@@ -1,0 +1,79 @@
+$global-width: 1400px;
+$global-height: 800px;
+
+// STAGE
+$stage-width: $global-width;
+$stage-height: $global-height;
+$stage-x: 0;
+$stage-y: 0;
+
+// CONTROL BAR
+$ctrlbar-width: fit-content;
+$ctrlbar-height: 90px;
+$ctrlbar-x: 0;
+$ctrlbar-y: $stage-height - $ctrlbar-height - 20px;
+
+// RAM
+$ram-label-width: 150px;
+$ram-address-width: 100px;
+$ram-opcode-width: 90px;
+$ram-operand-width: 90px;
+$ram-cell-height: 30px;
+$ram-cell-padding-left: 10px;
+$ram-cell-width: $ram-opcode-width + $ram-operand-width + $ram-cell-padding-left;
+$ram-font-size: 16px;
+
+// CPU
+$cpu-x: 50px;
+$cpu-y: 50px;
+$cpu-width: 700px;
+$cpu-height: 620px;
+
+$cpu-ir-x: 110px;
+$cpu-ir-y: 100px;
+$cpu-ir-width: 200px;
+$cpu-ir-height: 30px;
+
+$cpu-cu-y: 230px;
+$cpu-cu-width: 120px;
+$cpu-cu-height: 60px;
+$cpu-cu-x: $cpu-ir-x - calc($cpu-cu-width / 2) + calc($cpu-ir-width / 4); //was 110
+
+$cpu-pc-x: 570px;
+$cpu-pc-y: 70px;
+$cpu-pc-width: 100px;
+$cpu-pc-height: 30px;
+
+$cpu-inc-x: 570px;
+$cpu-inc-y: 130px;
+$cpu-inc-width: 100px;
+$cpu-inc-height: 30px;
+
+$cpu-mux-x: 400px;
+$cpu-mux-width: 100px;
+$cpu-mux-height: 40px;
+$cpu-mux-y: $cpu-cu-y + calc($cpu-cu-height / 2) - calc($cpu-mux-height / 2);
+
+$cpu-alu-y: 380px;
+$cpu-alu-width: 300px;
+$cpu-alu-height: fit-content;
+$cpu-alu-x: $cpu-mux-x - calc($cpu-alu-width * 0.8) + calc($cpu-mux-width / 2);
+
+$cpu-sw-x: 540px;
+$cpu-sw-y: 550px;
+$cpu-sw-width: 120px;
+$cpu-sw-height: 30px;
+
+$cpu-acc-y: $cpu-sw-y;
+$cpu-acc-width: 100px;
+$cpu-acc-height: 30px;
+$cpu-acc-x: $cpu-alu-x + calc($cpu-alu-width / 2) - calc($cpu-acc-width / 2);
+
+$cpu-comp-bgcolor: lightgrey;
+$cpu-comp-shadow: 0 0 10px
+	rgba(
+		$color: #000000,
+		$alpha: 0.2
+	);
+$cpu-comp-border: 1px solid black;
+$cpu-comp-border-radius: 5px;
