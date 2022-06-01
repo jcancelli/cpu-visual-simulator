@@ -1,6 +1,7 @@
 import { get } from "svelte/store"
 import animationStore from "../store/animationStore"
 import Node from "./Node"
+import * as Wire from "./Wire"
 
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
@@ -9,11 +10,14 @@ const BASE_ANIM_SPEED = 400
 
 export default class WireAnimation {
 	private path: Node[]
+
 	private pos = { x: 0, y: 0 }
 	private nextNodeIndex: number
-
+	private nextNode: { distance: number; direction: number; node: { x: number } }
 	private previousTimestamp: DOMHighResTimeStamp
 	private deltatime: number
+	private incrementedX: number
+	private incrementedY: number
 
 	private resolve: () => Promise<void>
 
@@ -55,21 +59,19 @@ export default class WireAnimation {
 	}
 
 	private draw(distanceToTravel: number) {
-		let next, incrementedX, incrementedY
-		ctx.lineWidth = 5
+		let next
 		ctx.strokeStyle = "lime"
-		ctx.lineCap = "square"
 		ctx.beginPath()
 		ctx.moveTo(this.pos.x, this.pos.y)
 		while (distanceToTravel > 0) {
 			next = _nextNode(this.pos, this.path[this.nextNodeIndex], distanceToTravel)
 			while ((this.pos.x !== next.node.x || this.pos.y !== next.node.y) && distanceToTravel > 0) {
-				incrementedX = this.pos.x + next.direction.x
-				incrementedY = this.pos.y + next.direction.y
-				ctx.lineTo(incrementedX, incrementedY)
+				this.incrementedX = this.pos.x + next.direction.x
+				this.incrementedY = this.pos.y + next.direction.y
+				ctx.lineTo(this.incrementedX, this.incrementedY)
 				ctx.stroke()
-				this.pos.x = incrementedX
-				this.pos.y = incrementedY
+				this.pos.x = this.incrementedX
+				this.pos.y = this.incrementedY
 				distanceToTravel--
 			}
 			increaseTransparency(0.05)
@@ -96,6 +98,8 @@ export default class WireAnimation {
 export function setCanvas(_canvas: HTMLCanvasElement) {
 	canvas = _canvas
 	ctx = canvas.getContext("2d")
+	ctx.lineCap = "round"
+	ctx.lineWidth = Wire.WIDTH
 }
 
 function increaseTransparency(alpha) {
@@ -122,8 +126,8 @@ function fadeRemainingTrail(index) {
 }
 
 function _nextNode(nodeA, nodeB, distanceLeft) {
-	let direction = _direction(nodeA, nodeB)
-	let distance = _distance(nodeA, nodeB)
+	let direction = Node.direction(nodeA, nodeB)
+	let distance = Node.distance(nodeA, nodeB)
 	let nextNode = nodeB
 	if (distance > distanceLeft) {
 		distance = distanceLeft
@@ -134,24 +138,6 @@ function _nextNode(nodeA, nodeB, distanceLeft) {
 		direction,
 		node: nextNode
 	}
-}
-
-function _direction(nodeA, nodeB) {
-	if (nodeA.x > nodeB.x) {
-		return { x: -1, y: 0 }
-	} else if (nodeA.x < nodeB.x) {
-		return { x: 1, y: 0 }
-	} else {
-		if (nodeA.y > nodeB.y) {
-			return { x: 0, y: -1 }
-		} else {
-			return { x: 0, y: 1 }
-		}
-	}
-}
-
-function _distance(nodeA, nodeB) {
-	return Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y)
 }
 
 function _node(fromNode, distance, direction) {
