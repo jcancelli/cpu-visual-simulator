@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import animationStore from "../store/animationStore"
-import Node from "./Node"
+import Node, { Position } from "./Node"
 import * as Wire from "./Wire"
 
 let canvas: HTMLCanvasElement
@@ -13,7 +13,7 @@ export default class WireAnimation {
 
 	private pos = { x: 0, y: 0 }
 	private nextNodeIndex: number
-	private nextNode: { distance: number; direction: number; node: { x: number } }
+	private nextNode: { distance: number; direction: { x: number; y: number }; node: Position }
 	private previousTimestamp: DOMHighResTimeStamp
 	private deltatime: number
 	private incrementedX: number
@@ -59,15 +59,17 @@ export default class WireAnimation {
 	}
 
 	private draw(distanceToTravel: number) {
-		let next
 		ctx.strokeStyle = "lime"
 		ctx.beginPath()
 		ctx.moveTo(this.pos.x, this.pos.y)
 		while (distanceToTravel > 0) {
-			next = _nextNode(this.pos, this.path[this.nextNodeIndex], distanceToTravel)
-			while ((this.pos.x !== next.node.x || this.pos.y !== next.node.y) && distanceToTravel > 0) {
-				this.incrementedX = this.pos.x + next.direction.x
-				this.incrementedY = this.pos.y + next.direction.y
+			this.nextNode = _nextNode(this.pos, this.path[this.nextNodeIndex], distanceToTravel)
+			while (
+				(this.pos.x !== this.nextNode.node.x || this.pos.y !== this.nextNode.node.y) &&
+				distanceToTravel > 0
+			) {
+				this.incrementedX = this.pos.x + this.nextNode.direction.x
+				this.incrementedY = this.pos.y + this.nextNode.direction.y
 				ctx.lineTo(this.incrementedX, this.incrementedY)
 				ctx.stroke()
 				this.pos.x = this.incrementedX
