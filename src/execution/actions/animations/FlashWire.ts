@@ -14,7 +14,7 @@ export default class FlashWire extends Animation {
 	}
 
 	protected async action(cache: Cache): Promise<any> {
-		//return get(components.wires).flashWire(this.from, this.to)
+		return get(components.wires).flashWire(this.from, this.to)
 	}
 
 	toString(): string {
