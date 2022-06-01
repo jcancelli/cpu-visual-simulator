@@ -29,27 +29,25 @@ export const FETCH = [
 	new FlashWire("CU:3", "RAM:CTRL"),
 	new CacheRam("PC").sideffects(new FlashRam("DATA", "PC")),
 	new FlashWire("RAM:DATA", "IR:1"),
-	new FetchInstruction().sideffects(new FlashCpu("IR")),
-	new FlashWire("IR:3", "CU:1"),
-	new FlashCpu("CU")
+	new FetchInstruction().sideffects(new FlashCpu("IR"))
 ] as const
 
 export const DECODE_OPCODE = [
 	new FlashCpu("IR:OPC"),
-	new FlashWire("IR:2", "CU:1"),
+	new FlashWire("IR:3", "CU:1"),
 	new FlashCpu("CU")
 ] as const
 
 export const SET_MUX = [new FlashWire("CU:2", "MUX:4"), new FlashCpu("MUX")] as const
 
 export const SET_ALU_OPERATION = [
-	new FlashWire("CU:3", "ALU:5"),
+	new FlashWire("CU:4", "ALU:5"),
 	new SetAluOperation().sideffects(new FlashCpu("ALU:OPR"))
 ] as const
 
 export const LOAD_ALU1_FROM_ACC = [
 	new CacheCpu("ACC").sideffects(new FlashCpu("ACC")),
-	new FlashWire("ACC:2", "ALU:1"),
+	new FlashWire("ACC:1", "ALU:1"),
 	new AccToAlu1().sideffects(new FlashCpu("ALU:1"))
 ] as const
 
@@ -59,17 +57,17 @@ export function LOAD_ALU2(immediateFlag: boolean) {
 
 export const LOAD_ALU2_FROM_IR = [
 	new FlashCpu("IR:OPR"),
-	new FlashWire("IR:3", "MUX:1"),
+	new FlashWire("IR:2", "MUX:1"),
 	new FlashWire("MUX:3", "ALU:2"),
 	new SetAlu2("IR:OPR").sideffects(new FlashCpu("ALU:2"))
 ] as const
 
 export const LOAD_ALU2_FROM_RAM = [
 	new FlashCpu("IR:OPR"),
-	new FlashWire("IR:3", "RAM:ADD"),
+	new FlashWire("IR:2", "RAM:ADD"),
 	new FlashRam("ADDRESS", "IR:OPR"),
 	new FlashCpu("CU"),
-	new FlashWire("CU:4", "RAM:CTRL"),
+	new FlashWire("CU:3", "RAM:CTRL"),
 	new CacheRam("IR:OPR").sideffects(new FlashRam("DATA", "IR:OPR")),
 	new FlashWire("RAM:DATA", "MUX:2"),
 	new FlashWire("MUX:3", "ALU:2"),

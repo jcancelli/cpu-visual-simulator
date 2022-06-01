@@ -85,7 +85,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				new FlashRam("ADDRESS", "IR:OPR"),
 				new CacheCpu("ACC").sideffects(new FlashCpu("ACC")),
 				new FlashWire("ACC:1", "RAM:DATA"),
-				new FlashWire("CU:2", "RAM:CTRL"),
+				new FlashWire("CU:3", "RAM:CTRL"),
 				new StoreAccToAddress("IR:OPR").sideffects(new FlashRam("DATA", "IR:OPR"))
 			)
 			break
