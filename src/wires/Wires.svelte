@@ -19,7 +19,8 @@
 	})
 
 	export async function flashWire(fromName: string, toName: string): Promise<void> {
-		const from = node(fromName), to = node(toName)
+		const from = node(fromName),
+			to = node(toName)
 		if (!from) throw new Error("Node " + fromName + " is undefined")
 		if (!to) throw new Error("Node " + toName + " is undefined")
 		let animation: WireAnimation
