@@ -1,6 +1,11 @@
 import Wire from "./Wire"
 
-export default class Node {
+export interface Position {
+	x: number
+	y: number
+}
+
+export default class Node implements Position {
 	readonly x: number
 	readonly y: number
 	readonly name: string
@@ -13,11 +18,11 @@ export default class Node {
 		this.neighbours = []
 	}
 
-	isAlignedTo(node: Node): boolean {
+	isAlignedTo(node: Position): boolean {
 		return this.x === node.x || this.y === node.y
 	}
 
-	isConnectedTo(node: Node): boolean {
+	isConnectedTo(node: Position): boolean {
 		return this.neighbours.some(n => n === node)
 	}
 
@@ -36,6 +41,24 @@ export default class Node {
 		}
 		this.neighbours.push(node)
 		node.neighbours.push(this)
+	}
+
+	static distance(a: Position, b: Position): number {
+		return Math.hypot(a.x - b.x, a.y - b.y)
+	}
+
+	static direction(a: Position, b: Position): { x: number; y: number } {
+		if (a.x > b.x) {
+			return { x: -1, y: 0 }
+		} else if (a.x < b.x) {
+			return { x: 1, y: 0 }
+		} else {
+			if (a.y > b.y) {
+				return { x: 0, y: -1 }
+			} else {
+				return { x: 0, y: 1 }
+			}
+		}
 	}
 }
 
