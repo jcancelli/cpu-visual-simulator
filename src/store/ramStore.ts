@@ -49,15 +49,9 @@ function updateLabels(label: string, newLabel: string): void {
 	updateSync(oldRam =>
 		oldRam.map(instruction => {
 			if (instruction.symbolicOperand === label) {
-				return {
-					...instruction,
-					symbolicOperand: newLabel
-				}
+				return new Instruction(instruction.symbolicOpcode, newLabel, instruction.value)
 			} else if (instruction.symbolicOperand === "#" + label) {
-				return {
-					...instruction,
-					symbolicOperand: "#" + newLabel
-				}
+				return new Instruction(instruction.symbolicOpcode, "#" + newLabel, instruction.value)
 			} else {
 				return instruction
 			}
@@ -69,15 +63,17 @@ function deleteLabel(label: string): void {
 	updateSync(oldRam =>
 		oldRam.map(instruction => {
 			if (instruction.symbolicOperand === label) {
-				return {
-					...instruction,
-					symbolicOperand: "" + instruction.numericOperand
-				}
+				return new Instruction(
+					instruction.symbolicOpcode,
+					instruction.numericOperand.toString(),
+					instruction.value
+				)
 			} else if (instruction.symbolicOperand === "#" + label) {
-				return {
-					...instruction,
-					symbolicOperand: "#" + instruction.numericOperand
-				}
+				return new Instruction(
+					instruction.symbolicOpcode,
+					"#" + instruction.numericOperand(),
+					instruction.value
+				)
 			} else {
 				return instruction
 			}
