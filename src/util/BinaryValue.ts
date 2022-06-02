@@ -62,7 +62,7 @@ export default class BinaryValue {
 	// pos can be either negative or positive, a negative pos start from the lsbyte
 	// pos goes from 1 to this.bytes() or from -1 to -this.bytes()
 	getByte(pos: number): BinaryValue {
-		const index = positionToIndex(pos, this.bytes())
+		const index = positionToIndex(pos, this.bytes()) * 8
 		return new BinaryValue(8, this.value.substring(index, index + 8))
 	}
 
