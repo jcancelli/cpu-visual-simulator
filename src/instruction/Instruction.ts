@@ -15,6 +15,7 @@ export default class Instruction {
 		this.opcode = opcode(removeFlags(value))
 		this.symbolicOpcode = symOpc
 		this.symbolicOperand = symOpr
+		this.value = value
 		if (invalidate) {
 			this.opcode = undefined
 		}
