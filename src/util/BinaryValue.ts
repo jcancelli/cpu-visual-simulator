@@ -52,19 +52,21 @@ export default class BinaryValue {
 		return this.bits() / 8
 	}
 
+	// pos can be either negative or positive, a negative pos start from the lsbyte
+	// pos goes from 1 to this.bytes() or from -1 to -this.bytes()
 	getByte(pos: number): BinaryValue {
 		const index = positionToIndex(pos, this.bytes())
 		return new BinaryValue(8, this.value.substring(index, index + 8))
 	}
 
 	// pos can be either negative or positive, a negative pos start from the lsb
-	// pos goes from 1 to this.bits or from -1 to -this.bits
+	// pos goes from 1 to this.bits() or from -1 to -this.bits()
 	isBitSet(pos: number): boolean {
 		return this.value.charAt(positionToIndex(pos, this.bits())) === "1"
 	}
 
 	// pos can be either negative or positive, a negative pos start from the lsb
-	// pos goes from 1 to this.bits or from -1 to -this.bits
+	// pos goes from 1 to this.bits() or from -1 to -this.bits()
 	setBit(pos: number, value: boolean): BinaryValue {
 		return new BinaryValue(this.bits(), setBit(this.value, pos, value))
 	}
