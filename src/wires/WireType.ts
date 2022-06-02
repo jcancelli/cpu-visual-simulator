@@ -4,7 +4,7 @@ export const WireTypes = {
 	DATA_INT: {
 		name: "DATA_INT",
 		color: "cyan",
-		animationColor: "forestgreen"
+		animationColor: "darkgreen"
 	},
 	DATA_EXT: {
 		name: "DATA_EXT",
@@ -14,7 +14,7 @@ export const WireTypes = {
 	CONTROL_INT: {
 		name: "CONTROL_INT",
 		color: "#ff7a90",
-		animationColor: "forestgreen"
+		animationColor: "lime"
 	},
 	CONTROL_EXT: {
 		name: "CONTROL_EXT",
@@ -24,7 +24,7 @@ export const WireTypes = {
 	ADDRESS_INT: {
 		name: "ADDRESS_INT",
 		color: "yellow",
-		animationColor: "forestgreen"
+		animationColor: "darkgreen"
 	},
 	ADDRESS_EXT: {
 		name: "ADDRESS_EXT",
