@@ -3,8 +3,9 @@
 	import ControlBar from "./components/ControlBar.svelte"
 	import Debugger from "./components/Debugger.svelte"
 	import MessageFeed from "./components/MessageFeed.svelte"
-	import { controlBar, debug, messageFeed } from "./store/componentsStore"
+	import { controlBar, debug, messageFeed, wires } from "./store/componentsStore"
 	import { onMount } from "svelte"
+	import { get } from "svelte/store"
 
 	let app: HTMLDivElement
 
@@ -17,7 +18,10 @@
 		app.style.transform = `scale(${scale})`
 	}
 
-	onMount(scale)
+	onMount(() => {
+		scale()
+		get(wires).drawStaticWires()
+	})
 </script>
 
 <svelte:window on:resize={scale} />
