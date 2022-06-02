@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from "svelte"
-	import { WIDTH as wireWidth } from "./Wire"
-	import { Wires } from "./Wires"
-	import { path as nodesPath } from "./Node"
+	import Wire from "./Wire"
+	import * as Wires from "./Wires"
+	import * as Nodes from "./Nodes"
 	import { node } from "./Nodes"
 	import WireAnimation, * as WireAnimations from "./WireAnimation"
 
@@ -27,7 +27,9 @@
 		if ((animation = animationsCache.get(fromName + toName))) {
 			animation.reset()
 		} else {
-			animation = new WireAnimation(nodesPath(from, to))
+			const nodesPath = Nodes.path(from, to)
+			const wiresPath = Wires.path(nodesPath)
+			animation = new WireAnimation(nodesPath, wiresPath)
 			animationsCache.set(fromName + toName, animation)
 		}
 		await animation.play()
@@ -35,9 +37,9 @@
 
 	export function drawStaticWires() {
 		const ctx = staticCanvas.getContext("2d")
-		ctx.lineWidth = wireWidth
+		ctx.lineWidth = Wire.WIDTH
 		ctx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height)
-		for (const wire of Wires) {
+		for (const wire of Wires.Wires) {
 			ctx.lineCap = wire.linecap ? "square" : "butt"
 			ctx.strokeStyle = wire.type.color
 			ctx.beginPath()

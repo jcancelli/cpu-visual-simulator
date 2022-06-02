@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import animationStore from "../store/animationStore"
 import Node, { Position } from "./Node"
-import * as Wire from "./Wire"
+import Wire from "./Wire"
 
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
@@ -10,7 +10,7 @@ const BASE_ANIM_SPEED = 400
 
 export default class WireAnimation {
 	private path: Node[]
-
+	private wires: Wire[]
 	private pos = { x: 0, y: 0 }
 	private nextNodeIndex: number
 	private nextNode: { distance: number; direction: { x: number; y: number }; node: Position }
@@ -21,8 +21,9 @@ export default class WireAnimation {
 
 	private resolve: () => Promise<void>
 
-	constructor(nodesPath: Node[]) {
+	constructor(nodesPath: Node[], wirePath: Wire[]) {
 		this.path = [...nodesPath]
+		this.wires = [...wirePath]
 		this.reset()
 	}
 
