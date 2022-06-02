@@ -21,7 +21,7 @@ export const DataBusNodes = [
 	new Node("MUX:1", 477, 292),
 	new Node("MUX:2", 527, 292),
 	new Node("MUX:3", 502, 332),
-	new Node("ACC:1", 362, 617),
+	new Node("ACC:1", 327, 617),
 	new Node("ACC:2", 412, 601),
 	new Node("ALU:1", 320, 432),
 	new Node("ALU:2", 502, 432),

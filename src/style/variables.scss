@@ -65,7 +65,7 @@ $cpu-sw-width: 120px;
 $cpu-sw-height: 30px;
 
 $cpu-acc-y: $cpu-sw-y;
-$cpu-acc-width: 100px;
+$cpu-acc-width: 170px;
 $cpu-acc-height: 30px;
 $cpu-acc-x: $cpu-alu-x + calc($cpu-alu-width / 2) - calc($cpu-acc-width / 2);
 
