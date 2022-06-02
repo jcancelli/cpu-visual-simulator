@@ -1,73 +1,63 @@
-export function isValidBinary8bit(bin: string): boolean {
-	return /^[01]{1,8}$/.test(bin)
-}
+import { positionToIndex } from "./stringUtil"
 
-export function isValidUnsigned8bit(num: number): boolean {
-	return num < 256 && num >= 0
-}
+export const MAX_BITS = 32 // js limit for bitwise operations
+export const MIN_BITS = 1
 
-export function isValidSigned8bit(num: number): boolean {
-	return num < 128 && num >= -128
-}
-
-export function unsignedToBinary8bit(num: number): string {
-	if (!isValidUnsigned8bit(num)) {
-		throw new Error("Invalid 8 bit unsigned value: " + num)
+export function checkValidBitCount(bits: number) {
+	if (bits < MIN_BITS || bits > MAX_BITS) {
+		throw new Error(`Binary numbers must be between ${MIN_BITS} and ${MAX_BITS} bits`)
 	}
-	return pad((num >>> 0).toString(2))
 }
 
-export function signedToBinary8bit(num: number): string {
-	if (!isValidSigned8bit(num)) {
-		throw new Error("Invalid 8 bit signed value: " + num)
-	}
-	return pad(signedToBinaryString(num))
+export function isValidBinary(bin: string, bits: number): boolean {
+	checkValidBitCount(bits)
+	return new RegExp(`^[01]{1,${bits}}$`).test(bin)
 }
 
-export function binaryToUnsigned8bit(bin: string): number {
-	if (!isValidBinary8bit(bin)) {
-		throw new Error('Invalid binary value: "' + bin + '"')
-	}
-	return parseInt(bin, 2)
+// returns wether or not a value is a valid "bits"-bit value (signed or unsigned)
+export function valueIsInRange(value: number, bits: number): boolean {
+	return value <= maxValue(bits) && value >= minValue(bits)
 }
 
-export function binaryToSigned8bit(bin: string): number {
-	if (!isValidBinary8bit(bin)) {
-		throw new Error('Invalid binary value: "' + bin + '"')
-	}
-	if (bin.length < 8 || bin.startsWith("0")) {
-		bin = ("00000000000000000000000000000000" + bin).slice(-32)
-	} else {
-		bin = ("11111111111111111111111111111111" + bin).slice(-32)
-	}
-	return ~~parseInt(bin, 2)
+export function isSigned(value: number, bits: number): boolean {
+	return value <= maxSignedValue(bits) && value >= minValue(bits)
 }
 
-export function unsignedToSigned(num: number): number {
-	return binaryToSigned8bit(unsignedToBinary8bit(num))
+export function isUnsigned(value: number, bits: number): boolean {
+	return value <= maxValue(bits) && value >= 0
 }
 
-export function signedToBinaryString(num: number) {
-	return (num >>> 0).toString(2)
+export function maxValue(bits: number): number {
+	checkValidBitCount(bits)
+	return Math.pow(2, bits)
 }
 
-// bitPos: index of the bit starting from 0 and from the least significant bit
-export function setBit(binString: string, bitPos: number, value: boolean): string {
+export function maxSignedValue(bits: number): number {
+	checkValidBitCount(bits)
+	return Math.pow(2, bits - 1) - 1
+}
+
+export function minValue(bits: number): number {
+	checkValidBitCount(bits)
+	return -Math.pow(2, bits - 1)
+}
+
+export function valueToBinary(value: number, bits: number) {
+	checkValidBitCount(bits)
+	return pad((value >>> 0).toString(2), bits)
+}
+
+export function pad(bin: string, bits: number) {
+	return ("00000000000000000000000000000000" + bin).slice(-bits)
+}
+
+// pos can be either negative or positive, a negative pos start from the lsb
+// pos goes from 1 to binString.length or from -1 to -binString.length
+export function setBit(binString: string, pos: number, value: boolean): string {
 	if (!/^[10]*$/.test(binString)) {
 		throw new Error("Invalid binary string")
 	}
-	if (bitPos < 0 || bitPos > binString.length) {
-		throw new Error("Invalid bit position")
-	}
 	let bits = binString.split("")
-	bits[binString.length - bitPos - 1] = value ? "1" : "0"
+	bits[positionToIndex(pos, binString.length)] = value ? "1" : "0"
 	return bits.join("")
-}
-
-export function pad(bin: string) {
-	return ("00000000" + bin).slice(-8)
-}
-
-export function handleOverflowUnderflow(num: number) {
-	return binaryToSigned8bit(pad(signedToBinaryString(num)))
 }
