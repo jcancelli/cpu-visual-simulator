@@ -10,8 +10,8 @@
 	import Nodes, { node } from "../wires/Nodes"
 	import { MessageType } from "./MessageFeed.svelte"
 	import cpuStore from "../store/cpuStore"
-	import { FlashableCpuComponent } from "./cpu/Cpu.svelte"
 	import { parse } from "../instruction/instructionParser"
+	import { FlashableCpuComponent } from "../execution/actions/animations/FlashCpu"
 
 	let div: HTMLDivElement
 
