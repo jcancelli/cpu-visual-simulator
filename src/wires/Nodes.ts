@@ -67,4 +67,34 @@ export function node(name: string): Node {
 	return Nodes.find(n => n.name === name)
 }
 
+// https://stackoverflow.com/questions/32527026/shortest-path-in-javascript/32527538#32527538
+export function path(from: Node, to: Node) {
+	const toVisit = [from]
+	const visited = new Set<Node>()
+	const predecessor = {}
+	let tail = 0
+	while (tail < toVisit.length) {
+		let node = toVisit[tail++]
+		for (const neighbour of node.neighbours) {
+			if (visited.has(neighbour)) {
+				continue
+			}
+			visited.add(neighbour)
+			if (neighbour === to) {
+				const path = [neighbour]
+				while (node !== from) {
+					path.push(node)
+					node = predecessor[node.name]
+				}
+				path.push(node)
+				path.reverse()
+				return path
+			}
+			predecessor[neighbour.name] = node
+			toVisit.push(neighbour)
+		}
+	}
+	throw new Error("No path connecting " + from.name + " to " + to.name)
+}
+
 export default Nodes
