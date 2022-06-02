@@ -143,7 +143,6 @@ function parseBinary(input: string): Instruction {
 	const [binaryOpcode, binaryOperand] = input.split(" ")
 	const hasOperand = !!binaryOperand
 	const opcodeValue = new BinaryValue(8, binaryOpcode)
-	const operandValue = new BinaryValue(8, binaryOperand)
 	const numericOpcode = opcodeValue.signed()
 	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 	const opcode = parseOpcode(removeFlags(opcodeValue))
@@ -157,6 +156,7 @@ function parseBinary(input: string): Instruction {
 		if (immediateFlagSet && !opcode.takesImmediate) {
 			throw new Error("Opcode doesn't allow immediate operand")
 		}
+		const operandValue = new BinaryValue(8, binaryOperand)
 		const numericOperand = immediateFlagSet ? operandValue.signed() : operandValue.unsigned()
 		const symbolicOperand = immediateFlagSet ? "#" + numericOperand : numericOperand.toString()
 		if (!immediateFlagSet && !isValidAddress(numericOperand)) {
