@@ -60,11 +60,11 @@ export default class WireAnimation {
 	}
 
 	private draw(distanceToTravel: number) {
-		ctx.strokeStyle = "lime"
 		ctx.beginPath()
 		ctx.moveTo(this.pos.x, this.pos.y)
 		while (distanceToTravel > 0) {
 			this.nextNode = _nextNode(this.pos, this.path[this.nextNodeIndex], distanceToTravel)
+			ctx.strokeStyle = this.wires[this.nextNodeIndex - 1].type.animationColor
 			while (
 				(this.pos.x !== this.nextNode.node.x || this.pos.y !== this.nextNode.node.y) &&
 				distanceToTravel > 0
