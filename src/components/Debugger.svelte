@@ -12,6 +12,7 @@
 	import cpuStore from "../store/cpuStore"
 	import { parse } from "../instruction/instructionParser"
 	import { FlashableCpuComponent } from "../execution/actions/animations/FlashCpu"
+	import { onMount } from "svelte"
 
 	let div: HTMLDivElement
 
@@ -26,6 +27,16 @@
 	let cpuComponent: FlashableCpuComponent
 
 	$: inputValue = parseInt(numberInput)
+
+	onMount(() => {
+		const listener = (e: KeyboardEvent) => {
+			if (e.altKey && e.key === "d") {
+				debugStore.updateShowDebugger(oldValue => !oldValue)
+			}
+		}
+		window.addEventListener("keydown", listener)
+		return () => window.removeEventListener("keydown", listener)
+	})
 
 	function closeDebugger() {
 		debugStore.setShowDebugger(false)
