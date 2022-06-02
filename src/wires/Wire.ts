@@ -40,13 +40,12 @@ export const WireType = {
 	}
 } as const
 
-export const WIDTH = 5
-
 export default class Wire {
 	readonly a: Node
 	readonly b: Node
 	readonly type: WireType
 	readonly linecap: boolean
+	static readonly WIDTH = 5
 
 	constructor(a: Node, b: Node, type: WireType, linecap: boolean = true) {
 		this.a = a
