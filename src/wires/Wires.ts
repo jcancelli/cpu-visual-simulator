@@ -1,3 +1,4 @@
+import Node from "./Node"
 import { node } from "./Nodes"
 import Wire, { WireType } from "./Wire"
 
@@ -57,5 +58,15 @@ export const ControlBusWires = [
 export const Wires = [...DataBusWires, ...AddressBusWires, ...ControlBusWires] as const
 
 export function wire(name: string): Wire | undefined {
-	return Wires.find(w => w.a.name + "-" + w.b.name === name)[0]
+	return Wires.find(
+		w => w.a.name + "-" + w.b.name === name || w.b.name + "-" + w.a.name === name
+	)[0]
+}
+
+export function path(nodePath: Node[]): Wire[] {
+	let wirePath: Wire[] = []
+	for (let i = 0; i < nodePath.length - 1; i++) {
+		wirePath.push(wire(`${nodePath[i].name}-${nodePath[i + 1].name}`))
+	}
+	return wirePath
 }
