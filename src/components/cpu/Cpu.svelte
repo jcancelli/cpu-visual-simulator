@@ -1,20 +1,3 @@
-<script lang="ts" context="module">
-	export type FlashableCpuComponent =
-		| "IR"
-		| "IR:OPC"
-		| "IR:OPR"
-		| "PC"
-		| "INC"
-		| "MUX"
-		| "CU"
-		| "ALU:1"
-		| "ALU:2"
-		| "ALU:OPR"
-		| "ACC"
-		| "SW:Z"
-		| "SW:N"
-</script>
-
 <script lang="ts">
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import InstructionRegister from "./InstructionRegister.svelte"
@@ -24,6 +7,7 @@
 	import ProgramCounter from "./ProgramCounter.svelte"
 	import Multiplexer from "./Multiplexer.svelte"
 	import ArithmeticLogicUnit from "./ArithmeticLogicUnit.svelte"
+	import { FlashableCpuComponent } from "../../execution/actions/animations/FlashCpu"
 
 	let ir: InstructionRegister
 	let cu: ControlUnit

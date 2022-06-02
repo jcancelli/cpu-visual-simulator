@@ -1,8 +1,22 @@
 import { get } from "svelte/store"
-import { FlashableCpuComponent } from "../../../components/cpu/Cpu.svelte"
 import components from "../../../store/componentsStore"
 import { Cache } from "../../execution"
 import Animation from "./Animation"
+
+export type FlashableCpuComponent =
+	| "IR"
+	| "IR:OPC"
+	| "IR:OPR"
+	| "PC"
+	| "INC"
+	| "MUX"
+	| "CU"
+	| "ALU:1"
+	| "ALU:2"
+	| "ALU:OPR"
+	| "ACC"
+	| "SW:Z"
+	| "SW:N"
 
 export default class FlashCpu extends Animation {
 	protected component: FlashableCpuComponent
