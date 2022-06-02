@@ -65,7 +65,7 @@ function deleteLabel(label: string): void {
 			if (instruction.symbolicOperand === label) {
 				return new Instruction(
 					instruction.symbolicOpcode,
-					instruction.numericOperand.toString(),
+					instruction.numericOperand().toString(),
 					instruction.value
 				)
 			} else if (instruction.symbolicOperand === "#" + label) {
