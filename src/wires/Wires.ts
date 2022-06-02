@@ -58,9 +58,7 @@ export const ControlBusWires = [
 export const Wires = [...DataBusWires, ...AddressBusWires, ...ControlBusWires] as const
 
 export function wire(name: string): Wire | undefined {
-	return Wires.find(
-		w => w.a.name + "-" + w.b.name === name || w.b.name + "-" + w.a.name === name
-	)[0]
+	return Wires.find(w => w.a.name + "-" + w.b.name === name || w.b.name + "-" + w.a.name === name)
 }
 
 export function path(nodePath: Node[]): Wire[] {
