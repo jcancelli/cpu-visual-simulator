@@ -1,44 +1,5 @@
 import Node from "./Node"
-
-export type WireType = typeof WireType[keyof typeof WireType]
-
-export const WireType = {
-	DATA_INT: {
-		name: "DATA_INT",
-		color: "cyan",
-		animationColor: "red"
-	},
-	DATA_EXT: {
-		name: "DATA_EXT",
-		color: "blue",
-		animationColor: "red"
-	},
-	CONTROL_INT: {
-		name: "CONTROL_INT",
-		color: "#ff7a90",
-		animationColor: "blue"
-	},
-	CONTROL_EXT: {
-		name: "CONTROL_EXT",
-		color: "red",
-		animationColor: "blue"
-	},
-	ADDRESS_INT: {
-		name: "ADDRESS_INT",
-		color: "yellow",
-		animationColor: "green"
-	},
-	ADDRESS_EXT: {
-		name: "ADDRESS_EXT",
-		color: "darkorange",
-		animationColor: "green"
-	},
-	INVISIBLE: {
-		name: "INVISIBLE",
-		color: "transparent",
-		animationColor: "transparent"
-	}
-} as const
+import type { WireType } from "./WireType"
 
 export default class Wire {
 	readonly a: Node
