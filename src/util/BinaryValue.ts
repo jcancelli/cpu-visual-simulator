@@ -1,4 +1,11 @@
-import { isValidBinary, pad, setBit, valueIsInRange, valueToBinary } from "./binaryUtil"
+import {
+	checkValidBitCount,
+	isValidBinary,
+	pad,
+	setBit,
+	valueIsInRange,
+	valueToBinary
+} from "./binaryUtil"
 import { positionToIndex } from "./stringUtil"
 
 export type Bits = 8 | 16 | 32
@@ -18,15 +25,15 @@ export default class BinaryValue {
 			}
 			this.value = valueToBinary(value, bits)
 		} else {
-			this.value = valueToBinary(value.signedValue(), bits) // TEST THIS
+			this.value = valueToBinary(value.signed(), bits) // TEST THIS
 		}
 	}
 
-	signedValue(): number {
+	signed(): number {
 		return ~~parseInt(this.value, 2) // to test, in the old implementation, if the msb was 1, it was padded with "1"s to 32 bits
 	}
 
-	// export function signedValue(): number {
+	// signed(): number {
 	// 	let bin = this.value
 	// 	if (bin.startsWith("0")) {
 	// 		bin = ("00000000000000000000000000000000" + bin).slice(-32)
@@ -36,7 +43,7 @@ export default class BinaryValue {
 	// 	return ~~parseInt(bin, 2)
 	// }
 
-	unsignedValue(): number {
+	unsigned(): number {
 		return parseInt(this.value, 2)
 	}
 
@@ -59,6 +66,14 @@ export default class BinaryValue {
 		return new BinaryValue(8, this.value.substring(index, index + 8))
 	}
 
+	getBytes(): BinaryValue[] {
+		const bytes = []
+		for (let i = 1; i <= this.bytes(); i++) {
+			bytes.push(this.getByte(i))
+		}
+		return bytes
+	}
+
 	// pos can be either negative or positive, a negative pos start from the lsb
 	// pos goes from 1 to this.bits() or from -1 to -this.bits()
 	isBitSet(pos: number): boolean {
@@ -69,5 +84,19 @@ export default class BinaryValue {
 	// pos goes from 1 to this.bits() or from -1 to -this.bits()
 	setBit(pos: number, value: boolean): BinaryValue {
 		return new BinaryValue(this.bits(), setBit(this.value, pos, value))
+	}
+
+	static fromBytesValues(bytes: number[] | string[] | BinaryValue[]): BinaryValue {
+		checkValidBitCount(bytes.length * 8)
+		if (typeof bytes[0] === "number") {
+			return BinaryValue.fromBytesValues(bytes.map(b => new BinaryValue(8, b)))
+		} else if (typeof bytes[0] === "string") {
+			return new BinaryValue((bytes.length * 8) as Bits, bytes.join(""))
+		} else {
+			return new BinaryValue(
+				(bytes.length * 8) as Bits,
+				bytes.map(b => b.toBinaryString()).join("")
+			)
+		}
 	}
 }

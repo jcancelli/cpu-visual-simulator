@@ -1,5 +1,4 @@
 import cpuStore from "../../../store/cpuStore"
-import { handleOverflowUnderflow } from "../../../util/binaryUtil"
 import { Cache } from "../../execution"
 import CpuAction from "./CpuAction"
 
@@ -36,7 +35,7 @@ export default class ExecuteAluOperation extends CpuAction {
 			default:
 				throw new Error(`Operator "${cache["ALU:OP"]}" doesn't set the Accumulator`)
 		}
-		cpuStore.setACC(handleOverflowUnderflow(result))
+		cpuStore.setACC(result)
 		cache["ACC"] = result
 	}
 }

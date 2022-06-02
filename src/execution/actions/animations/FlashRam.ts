@@ -2,6 +2,7 @@ import Animation from "./Animation"
 import { get } from "svelte/store"
 import components from "../../../store/componentsStore"
 import { Cache, CacheableKey } from "../../execution"
+import BinaryValue from "../../../util/BinaryValue"
 
 export type FlashableRamComponent = "ADDRESS" | "DATA"
 
@@ -17,7 +18,8 @@ export default class FlashRam extends Animation {
 
 	protected async action(cache: Cache): Promise<any> {
 		const ram = get(components.ram)
-		const address = typeof this.address === "number" ? this.address : cache[this.address]
+		const address =
+			typeof this.address === "number" ? this.address : (cache[this.address] as number)
 		if (typeof address !== "number") {
 			throw new Error(this.address + " is not a number")
 		}

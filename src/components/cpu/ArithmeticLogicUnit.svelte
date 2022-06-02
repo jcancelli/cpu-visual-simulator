@@ -2,7 +2,6 @@
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import cpuStore from "../../store/cpuStore"
 	import displaySettingsStore from "../../store/displaySettingsStore"
-	import { signedToBinary8bit } from "../../util/binaryUtil"
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashFirstOperand() {
@@ -40,11 +39,11 @@
 
 	$: {
 		if ($displaySettingsStore.binary) {
-			operand1 = $cpuStore.alu1 !== null ? signedToBinary8bit($cpuStore.alu1) : ""
-			operand2 = $cpuStore.alu2 !== null ? signedToBinary8bit($cpuStore.alu2) : ""
+			operand1 = $cpuStore.alu1 !== null ? $cpuStore.alu1.toBinaryString() : ""
+			operand2 = $cpuStore.alu2 !== null ? $cpuStore.alu2.toBinaryString() : ""
 		} else {
-			operand1 = $cpuStore.alu1 !== null ? "" + $cpuStore.alu1 : ""
-			operand2 = $cpuStore.alu2 !== null ? "" + $cpuStore.alu2 : ""
+			operand1 = $cpuStore.alu1 !== null ? "" + $cpuStore.alu1.signed() : ""
+			operand2 = $cpuStore.alu2 !== null ? "" + $cpuStore.alu2.signed() : ""
 		}
 	}
 </script>

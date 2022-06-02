@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { signedToBinary8bit } from "../../util/binaryUtil"
 	import cpuStore from "../../store/cpuStore"
 	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
@@ -19,7 +18,9 @@
 
 <div class="acc" bind:this={accDiv}>
 	<ComponentLabel text="ACC" top="-20px" left="0" />
-	{$displaySettingsStore.binary ? signedToBinary8bit($cpuStore.accumulator) : $cpuStore.accumulator}
+	{$displaySettingsStore.binary
+		? $cpuStore.accumulator.toBinaryString()
+		: $cpuStore.accumulator.signed()}
 </div>
 
 <style lang="scss">

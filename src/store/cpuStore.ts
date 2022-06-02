@@ -1,17 +1,17 @@
 import { Updater, writable } from "svelte/store"
 import Instruction from "../instruction/Instruction"
 import { Operators } from "../instruction/Opcode"
-import { isValidSigned8bit, isValidUnsigned8bit } from "../util/binaryUtil"
-import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
+import BinaryValue from "../util/BinaryValue"
+import { FIRST_ADDRESS, isValidAddress, WORD_SIZE } from "../util/ramUtil"
 
 interface Cpu {
 	instructionRegister: Instruction | null
-	programCounter: number
-	increment: number
-	alu1: number | null
-	alu2: number | null
+	programCounter: BinaryValue
+	increment: BinaryValue
+	alu1: BinaryValue | null
+	alu2: BinaryValue | null
 	operation: Operators
-	accumulator: number
+	accumulator: BinaryValue
 	zeroFlag: boolean
 	negativeFlag: boolean
 	isJumping: boolean
@@ -38,12 +38,12 @@ function updateSync(updater: Updater<Cpu>): void {
 function reset() {
 	setSync({
 		instructionRegister: null,
-		programCounter: FIRST_ADDRESS,
-		increment: WORD_SIZE,
+		programCounter: new BinaryValue(8, FIRST_ADDRESS),
+		increment: new BinaryValue(8, WORD_SIZE),
 		alu1: null,
 		alu2: null,
 		operation: "",
-		accumulator: 0,
+		accumulator: new BinaryValue(8, 0),
 		zeroFlag: true,
 		negativeFlag: false,
 		isJumping: false,
@@ -74,43 +74,46 @@ function setIR(instruction: Instruction | null) {
 	}))
 }
 
-function setPC(value: number) {
-	if (!isValidAddress(value)) {
+function setPC(value: number | BinaryValue) {
+	if (typeof value === "number") {
+		value = new BinaryValue(8, value)
+	}
+	if (!isValidAddress(value.unsigned())) {
 		throw new Error("Invalid address")
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
-		programCounter: value
+		programCounter: value as BinaryValue
 	}))
 }
 
-function setALU1(value: number | null) {
-	if (!isValidSigned8bit(value) && !isValidUnsigned8bit(value)) {
-		throw new Error("Invalid value")
+function setALU1(value: number | BinaryValue | null) {
+	if (typeof value === "number") {
+		value = new BinaryValue(8, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
-		alu1: value
+		alu1: value === null ? null : (value as BinaryValue)
 	}))
 }
 
-function setALU2(value: number | null) {
-	if (!isValidSigned8bit(value) && !isValidUnsigned8bit(value)) {
-		throw new Error("Invalid value")
+function setALU2(value: number | null | BinaryValue) {
+	if (typeof value === "number") {
+		value = new BinaryValue(8, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
-		alu2: value
+		alu2: value === null ? null : (value as BinaryValue)
 	}))
 }
 
-function setACC(value: number) {
-	if (!isValidSigned8bit(value)) {
-		throw new Error("Invalid value")
+function setACC(value: number | BinaryValue) {
+	if (typeof value === "number") {
+		value = new BinaryValue(8, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
-		accumulator: value
+		accumulator: value as BinaryValue
 	}))
 }
 

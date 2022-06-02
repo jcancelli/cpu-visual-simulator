@@ -38,7 +38,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
-				...LOAD_ALU2(instruction.immediateFlag),
+				...LOAD_ALU2(instruction.immediateFlag()),
 				new ExecuteAluOperation().sideffects(new FlashCpu("ACC")),
 				new FlashWire("ALU:3", "SW:1"),
 				new UpdateSW() // TODO FLASH EDITED FLAG
@@ -62,7 +62,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
-				...LOAD_ALU2(instruction.immediateFlag),
+				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:3", "SW:1"),
 				new CompareUpdateSW() // TODO FLASH EDITED FLAG
 			)
@@ -73,7 +73,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
-				...LOAD_ALU2(instruction.immediateFlag),
+				...LOAD_ALU2(instruction.immediateFlag()),
 				new ExecuteAluOperation().sideffects(new FlashCpu("ACC"))
 			)
 			break

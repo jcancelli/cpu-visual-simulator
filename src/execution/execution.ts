@@ -12,12 +12,12 @@ export type Cache = {
 	IR: Instruction | null
 	"IR:OPC": number | null
 	"IR:OPR": number | null
-	PC: number
-	INC: number
+	PC: number | null
+	INC: number | null
 	"ALU:1": number | null
 	"ALU:2": number | null
 	"ALU:OPR": Operators
-	ACC: number
+	ACC: number | null
 	"SW:Z": boolean
 	"SW:N": boolean
 	RAM: {
@@ -55,12 +55,12 @@ let cache: Cache = {
 	IR: null,
 	"IR:OPC": null,
 	"IR:OPR": null,
-	PC: 0,
-	INC: 0,
+	PC: null,
+	INC: null,
 	"ALU:1": null,
 	"ALU:2": null,
 	"ALU:OPR": "",
-	ACC: 0,
+	ACC: null,
 	"SW:Z": true,
 	"SW:N": false,
 	RAM: null
@@ -93,7 +93,10 @@ async function cycle() {
 			case "EXECUTING_INSTRUCTION":
 				await execute()
 				if (queueIsEmpty()) {
-					if (get(cpuStore).programCounter === LAST_ADDRESS && !get(cpuStore).isJumping) {
+					if (
+						get(cpuStore).programCounter.unsigned() === LAST_ADDRESS &&
+						!get(cpuStore).isJumping
+					) {
 						cpuStore.setIsHalting(true)
 					}
 					if (get(cpuStore).isJumping) {

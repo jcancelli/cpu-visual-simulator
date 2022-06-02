@@ -1,9 +1,10 @@
+import BinaryValue from "../util/BinaryValue"
+
 export type Opcode = typeof opcodes[number]
 export type SymbolicOpcode = typeof opcodes[number]["symbolic"]
 export type NumericOpcode = typeof opcodes[number]["numeric"]
 export type Operators = typeof opcodes[number]["operator"]
-export const IMMEDIATE_FLAG = 0b10000000
-export const IMMEDIATE_FLAG_MASK = 0b01111111
+export const IMMEDIATE_FLAG_POS = 1 // the most significant bit
 
 export const opcodes = [
 	// CONTROL FLOW
@@ -125,8 +126,8 @@ export const opcodes = [
 	}
 ] as const
 
-export function opcode(param: number | string): Opcode {
-	return typeof param === "number"
-		? opcodes.find(opcode => opcode.numeric === param)
-		: opcodes.find(opcode => opcode.symbolic === param)
+export function opcode(param: string | BinaryValue): Opcode {
+	return typeof param === "string"
+		? opcodes.find(opcode => opcode.symbolic === param)
+		: opcodes.find(opcode => opcode.numeric === param.getByte(1).unsigned())
 }

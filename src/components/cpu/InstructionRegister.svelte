@@ -19,15 +19,15 @@
 
 	$: {
 		if ($displaySettingsStore.binary) {
-			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOpcode : ""
-			operand = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOperand : ""
+			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOpcode() : ""
+			operand = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOperand() : ""
 		} else {
 			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.opcode.symbolic : ""
 			if ($cpuStore.instructionRegister && $cpuStore.instructionRegister.symbolicOperand !== "") {
 				if ($cpuStore.instructionRegister.immediateFlag) {
-					operand = `#${$cpuStore.instructionRegister.numericOperand}`
+					operand = `#${$cpuStore.instructionRegister.numericOperand()}`
 				} else {
-					operand = `${$cpuStore.instructionRegister.numericOperand}`
+					operand = `${$cpuStore.instructionRegister.numericOperand()}`
 				}
 			} else {
 				operand = ""

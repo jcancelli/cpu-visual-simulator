@@ -15,27 +15,27 @@ export default class CacheCpu extends CacheAction {
 		const cpu = get(cpuStore)
 		switch (this.key) {
 			case "ACC":
-				cache["ACC"] = cpu.accumulator
+				cache["ACC"] = cpu.accumulator.signed()
 				break
 			case "ALU:1":
-				cache["ALU:1"] = cpu.alu1
+				cache["ALU:1"] = cpu.alu1.signed()
 				break
 			case "ALU:2":
-				cache["ALU:2"] = cpu.alu2
+				cache["ALU:2"] = cpu.alu2.signed()
 				break
 			case "ALU:OPR":
 				cache["ALU:OPR"] = cpu.operation
 				break
 			case "IR":
 				cache["IR"] = cpu.instructionRegister
-				cache["IR:OPC"] = cpu.instructionRegister.numericOpcode
-				cache["IR:OPR"] = cpu.instructionRegister.numericOperand
+				cache["IR:OPC"] = cpu.instructionRegister.numericOpcode()
+				cache["IR:OPR"] = cpu.instructionRegister.numericOperand()
 				break
 			case "PC":
-				cache["PC"] = cpu.programCounter
+				cache["PC"] = cpu.programCounter.unsigned()
 				break
 			case "INC":
-				cache["INC"] = cpu.increment
+				cache["INC"] = cpu.increment.unsigned()
 				break
 			case "SW:Z":
 				cache["SW:Z"] = cpu.zeroFlag

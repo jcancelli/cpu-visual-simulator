@@ -1,13 +1,7 @@
 import symbolTableStore from "../store/symbolTableStore"
-import {
-	binaryToSigned8bit,
-	binaryToUnsigned8bit,
-	isValidSigned8bit,
-	pad,
-	signedToBinary8bit,
-	unsignedToBinary8bit
-} from "../util/binaryUtil"
-import { immediateFlag, removeFlags, setImmediateFlag } from "../util/instructionUtil"
+import { isSigned } from "../util/binaryUtil"
+import BinaryValue from "../util/BinaryValue"
+import { isImmediateFlagSet, removeFlags, setImmediateFlag } from "../util/instructionUtil"
 import { isValidAddress } from "../util/ramUtil"
 import Instruction from "./Instruction"
 import { Opcode, opcode as parseOpcode } from "./Opcode"
@@ -81,14 +75,7 @@ function parseInstruction(input: string): Instruction {
 		if (opcode.takesOperand) {
 			throw new Error("Opcode requires operand")
 		}
-		return new Instruction(
-			symbolicOpcode,
-			"",
-			signedToBinary8bit(opcode.numeric),
-			"00000000",
-			opcode.numeric,
-			0
-		)
+		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytesValues([opcode.numeric, 0]))
 	}
 }
 
@@ -100,31 +87,23 @@ function parseDirectLabel(symbolicOpcode: string, symbolicOperand: string, opcod
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		signedToBinary8bit(opcode.numeric),
-		unsignedToBinary8bit(address),
-		opcode.numeric,
-		address
+		BinaryValue.fromBytesValues([opcode.numeric, address])
 	)
 }
 
 function parseImmediateNumber(symbolicOpcode: string, symbolicOperand: string, opcode: Opcode) {
-	const numericOpcode = setImmediateFlag(opcode.numeric, true) as number
+	const numericOpcode = setImmediateFlag(new BinaryValue(8, opcode.numeric), true).signed()
 	const numericOperand = parseInt(symbolicOperand.slice(1))
 	if (!opcode.takesImmediate) {
 		throw new Error("Opcode doesn't allow immediate operand")
 	}
-	if (!isValidSigned8bit(numericOperand)) {
+	if (!isSigned(numericOperand, 8)) {
 		throw new Error("Operand is not a valid 8 bit signed value")
 	}
-	const binaryOpcode = signedToBinary8bit(numericOpcode)
-	const binaryOperand = signedToBinary8bit(numericOperand)
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		binaryOpcode,
-		binaryOperand,
-		numericOpcode,
-		numericOperand
+		BinaryValue.fromBytesValues([numericOpcode, numericOperand])
 	)
 }
 
@@ -133,50 +112,41 @@ function parseImmediateLabel(symbolicOpcode: string, symbolicOperand: string, op
 	if (!symbolTableStore.hasLabel(label)) {
 		throw new Error("Unknown label")
 	}
-	const numericOpcode = setImmediateFlag(opcode.numeric, true) as number
+	const numericOpcode = setImmediateFlag(new BinaryValue(8, opcode.numeric), true).signed()
 	const numericOperand = symbolTableStore.getAddress(label)
 	if (!opcode.takesImmediate) {
 		throw new Error("Opcode doesn't allow immediate operand")
 	}
-	if (!isValidSigned8bit(numericOperand)) {
+	if (!isSigned(numericOperand, 8)) {
 		throw new Error("Operand is not a valid 8 bit signed value")
 	}
-	const binaryOpcode = signedToBinary8bit(numericOpcode)
-	const binaryOperand = signedToBinary8bit(numericOperand)
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		binaryOpcode,
-		binaryOperand,
-		numericOpcode,
-		numericOperand
+		BinaryValue.fromBytesValues([numericOpcode, numericOperand])
 	)
 }
 
 function parseDirect(symbolicOpcode: string, symbolicOperand: string, opcode: Opcode) {
-	const numericOpcode = opcode.numeric
 	const numericOperand = parseInt(symbolicOperand)
 	if (!isValidAddress(numericOperand)) {
 		throw new Error("Operand is not a valid address")
 	}
-	const binaryOpcode = signedToBinary8bit(numericOpcode)
-	const binaryOperand = unsignedToBinary8bit(numericOperand)
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		binaryOpcode,
-		binaryOperand,
-		numericOpcode,
-		numericOperand
+		BinaryValue.fromBytesValues([opcode.numeric, numericOperand])
 	)
 }
 
 function parseBinary(input: string): Instruction {
 	const [binaryOpcode, binaryOperand] = input.split(" ")
 	const hasOperand = !!binaryOperand
-	const numericOpcode = binaryToSigned8bit(binaryOpcode)
-	const immediateFlagSet = immediateFlag(numericOpcode)
-	const opcode = parseOpcode(setImmediateFlag(numericOpcode, false))
+	const opcodeValue = new BinaryValue(8, binaryOpcode)
+	const operandValue = new BinaryValue(8, binaryOperand)
+	const numericOpcode = opcodeValue.signed()
+	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
+	const opcode = parseOpcode(removeFlags(opcodeValue))
 	if (hasOperand) {
 		if (!opcode) {
 			throw new Error("Invalid opcode")
@@ -187,9 +157,7 @@ function parseBinary(input: string): Instruction {
 		if (immediateFlagSet && !opcode.takesImmediate) {
 			throw new Error("Opcode doesn't allow immediate operand")
 		}
-		const numericOperand = immediateFlagSet
-			? binaryToSigned8bit(binaryOperand)
-			: binaryToUnsigned8bit(binaryOperand)
+		const numericOperand = immediateFlagSet ? operandValue.signed() : operandValue.unsigned()
 		const symbolicOperand = immediateFlagSet ? "#" + numericOperand : numericOperand.toString()
 		if (!immediateFlagSet && !isValidAddress(numericOperand)) {
 			throw new Error("Invalid address")
@@ -197,24 +165,18 @@ function parseBinary(input: string): Instruction {
 		return new Instruction(
 			opcode.symbolic,
 			symbolicOperand,
-			pad(binaryOpcode),
-			pad(binaryOperand),
-			numericOpcode,
-			numericOperand
+			new BinaryValue(16, binaryOpcode + binaryOperand)
 		)
 	} else {
-		const opcode = parseOpcode(removeFlags(numericOpcode))
-		const immediateFlagSet = immediateFlag(binaryOpcode)
+		const opcode = parseOpcode(removeFlags(opcodeValue))
+		const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 		const invalidate = !opcode || (immediateFlagSet && !opcode.takesImmediate)
 		const symbolicOpcode = !invalidate ? opcode.symbolic : numericOpcode.toString()
 		const symbolicOperand = opcode && opcode.takesOperand ? (immediateFlagSet ? "#0" : "0") : ""
 		return new Instruction(
 			symbolicOpcode,
 			symbolicOperand,
-			pad(binaryOpcode),
-			"00000000",
-			numericOpcode,
-			0,
+			new BinaryValue(16, binaryOpcode + binaryOperand),
 			invalidate
 		)
 	}
@@ -222,15 +184,15 @@ function parseBinary(input: string): Instruction {
 
 function parseData(input: string): Instruction {
 	const numericValue = parseInt(input)
-	if (!isValidSigned8bit(numericValue)) {
+	if (!isSigned(numericValue, 8)) {
 		throw new Error("Input is not a valid 8 bit signed value")
 	}
-	const binaryValue = signedToBinary8bit(numericValue)
-	const opcode = parseOpcode(removeFlags(numericValue))
-	const immediateFlagSet = immediateFlag(numericValue)
+	const value = new BinaryValue(8, numericValue)
+	const opcode = parseOpcode(removeFlags(value))
+	const immediateFlagSet = isImmediateFlagSet(value)
 	const invalidate =
 		!opcode ||
 		(immediateFlagSet && !opcode.takesImmediate) ||
 		(immediateFlagSet && !opcode.takesOperand)
-	return new Instruction(input, "", binaryValue, "00000000", numericValue, 0, invalidate)
+	return new Instruction(input, "", BinaryValue.fromBytesValues([numericValue, 0]), invalidate)
 }

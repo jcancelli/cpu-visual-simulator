@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte/internal"
 	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ramStore from "../../store/ramStore"
 	import { parse } from "../../instruction/instructionParser"
@@ -8,8 +7,6 @@
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelectionStore from "../../store/ramSelectionStore"
 
-	const dispatch = createEventDispatcher()
-
 	export let address: number
 	export let selected: boolean = false
 
@@ -17,9 +14,9 @@
 	let input: HTMLInputElement
 
 	$: instruction = $ramStore[addressToIndex(address)]
-	$: opcode = $displaySettingsStore.binary ? instruction.binaryOpcode : instruction.symbolicOpcode
+	$: opcode = $displaySettingsStore.binary ? instruction.binaryOpcode() : instruction.symbolicOpcode
 	$: operand = $displaySettingsStore.binary
-		? instruction.binaryOperand
+		? instruction.binaryOperand()
 		: instruction.symbolicOperand
 
 	function formatInput({ target }) {

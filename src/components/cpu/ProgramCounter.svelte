@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { unsignedToBinary8bit } from "../../util/binaryUtil"
 	import cpuStore from "../../store/cpuStore"
 	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
-	import { WORD_SIZE } from "../../util/ramUtil"
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashPC() {
@@ -21,11 +19,13 @@
 <div class="pc" bind:this={pcDiv}>
 	<ComponentLabel text="PC" top="-20px" left="0" />
 	{$displaySettingsStore.binary
-		? unsignedToBinary8bit($cpuStore.programCounter)
-		: $cpuStore.programCounter}
+		? $cpuStore.programCounter.toBinaryString()
+		: $cpuStore.programCounter.unsigned()}
 </div>
 <div class="inc" bind:this={incDiv}>
-	+{$displaySettingsStore.binary ? unsignedToBinary8bit(WORD_SIZE) : WORD_SIZE}
+	+{$displaySettingsStore.binary
+		? $cpuStore.increment.toBinaryString()
+		: $cpuStore.increment.unsigned()}
 </div>
 
 <style lang="scss">
