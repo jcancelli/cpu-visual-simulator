@@ -24,7 +24,7 @@
 		} else {
 			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.opcode.symbolic : ""
 			if ($cpuStore.instructionRegister && $cpuStore.instructionRegister.symbolicOperand !== "") {
-				if ($cpuStore.instructionRegister.immediateFlag) {
+				if ($cpuStore.instructionRegister.immediateFlag()) {
 					operand = `#${$cpuStore.instructionRegister.numericOperand()}`
 				} else {
 					operand = `${$cpuStore.instructionRegister.numericOperand()}`
