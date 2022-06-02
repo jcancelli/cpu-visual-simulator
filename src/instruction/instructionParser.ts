@@ -168,7 +168,6 @@ function parseBinary(input: string): Instruction {
 			new BinaryValue(16, binaryOpcode + binaryOperand)
 		)
 	} else {
-		const opcode = parseOpcode(removeFlags(opcodeValue))
 		const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 		const invalidate = !opcode || (immediateFlagSet && !opcode.takesImmediate)
 		const symbolicOpcode = !invalidate ? opcode.symbolic : numericOpcode.toString()
@@ -176,7 +175,7 @@ function parseBinary(input: string): Instruction {
 		return new Instruction(
 			symbolicOpcode,
 			symbolicOperand,
-			new BinaryValue(16, binaryOpcode + binaryOperand),
+			new BinaryValue(16, binaryOpcode + "00000000"),
 			invalidate
 		)
 	}
