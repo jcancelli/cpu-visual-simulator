@@ -34,7 +34,7 @@
 	<div class="execution-buttons">
 		<fieldset>
 			<legend>Execution</legend>
-			<button on:click={resetExecution} title="Reset">
+			<button on:click={resetExecution} title="Reset" disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -74,7 +74,7 @@
 					</svg>
 				{/if}
 			</button>
-			<button on:click={skipToEnd} title="Skip to end">
+			<button on:click={skipToEnd} title="Skip to end" disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -90,7 +90,7 @@
 		</fieldset>
 		<fieldset>
 			<legend>Step</legend>
-			<button on:click={playStep} title="Play step">
+			<button on:click={playStep} title="Play step" disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -103,7 +103,7 @@
 					/>
 				</svg>
 			</button>
-			<button on:click={skipStep} title="Skip step">
+			<button on:click={skipStep} title="Skip step" disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -119,7 +119,7 @@
 		</fieldset>
 		<fieldset>
 			<legend>Instruction</legend>
-			<button on:click={playInstruction}>
+			<button on:click={playInstruction} disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -132,7 +132,7 @@
 					/>
 				</svg>
 			</button>
-			<button on:click={skipInstruction}>
+			<button on:click={skipInstruction} disabled>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -150,11 +150,11 @@
 	<div class="animation">
 		<fieldset>
 			<legend>Animation speed</legend>
-			<input type="range" />
+			<input type="range" disabled />
 		</fieldset>
 		<fieldset>
 			<legend>Animation</legend>
-			<input type="checkbox" />
+			<input type="checkbox" disabled />
 		</fieldset>
 	</div>
 	<div class="display">
@@ -212,6 +212,11 @@
 
 			&:active {
 				filter: brightness(0.9);
+			}
+
+			&:disabled {
+				filter: brightness(0.6);
+				cursor: default;
 			}
 
 			svg {
