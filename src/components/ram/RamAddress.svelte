@@ -1,7 +1,7 @@
 <script lang="ts">
 	import displaySettingsStore from "../../store/displaySettingsStore"
-	import { unsignedToBinary8bit } from "../../util/binaryUtil"
 	import { flash as flashComponent } from "../../util/animationUtil"
+	import BinaryValue from "../../util/BinaryValue"
 
 	export let address: number
 
@@ -22,7 +22,7 @@
 </script>
 
 <div class="address" bind:this={addressDiv}>
-	{$displaySettingsStore.binary ? unsignedToBinary8bit(address) : address}
+	{$displaySettingsStore.binary ? new BinaryValue(8, address).toBinaryString() : address}
 </div>
 
 <style lang="scss">
