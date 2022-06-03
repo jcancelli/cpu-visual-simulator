@@ -30,18 +30,12 @@ export default class BinaryValue {
 	}
 
 	signed(): number {
-		return ~~parseInt(this.value, 2) // to test, in the old implementation, if the msb was 1, it was padded with "1"s to 32 bits
+		if (this.value.startsWith("0")) {
+			return parseInt(this.value, 2)
+		} else {
+			return ~~parseInt(("11111111111111111111111111111111" + this.value).slice(-32), 2)
+		}
 	}
-
-	// signed(): number {
-	// 	let bin = this.value
-	// 	if (bin.startsWith("0")) {
-	// 		bin = ("00000000000000000000000000000000" + bin).slice(-32)
-	// 	} else {
-	// 		bin = ("11111111111111111111111111111111" + bin).slice(-32)
-	// 	}
-	// 	return ~~parseInt(bin, 2)
-	// }
 
 	unsigned(): number {
 		return parseInt(this.value, 2)
