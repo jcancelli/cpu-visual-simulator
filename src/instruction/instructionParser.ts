@@ -1,13 +1,13 @@
 import symbolTableStore from "../store/symbolTableStore"
-import { isSigned } from "../util/binaryUtil"
+import { isSigned, pad } from "../util/binaryUtil"
 import BinaryValue from "../util/BinaryValue"
 import { isImmediateFlagSet, removeFlags, setImmediateFlag } from "../util/instructionUtil"
 import { isValidAddress } from "../util/ramUtil"
 import Instruction from "./Instruction"
 import { Opcode, opcode as parseOpcode } from "./Opcode"
 
-export const BINARY = /^[01]{1,8}( [01]{1,8})?$/
-export const DATA = /^-?[0-9]{1,3}$/
+export const BINARY = /^[01]{0,8}\s?[01]{1,8}?$/
+export const DATA = /^-?[0-9]{1,5}$/
 export const OPCODE = /[A-Z]{2,3}/
 export const IMMEDIATE_NUM = /#-?[0-9]{1,3}/
 export const DIRECT_PARAM = /[0-9]{1,3}/
@@ -140,58 +140,50 @@ function parseDirect(symbolicOpcode: string, symbolicOperand: string, opcode: Op
 }
 
 function parseBinary(input: string): Instruction {
-	const [binaryOpcode, binaryOperand] = input.split(" ")
-	const hasOperand = !!binaryOperand
-	const opcodeValue = new BinaryValue(8, binaryOpcode)
-	const numericOpcode = opcodeValue.signed()
+	if (input.includes(" ")) {
+		const [opc, opr] = input.split(" ")
+		input = opc + pad(opr, 8)
+	}
+	const value = new BinaryValue(16, input)
+	const opcodeValue = value.getByte(1)
+	const operandValue = value.getByte(2)
 	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 	const opcode = parseOpcode(removeFlags(opcodeValue))
-	if (hasOperand) {
-		if (!opcode) {
-			throw new Error("Invalid opcode")
-		}
-		if (!opcode.takesOperand) {
-			throw new Error("Opcode doesn't allow operand")
-		}
-		if (immediateFlagSet && !opcode.takesImmediate) {
-			throw new Error("Opcode doesn't allow immediate operand")
-		}
-		const operandValue = new BinaryValue(8, binaryOperand)
-		const numericOperand = immediateFlagSet ? operandValue.signed() : operandValue.unsigned()
-		const symbolicOperand = immediateFlagSet ? "#" + numericOperand : numericOperand.toString()
-		if (!immediateFlagSet && !isValidAddress(numericOperand)) {
-			throw new Error("Invalid address")
-		}
-		return new Instruction(
-			opcode.symbolic,
-			symbolicOperand,
-			new BinaryValue(16, binaryOpcode + binaryOperand)
-		)
-	} else {
-		const immediateFlagSet = isImmediateFlagSet(opcodeValue)
-		const invalidate = !opcode || (immediateFlagSet && !opcode.takesImmediate)
-		const symbolicOpcode = !invalidate ? opcode.symbolic : numericOpcode.toString()
-		const symbolicOperand = opcode && opcode.takesOperand ? (immediateFlagSet ? "#0" : "0") : ""
-		return new Instruction(
-			symbolicOpcode,
-			symbolicOperand,
-			new BinaryValue(16, binaryOpcode + "00000000"),
-			invalidate
-		)
+	let invalidate = false
+	if (!opcode) {
+		invalidate = true
 	}
+	if (!opcode.takesOperand) {
+		invalidate = true
+	}
+	if (immediateFlagSet && !opcode.takesImmediate) {
+		invalidate = true
+	}
+	if (!immediateFlagSet && !isValidAddress(operandValue.unsigned())) {
+		invalidate = true
+	}
+	const symbolicOpcode = invalidate ? value.signed().toString() : opcode.symbolic
+	let symbolicOperand = immediateFlagSet
+		? "#" + operandValue.signed()
+		: operandValue.unsigned().toString()
+	if (invalidate) {
+		symbolicOperand = ""
+	}
+	return new Instruction(symbolicOpcode, symbolicOperand, value, invalidate)
 }
 
 function parseData(input: string): Instruction {
 	const numericValue = parseInt(input)
-	if (!isSigned(numericValue, 8)) {
-		throw new Error("Input is not a valid 8 bit signed value")
+	if (!isSigned(numericValue, 16)) {
+		throw new Error("Input is not a valid 16 bit signed value")
 	}
-	const value = new BinaryValue(8, numericValue)
-	const opcode = parseOpcode(removeFlags(value))
-	const immediateFlagSet = isImmediateFlagSet(value)
+	const value = new BinaryValue(16, numericValue)
+	const opcodeValue = value.getByte(1)
+	const opcode = parseOpcode(removeFlags(opcodeValue))
+	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 	const invalidate =
 		!opcode ||
 		(immediateFlagSet && !opcode.takesImmediate) ||
 		(immediateFlagSet && !opcode.takesOperand)
-	return new Instruction(input, "", BinaryValue.fromBytesValues([numericValue, 0]), invalidate)
+	return new Instruction(input, "", value, invalidate)
 }

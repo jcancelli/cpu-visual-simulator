@@ -43,7 +43,7 @@ function reset() {
 		alu1: null,
 		alu2: null,
 		operation: "",
-		accumulator: new BinaryValue(8, 0),
+		accumulator: new BinaryValue(16, 0),
 		zeroFlag: true,
 		negativeFlag: false,
 		isJumping: false,
@@ -89,7 +89,7 @@ function setPC(value: number | BinaryValue) {
 
 function setALU1(value: number | BinaryValue | null) {
 	if (typeof value === "number") {
-		value = new BinaryValue(8, value)
+		value = new BinaryValue(16, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
@@ -99,7 +99,7 @@ function setALU1(value: number | BinaryValue | null) {
 
 function setALU2(value: number | null | BinaryValue) {
 	if (typeof value === "number") {
-		value = new BinaryValue(8, value)
+		value = new BinaryValue(16, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,
@@ -109,7 +109,7 @@ function setALU2(value: number | null | BinaryValue) {
 
 function setACC(value: number | BinaryValue) {
 	if (typeof value === "number") {
-		value = new BinaryValue(8, value)
+		value = new BinaryValue(16, value)
 	}
 	updateSync(oldCpu => ({
 		...oldCpu,

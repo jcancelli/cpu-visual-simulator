@@ -17,8 +17,8 @@ export default class SetAlu2 extends CpuAction {
 				cache["ALU:2"] = cache["IR"].numericOperand()
 				break
 			case "RAM":
-				cpuStore.setALU2(cache["RAM"].data.numericOpcode())
-				cache["ALU:2"] = cache["RAM"].data.numericOpcode()
+				cpuStore.setALU2(cache["RAM"].data.value.signed())
+				cache["ALU:2"] = cache["RAM"].data.value.signed()
 				break
 			default:
 				throw new Error(`Unexpected value "${this.value}"`)
