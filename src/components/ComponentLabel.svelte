@@ -35,5 +35,6 @@
 		width: fit-content;
 		font-weight: bold;
 		position: absolute;
+		cursor: default;
 	}
 </style>
