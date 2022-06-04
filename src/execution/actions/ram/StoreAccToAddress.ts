@@ -1,5 +1,6 @@
 import { parse } from "../../../instruction/instructionParser"
 import ramStore from "../../../store/ramStore"
+import BinaryValue from "../../../util/BinaryValue"
 import { Cache, CacheableKey } from "../../execution"
 import RamAction from "./RamAction"
 
@@ -17,6 +18,12 @@ export default class StoreAccToAddress extends RamAction {
 		if (typeof address !== "number") {
 			throw new Error("Address is not a number")
 		}
-		ramStore.write(address, parse(cache["ACC"].toString(), false))
+		if (/^[A-Z]{1,5}$/.test(ramStore.read(address).symbolicOpcode)) {
+			// if the destination address is showing the instruction as code
+			ramStore.write(address, parse(new BinaryValue(16, cache["ACC"]).toBinaryString(), true)) // write instruction as code
+		} else {
+			// if the destination address is showing the instruction as a number
+			ramStore.write(address, parse(cache["ACC"].toString(), false)) // write instruction as number
+		}
 	}
 }
