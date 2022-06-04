@@ -1,6 +1,10 @@
 $global-width: 1400px;
 $global-height: 800px;
 
+$binary-box-height: 30px;
+$binary-box-8-bit-width: 100px;
+$binary-box-16-bit-width: 170px;
+
 // STAGE
 $stage-width: $global-width;
 $stage-height: $global-height;
@@ -32,22 +36,22 @@ $cpu-height: 620px;
 $cpu-ir-x: 110px;
 $cpu-ir-y: 100px;
 $cpu-ir-width: 200px;
-$cpu-ir-height: 30px;
+$cpu-ir-height: $binary-box-height;
 
 $cpu-cu-y: 230px;
 $cpu-cu-width: 120px;
 $cpu-cu-height: 60px;
-$cpu-cu-x: $cpu-ir-x - calc($cpu-cu-width / 2) + calc($cpu-ir-width / 4); //was 110
+$cpu-cu-x: $cpu-ir-x - calc($cpu-cu-width / 2) + calc($cpu-ir-width / 4);
 
 $cpu-pc-x: 570px;
 $cpu-pc-y: 70px;
-$cpu-pc-width: 100px;
-$cpu-pc-height: 30px;
+$cpu-pc-width: $binary-box-8-bit-width;
+$cpu-pc-height: $binary-box-height;
 
 $cpu-inc-x: 570px;
 $cpu-inc-y: 130px;
-$cpu-inc-width: 100px;
-$cpu-inc-height: 30px;
+$cpu-inc-width: $binary-box-8-bit-width;
+$cpu-inc-height: $binary-box-height;
 
 $cpu-mux-x: 400px;
 $cpu-mux-width: 100px;
@@ -62,11 +66,11 @@ $cpu-alu-x: $cpu-mux-x - calc($cpu-alu-width * 0.8) + calc($cpu-mux-width / 2);
 $cpu-sw-x: 540px;
 $cpu-sw-y: 550px;
 $cpu-sw-width: 120px;
-$cpu-sw-height: 30px;
+$cpu-sw-height: $binary-box-height;
 
 $cpu-acc-y: $cpu-sw-y;
-$cpu-acc-width: 170px;
-$cpu-acc-height: 30px;
+$cpu-acc-width: $binary-box-16-bit-width;
+$cpu-acc-height: $binary-box-height;
 $cpu-acc-x: $cpu-alu-x + calc($cpu-alu-width / 2) - calc($cpu-acc-width / 2);
 
 $cpu-comp-bgcolor: lightgrey;
