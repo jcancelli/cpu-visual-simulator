@@ -1,4 +1,4 @@
-import { get, Writable, writable } from "svelte/store"
+import { get, writable } from "svelte/store"
 import cpuStore from "../store/cpuStore"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
@@ -7,6 +7,7 @@ import { Operators } from "../instruction/Opcode"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/componentsStore"
 import { FETCH, INCREMENT_PC } from "./actions/actionMacros"
+import Logger from "../util/Logger"
 
 export type Cache = {
 	IR: Instruction | null
@@ -126,6 +127,7 @@ async function cycle() {
 	} catch (error) {
 		cpuStore.setIsHalting(true)
 		get(messageFeed).message("ERROR", error.message)
+		Logger.error(error, "EXECUTION")
 	} finally {
 		if (get(cpuStore).isHalting) {
 			reset()
@@ -137,6 +139,7 @@ async function cycle() {
 async function execute() {
 	while (!queueIsEmpty() && shouldExecute()) {
 		const action = queue.shift()!
+		Logger.info(`Executing: ${action.toString()}`, "EXECUTION")
 		await action.execute(cache)
 		if (isShortStepping && action.doesEndStep()) {
 			setIsShortStepping(false)
@@ -148,12 +151,14 @@ function start() {
 	setIsPlaying(true)
 	setIsShortStepping(false)
 	setIsLongStepping(false)
+	Logger.info("Start execution", "EXECUTION")
 }
 
 function pause() {
 	setIsPlaying(false)
 	setIsShortStepping(false)
 	setIsLongStepping(false)
+	Logger.info("Pause execution", "EXECUTION")
 }
 
 function toggle() {
@@ -168,18 +173,21 @@ function step() {
 	setIsPlaying(false)
 	setIsShortStepping(true)
 	setIsLongStepping(false)
+	Logger.info("Step execution", "EXECUTION")
 }
 
 function instruction() {
 	setIsPlaying(false)
 	setIsShortStepping(false)
 	setIsLongStepping(true)
+	Logger.info("Instruction execution", "EXECUTION")
 }
 
 function reset() {
 	pause()
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
+	Logger.info("Reset execution", "EXECUTION")
 }
 
 function shouldExecute() {
