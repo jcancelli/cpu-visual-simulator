@@ -152,14 +152,11 @@ function parseBinary(input: string): Instruction {
 	let invalidate = false
 	if (!opcode) {
 		invalidate = true
-	}
-	if (!opcode?.takesOperand) {
+	} else if (!opcode.takesOperand) {
 		invalidate = true
-	}
-	if (immediateFlagSet && !opcode?.takesImmediate) {
+	} else if (immediateFlagSet && !opcode.takesImmediate) {
 		invalidate = true
-	}
-	if (!immediateFlagSet && !isValidAddress(operandValue.unsigned())) {
+	} else if (!immediateFlagSet && !isValidAddress(operandValue.unsigned())) {
 		invalidate = true
 	}
 	const symbolicOpcode = invalidate ? value.signed().toString() : opcode.symbolic
