@@ -30,7 +30,6 @@ export default abstract class Action {
 		if (!this._condition(cache)) {
 			return
 		}
-		console.log("Executing | " + this.toString())
 		const promises = [
 			...this._sideffects.map(sideffect => sideffect.execute(cache)),
 			this.action(cache)
