@@ -153,10 +153,10 @@ function parseBinary(input: string): Instruction {
 	if (!opcode) {
 		invalidate = true
 	}
-	if (!opcode.takesOperand) {
+	if (!opcode?.takesOperand) {
 		invalidate = true
 	}
-	if (immediateFlagSet && !opcode.takesImmediate) {
+	if (immediateFlagSet && !opcode?.takesImmediate) {
 		invalidate = true
 	}
 	if (!immediateFlagSet && !isValidAddress(operandValue.unsigned())) {
