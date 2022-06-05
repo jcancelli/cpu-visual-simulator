@@ -1,4 +1,5 @@
 import { Updater, writable } from "svelte/store"
+import CheckedError from "../errors/CheckedError"
 import { addressToIndex, FIRST_ADDRESS, indexToAddress, LAST_ADDRESS } from "../util/ramUtil"
 import ramStore from "./ramStore"
 
@@ -37,7 +38,7 @@ function setLabel(address: number, label: string): void {
 		return
 	}
 	if (hasLabel(label)) {
-		throw new Error("Label already exists")
+		throw new CheckedError("Label already exists")
 	}
 	const index = addressToIndex(address)
 	updateSync(oldSymbolTable =>
