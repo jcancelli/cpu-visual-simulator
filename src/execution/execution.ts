@@ -139,7 +139,6 @@ async function cycle() {
 async function execute() {
 	while (!queueIsEmpty() && shouldExecute()) {
 		const action = queue.shift()!
-		Logger.info(`Executing: ${action.toString()}`, "EXECUTION")
 		await action.execute(cache)
 		if (isShortStepping && action.doesEndStep()) {
 			setIsShortStepping(false)
@@ -151,14 +150,14 @@ function start() {
 	setIsPlaying(true)
 	setIsShortStepping(false)
 	setIsLongStepping(false)
-	Logger.info("Start execution", "EXECUTION")
+	Logger.info("Execution - START", "EXECUTION")
 }
 
 function pause() {
 	setIsPlaying(false)
 	setIsShortStepping(false)
 	setIsLongStepping(false)
-	Logger.info("Pause execution", "EXECUTION")
+	Logger.info("Execution - PAUSE", "EXECUTION")
 }
 
 function toggle() {
@@ -173,21 +172,21 @@ function step() {
 	setIsPlaying(false)
 	setIsShortStepping(true)
 	setIsLongStepping(false)
-	Logger.info("Step execution", "EXECUTION")
+	Logger.info("Execution - STEP", "EXECUTION")
 }
 
 function instruction() {
 	setIsPlaying(false)
 	setIsShortStepping(false)
 	setIsLongStepping(true)
-	Logger.info("Instruction execution", "EXECUTION")
+	Logger.info("Execution - INSTRUCTION", "EXECUTION")
 }
 
 function reset() {
 	pause()
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
-	Logger.info("Reset execution", "EXECUTION")
+	Logger.info("Execution - RESET", "EXECUTION")
 }
 
 function shouldExecute() {
