@@ -1,3 +1,4 @@
+import Logger from "../../util/Logger"
 import { Cache } from "../execution"
 
 export default abstract class Action {
@@ -30,6 +31,7 @@ export default abstract class Action {
 		if (!this._condition(cache)) {
 			return
 		}
+		Logger.info(`Executing: ${this.toString()}`, "EXECUTION")
 		const promises = [
 			...this._sideffects.map(sideffect => sideffect.execute(cache)),
 			this.action(cache)
