@@ -1,9 +1,25 @@
 import { writable } from "svelte/store"
+import { Log } from "../util/Logger"
 
-const logsStore = writable<string[]>([])
+const _logsStore = writable<Log[]>([])
 
-function push(log: string) {
-	logsStore.update(logs => [...logs, log])
+export const logsStore = {
+	subscribe: _logsStore.subscribe,
+	push(log: Log) {
+		_logsStore.update(logs => [...logs, log])
+	}
 }
 
-export const logs = { subscribe: logsStore.subscribe, push }
+const _loggerStore = writable({
+	showLogger: false
+})
+
+export const loggerStore = {
+	subscribe: _loggerStore.subscribe,
+	updateShowLogger(updater: (oldVal: boolean) => boolean) {
+		_loggerStore.update(oldVal => ({
+			...oldVal,
+			showLogger: updater(oldVal.showLogger)
+		}))
+	}
+}
