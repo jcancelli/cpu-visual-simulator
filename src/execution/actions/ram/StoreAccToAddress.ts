@@ -18,8 +18,9 @@ export default class StoreAccToAddress extends RamAction {
 		if (typeof address !== "number") {
 			throw new Error("Address is not a number")
 		}
-		if (/^[A-Z]{1,5}$/.test(ramStore.read(address).symbolicOpcode)) {
-			// if the destination address is showing the instruction as code
+		const prevSymbolicOpcode = ramStore.read(address).symbolicOpcode
+		if (/^[A-Z]+$/.test(prevSymbolicOpcode) && prevSymbolicOpcode !== "NOP") {
+			// if the destination address is showing the instruction as code but is not "NOP"
 			ramStore.write(address, parse(new BinaryValue(16, cache["ACC"]).toBinaryString(), true)) // write instruction as code
 		} else {
 			// if the destination address is showing the instruction as a number
