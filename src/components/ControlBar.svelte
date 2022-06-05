@@ -119,7 +119,7 @@
 		</fieldset>
 		<fieldset>
 			<legend>Instruction</legend>
-			<button on:click={playInstruction} disabled>
+			<button on:click={playInstruction}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"

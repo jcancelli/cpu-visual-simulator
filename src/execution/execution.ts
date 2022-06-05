@@ -118,6 +118,7 @@ async function cycle() {
 				await execute()
 				if (isLongStepping) {
 					setIsLongStepping(false)
+					cpuStore.setIsHalting(true)
 				}
 				if (queueIsEmpty()) {
 					cycleFase = "ENQUEUING_FETCH"
