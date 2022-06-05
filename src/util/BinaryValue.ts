@@ -1,3 +1,4 @@
+import BinaryValueOutOfRange from "../errors/BinaryValueOutOfRange"
 import {
 	checkValidBitCount,
 	isValidBinary,
@@ -16,12 +17,12 @@ export default class BinaryValue {
 	constructor(bits: Bits, value: number | string | BinaryValue) {
 		if (typeof value === "string") {
 			if (!isValidBinary(value, bits)) {
-				throw new Error(`Invalid ${bits}-bit binary value`)
+				throw new BinaryValueOutOfRange(value, bits)
 			}
 			this.value = pad(value, bits)
 		} else if (typeof value === "number") {
 			if (!valueIsInRange(value, bits)) {
-				throw new Error(`Invalid ${bits}-bit value`)
+				throw new BinaryValueOutOfRange(value, bits)
 			}
 			this.value = valueToBinary(value, bits)
 		} else {
