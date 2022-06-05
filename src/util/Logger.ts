@@ -3,7 +3,7 @@ import { logsStore } from "../store/logStore"
 const FIRST_TIMESTAMP = Date.now()
 
 export const LogGroups = ["EXECUTION", "USER_INPUT", "DEBUG"] as const
-export const LogTypes = ["ERROR", "INFO"] as const
+export const LogTypes = ["UNCHECKED_ERROR", "CHECKED_ERROR", "INFO"] as const
 export type LogGroup = typeof LogGroups[number]
 export type LogType = typeof LogTypes[number]
 export type Log = {
@@ -13,12 +13,12 @@ export type Log = {
 	message: string
 }
 
-function error(err: Error, logGroup: LogGroup) {
+function error(err: Error, logGroup: LogGroup, checked: boolean = false) {
 	logsStore.push({
-		logType: "ERROR",
+		logType: checked ? "CHECKED_ERROR" : "UNCHECKED_ERROR",
 		logGroup,
 		timestamp: elapsed(),
-		message: err.stack
+		message: checked ? err.message : err.stack
 	})
 }
 
