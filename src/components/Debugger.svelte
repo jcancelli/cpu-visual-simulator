@@ -30,7 +30,7 @@
 
 	onMount(() => {
 		const listener = (e: KeyboardEvent) => {
-			if (e.altKey && e.key === "d") {
+			if (e.shiftKey && e.key.toLowerCase() === "d") {
 				debugStore.updateShowDebugger(oldValue => !oldValue)
 			}
 		}
