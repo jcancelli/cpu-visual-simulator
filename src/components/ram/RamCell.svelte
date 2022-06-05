@@ -6,6 +6,7 @@
 	import { messageFeed } from "../../store/componentsStore"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelectionStore from "../../store/ramSelectionStore"
+	import Logger from "../../util/Logger"
 
 	export let address: number
 	export let selected: boolean = false
@@ -43,10 +44,12 @@
 	export function commitInput() {
 		try {
 			if (input && input.value !== "") {
+				Logger.info(`RamCell input: "${input.value}"`, "USER_INPUT")
 				ramStore.write(address, parse(input.value.trim(), $displaySettingsStore.binary))
 			}
 		} catch (error) {
 			$messageFeed.message("ERROR", error.message)
+			Logger.error(error, "USER_INPUT", error.isChecked)
 		}
 	}
 

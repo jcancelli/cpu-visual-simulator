@@ -5,6 +5,7 @@
 	import { messageFeed } from "../../store/componentsStore"
 	import { createEventDispatcher } from "svelte"
 	import ramSelectionStore from "../../store/ramSelectionStore"
+	import Logger from "../../util/Logger"
 
 	const dispatch = createEventDispatcher()
 
@@ -67,10 +68,12 @@
 	export function commitInput() {
 		try {
 			if (!input) return
+			Logger.info(`RamLabel input: "${input.value}"`, "USER_INPUT")
 			symbolTableStore.setLabel(address, input.value)
 			label = $symbolTableStore[addressToIndex(address)]
 		} catch (error) {
 			$messageFeed.message("ERROR", error.message)
+			Logger.error(error, "USER_INPUT", error.isChecked)
 		}
 	}
 
