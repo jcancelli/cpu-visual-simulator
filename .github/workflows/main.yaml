@@ -1,6 +1,9 @@
 # https://github.com/marketplace/actions/deploy-to-github-pages
 name: Build and Deploy
-on: [push]
+on: 
+  push:
+    branches:
+      - "main"
 permissions: 
   contents: write
 jobs:
@@ -13,6 +16,7 @@ jobs:
 
       - name: Install and Build
         run: |
+          npm -v
           npm ci
           npm run build
 
