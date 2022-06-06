@@ -16,6 +16,7 @@ jobs:
 
       - name: Install and Build
         run: |
+          find .
           npm ci 
           npm run build
 
