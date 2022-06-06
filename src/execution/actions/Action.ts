@@ -1,19 +1,20 @@
 import Logger from "../../util/Logger"
 import { Cache } from "../execution"
+import { Condition } from "./Conditions"
 
 export default abstract class Action {
 	protected _endsStep: boolean
 	protected _sideffects: Action[]
-	protected _condition: (cache: Cache) => boolean // returns if an action should be executed when method execute is called
+	protected _conditions: Condition[] = [] // returns if an action should be executed when method execute is called
 
 	constructor() {
 		this._endsStep = false
 		this._sideffects = []
-		this._condition = () => true
+		this._conditions = []
 	}
 
-	condition(condition: (cache: Cache) => boolean): Action {
-		this._condition = condition
+	condition(condition: Condition): Action {
+		this._conditions.push(condition)
 		return this
 	}
 
@@ -28,7 +29,9 @@ export default abstract class Action {
 	}
 
 	async execute(cache: Cache): Promise<any> {
-		if (!this._condition(cache)) {
+		if (
+			!this._conditions.reduceRight((finalVal, condition) => finalVal && condition(cache), true)
+		) {
 			return
 		}
 		Logger.info(`Executing: ${this.toString()}`, "EXECUTION")
