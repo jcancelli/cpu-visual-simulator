@@ -26,7 +26,7 @@ export default class FlashCpu extends Animation {
 		this.component = component
 	}
 
-	protected async action(cache: Cache): Promise<any> {
+	protected async _animate(cache: Cache): Promise<any> {
 		return get(components.cpu).flash(this.component)
 	}
 
