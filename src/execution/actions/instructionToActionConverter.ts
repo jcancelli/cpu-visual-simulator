@@ -39,9 +39,10 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
+				new FlashWire("ALU:4", "ACC:2"),
 				new ExecuteAluOperation(),
 				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW() // TODO FLASH EDITED FLAG
+				new UpdateSW()
 			)
 			break
 
@@ -50,9 +51,10 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
+				new FlashWire("ALU:4", "ACC:2"),
 				new ExecuteAluOperation(),
 				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW() // TODO FLASH EDITED FLAG
+				new UpdateSW()
 			)
 			break
 
@@ -64,7 +66,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:3", "SW:1"),
-				new CompareUpdateSW() // TODO FLASH EDITED FLAG
+				new CompareUpdateSW()
 			)
 			break
 
@@ -74,6 +76,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
+				new FlashWire("ALU:4", "ACC:2"),
 				new ExecuteAluOperation()
 			)
 			break
