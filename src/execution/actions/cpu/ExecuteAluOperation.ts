@@ -1,3 +1,5 @@
+import { get } from "svelte/store"
+import { cpu } from "../../../store/componentsStore"
 import cpuStore from "../../../store/cpuStore"
 import { Cache } from "../../execution"
 import CpuAction from "./CpuAction"
@@ -36,6 +38,7 @@ export default class ExecuteAluOperation extends CpuAction {
 				throw new Error(`Operator "${cache["ALU:OP"]}" doesn't set the Accumulator`)
 		}
 		cpuStore.setACC(result)
+		await get(cpu).flash("ACC")
 		cache["ACC"] = result
 	}
 }

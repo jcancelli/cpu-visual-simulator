@@ -1,3 +1,5 @@
+import { get } from "svelte/store"
+import { cpu } from "../../../store/componentsStore"
 import cpuStore from "../../../store/cpuStore"
 import { Cache } from "../../execution"
 import CpuAction from "./CpuAction"
@@ -23,5 +25,6 @@ export default class SetAlu2 extends CpuAction {
 			default:
 				throw new Error(`Unexpected value "${this.value}"`)
 		}
+		await get(cpu).flash("ALU:2")
 	}
 }

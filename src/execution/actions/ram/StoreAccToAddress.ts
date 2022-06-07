@@ -1,4 +1,6 @@
+import { get } from "svelte/store"
 import { parse } from "../../../instruction/instructionParser"
+import { ram } from "../../../store/componentsStore"
 import ramStore from "../../../store/ramStore"
 import BinaryValue from "../../../util/BinaryValue"
 import { Cache, CacheableKey } from "../../execution"
@@ -26,5 +28,6 @@ export default class StoreAccToAddress extends RamAction {
 			// if the destination address is showing the instruction as a number
 			ramStore.write(address, parse(cache["ACC"].toString(), false)) // write instruction as number
 		}
+		await get(ram).flashContent(address)
 	}
 }

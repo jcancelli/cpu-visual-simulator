@@ -19,7 +19,7 @@ import {
 export const INCREMENT_PC = [
 	new CacheCpu("INC").sideffects(new FlashWire("PC:1", "INC:2")),
 	new FlashWire("INC:1", "PC:2"),
-	new IncrementPC().sideffects(new FlashCpu("PC"))
+	new IncrementPC()
 ] as const
 
 export const FETCH = [
@@ -29,7 +29,7 @@ export const FETCH = [
 	new FlashWire("CU:3", "RAM:CTRL"),
 	new CacheRam("PC").sideffects(new FlashRam("DATA", "PC")),
 	new FlashWire("RAM:DATA", "IR:1"),
-	new FetchInstruction().sideffects(new FlashCpu("IR"))
+	new FetchInstruction()
 ] as const
 
 export const DECODE_OPCODE = [
@@ -40,15 +40,12 @@ export const DECODE_OPCODE = [
 
 export const SET_MUX = [new FlashWire("CU:2", "MUX:4"), new FlashCpu("MUX")] as const
 
-export const SET_ALU_OPERATION = [
-	new FlashWire("CU:4", "ALU:5"),
-	new SetAluOperation().sideffects(new FlashCpu("ALU:OPR"))
-] as const
+export const SET_ALU_OPERATION = [new FlashWire("CU:4", "ALU:5"), new SetAluOperation()] as const
 
 export const LOAD_ALU1_FROM_ACC = [
 	new CacheCpu("ACC").sideffects(new FlashCpu("ACC")),
 	new FlashWire("ACC:1", "ALU:1"),
-	new AccToAlu1().sideffects(new FlashCpu("ALU:1"))
+	new AccToAlu1()
 ] as const
 
 export function LOAD_ALU2(immediateFlag: boolean) {
@@ -59,7 +56,7 @@ export const LOAD_ALU2_FROM_IR = [
 	new FlashCpu("IR:OPR"),
 	new FlashWire("IR:2", "MUX:1"),
 	new FlashWire("MUX:3", "ALU:2"),
-	new SetAlu2("IR:OPR").sideffects(new FlashCpu("ALU:2"))
+	new SetAlu2("IR:OPR")
 ] as const
 
 export const LOAD_ALU2_FROM_RAM = [
@@ -71,35 +68,35 @@ export const LOAD_ALU2_FROM_RAM = [
 	new CacheRam("IR:OPR").sideffects(new FlashRam("DATA", "IR:OPR")),
 	new FlashWire("RAM:DATA", "MUX:2"),
 	new FlashWire("MUX:3", "ALU:2"),
-	new SetAlu2("RAM").sideffects(new FlashCpu("ALU:2"))
+	new SetAlu2("RAM")
 ] as const
 
 export const SET_PC_TO_IR_OPERAND = [
 	new FlashCpu("IR:OPR"),
 	new FlashWire("IR:2", "PC:2"),
-	new JumpToIROperand().sideffects(new FlashCpu("PC"))
+	new JumpToIROperand()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG = [
 	new FlashCpu("IR:OPR").condition(ZERO_FLAG_SET),
 	new FlashWire("IR:2", "PC:2").condition(ZERO_FLAG_SET),
-	new JumpToIROperand().condition(ZERO_FLAG_SET).sideffects(new FlashCpu("PC"))
+	new JumpToIROperand().condition(ZERO_FLAG_SET)
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG = [
 	new FlashCpu("IR:OPR").condition(ZERO_FLAG_NOT_SET),
 	new FlashWire("IR:2", "PC:2").condition(ZERO_FLAG_NOT_SET),
-	new JumpToIROperand().condition(ZERO_FLAG_NOT_SET).sideffects(new FlashCpu("PC"))
+	new JumpToIROperand().condition(ZERO_FLAG_NOT_SET)
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG = [
 	new FlashCpu("IR:OPR").condition(NEGATIVE_FLAG_SET),
 	new FlashWire("IR:2", "PC:2").condition(NEGATIVE_FLAG_SET),
-	new JumpToIROperand().condition(NEGATIVE_FLAG_SET).sideffects(new FlashCpu("PC"))
+	new JumpToIROperand().condition(NEGATIVE_FLAG_SET)
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG = [
 	new FlashCpu("IR:OPR").condition(NEGATIVE_FLAG_NOT_SET),
 	new FlashWire("IR:2", "PC:2").condition(NEGATIVE_FLAG_NOT_SET),
-	new JumpToIROperand().condition(NEGATIVE_FLAG_NOT_SET).sideffects(new FlashCpu("PC"))
+	new JumpToIROperand().condition(NEGATIVE_FLAG_NOT_SET)
 ] as const
