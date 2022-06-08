@@ -154,7 +154,7 @@
 		</fieldset>
 		<fieldset>
 			<legend>Animation</legend>
-			<input type="checkbox" disabled />
+			<input type="checkbox" bind:checked={$animationStore.animate} />
 		</fieldset>
 	</div>
 	<div class="display">
