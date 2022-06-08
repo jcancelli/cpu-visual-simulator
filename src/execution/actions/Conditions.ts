@@ -1,5 +1,7 @@
 import { Cache } from "../execution"
 
+export type Condition = (cache: Cache) => boolean
+
 export function ZERO_FLAG_SET(cache: Cache): boolean {
 	return cache["SW:Z"]
 }
