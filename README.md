@@ -1,11 +1,6 @@
 # CPU Visual Simulator
 
-## Starting the app
-```
-npm install
-
-npm run dev
-```
+https://jcancelli.github.io/cpu-visual-simulator/
 
 
 ## Instruction set
