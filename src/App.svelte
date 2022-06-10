@@ -6,6 +6,7 @@
 	import { controlBar, debug, messageFeed, wires } from "./store/componentsStore"
 	import { onMount } from "svelte"
 	import { get } from "svelte/store"
+	import Logger from "./components/Logger.svelte"
 
 	let app: HTMLDivElement
 
@@ -30,6 +31,7 @@
 	<ControlBar bind:this={$controlBar} />
 </div>
 <Debugger bind:this={$debug} />
+<Logger />
 <MessageFeed bind:this={$messageFeed} />
 
 <style lang="scss">
