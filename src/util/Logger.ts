@@ -2,7 +2,7 @@ import { logsStore } from "../store/logStore"
 
 const FIRST_TIMESTAMP = Date.now()
 
-export const LogGroups = ["EXECUTION", "USER_INPUT", "DEBUG"] as const
+export const LogGroups = ["EXECUTION", "USER_INPUT", "DEBUG", "UNCAUGHT"] as const
 export const LogTypes = ["UNCHECKED_ERROR", "CHECKED_ERROR", "INFO"] as const
 export type LogGroup = typeof LogGroups[number]
 export type LogType = typeof LogTypes[number]
