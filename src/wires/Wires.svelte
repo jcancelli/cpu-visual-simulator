@@ -50,22 +50,5 @@
 	}
 </script>
 
-<div class="wires">
-	<canvas class="static" bind:this={staticCanvas} />
-	<canvas class="dynamic" bind:this={dynamicCanvas} />
-</div>
-
-<style lang="scss">
-	@import "../style/variables.scss";
-
-	.wires,
-	.static,
-	.dynamic {
-		position: absolute;
-		width: $stage-width;
-		height: $stage-height;
-		left: $stage-x;
-		top: $stage-y;
-		z-index: 2;
-	}
-</style>
+<canvas class="absolute z-[2] top-0 left-0 w-app h-app" bind:this={staticCanvas} />
+<canvas class="absolute z-[2] top-0 left-0 w-app h-app" bind:this={dynamicCanvas} />
