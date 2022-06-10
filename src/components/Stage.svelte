@@ -8,7 +8,7 @@
 	import NodeMarker from "../wires/NodeMarker.svelte"
 </script>
 
-<div class="stage">
+<div class="absolute top-0 left-0 w-app h-app">
 	<Wires bind:this={$wires} />
 	<Cpu bind:this={$cpu} />
 	<Ram bind:this={$ram} />
@@ -18,15 +18,3 @@
 		{/each}
 	{/if}
 </div>
-
-<style lang="scss">
-	@import "../style/variables.scss";
-
-	.stage {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: $stage-width;
-		height: $stage-height;
-	}
-</style>
