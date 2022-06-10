@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Stage from "./components/Stage.svelte"
 	import ControlBar from "./components/ControlBar.svelte"
-	import Debugger from "./components/Debugger.svelte"
+	import Debugger from "./components/debug/Debugger.svelte"
 	import MessageFeed from "./components/MessageFeed.svelte"
 	import { controlBar, debug, messageFeed, logger } from "./store/componentsStore"
 	import { onMount } from "svelte"
-	import LoggerComponent from "./components/Logger.svelte"
+	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/Logger"
 
 	let app: HTMLDivElement
