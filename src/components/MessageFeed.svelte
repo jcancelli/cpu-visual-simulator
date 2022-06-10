@@ -31,26 +31,25 @@
 	function removeMessage(id: number) {
 		messages = messages.filter(m => m.id !== id)
 	}
-
-	function scaleX(node, { delay = 0, duration = 200 }) {
-		return {
-			delay,
-			duration,
-			css: t => `transform: scaleX(${t})`
-		}
-	}
 </script>
 
-<div class="feed">
+<div class="fixed top-0 left-0 w-screen h-fit flex flex-col">
 	{#each messages as message (message.id)}
-		<div class="message {message.type}" transition:slide>
-			<button class="close-message" on:click={() => removeMessage(message.id)}>
+		<div
+			class="relative w-full h-fit flex justify-center items-center p-5 origin-left border text-white {message.type}"
+			transition:slide
+		>
+			<button
+				class="absolute bg-transparent text-white cursor-pointer font-bold right-8"
+				on:click={() => removeMessage(message.id)}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
 					viewBox="0 0 24 24"
 					width="24px"
 					fill="#FFFFFF"
+					class="hover:scale-105"
 				>
 					<path d="M0 0h24v24H0V0z" fill="none" />
 					<path
@@ -58,84 +57,29 @@
 					/>
 				</svg>
 			</button>
-			<p>{message.message}</p>
+			<p class="w-3/4 text-center text-xl">{message.message}</p>
 		</div>
 	{/each}
 </div>
 
 <style lang="scss">
-	$padding: 20px;
-
-	.feed {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: fit-content;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-content: flex-start;
-		box-sizing: border-box;
+	.ERROR {
+		background-color: firebrick;
+		border-color: darkred;
 	}
 
-	.message {
-		width: 100%;
-		height: fit-content;
-		position: relative;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: $padding;
-		color: white;
-		background-color: grey;
-		transform-origin: left;
-		border-style: solid;
-		box-sizing: border-box;
-
-		&.ERROR {
-			background-color: firebrick;
-			border-color: darkred;
-		}
-
-		&.WARNING {
-			background-color: orange;
-			border-color: #d17402;
-		}
-
-		&.SUCCESS {
-			background-color: green;
-			border-color: #006400;
-		}
-
-		&.INFO {
-			background-color: dodgerblue;
-			border-color: #1359a0;
-		}
+	.WARNING {
+		background-color: orange;
+		border-color: #d17402;
 	}
 
-	:global(.feed .message:not(:last-child)) {
-		border-bottom-width: 1px;
+	.SUCCESS {
+		background-color: green;
+		border-color: #006400;
 	}
 
-	p {
-		width: 75%;
-		font-size: 1.2rem;
-		text-align: center;
-	}
-
-	.close-message {
-		position: absolute;
-		right: $padding * 1.5;
-		background-color: transparent;
-		outline: 0;
-		border: 0;
-		color: white;
-		cursor: pointer;
-		font-weight: bold;
-
-		svg:hover {
-			transform: scale(105%);
-		}
+	.INFO {
+		background-color: dodgerblue;
+		border-color: #1359a0;
 	}
 </style>
