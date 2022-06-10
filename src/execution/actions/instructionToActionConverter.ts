@@ -51,6 +51,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
+				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:4", "ACC:2"),
 				new ExecuteAluOperation(),
 				new FlashWire("ALU:3", "SW:1"),
