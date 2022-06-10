@@ -3,7 +3,7 @@
 	import ControlBar from "./components/ControlBar.svelte"
 	import Debugger from "./components/Debugger.svelte"
 	import MessageFeed from "./components/MessageFeed.svelte"
-	import { controlBar, debug, messageFeed } from "./store/componentsStore"
+	import { controlBar, debug, messageFeed, logger } from "./store/componentsStore"
 	import { onMount } from "svelte"
 	import Logger from "./components/Logger.svelte"
 
@@ -27,7 +27,7 @@
 	<ControlBar bind:this={$controlBar} />
 </div>
 <Debugger bind:this={$debug} />
-<Logger />
+<Logger bind:this={$logger} />
 <MessageFeed bind:this={$messageFeed} />
 
 <style lang="scss">
