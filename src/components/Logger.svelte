@@ -48,8 +48,7 @@
 	}
 </script>
 
-<!-- {#if $loggerStore.showLogger} -->
-{#if true}
+{#if $loggerStore.showLogger}
 	<div class="fixed top-0 left-0 w-screen h-screen z-[1000] bg-black/70 text-white">
 		<div class="flex flex-wrap items-center justify-around gap-4 p-4">
 			<h2 class="text-2xl">Logs</h2>
