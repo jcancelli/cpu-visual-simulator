@@ -28,7 +28,7 @@
 </script>
 
 <svelte:window on:resize={scale} on:error={logError} />
-<div class="app" bind:this={app}>
+<div class="relative w-[1400px] h-[800px] origin-top-left" bind:this={app}>
 	<Stage />
 	<ControlBar bind:this={$controlBar} />
 </div>
@@ -36,13 +36,8 @@
 <LoggerComponent bind:this={$logger} />
 <MessageFeed bind:this={$messageFeed} />
 
-<style lang="scss">
-	@import "./style/variables.scss";
-
-	.app {
-		position: relative;
-		width: $global-width;
-		height: $global-height;
-		transform-origin: left top;
-	}
+<style lang="postcss" global>
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
 </style>
