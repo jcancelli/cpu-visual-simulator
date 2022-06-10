@@ -12,8 +12,8 @@
 	let dynamicCanvas: HTMLCanvasElement
 
 	onMount(async () => {
-		staticCanvas.width = dynamicCanvas.width = staticCanvas.clientWidth
-		staticCanvas.height = dynamicCanvas.height = staticCanvas.clientHeight
+		staticCanvas.width = dynamicCanvas.width = 1400
+		staticCanvas.height = dynamicCanvas.height = 800
 		drawStaticWires()
 		WireAnimations.setCanvas(dynamicCanvas)
 	})
