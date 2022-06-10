@@ -28,7 +28,7 @@
 </script>
 
 <svelte:window on:resize={scale} on:error={logError} />
-<div class="relative w-[1400px] h-[800px] origin-top-left" bind:this={app}>
+<div class="relative w-app h-app origin-top-left" bind:this={app}>
 	<Stage />
 	<ControlBar bind:this={$controlBar} />
 </div>

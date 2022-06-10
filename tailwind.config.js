@@ -2,7 +2,14 @@
 module.exports = {
   content: ["./public/index.html", "./src/**/*.svelte"],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        "app": "1400px"
+      },
+      height: {
+        "app": "800px"
+      }
+    },
   },
   plugins: [],
 }
