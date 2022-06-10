@@ -5,7 +5,8 @@
 	import MessageFeed from "./components/MessageFeed.svelte"
 	import { controlBar, debug, messageFeed, logger } from "./store/componentsStore"
 	import { onMount } from "svelte"
-	import Logger from "./components/Logger.svelte"
+	import LoggerComponent from "./components/Logger.svelte"
+	import Logger from "./util/Logger"
 
 	let app: HTMLDivElement
 
@@ -18,16 +19,21 @@
 		app.style.transform = `scale(${scale})`
 	}
 
+	function logError(e: Event) {
+		e.preventDefault()
+		Logger.error((e as ErrorEvent).error, "UNCAUGHT")
+	}
+
 	onMount(scale)
 </script>
 
-<svelte:window on:resize={scale} />
+<svelte:window on:resize={scale} on:error={logError} />
 <div class="app" bind:this={app}>
 	<Stage />
 	<ControlBar bind:this={$controlBar} />
 </div>
 <Debugger bind:this={$debug} />
-<Logger bind:this={$logger} />
+<LoggerComponent bind:this={$logger} />
 <MessageFeed bind:this={$messageFeed} />
 
 <style lang="scss">
