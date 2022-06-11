@@ -282,7 +282,7 @@
 {/if}
 
 <style lang="scss">
-	@import "../style/variables.scss";
+	@import "../../style/variables.scss";
 
 	.debug {
 		position: fixed;
