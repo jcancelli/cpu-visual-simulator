@@ -13,6 +13,7 @@
 	import { parse } from "../../instruction/instructionParser"
 	import { FlashableCpuComponent } from "../../execution/actions/animations/FlashCpu"
 	import { onMount } from "svelte"
+	import Debug from "../basic/inputs/Debug.svelte"
 
 	let div: HTMLDivElement
 
@@ -164,9 +165,11 @@
 	}
 </script>
 
-{#if $debugStore.showDegugger}
+<!-- {#if $debugStore.showDegugger} -->
+{#if true}
 	<div class="debug" bind:this={div}>
 		<h2>Debugger</h2>
+		<Debug />
 		<button on:click={closeDebugger} class="close-debugger" title="Close">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
