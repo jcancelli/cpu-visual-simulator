@@ -49,8 +49,10 @@
 	}
 </script>
 
-<div class="cpu-bg" />
-<div class="cpu">
+<div class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[1] rounded-[30px] bg-gray-300" />
+<div
+	class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[3] rounded-[30px] border border-[black]"
+>
 	<ComponentLabel text="CPU" fontSize="LARGE" top="-30px" left="47%" />
 	<InstructionRegister bind:this={ir} />
 	<ControlUnit bind:this={cu} />
@@ -60,31 +62,3 @@
 	<StatusWord bind:this={sw} />
 	<Accumulator bind:this={acc} />
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-
-	.cpu {
-		position: absolute;
-		left: $cpu-x;
-		top: $cpu-y;
-		width: $cpu-width;
-		height: $cpu-height;
-		border: 1px solid black;
-		border-radius: 30px;
-		z-index: 3;
-		box-shadow: 0 0 20px rgba($color: #000000, $alpha: 0.3);
-	}
-
-	.cpu-bg {
-		position: absolute;
-		left: $cpu-x;
-		top: $cpu-y;
-		width: $cpu-width;
-		height: $cpu-height;
-		z-index: 1;
-		border-radius: 30px;
-		border: 1px solid black;
-		background-color: rgb(192, 192, 192);
-	}
-</style>
