@@ -4,62 +4,49 @@
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashZeroFlag() {
-		return flash(swzDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+		return flash(swzDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashNegativeFlag() {
-		return flash(swnDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+		return flash(swnDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	let swzDiv: HTMLDivElement
 	let swnDiv: HTMLDivElement
 </script>
 
-<div class="sw">
-	<ComponentLabel text="SW" top="-20px" left="0" />
-	<div class="zero" bind:this={swzDiv}>
-		<ComponentLabel text="Z" bottom="-20px" left="25%" />
+<div
+	class="
+	absolute
+	top-[550px]
+	left-[540px]
+	w-[120px]
+	h-[30px]
+	rounded-md
+	bg-gray-100
+	shadow-component
+	flex
+	items-center
+	justify-center
+"
+>
+	<ComponentLabel text="SW" top="-25px" left="0" />
+	<div
+		class="relative h-full flex items-center justify-center w-[19%] border border-r-black rounded-l-md"
+		bind:this={swzDiv}
+	>
+		<ComponentLabel text="Z" bottom="-21px" left="25%" />
 		{$cpuStore.zeroFlag ? "1" : "0"}
 	</div>
-	<div class="negative" bind:this={swnDiv}>
-		<ComponentLabel text="N" bottom="-20px" left="25%" />
+	<div class="relative h-full flex items-center justify-center w-[19%]" bind:this={swnDiv}>
+		<ComponentLabel text="N" bottom="-21px" left="25%" />
 		{$cpuStore.negativeFlag ? "1" : "0"}
 	</div>
-	<div class="other">------</div>
+	<div
+		class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md"
+	>
+		------
+	</div>
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-	@import "../../style/mixins.scss";
-
-	.sw {
-		@include cpu-component;
-		@include center-content;
-		left: $cpu-sw-x;
-		top: $cpu-sw-y;
-		width: $cpu-sw-width;
-		height: $cpu-sw-height;
-	}
-
-	.zero,
-	.negative,
-	.other {
-		@include center-content;
-		position: relative;
-		height: $cpu-sw-height;
-	}
-
-	.zero,
-	.negative {
-		width: 19%;
-		border-right: 1px solid black;
-	}
-
-	.zero {
-		border-radius: $cpu-comp-border-radius 0 0 $cpu-comp-border-radius;
-	}
-
-	.other {
-		width: 62%;
-	}
-</style>
+<div class="absolute top-[550px] left-[540px] w-[120px] h-[30px] rounded-md border border-black" />
+<!-- the purpose of this last div is to give a border to the component. The border was buggy when given directly to the component -->
