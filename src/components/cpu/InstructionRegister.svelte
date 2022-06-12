@@ -5,11 +5,11 @@
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashOpcode() {
-		return flash(opcodeDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
-	export function flashOperand() {
-		return flash(operandDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+	export async function flashOperand() {
+		return flash(operandDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	let opcodeDiv: HTMLDivElement
@@ -36,39 +36,28 @@
 	}
 </script>
 
-<div class="ir">
-	<ComponentLabel text="IR" top="-20px" left="10px" />
-	<div class="opcode" bind:this={opcodeDiv}>{opcode}</div>
-	<div class="operand" bind:this={operandDiv}>{operand}</div>
+<div
+	class="
+	absolute
+	top-[100px]
+	left-[110px]
+	w-[200px]
+	h-[30px]
+	border
+	border-[black]
+	rounded-md
+	bg-gray-100
+	shadow-component
+	grid
+	items-center
+	grid-cols-2
+"
+>
+	<ComponentLabel text="IR" top="-25px" left="10px" />
+	<div class="flex items-center justify-center w-full h-full rounded-l-md" bind:this={opcodeDiv}>
+		{opcode}
+	</div>
+	<div class="flex items-center justify-center w-full h-full rounded-r-md" bind:this={operandDiv}>
+		{operand}
+	</div>
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-	@import "../../style/mixins.scss";
-
-	.ir {
-		@include cpu-component;
-		left: $cpu-ir-x;
-		top: $cpu-ir-y;
-		width: $cpu-ir-width;
-		height: $cpu-ir-height;
-		display: grid;
-		align-items: center;
-		grid-template-columns: 1fr 1fr;
-	}
-
-	.opcode,
-	.operand {
-		@include center-content;
-		width: calc($cpu-ir-width / 2);
-		height: $cpu-ir-height;
-	}
-
-	.opcode {
-		border-radius: $cpu-comp-border-radius 0 0 $cpu-comp-border-radius;
-	}
-
-	.operand {
-		border-radius: 0 $cpu-comp-border-radius $cpu-comp-border-radius 0;
-	}
-</style>
