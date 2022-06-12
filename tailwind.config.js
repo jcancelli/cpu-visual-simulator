@@ -13,6 +13,9 @@ module.exports = {
         "component": "0 0 10px rgba(0, 0, 0, 0.2)",
         "cpu": "0 0 20px rgba(0, 0, 0, 0.3)"
       },
+      dropShadow: {
+        "component": "0 0 10px rgba(0, 0, 0, 0.2)"
+      },
       colors: {
         "gray": {
           "100": "#e0e0e0",
