@@ -49,7 +49,9 @@
 	}
 </script>
 
-<div class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[1] rounded-[30px] bg-gray-300" />
+<div
+	class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[1] rounded-[30px] bg-gray-300 shadow-cpu"
+/>
 <div
 	class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[3] rounded-[30px] border border-[black]"
 >
