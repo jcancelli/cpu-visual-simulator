@@ -22,7 +22,7 @@
 		w-[120px]
 		h-[60px]
 		border
-		border-[black]
+		border-black
 		rounded-md
 		bg-gray-100
 		shadow-component

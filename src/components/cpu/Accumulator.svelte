@@ -24,7 +24,7 @@
 		w-[170px]
 		h-[30px]
 		border
-		border-[black]
+		border-black
 		rounded-md
 		bg-gray-100
 		shadow-component
