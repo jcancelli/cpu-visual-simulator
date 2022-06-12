@@ -5,50 +5,59 @@
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashPC() {
-		return flash(pcDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+		return flash(pcDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashINC() {
-		return flash(incDiv, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
+		return flash(incDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	let pcDiv: HTMLDivElement
 	let incDiv: HTMLDivElement
 </script>
 
-<div class="pc" bind:this={pcDiv}>
-	<ComponentLabel text="PC" top="-20px" left="0" />
+<div
+	class="
+	absolute
+	top-[70px]
+	left-[570px]
+	w-[100px]
+	h-[30px]
+	border
+	border-black
+	rounded-md
+	bg-gray-100
+	shadow-component
+	flex
+	items-center
+	justify-center
+"
+	bind:this={pcDiv}
+>
+	<ComponentLabel text="PC" top="-25px" left="0" />
 	{$displaySettingsStore.binary
 		? $cpuStore.programCounter.toBinaryString()
 		: $cpuStore.programCounter.unsigned()}
 </div>
-<div class="inc" bind:this={incDiv}>
+<div
+	class="
+	absolute
+	top-[130px]
+	left-[570px]
+	w-[100px]
+	h-[30px]
+	border
+	border-black
+	rounded-md
+	bg-gray-100
+	shadow-component
+	flex
+	items-center
+	justify-center
+"
+	bind:this={incDiv}
+>
 	+{$displaySettingsStore.binary
 		? $cpuStore.increment.toBinaryString()
 		: $cpuStore.increment.unsigned()}
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-	@import "../../style/mixins.scss";
-
-	.pc,
-	.inc {
-		@include cpu-component;
-		@include center-content;
-	}
-
-	.pc {
-		left: $cpu-pc-x;
-		top: $cpu-pc-y;
-		width: $cpu-pc-width;
-		height: $cpu-pc-height;
-	}
-
-	.inc {
-		left: $cpu-inc-x;
-		top: $cpu-inc-y;
-		width: $cpu-inc-width;
-		height: $cpu-inc-height;
-	}
-</style>
