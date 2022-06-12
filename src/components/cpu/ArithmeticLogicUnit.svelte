@@ -93,6 +93,7 @@
 			rounded-lg
 			font-bold
 			text-2xl
+			leading-[30px]
 		"
 		bind:this={operatorDiv}
 	>
