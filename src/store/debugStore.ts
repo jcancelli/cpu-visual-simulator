@@ -1,23 +1,23 @@
 import { Updater, writable } from "svelte/store"
 
 const { subscribe, set, update } = writable({
-	showDegugger: false,
+	showDebugger: false,
 	showNodes: false,
 	showNodeNames: false,
 	showNodesCoordinates: false
 })
 
-function setShowDebugger(showDegugger: boolean): void {
+function setShowDebugger(showDebugger: boolean): void {
 	update(oldSettings => ({
 		...oldSettings,
-		showDegugger
+		showDebugger: showDebugger
 	}))
 }
 
 function updateShowDebugger(updater: Updater<boolean>): void {
 	update(oldSettings => ({
 		...oldSettings,
-		showDegugger: updater(oldSettings.showDegugger)
+		showDebugger: updater(oldSettings.showDebugger)
 	}))
 }
 
