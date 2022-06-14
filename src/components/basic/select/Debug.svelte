@@ -1,10 +1,12 @@
 <script lang="ts">
 	export let value = ""
 	export let disabled = false
+	export let options: string[] = []
 </script>
 
 <select
 	class="
+        cursor-pointer
         bg-transparent
         border-2
         border-white
@@ -24,5 +26,7 @@
 	bind:value
 	{disabled}
 >
-	<slot />
+	{#each options as option}
+		<option class="text-black bg-white" value={option}>{option}</option>
+	{/each}
 </select>

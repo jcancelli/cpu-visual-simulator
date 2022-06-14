@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let value = ""
+	export let value: number | string = ""
 	export let placeholder = ""
 	export let disabled = false
 	export let type: "text" | "number" = "text"
