@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let value = ""
+	export let placeholder = ""
 	export let disabled = false
 	export let options: string[] = []
 </script>
@@ -26,6 +27,9 @@
 	bind:value
 	{disabled}
 >
+	{#if placeholder !== ""}
+		<option class="text-black bg-white" value="" selected disabled>Operation</option>
+	{/if}
 	{#each options as option}
 		<option class="text-black bg-white" value={option}>{option}</option>
 	{/each}
