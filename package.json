@@ -46,7 +46,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{ts, svelte}": [
+    "*.{ts,svelte}": [
       "prettier --write --plugin-search-dir=. ./src"
     ]
   }
