@@ -28,7 +28,7 @@
 	{disabled}
 >
 	{#if placeholder !== ""}
-		<option class="text-black bg-white" value="" selected disabled>Operation</option>
+		<option class="text-black bg-white" value="" selected disabled>{placeholder}</option>
 	{/if}
 	{#each options as option}
 		<option class="text-black bg-white" value={option}>{option}</option>
