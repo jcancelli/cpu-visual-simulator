@@ -14,6 +14,7 @@
 	} from "../../store/debugStores"
 	import ramStore from "../../store/ramStore"
 	import { displayAsBinary, displayLabels } from "../../store/settings"
+	import SpeechSynthesis from "../../util/SpeechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
 	import Checkbox from "../basic/checkboxes/Debug.svelte"
@@ -62,6 +63,8 @@
 
 	let fromNode: string
 	let toNode: string
+
+	let ttsText: string
 
 	function toggleDebugger() {
 		$showDebugger = !$showDebugger
@@ -146,6 +149,9 @@
 					<Button on:click={() => $ram.flashContent(parseInt(ramNumericValue))}>Flash data</Button>
 					<Button on:click={() => $ram.showAddress(parseInt(ramNumericValue))}>Show address</Button>
 					<Button on:click={() => ramStore.clear()}>Clear</Button>
+					<Button on:click={() => ramStore.write(parseInt(ramNumericValue), ramInstruction)}
+						>Write</Button
+					>
 					<Button
 						on:click={() => {
 							console.log("--- RAM CONTENT ----------------")
@@ -198,6 +204,14 @@
 				<svelte:fragment slot="buttons">
 					<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>
 					<Checkbox bind:checked={$displayLabels}>Labels</Checkbox>
+				</svelte:fragment>
+			</Widget>
+			<Widget title="TTS">
+				<svelte:fragment slot="inputs">
+					<Input bind:value={ttsText} placeholder="Utterance" />
+				</svelte:fragment>
+				<svelte:fragment slot="buttons">
+					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
 				</svelte:fragment>
 			</Widget>
 		</div>

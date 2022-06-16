@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { playAnimations } from "../../store/settings"
+import { playAnimations, textToSpeech } from "../../store/settings"
 import { Cache } from "../execution"
 
 export type Condition = (cache: Cache) => boolean
@@ -22,4 +22,8 @@ export function NEGATIVE_FLAG_NOT_SET(cache: Cache): boolean {
 
 export function IS_ANIMATING(cache: Cache): boolean {
 	return get(playAnimations)
+}
+
+export function TTS_ENABLED(cache: Cache): boolean {
+	return get(textToSpeech)
 }
