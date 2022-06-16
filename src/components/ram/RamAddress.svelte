@@ -1,5 +1,6 @@
 <script lang="ts">
-	import displaySettingsStore from "../../store/displaySettingsStore"
+	import { displayAsBinary } from "../../store/settingsStores"
+
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import BinaryValue from "../../util/BinaryValue"
 
@@ -22,7 +23,7 @@
 </script>
 
 <div class="address" bind:this={addressDiv}>
-	{$displaySettingsStore.binary ? new BinaryValue(8, address).toBinaryString() : address}
+	{$displayAsBinary ? new BinaryValue(8, address).toBinaryString() : address}
 </div>
 
 <style lang="scss">

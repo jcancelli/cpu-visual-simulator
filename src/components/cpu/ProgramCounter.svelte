@@ -1,8 +1,8 @@
 <script lang="ts">
 	import cpuStore from "../../store/cpuStore"
-	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
+	import { displayAsBinary } from "../../store/settingsStores"
 
 	export async function flashPC() {
 		return flash(pcDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
@@ -35,7 +35,7 @@
 	bind:this={pcDiv}
 >
 	<ComponentLabel text="PC" top="-25px" left="0" />
-	{$displaySettingsStore.binary
+	{$displayAsBinary
 		? $cpuStore.programCounter.toBinaryString()
 		: $cpuStore.programCounter.unsigned()}
 </div>
@@ -57,7 +57,5 @@
 "
 	bind:this={incDiv}
 >
-	+{$displaySettingsStore.binary
-		? $cpuStore.increment.toBinaryString()
-		: $cpuStore.increment.unsigned()}
+	+{$displayAsBinary ? $cpuStore.increment.toBinaryString() : $cpuStore.increment.unsigned()}
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import execution, { isExecutingStore } from "../execution/execution"
 	import animationStore from "../store/animationStore"
-	import displaySettingsStore from "../store/displaySettingsStore"
+	import { displayAsBinary } from "../store/settingsStores"
 
 	function resetExecution() {
 		execution.reset()
@@ -26,7 +26,7 @@
 	function skipInstruction() {}
 
 	function toggleBinary() {
-		displaySettingsStore.updateBinary(val => !val)
+		$displayAsBinary = !$displayAsBinary
 	}
 </script>
 
@@ -160,8 +160,7 @@
 	<div class="display">
 		<fieldset>
 			<legend>Dispaly</legend>
-			<button on:click={toggleBinary}>{$displaySettingsStore.binary ? "Symbolic" : "Binary"}</button
-			>
+			<button on:click={toggleBinary}>{$displayAsBinary ? "Symbolic" : "Binary"}</button>
 		</fieldset>
 	</div>
 </div>

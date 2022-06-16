@@ -1,5 +1,5 @@
 <script lang="ts">
-	import displaySettingsStore from "../store/displaySettingsStore"
+	import { displayLabels } from "../store/settingsStores"
 
 	export let text = ""
 	export let top = "auto"
@@ -21,5 +21,5 @@
 		fontSize
 	]}"
 >
-	{$displaySettingsStore.showLabels ? text : ""}
+	{$displayLabels ? text : ""}
 </div>

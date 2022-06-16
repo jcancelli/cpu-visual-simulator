@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import cpuStore from "../../store/cpuStore"
-	import displaySettingsStore from "../../store/displaySettingsStore"
 	import { flash } from "../../util/animationUtil"
+	import { displayAsBinary } from "../../store/settingsStores"
 
 	export async function flashFirstOperand() {
 		return flash(
@@ -38,7 +38,7 @@
 	let operand2 = ""
 
 	$: {
-		if ($displaySettingsStore.binary) {
+		if ($displayAsBinary) {
 			operand1 = $cpuStore.alu1 !== null ? splitBinString($cpuStore.alu1.toBinaryString()) : ""
 			operand2 = $cpuStore.alu2 !== null ? splitBinString($cpuStore.alu2.toBinaryString()) : ""
 		} else {
@@ -70,7 +70,7 @@
 			top-[15%]
 			left-[15%]
 			w-[90px] 
-			{$displaySettingsStore.binary ? 'top-[15%] h-[50px]' : 'top-[20%] h-[30px]'}
+			{$displayAsBinary ? 'top-[15%] h-[50px]' : 'top-[20%] h-[30px]'}
 			text-center
 			leading-tight
 			rounded-lg
@@ -108,7 +108,7 @@
 			top-[15%]
 			right-[15%]
 			w-[90px]
-			{$displaySettingsStore.binary ? 'top-[15%] h-[50px]' : 'top-[20%] h-[30px]'}
+			{$displayAsBinary ? 'top-[15%] h-[50px]' : 'top-[20%] h-[30px]'}
 			text-center
 			leading-tight
 			rounded-lg

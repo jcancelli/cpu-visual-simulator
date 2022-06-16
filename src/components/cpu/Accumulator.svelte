@@ -1,8 +1,8 @@
 <script lang="ts">
 	import cpuStore from "../../store/cpuStore"
-	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash as flashComponent } from "../../util/animationUtil"
+	import { displayAsBinary } from "../../store/settingsStores"
 
 	export async function flash() {
 		return flashComponent(
@@ -35,7 +35,5 @@
 	bind:this={accDiv}
 >
 	<ComponentLabel text="ACC" top="-25px" left="0" />
-	{$displaySettingsStore.binary
-		? $cpuStore.accumulator.toBinaryString()
-		: $cpuStore.accumulator.signed()}
+	{$displayAsBinary ? $cpuStore.accumulator.toBinaryString() : $cpuStore.accumulator.signed()}
 </div>

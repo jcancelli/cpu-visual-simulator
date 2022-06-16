@@ -1,8 +1,8 @@
 <script lang="ts">
 	import cpuStore from "../../store/cpuStore"
-	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
+	import { displayAsBinary } from "../../store/settingsStores"
 
 	export async function flashOpcode() {
 		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
@@ -18,7 +18,7 @@
 	let operand: string
 
 	$: {
-		if ($displaySettingsStore.binary) {
+		if ($displayAsBinary) {
 			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOpcode() : ""
 			operand = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOperand() : ""
 		} else {

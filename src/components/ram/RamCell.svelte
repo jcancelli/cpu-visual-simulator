@@ -1,5 +1,4 @@
 <script lang="ts">
-	import displaySettingsStore from "../../store/displaySettingsStore"
 	import ramStore from "../../store/ramStore"
 	import { parse } from "../../instruction/instructionParser"
 	import { addressToIndex } from "../../util/ramUtil"
@@ -7,6 +6,7 @@
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelectionStore from "../../store/ramSelectionStore"
 	import Logger from "../../util/Logger"
+	import { displayAsBinary } from "../../store/settingsStores"
 
 	export let address: number
 	export let selected: boolean = false
@@ -15,10 +15,8 @@
 	let input: HTMLInputElement
 
 	$: instruction = $ramStore[addressToIndex(address)]
-	$: opcode = $displaySettingsStore.binary ? instruction.binaryOpcode() : instruction.symbolicOpcode
-	$: operand = $displaySettingsStore.binary
-		? instruction.binaryOperand()
-		: instruction.symbolicOperand
+	$: opcode = $displayAsBinary ? instruction.binaryOpcode() : instruction.symbolicOpcode
+	$: operand = $displayAsBinary ? instruction.binaryOperand() : instruction.symbolicOperand
 
 	function formatInput({ target }) {
 		target.value = target.value.toUpperCase().replaceAll(/[^A-Z0-9 _\-#\(\)]*/g, "")
@@ -45,7 +43,7 @@
 		try {
 			if (input && input.value !== "") {
 				Logger.info(`RamCell input: "${input.value}"`, "USER_INPUT")
-				ramStore.write(address, parse(input.value.trim(), $displaySettingsStore.binary))
+				ramStore.write(address, parse(input.value.trim(), $displayAsBinary))
 			}
 		} catch (error) {
 			$messageFeed.message("ERROR", error.message)
