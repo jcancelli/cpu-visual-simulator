@@ -1,14 +1,12 @@
 import Action from "../Action"
 import { Cache } from "../../execution"
-import { get } from "svelte/store"
-import { playAnimations } from "../../../store/settings"
+import { IS_ANIMATING } from "../Conditions"
 
 export default abstract class Animation extends Action {
-	protected async action(cache: Cache): Promise<any> {
-		if (get(playAnimations)) {
-			return this._animate(cache)
-		}
+	constructor() {
+		super()
+		this.condition(IS_ANIMATING)
 	}
 
-	protected abstract _animate(cache: Cache): Promise<any>
+	protected abstract action(cache: Cache): Promise<any>
 }

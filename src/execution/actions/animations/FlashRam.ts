@@ -15,7 +15,7 @@ export default class FlashRam extends Animation {
 		this.address = address
 	}
 
-	protected async _animate(cache: Cache): Promise<any> {
+	protected async action(cache: Cache): Promise<any> {
 		const ram = get(components.ram)
 		const address =
 			typeof this.address === "number" ? this.address : (cache[this.address] as number)

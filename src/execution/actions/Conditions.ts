@@ -1,3 +1,5 @@
+import { get } from "svelte/store"
+import { playAnimations } from "../../store/settings"
 import { Cache } from "../execution"
 
 export type Condition = (cache: Cache) => boolean
@@ -16,4 +18,8 @@ export function NEGATIVE_FLAG_SET(cache: Cache): boolean {
 
 export function NEGATIVE_FLAG_NOT_SET(cache: Cache): boolean {
 	return !cache["SW:N"]
+}
+
+export function IS_ANIMATING(cache: Cache): boolean {
+	return get(playAnimations)
 }
