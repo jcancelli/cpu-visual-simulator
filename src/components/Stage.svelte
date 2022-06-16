@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ram, cpu, wires } from "../store/componentsStore"
-	import debugStore from "../store/debugStore"
+	import { showNodes } from "../store/debugStores"
 	import Nodes from "../wires/Nodes"
 	import Wires from "../wires/Wires.svelte"
 	import Cpu from "./cpu/Cpu.svelte"
@@ -12,7 +12,7 @@
 	<Wires bind:this={$wires} />
 	<Cpu bind:this={$cpu} />
 	<Ram bind:this={$ram} />
-	{#if $debugStore.showNodes}
+	{#if $showNodes}
 		{#each Nodes as node}
 			<NodeMarker {node} />
 		{/each}

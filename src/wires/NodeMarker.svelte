@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Node from "./Node"
-	import debugStore from "../store/debugStore"
+	import { showNodesNames, showNodesCoordinates } from "../store/debugStores"
 
 	export let node: Node
 </script>
@@ -11,10 +11,10 @@
 		title={`${node.name} x: ${node.x} y: ${node.y}`}
 	/>
 	<div class="relative left-[7px] top-[-10px] bg-white font-bold">
-		{#if $debugStore.showNodeNames}
+		{#if $showNodesNames}
 			<span class="text-fuchsia-500">{node.name}</span>
 		{/if}
-		{#if $debugStore.showNodesCoordinates}
+		{#if $showNodesCoordinates}
 			<span class="text-blue-700">x: {node.x}</span>
 			<span class="text-red-700">y: {node.y}</span>
 		{/if}
