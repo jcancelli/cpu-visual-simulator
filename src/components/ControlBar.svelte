@@ -1,7 +1,6 @@
 <script lang="ts">
 	import execution, { isExecutingStore } from "../execution/execution"
-	import animationStore from "../store/animationStore"
-	import { displayAsBinary } from "../store/settingsStores"
+	import { displayAsBinary, playAnimations } from "../store/settings"
 
 	function resetExecution() {
 		execution.reset()
@@ -154,7 +153,7 @@
 		</fieldset>
 		<fieldset>
 			<legend>Animation</legend>
-			<input type="checkbox" bind:checked={$animationStore.animate} />
+			<input type="checkbox" bind:checked={$playAnimations} />
 		</fieldset>
 	</div>
 	<div class="display">

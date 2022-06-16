@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import animationStore from "../store/animationStore"
+import { animationSpeed } from "../store/settings"
 import Node, { Position } from "./Node"
 import Wire from "./Wire"
 
@@ -42,9 +42,7 @@ export default class WireAnimation {
 
 	private animate(timestamp: DOMHighResTimeStamp) {
 		this.deltatime = (timestamp - this.previousTimestamp) / 1000
-		const distance = Math.floor(
-			this.deltatime * BASE_ANIM_SPEED * get(animationStore).animationSpeedMultiplier
-		)
+		const distance = Math.floor(this.deltatime * BASE_ANIM_SPEED * get(animationSpeed))
 		this.draw(distance)
 		if (
 			this.pos.x === this.path[this.path.length - 1].x &&

@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import animationStore from "../store/animationStore"
+import { animationSpeed } from "../store/settings"
 
 export type Color = { r: number; g: number; b: number }
 
@@ -33,7 +33,7 @@ export async function fade(
 			const b = Math.round(lerp(start.b, end.b, u))
 			element.style.setProperty(property, `rgb(${r}, ${g}, ${b})`)
 			const elapsed = timestamp - animationStart
-			u = elapsed / (baseDuration * get(animationStore).animationSpeedMultiplier)
+			u = elapsed / (baseDuration * get(animationSpeed))
 			requestAnimationFrame(frame)
 		}
 		requestAnimationFrame(frame)

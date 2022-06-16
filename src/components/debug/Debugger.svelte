@@ -13,7 +13,7 @@
 		showNodesCoordinates
 	} from "../../store/debugStores"
 	import ramStore from "../../store/ramStore"
-	import { displayAsBinary, displayLabels } from "../../store/settingsStores"
+	import { displayAsBinary, displayLabels } from "../../store/settings"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
 	import Checkbox from "../basic/checkboxes/Debug.svelte"

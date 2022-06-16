@@ -6,7 +6,7 @@
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelectionStore from "../../store/ramSelectionStore"
 	import Logger from "../../util/Logger"
-	import { displayAsBinary } from "../../store/settingsStores"
+	import { displayAsBinary } from "../../store/settings"
 
 	export let address: number
 	export let selected: boolean = false

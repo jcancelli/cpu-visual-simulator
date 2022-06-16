@@ -2,7 +2,7 @@
 	import cpuStore from "../../store/cpuStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
-	import { displayAsBinary } from "../../store/settingsStores"
+	import { displayAsBinary } from "../../store/settings"
 
 	export async function flashOpcode() {
 		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })

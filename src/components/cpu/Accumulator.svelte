@@ -2,7 +2,7 @@
 	import cpuStore from "../../store/cpuStore"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash as flashComponent } from "../../util/animationUtil"
-	import { displayAsBinary } from "../../store/settingsStores"
+	import { displayAsBinary } from "../../store/settings"
 
 	export async function flash() {
 		return flashComponent(

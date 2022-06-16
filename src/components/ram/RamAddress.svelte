@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { displayAsBinary } from "../../store/settingsStores"
+	import { displayAsBinary } from "../../store/settings"
 
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import BinaryValue from "../../util/BinaryValue"
