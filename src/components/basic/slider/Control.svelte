@@ -4,6 +4,7 @@
 	export let value = max / 2 + min
 	export let step = 0.1
 	export let disabled = false
+	export let title = ""
 </script>
 
 <input
@@ -13,6 +14,7 @@
 	{max}
 	{step}
 	{disabled}
+	{title}
 	bind:value
 	on:input
 	on:change
