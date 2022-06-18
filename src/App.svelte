@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Stage from "./components/Stage.svelte"
-	import ControlBar from "./components/ControlBar.svelte"
 	import Debugger from "./components/debug/Debugger.svelte"
 	import MessageFeed from "./components/MessageFeed.svelte"
-	import { controlBar, debug, messageFeed, logger } from "./store/componentsStore"
+	import { controls, debug, messageFeed, logger } from "./store/componentsStore"
 	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/Logger"
+	import Controls from "./components/controls/Controls.svelte"
 
 	let app: HTMLDivElement
 
@@ -30,7 +30,7 @@
 <svelte:window on:resize={scale} on:error={logError} />
 <div class="relative w-app h-app origin-top-left" bind:this={app}>
 	<Stage />
-	<ControlBar bind:this={$controlBar} />
+	<Controls bind:this={$controls} />
 </div>
 <Debugger bind:this={$debug} />
 <LoggerComponent bind:this={$logger} />
