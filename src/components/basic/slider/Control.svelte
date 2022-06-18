@@ -32,7 +32,7 @@
 		width: 100%;
 		background-color: transparent;
 		height: 26px;
-		margin: 10px 0;
+		margin: 0;
 	}
 	input[type="range"]:focus {
 		outline: none;
