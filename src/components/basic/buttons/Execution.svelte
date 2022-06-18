@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let disabled = false
+	export let title = ""
 </script>
 
 <button
@@ -25,6 +26,7 @@
 	on:mouseleave
 	on:mouseover
 	{disabled}
+	{title}
 >
 	<slot />
 </button>
