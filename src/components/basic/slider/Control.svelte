@@ -24,6 +24,7 @@
 />
 
 <style>
+	/* https://www.cssportal.com/style-input-range/ */
 	input[type="range"] {
 		-webkit-appearance: none;
 		width: 100%;
