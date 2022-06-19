@@ -1,6 +1,5 @@
 import { get } from "svelte/store"
-import { SupportedLang } from "../resources/text"
-import { animationSpeed, language as selectedLanguage } from "../store/settings"
+import { animationSpeed, language as selectedLanguage, SupportedLang } from "../store/settings"
 
 let utterance: SpeechSynthesisUtterance = null
 let rate = get(animationSpeed)

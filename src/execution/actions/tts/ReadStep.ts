@@ -1,6 +1,5 @@
 import { get } from "svelte/store"
-import texts, { Step } from "../../../resources/text"
-import { language } from "../../../store/settings"
+import texts, { Step } from "../../../store/text"
 import Action from "../Action"
 import { TTS_ENABLED } from "../Conditions"
 import { Cache } from "../../execution"
@@ -16,6 +15,6 @@ export default class ReadStep extends Action {
 	}
 
 	protected async action(cache: Cache): Promise<any> {
-		SpeechSynthesis.read(texts[get(language)].steps[this.step])
+		SpeechSynthesis.read(get(texts).steps[this.step])
 	}
 }
