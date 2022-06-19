@@ -4,7 +4,7 @@
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/componentsStore"
 	import { createEventDispatcher } from "svelte"
-	import ramSelectionStore from "../../store/ramSelectionStore"
+	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"
 
 	const dispatch = createEventDispatcher()
@@ -55,13 +55,13 @@
 	}
 
 	export function select() {
-		ramSelectionStore.select(address, "LABEL")
+		ramSelection.select(address, "LABEL")
 	}
 
 	export function deselect() {
 		commitInput()
-		if ($ramSelectionStore.column === "LABEL" && address === $ramSelectionStore.address) {
-			ramSelectionStore.deselect()
+		if ($ramSelection.column === "LABEL" && address === $ramSelection.address) {
+			ramSelection.deselect()
 		}
 	}
 

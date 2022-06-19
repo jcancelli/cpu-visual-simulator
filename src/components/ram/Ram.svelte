@@ -5,7 +5,7 @@
 	import RamCell from "./RamCell.svelte"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import ramStore from "../../store/ramStore"
-	import ramSelectionStore from "../../store/ramSelectionStore"
+	import ramSelection from "../../store/ramSelection"
 
 	const VISIBLE_CELLS = 18
 
@@ -33,51 +33,41 @@
 	}
 
 	function onWheel({ deltaY }) {
-		ramSelectionStore.deselect()
+		ramSelection.deselect()
 		scroll({ deltaY })
 	}
 
 	function onArrowUp(e: KeyboardEvent) {
-		if (ramSelectionStore.noSelection()) return
+		if (ramSelection.noSelection()) return
 		if (e.ctrlKey) {
-			ramStore.moveSecondHalfUpFromAddress($ramSelectionStore.address)
+			ramStore.moveSecondHalfUpFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ramStore.moveFirstHalfUpFromAddress($ramSelectionStore.address)
+			ramStore.moveFirstHalfUpFromAddress($ramSelection.address)
 		}
-		if ($ramSelectionStore.address === firstVisibleAddress) {
+		if ($ramSelection.address === firstVisibleAddress) {
 			scrollUp()
 		}
-		ramSelectionStore.selectUp()
+		ramSelection.selectUp()
 	}
 
 	function onArrowDown(e: KeyboardEvent) {
-		if (ramSelectionStore.noSelection()) return
+		if (ramSelection.noSelection()) return
 		if (e.ctrlKey) {
-			ramStore.moveSecondHalfDownFromAddress($ramSelectionStore.address)
+			ramStore.moveSecondHalfDownFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ramStore.moveFirstHalfDownFromAddress($ramSelectionStore.address)
+			ramStore.moveFirstHalfDownFromAddress($ramSelection.address)
 		}
-		if ($ramSelectionStore.address === lastVisibleAddress) {
+		if ($ramSelection.address === lastVisibleAddress) {
 			scrollDown()
 		}
-		ramSelectionStore.selectDown()
-	}
-
-	function onArrowLeft(e: KeyboardEvent) {
-		if (ramSelectionStore.noSelection()) return
-		ramSelectionStore.selectLeft()
-	}
-
-	function onArrowRight(e: KeyboardEvent) {
-		if (ramSelectionStore.noSelection()) return
-		ramSelectionStore.selectRight()
+		ramSelection.selectDown()
 	}
 
 	function onEnter(e: KeyboardEvent) {
-		if (ramSelectionStore.noSelection()) {
-			ramSelectionStore.select(firstVisibleAddress)
+		if (ramSelection.noSelection()) {
+			ramSelection.select(firstVisibleAddress)
 		} else {
-			ramSelectionStore.deselect()
+			ramSelection.deselect()
 		}
 	}
 
@@ -89,12 +79,6 @@
 					break
 				case "ArrowDown":
 					onArrowDown(e)
-					break
-				case "ArrowLeft":
-					onArrowLeft(e)
-					break
-				case "ArrowRight":
-					onArrowRight(e)
 					break
 				case "Enter":
 					onEnter(e)
@@ -163,7 +147,7 @@
 		{#each visibleAddresses as address, i}
 			<RamLabel
 				{address}
-				selected={$ramSelectionStore.address === address && $ramSelectionStore.column === "LABEL"}
+				selected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 				bind:this={labelElements[i]}
 			/>
 		{/each}
@@ -175,7 +159,7 @@
 				<RamAddress {address} bind:this={addressElements[i]} />
 				<RamCell
 					{address}
-					selected={$ramSelectionStore.address === address && $ramSelectionStore.column === "CELL"}
+					selected={$ramSelection.address === address && $ramSelection.column === "CELL"}
 					bind:this={cellElements[i]}
 				/>
 			</div>

@@ -4,7 +4,7 @@
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/componentsStore"
 	import { flash as flashComponent } from "../../util/animationUtil"
-	import ramSelectionStore from "../../store/ramSelectionStore"
+	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"
 	import { displayAsBinary } from "../../store/settings"
 
@@ -29,13 +29,13 @@
 	}
 
 	export function select() {
-		ramSelectionStore.select(address, "CELL")
+		ramSelection.select(address, "CELL")
 	}
 
 	export function deselect() {
 		commitInput()
-		if ($ramSelectionStore.column === "CELL" && address === $ramSelectionStore.address) {
-			ramSelectionStore.deselect()
+		if ($ramSelection.column === "CELL" && address === $ramSelection.address) {
+			ramSelection.deselect()
 		}
 	}
 
