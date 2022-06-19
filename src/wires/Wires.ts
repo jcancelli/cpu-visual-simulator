@@ -6,8 +6,8 @@ import { WireTypes } from "./WireType"
 export const DataBusWires = [
 	// MAIN BUS
 	new Wire(node("RAM:DATA"), node("DATA:1"), WireTypes.DATA_EXT),
-	new Wire(node("DATA:1"), node("DATA:2"), WireTypes.DATA_EXT, false),
-	new Wire(node("DATA:2"), node("DATA:3"), WireTypes.DATA_INT, false),
+	new Wire(node("DATA:1"), node("DATA:2"), WireTypes.DATA_EXT),
+	new Wire(node("DATA:2"), node("DATA:3"), WireTypes.DATA_INT),
 	new Wire(node("DATA:3"), node("DATA:4"), WireTypes.DATA_INT),
 	new Wire(node("DATA:4"), node("DATA:5"), WireTypes.DATA_INT),
 	new Wire(node("DATA:5"), node("DATA:6"), WireTypes.DATA_INT),
@@ -28,8 +28,8 @@ export const DataBusWires = [
 ] as const
 
 export const AddressBusWires = [
-	new Wire(node("RAM:ADD"), node("ADD:1"), WireTypes.ADDRESS_EXT, false),
-	new Wire(node("ADD:1"), node("ADD:2"), WireTypes.ADDRESS_INT, false),
+	new Wire(node("RAM:ADD"), node("ADD:1"), WireTypes.ADDRESS_EXT),
+	new Wire(node("ADD:1"), node("ADD:2"), WireTypes.ADDRESS_INT),
 	new Wire(node("ADD:2"), node("INC:1"), WireTypes.ADDRESS_INT),
 	new Wire(node("INC:2"), node("PC:1"), WireTypes.ADDRESS_INT),
 	new Wire(node("PC:2"), node("ADD:4"), WireTypes.ADDRESS_INT),
@@ -44,8 +44,8 @@ export const ControlBusWires = [
 	// CU-MUX
 	new Wire(node("CU:2"), node("MUX:4"), WireTypes.CONTROL_INT),
 	// CU-RAM
-	new Wire(node("RAM:CTRL"), node("CTRL:1"), WireTypes.CONTROL_EXT, false),
-	new Wire(node("CTRL:1"), node("CTRL:2"), WireTypes.CONTROL_INT, false),
+	new Wire(node("RAM:CTRL"), node("CTRL:1"), WireTypes.CONTROL_EXT),
+	new Wire(node("CTRL:1"), node("CTRL:2"), WireTypes.CONTROL_INT),
 	new Wire(node("CTRL:2"), node("CTRL:3"), WireTypes.INVISIBLE),
 	new Wire(node("CTRL:3"), node("CTRL:4"), WireTypes.CONTROL_INT),
 	new Wire(node("CTRL:4"), node("CU:3"), WireTypes.CONTROL_INT),

@@ -5,15 +5,13 @@ export default class Wire {
 	readonly a: Node
 	readonly b: Node
 	readonly type: WireType
-	readonly linecap: boolean
 	static readonly WIDTH = 5
 
-	constructor(a: Node, b: Node, type: WireType, linecap: boolean = true) {
+	constructor(a: Node, b: Node, type: WireType) {
 		this.a = a
 		this.b = b
 		this.type = type
 		this.a.connectTo(b, this)
-		this.linecap = linecap
 	}
 
 	isConnecting(a: Node, b: Node): boolean {

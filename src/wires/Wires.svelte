@@ -3,7 +3,6 @@
 	import Wire from "./Wire"
 	import * as Wires from "./Wires"
 	import * as Nodes from "./Nodes"
-	import { node } from "./Nodes"
 	import WireAnimation, * as WireAnimations from "./WireAnimation"
 
 	const animationsCache = new Map<string, WireAnimation>()
@@ -19,8 +18,8 @@
 	})
 
 	export async function flashWire(fromName: string, toName: string): Promise<void> {
-		const from = node(fromName),
-			to = node(toName)
+		const from = Nodes.node(fromName),
+			to = Nodes.node(toName)
 		if (!from) throw new Error("Node " + fromName + " is undefined")
 		if (!to) throw new Error("Node " + toName + " is undefined")
 		let animation: WireAnimation
@@ -40,12 +39,18 @@
 		ctx.lineWidth = Wire.WIDTH
 		ctx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height)
 		for (const wire of Wires.Wires) {
-			ctx.lineCap = wire.linecap ? "square" : "butt"
 			ctx.strokeStyle = wire.type.color
 			ctx.beginPath()
 			ctx.moveTo(wire.a.x, wire.a.y)
 			ctx.lineTo(wire.b.x, wire.b.y)
 			ctx.stroke()
+		}
+		for (const node of Nodes.Nodes.filter(n => n.intersectionType !== null)) {
+			const halfSize = Wire.WIDTH / 2 - 0.5
+			ctx.beginPath()
+			ctx.fillStyle = node.intersectionType.color
+			ctx.arc(node.x, node.y, halfSize, 0, Math.PI * 2)
+			ctx.fill()
 		}
 	}
 </script>

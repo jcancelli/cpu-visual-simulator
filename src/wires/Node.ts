@@ -1,4 +1,5 @@
 import Wire from "./Wire"
+import WireType from "./WireType"
 
 export interface Position {
 	x: number
@@ -10,12 +11,14 @@ export default class Node implements Position {
 	readonly y: number
 	readonly name: string
 	readonly neighbours: Node[]
+	readonly intersectionType: WireType
 
-	constructor(name, x, y) {
+	constructor(name: string, x: number, y: number, intersectionType: WireType = null) {
 		this.x = x
 		this.y = y
 		this.name = name
 		this.neighbours = []
+		this.intersectionType = intersectionType
 	}
 
 	isAlignedTo(node: Position): boolean {
