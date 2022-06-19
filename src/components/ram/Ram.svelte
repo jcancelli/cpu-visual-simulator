@@ -6,22 +6,26 @@
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import ramStore from "../../store/ramStore"
 	import ramSelection from "../../store/ramSelection"
+	import { afterUpdate } from "svelte"
 
 	const VISIBLE_CELLS = 18
 
+	let afterUpdateCallbacks: (() => void)[] = []
+
 	let firstVisibleAddress = FIRST_ADDRESS
-	$: lastVisibleAddress = firstVisibleAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
-	let visibleAddresses: number[] = []
-	$: {
-		visibleAddresses = []
-		for (let i = firstVisibleAddress, j = 0; i <= lastVisibleAddress; i += WORD_SIZE, j++) {
-			visibleAddresses[j] = i
-		}
-	}
+	let lastVisibleAddress: number
+	let visibleAddresses: number[]
+
+	updateVisibleAddresses()
 
 	let labelElements: RamLabel[] = []
 	let addressElements: RamAddress[] = []
 	let cellElements: RamCell[] = []
+
+	afterUpdate(() => {
+		afterUpdateCallbacks.forEach(callback => callback())
+		afterUpdateCallbacks = []
+	})
 
 	function scroll({ deltaY }) {
 		let newFirstVisibleAddress = firstVisibleAddress + (deltaY > 0 ? WORD_SIZE : -WORD_SIZE)
@@ -30,6 +34,7 @@
 		if (newFirstVisibleAddress > LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE)
 			newFirstVisibleAddress = FIRST_ADDRESS
 		firstVisibleAddress = newFirstVisibleAddress
+		updateVisibleAddresses()
 	}
 
 	function onWheel({ deltaY }) {
@@ -93,6 +98,14 @@
 		}
 	}
 
+	function updateVisibleAddresses() {
+		lastVisibleAddress = firstVisibleAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
+		visibleAddresses = []
+		for (let i = firstVisibleAddress, j = 0; i <= lastVisibleAddress; i += WORD_SIZE, j++) {
+			visibleAddresses[j] = i
+		}
+	}
+
 	export function scrollUp() {
 		scroll({ deltaY: -1 })
 	}
@@ -108,7 +121,7 @@
 		return address >= firstVisibleAddress && address <= lastVisibleAddress
 	}
 
-	export function showAddress(address: number): void {
+	export async function showAddress(address: number) {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
@@ -121,21 +134,25 @@
 			tmpFirstAddress -= tmpLastAddress - LAST_ADDRESS
 		}
 		firstVisibleAddress = tmpFirstAddress
+		updateVisibleAddresses()
+		return new Promise<void>((resolve, reject) => {
+			afterUpdateCallbacks.push(resolve)
+		})
 	}
 
 	export async function flashAddress(address: number) {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		showAddress(address)
-		return addressElements.find(e => e.getAddress() === address).flash()
+		await showAddress(address)
+		addressElements.find(e => e.getAddress() === address).flash()
 	}
 
 	export async function flashContent(address: number) {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		showAddress(address)
+		await showAddress(address)
 		return cellElements.find(e => e.getAddress() === address).flash()
 	}
 </script>
