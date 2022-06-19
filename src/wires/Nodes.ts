@@ -5,7 +5,7 @@ import Node from "./Node"
 export const DataBusNodes = [
 	new Node("RAM:DATA", 1250, 115),
 	new Node("DATA:1", 1250, 85),
-	new Node("DATA:2", 751, 85),
+	new Node("DATA:2", 749, 85),
 	new Node("DATA:3", 527, 85),
 	new Node("DATA:4", 262, 85),
 	new Node("DATA:5", 95, 85),
@@ -16,8 +16,8 @@ export const DataBusNodes = [
 	new Node("DATA:10", 477, 250),
 	new Node("DATA:11", 652, 490),
 	new Node("IR:1", 262, 151),
-	new Node("IR:2", 312, 182),
-	new Node("IR:3", 212, 182),
+	new Node("IR:2", 312, 180),
+	new Node("IR:3", 212, 180),
 	new Node("MUX:1", 477, 292),
 	new Node("MUX:2", 527, 292),
 	new Node("MUX:3", 502, 332),
@@ -32,21 +32,21 @@ export const DataBusNodes = [
 
 const AddressBusNodes = [
 	new Node("RAM:ADD", 1058, 250),
-	new Node("ADD:1", 751, 250),
+	new Node("ADD:1", 749, 250),
 	new Node("ADD:2", 670, 250),
 	new Node("ADD:3", 590, 250),
 	new Node("ADD:4", 590, 137),
 	new Node("ADD:5", 535, 250),
 	new Node("ADD:6", 519, 250),
-	new Node("INC:1", 670, 212),
+	new Node("INC:1", 670, 210),
 	new Node("INC:2", 670, 182),
-	new Node("PC:1", 670, 152),
+	new Node("PC:1", 670, 150),
 	new Node("PC:2", 622, 137)
 ] as const
 
 const ControlBusNodes = [
 	new Node("RAM:CTRL", 1058, 370),
-	new Node("CTRL:1", 751, 370),
+	new Node("CTRL:1", 749, 370),
 	new Node("CTRL:2", 507, 370),
 	new Node("CTRL:3", 494, 370),
 	new Node("CTRL:4", 240, 370),
@@ -54,9 +54,9 @@ const ControlBusNodes = [
 	new Node("CTRL:6", 185, 398),
 	new Node("CTRL:7", 185, 490),
 	new Node("CU:1", 212, 281),
-	new Node("CU:2", 272, 313),
-	new Node("CU:3", 240, 342),
-	new Node("CU:4", 185, 342),
+	new Node("CU:2", 270, 313),
+	new Node("CU:3", 240, 340),
+	new Node("CU:4", 185, 340),
 	new Node("MUX:4", 464, 313),
 	new Node("ALU:5", 297, 490)
 ] as const
