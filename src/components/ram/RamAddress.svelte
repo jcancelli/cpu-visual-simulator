@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { displayAsBinary } from "../../store/settings"
-
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import BinaryValue from "../../util/BinaryValue"
 
@@ -22,30 +21,20 @@
 	}
 </script>
 
-<div class="address" bind:this={addressDiv}>
+<div
+	class="
+		h-[30px]
+		w-[100px]
+		flex
+		items-center
+		justify-center
+		bg-[#FF8C00]
+		border
+		border-black
+		border-t-0
+		{$$restProps.class}
+	"
+	bind:this={addressDiv}
+>
 	{$displayAsBinary ? new BinaryValue(8, address).toBinaryString() : address}
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-
-	.address {
-		height: $ram-cell-height;
-		width: $ram-address-width;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: darkorange;
-		border: thin solid black;
-		border-top: 0;
-	}
-
-	:global(.row:first-child .address) {
-		border-radius: 10px 0 0 0;
-		border-top: thin solid black;
-	}
-
-	:global(.row:last-child .address) {
-		border-radius: 0 0 0 10px;
-	}
-</style>

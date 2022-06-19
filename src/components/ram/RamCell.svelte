@@ -65,7 +65,24 @@
 	}
 </script>
 
-<div class="cell" on:click={select} bind:this={cell}>
+<div
+	class="
+		h-[30px]
+		w-[190px]
+		grid
+		grid-cols-2
+		items-center
+		bg-gray-200
+		cursor-text
+		border
+		border-black
+		border-t-0
+		border-l-0
+		{$$restProps.class}
+	"
+	on:click={select}
+	bind:this={cell}
+>
 	{#if selected}
 		<input
 			value={opcode + (operand ? " " + operand : "")}
@@ -73,33 +90,31 @@
 			use:initInput
 			on:focusout={deselect}
 			on:input={formatInput}
+			class="
+				h-[30px]
+				w-[190px]
+				p-0
+				pl-[10px]
+				border-0
+				col-span-1
+				outline-none
+				bg-black
+				text-gray-200
+				selection:bg-transparent
+			"
 		/>
 	{:else}
-		<div class="opcode">{opcode}</div>
+		<div class="h-[30px] w-[190px] flex items-center justify-start pl-[10px]">{opcode}</div>
 		{#if operand}
-			<div class="operand">{operand}</div>
+			<div class="h-[30px] w-[190px] flex items-center justify-start overflow-hidden">
+				{operand}
+			</div>
 		{/if}
 	{/if}
 </div>
 
 <style lang="scss">
-	@import "../../style/variables.scss";
-
-	.cell {
-		height: $ram-cell-height;
-		width: $ram-cell-width;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: center;
-		font-size: $ram-font-size;
-		background-color: lightgrey;
-		cursor: text;
-		border: thin solid black;
-		border-top: 0;
-		border-left: 0;
-	}
-
-	:global(.row:first-child .cell) {
+	.first-cell {
 		border-radius: 0 10px 0 0;
 		border-top: thin solid black;
 
@@ -108,50 +123,11 @@
 		}
 	}
 
-	:global(.row:last-child .cell) {
+	.last-cell {
 		border-radius: 0 0 10px 0;
 
 		input {
 			border-radius: 0 0 10px 0;
 		}
-	}
-
-	input {
-		display: block;
-		width: $ram-cell-width;
-		height: $ram-cell-height;
-		padding: 0;
-		padding-left: $ram-cell-padding-left;
-		border: 0;
-		grid-column: 1 / -1;
-		outline: 0;
-		box-sizing: border-box;
-		background-color: black;
-		color: lightgrey;
-		font-size: $ram-font-size;
-		font-stretch: normal;
-	}
-
-	.opcode,
-	.operand {
-		height: $ram-cell-height;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		font-size: $ram-font-size;
-	}
-
-	.opcode {
-		width: $ram-opcode-width;
-		padding-left: $ram-cell-padding-left;
-	}
-
-	.operand {
-		width: $ram-operand-width;
-		overflow: hidden;
-	}
-
-	input::selection {
-		background-color: transparent;
 	}
 </style>

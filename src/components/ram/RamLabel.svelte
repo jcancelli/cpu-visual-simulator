@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { fade } from "svelte/transition"
 	import symbolTableStore from "../../store/symbolTableStore"
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/components"
-	import { createEventDispatcher } from "svelte"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"
-
-	const dispatch = createEventDispatcher()
 
 	export let address: number
 	export let selected: boolean
@@ -82,7 +78,7 @@
 	}
 </script>
 
-<div class="label">
+<div class="relative h-[30px] flex items-center {$$restProps.class}">
 	{#if isExpanded}
 		<input
 			value={label}
@@ -91,6 +87,22 @@
 			on:focus={select}
 			on:focusout={deselect}
 			transition:scaleX
+			class="
+				absolute
+				right-0
+				h-[28px]
+				w-[150px]
+				p-[10px]
+				border
+				border-black/40
+				border-r-0
+				outline-none
+				bg-gray-500/50
+				text-black
+				shadow-ramlabels
+				rounded-l-md
+				origin-right
+			"
 		/>
 	{:else}
 		<svg
@@ -98,6 +110,7 @@
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 24 24"
 			in:delay={{ delay: 300 }}
+			class="absolute right-0 fill-black/30 cursor-pointer w-6 h-6 transition-colors hover:fill-black"
 		>
 			<rect fill="none" height="24px" width="24px" />
 			<path
@@ -108,50 +121,11 @@
 </div>
 
 <style lang="scss">
-	@import "../../style/variables.scss";
-
-	.label {
-		position: relative;
-		height: $ram-cell-height + 1px;
-		display: flex;
-		align-items: center;
-	}
-
-	:global(.labels .label:first-child input) {
+	.first-label input {
 		border-radius: 5px 10px 0 5px;
 	}
 
-	:global(.labels .label:last-child input) {
+	.last-label input {
 		border-radius: 5px 0 10px 5px;
-	}
-
-	input {
-		position: absolute;
-		right: 0;
-		height: $ram-cell-height;
-		width: $ram-label-width;
-		box-sizing: border-box;
-		padding: 0 0 0 10px;
-		border: thin solid rgba(0, 0, 0, 0.4);
-		border-right: 0;
-		outline: 0;
-		background-color: rgba(lightgrey, 0.5);
-		color: black;
-		box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-		border-radius: 5px 0 0 5px;
-		transform-origin: right;
-	}
-
-	svg {
-		position: absolute;
-		right: 0;
-		fill: rgba(0, 0, 0, 0.3);
-		cursor: pointer;
-		width: 24px;
-		height: 24px;
-
-		&:hover {
-			fill: black;
-		}
 	}
 </style>

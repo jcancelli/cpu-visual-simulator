@@ -159,67 +159,42 @@
 	}
 </script>
 
-<div class="ram-wrapper" on:wheel={onWheel} use:ramKeysListener>
+<div class="absolute top-[115px] right-[50px] z-[3] flex" on:wheel={onWheel} use:ramKeysListener>
 	<ComponentLabel text="RAM" fontSize="LARGE" top="-30px" right="0" />
-
-	<div class="labels">
+	<div class="flex flex-col items-end justify-center">
 		{#each visibleAddresses as address, i}
 			<RamLabel
 				{address}
 				selected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 				bind:this={labelElements[i]}
+				class="
+					{address === firstVisibleAddress ? 'first-label' : ''}
+					{address === lastVisibleAddress ? 'last-label' : ''}
+				"
 			/>
 		{/each}
 	</div>
-
-	<div class="ram">
+	<div class="h-fit flex flex-col rounded-2xl shadow-cpu">
 		{#each visibleAddresses as address, i}
-			<div class="row">
-				<RamAddress {address} bind:this={addressElements[i]} />
+			<div class="flex flex-nowrap">
+				<RamAddress
+					{address}
+					bind:this={addressElements[i]}
+					class="
+						{address === firstVisibleAddress ? 'rounded-tl-2xl border-t' : ''}
+						{address === lastVisibleAddress ? 'rounded-bl-2xl' : ''}
+					"
+				/>
 				<RamCell
 					{address}
 					selected={$ramSelection.address === address && $ramSelection.column === "CELL"}
 					bind:this={cellElements[i]}
+					class="
+						{address === firstVisibleAddress ? 'first-cell' : ''}
+						{address === lastVisibleAddress ? 'last-cell' : ''}
+					"
 				/>
 			</div>
 		{/each}
 	</div>
 </div>
-
-<style lang="scss">
-	@import "../../style/variables.scss";
-
-	.ram-wrapper {
-		position: absolute;
-		right: 50px;
-		top: 115px;
-		z-index: 3;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.labels {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		justify-content: center;
-	}
-
-	.ram {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 0 0 20px rgba(#000000, 0.3);
-		border-radius: 15px;
-		background-color: rgba(#000000, 0.3);
-
-		.row {
-			display: flex;
-			flex-wrap: nowrap;
-			justify-content: center;
-			align-items: center;
-		}
-	}
-</style>
