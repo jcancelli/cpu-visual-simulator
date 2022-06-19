@@ -1,14 +1,14 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpuStore"
-import { Cache } from "../../execution"
+import state from "../../state"
 import CpuAction from "./CpuAction"
 
 export default class IncrementPC extends CpuAction {
-	protected async action(cache: Cache): Promise<any> {
-		const pc = cache["PC"] + cache["INC"]
+	protected async action(): Promise<any> {
+		const pc = state["PC"] + state["INC"]
 		cpuStore.setPC(pc)
 		await get(cpu).flash("PC")
-		cache["PC"] = pc
+		state["PC"] = pc
 	}
 }

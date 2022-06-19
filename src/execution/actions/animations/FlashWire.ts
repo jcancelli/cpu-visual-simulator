@@ -1,7 +1,6 @@
 import Animation from "./Animation"
 import { get } from "svelte/store"
 import components from "../../../store/components"
-import { Cache } from "../../execution"
 
 export default class FlashWire extends Animation {
 	protected from: string
@@ -13,7 +12,7 @@ export default class FlashWire extends Animation {
 		this.to = to
 	}
 
-	protected async action(cache: Cache): Promise<any> {
+	protected async action(): Promise<any> {
 		return get(components.wires).flashWire(this.from, this.to)
 	}
 

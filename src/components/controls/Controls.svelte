@@ -1,10 +1,8 @@
 <script lang="ts">
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "../basic/buttons/Execution.svelte"
-	import execution from "../../execution/execution"
-	import { isExecutingStore } from "../../execution/execution"
-	import { animationSpeed } from "../../store/settings"
-	import { playAnimations, displayAsBinary } from "../../store/settings"
+	import execution, { isExecuting } from "../../execution/execution"
+	import { playAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
@@ -47,8 +45,8 @@
 				/>
 				<ExecutionButton
 					on:click={toggleExecution}
-					icon={$isExecutingStore ? "pause" : "play"}
-					title={$isExecutingStore
+					icon={$isExecuting ? "pause" : "play"}
+					title={$isExecuting
 						? $texts.controls.buttons.pause.title
 						: $texts.controls.buttons.play.title}
 				/>

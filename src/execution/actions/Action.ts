@@ -1,5 +1,4 @@
 import Logger from "../../util/Logger"
-import { Cache } from "../execution"
 import { Condition } from "./Conditions"
 
 export default abstract class Action {
@@ -28,21 +27,16 @@ export default abstract class Action {
 		return this
 	}
 
-	async execute(cache: Cache): Promise<any> {
-		if (
-			!this._conditions.reduceRight((finalVal, condition) => finalVal && condition(cache), true)
-		) {
+	async execute(): Promise<any> {
+		if (!this._conditions.reduceRight((finalVal, condition) => finalVal && condition(), true)) {
 			return
 		}
 		Logger.info(`Executing: ${this.toString()}`, "EXECUTION")
-		const promises = [
-			...this._sideffects.map(sideffect => sideffect.execute(cache)),
-			this.action(cache)
-		]
+		const promises = [...this._sideffects.map(sideffect => sideffect.execute()), this.action()]
 		return Promise.all(promises)
 	}
 
-	protected abstract action(cache: Cache): Promise<any>
+	protected abstract action(): Promise<any>
 
 	doesEndStep() {
 		return this._endsStep

@@ -1,13 +1,13 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpuStore"
-import { Cache } from "../../execution"
+import state from "../../state"
 import CpuAction from "./CpuAction"
 
 export default class SetAluOperation extends CpuAction {
-	protected async action(cache: Cache): Promise<any> {
-		cpuStore.setOperation(cache["IR"].opcode.operator)
+	protected async action(): Promise<any> {
+		cpuStore.setOperation(state["IR"].opcode.operator)
 		await get(cpu).flash("ALU:OPR")
-		cache["ALU:OPR"] = cache["IR"].opcode.operator
+		state["ALU:OPR"] = state["IR"].opcode.operator
 	}
 }

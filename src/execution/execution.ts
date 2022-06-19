@@ -2,32 +2,11 @@ import { get, writable } from "svelte/store"
 import cpuStore from "../store/cpuStore"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
-import Instruction from "../instruction/Instruction"
-import { Operators } from "../instruction/Opcode"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/components"
 import { FETCH, INCREMENT_PC } from "./actions/actionMacros"
 import Logger from "../util/Logger"
-
-export type Cache = {
-	IR: Instruction | null
-	"IR:OPC": number | null
-	"IR:OPR": number | null
-	PC: number | null
-	INC: number | null
-	"ALU:1": number | null
-	"ALU:2": number | null
-	"ALU:OPR": Operators
-	ACC: number | null
-	"SW:Z": boolean
-	"SW:N": boolean
-	RAM: {
-		address: number
-		data: Instruction
-	}
-}
-
-export type CacheableKey = keyof Cache
+import state from "./state"
 
 type CycleFase =
 	| "ENQUEUING_FETCH"
@@ -37,14 +16,6 @@ type CycleFase =
 	| "ENQUEUEING_PC_INCREMENT"
 	| "EXECUTING_PC_INCREMENT"
 
-const CYCLES_PER_SECOND = 20
-
-const privateIsExecutingStore = {
-	...writable(false),
-	update: () => privateIsExecutingStore.set(isPlaying || isShortStepping || isLongStepping)
-}
-export const isExecutingStore = { subscribe: privateIsExecutingStore.subscribe } // read-only reference to isExecutingStore
-
 let isPlaying = false
 let isShortStepping = false // is executing a single step
 let isLongStepping = false // is executing a full instruction
@@ -52,22 +23,13 @@ let isLocked = false // prevent concurrency
 let cycleFase: CycleFase = "ENQUEUING_FETCH"
 let queue: Action[] = [] // contains all actions to be executed
 
-let cache: Cache = {
-	IR: null,
-	"IR:OPC": null,
-	"IR:OPR": null,
-	PC: null,
-	INC: null,
-	"ALU:1": null,
-	"ALU:2": null,
-	"ALU:OPR": "",
-	ACC: null,
-	"SW:Z": true,
-	"SW:N": false,
-	RAM: null
+const privateIsExecutingStore = {
+	...writable(false),
+	update: () => privateIsExecutingStore.set(isPlaying || isShortStepping || isLongStepping)
 }
+export const isExecuting = { subscribe: privateIsExecutingStore.subscribe } // read-only reference to isExecutingStore
 
-setInterval(cycle, 1000 / CYCLES_PER_SECOND)
+setInterval(cycle, 50)
 
 async function cycle() {
 	if (isLocked || !shouldExecute()) {
@@ -88,7 +50,7 @@ async function cycle() {
 				}
 				break
 			case "ENQUEUING_INSTRUCTION":
-				queue.push(...instructionToActions(cache["IR"]))
+				queue.push(...instructionToActions(state["IR"]))
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
@@ -140,7 +102,7 @@ async function cycle() {
 async function execute() {
 	while (!queueIsEmpty() && shouldExecute()) {
 		const action = queue.shift()!
-		await action.execute(cache)
+		await action.execute()
 		if (isShortStepping && action.doesEndStep()) {
 			setIsShortStepping(false)
 		}

@@ -1,8 +1,8 @@
 import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
-import CacheCpu from "./cache/CacheCpu"
-import CacheRam from "./cache/CacheRam"
+import StoreCpuState from "./state/StoreCpuState"
+import StoreRamState from "./state/StoreRamState"
 import AccToAlu1 from "./cpu/AccToAlu1"
 import FetchInstruction from "./cpu/FetchInstruction"
 import IncrementPC from "./cpu/IncrementPC"
@@ -17,17 +17,17 @@ import {
 } from "./Conditions"
 
 export const INCREMENT_PC = [
-	new CacheCpu("INC").sideffects(new FlashWire("PC:1", "INC:2")),
+	new StoreCpuState("INC").sideffects(new FlashWire("PC:1", "INC:2")),
 	new FlashWire("INC:1", "PC:2"),
 	new IncrementPC()
 ] as const
 
 export const FETCH = [
-	new CacheCpu("PC").sideffects(new FlashCpu("PC")),
+	new StoreCpuState("PC").sideffects(new FlashCpu("PC")),
 	new FlashWire("PC:2", "RAM:ADD"),
 	new FlashRam("ADDRESS", "PC"),
 	new FlashWire("CU:3", "RAM:CTRL"),
-	new CacheRam("PC").sideffects(new FlashRam("DATA", "PC")),
+	new StoreRamState("PC").sideffects(new FlashRam("DATA", "PC")),
 	new FlashWire("RAM:DATA", "IR:1"),
 	new FetchInstruction()
 ] as const
@@ -43,7 +43,7 @@ export const SET_MUX = [new FlashWire("CU:2", "MUX:4"), new FlashCpu("MUX")] as 
 export const SET_ALU_OPERATION = [new FlashWire("CU:4", "ALU:5"), new SetAluOperation()] as const
 
 export const LOAD_ALU1_FROM_ACC = [
-	new CacheCpu("ACC").sideffects(new FlashCpu("ACC")),
+	new StoreCpuState("ACC").sideffects(new FlashCpu("ACC")),
 	new FlashWire("ACC:1", "ALU:1"),
 	new AccToAlu1()
 ] as const
@@ -65,7 +65,7 @@ export const LOAD_ALU2_FROM_RAM = [
 	new FlashRam("ADDRESS", "IR:OPR"),
 	new FlashCpu("CU"),
 	new FlashWire("CU:3", "RAM:CTRL"),
-	new CacheRam("IR:OPR").sideffects(new FlashRam("DATA", "IR:OPR")),
+	new StoreRamState("IR:OPR").sideffects(new FlashRam("DATA", "IR:OPR")),
 	new FlashWire("RAM:DATA", "MUX:2"),
 	new FlashWire("MUX:3", "ALU:2"),
 	new SetAlu2("RAM")

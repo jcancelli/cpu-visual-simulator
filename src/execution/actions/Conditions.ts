@@ -1,29 +1,29 @@
 import { get } from "svelte/store"
 import { playAnimations, textToSpeech } from "../../store/settings"
-import { Cache } from "../execution"
+import state from "../state"
 
-export type Condition = (cache: Cache) => boolean
+export type Condition = () => boolean
 
-export function ZERO_FLAG_SET(cache: Cache): boolean {
-	return cache["SW:Z"]
+export function ZERO_FLAG_SET(): boolean {
+	return state["SW:Z"]
 }
 
-export function ZERO_FLAG_NOT_SET(cache: Cache): boolean {
-	return !cache["SW:Z"]
+export function ZERO_FLAG_NOT_SET(): boolean {
+	return !state["SW:Z"]
 }
 
-export function NEGATIVE_FLAG_SET(cache: Cache): boolean {
-	return cache["SW:N"]
+export function NEGATIVE_FLAG_SET(): boolean {
+	return state["SW:N"]
 }
 
-export function NEGATIVE_FLAG_NOT_SET(cache: Cache): boolean {
-	return !cache["SW:N"]
+export function NEGATIVE_FLAG_NOT_SET(): boolean {
+	return !state["SW:N"]
 }
 
-export function IS_ANIMATING(cache: Cache): boolean {
+export function IS_ANIMATING(): boolean {
 	return get(playAnimations)
 }
 
-export function TTS_ENABLED(cache: Cache): boolean {
+export function TTS_ENABLED(): boolean {
 	return get(textToSpeech)
 }

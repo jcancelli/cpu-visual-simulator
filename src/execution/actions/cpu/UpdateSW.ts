@@ -1,13 +1,13 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpuStore"
-import { Cache } from "../../execution"
+import state from "../../state"
 import CpuAction from "./CpuAction"
 
 export default class UpdateSW extends CpuAction {
-	protected async action(cache: Cache): Promise<any> {
-		const z = cache["ACC"] === 0
-		const n = cache["ACC"] < 0
+	protected async action(): Promise<any> {
+		const z = state["ACC"] === 0
+		const n = state["ACC"] < 0
 		if (z !== get(cpuStore).zeroFlag && n !== get(cpuStore).negativeFlag) {
 			cpuStore.setZeroFlag(z)
 			cpuStore.setNegativeFlag(n)
@@ -22,7 +22,7 @@ export default class UpdateSW extends CpuAction {
 				await get(cpu).flash("SW:N")
 			}
 		}
-		cache["SW:Z"] = z
-		cache["SW:N"] = n
+		state["SW:Z"] = z
+		state["SW:N"] = n
 	}
 }

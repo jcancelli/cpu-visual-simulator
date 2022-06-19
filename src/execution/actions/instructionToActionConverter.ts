@@ -3,7 +3,7 @@ import Action from "./Action"
 import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
-import CacheCpu from "./cache/CacheCpu"
+import StoreCpuState from "./state/StoreCpuState"
 import CompareUpdateSW from "./cpu/CompareUpdateSW"
 import ExecuteAluOperation from "./cpu/ExecuteAluOperation"
 import UpdateSW from "./cpu/UpdateSW"
@@ -87,7 +87,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				new FlashWire("IR:2", "RAM:ADD"),
 				new FlashRam("ADDRESS", "IR:OPR"),
-				new CacheCpu("ACC").sideffects(new FlashCpu("ACC")),
+				new StoreCpuState("ACC").sideffects(new FlashCpu("ACC")),
 				new FlashWire("ACC:1", "RAM:DATA"),
 				new FlashWire("CU:3", "RAM:CTRL"),
 				new StoreAccToAddress("IR:OPR")
