@@ -38,28 +38,41 @@
         },
         "buttons": {
             "reset": {
-                "title": ""
+                "title": "Reset"
             },
             "play": {
-                "title": ""
+                "title": "Play"
             },
             "pause": {
-                "title": ""
+                "title": "Pause"
             },
             "end": {
-                "title": ""
+                "title": "Skip to end"
             },
             "play_step": {
-                "title": ""
+                "title": "Play step"
             },
             "skip_step": {
-                "title": ""
+                "title": "Skip step"
             },
             "play_instruction": {
-                "title": ""
+                "title": "Play instruction"
             },
             "skip_instruction": {
-                "title": ""
+                "title": "Skip instruction"
+            }
+        },
+        "sliders": {
+            "speed": {
+                "title": "Speed"
+            }
+        },
+        "checkboxes": {
+            "binary": {
+                "text": "Binary"
+            },
+            "animations": {
+                "text": "Animations"
             }
         }
     }
