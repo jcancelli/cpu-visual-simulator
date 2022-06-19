@@ -88,7 +88,7 @@ export const texts = writable<Text>(text_placeholder)
 fetchText(get(language))
 
 export function fetchText(lang: SupportedLang) {
-	fetch(`/resources/texts/${lang}.json`)
+	fetch(`resources/texts/${lang}.json`)
 		.then(res => res.json())
 		.then(data => texts.set(data as Text))
 }
