@@ -32,7 +32,7 @@ export const DataBusNodes = [
 ] as const
 
 const AddressBusNodes = [
-	new Node("RAM:ADD", 1058, 250),
+	new Node("RAM:ADD", 1061, 250),
 	new Node("ADD:1", 749, 250),
 	new Node("ADD:2", 670, 250),
 	new Node("ADD:3", 590, 250),
@@ -46,7 +46,7 @@ const AddressBusNodes = [
 ] as const
 
 const ControlBusNodes = [
-	new Node("RAM:CTRL", 1058, 370),
+	new Node("RAM:CTRL", 1061, 370),
 	new Node("CTRL:1", 749, 370),
 	new Node("CTRL:2", 507, 370),
 	new Node("CTRL:3", 497, 370),
