@@ -6,6 +6,7 @@ import Controls from "../components/controls/Controls.svelte"
 import Debugger from "../components/debug/Debugger.svelte"
 import MessageFeed from "../components/MessageFeed.svelte"
 import Logger from "../components/debug/Logger.svelte"
+import Menu from "../components/menu/Menu.svelte"
 
 export const ram = writable<Ram>()
 export const cpu = writable<Cpu>()
@@ -14,6 +15,7 @@ export const controls = writable<Controls>()
 export const debug = writable<Debugger>()
 export const messageFeed = writable<MessageFeed>()
 export const logger = writable<Logger>()
+export const menu = writable<Menu>()
 
 const components = {
 	ram,
@@ -21,7 +23,8 @@ const components = {
 	wires,
 	controls,
 	debug,
-	messageFeed
+	messageFeed,
+	menu
 }
 
 export default components

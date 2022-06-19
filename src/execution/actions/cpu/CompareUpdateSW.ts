@@ -2,7 +2,7 @@ import cpuStore from "../../../store/cpuStore"
 import { Cache } from "../../execution"
 import { get } from "svelte/store"
 import CpuAction from "./CpuAction"
-import { cpu } from "../../../store/componentsStore"
+import { cpu } from "../../../store/components"
 
 export default class CompareUpdateSW extends CpuAction {
 	protected async action(cache: Cache): Promise<any> {

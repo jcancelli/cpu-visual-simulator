@@ -2,7 +2,7 @@
 	import { fade } from "svelte/transition"
 	import symbolTableStore from "../../store/symbolTableStore"
 	import { addressToIndex } from "../../util/ramUtil"
-	import { messageFeed } from "../../store/componentsStore"
+	import { messageFeed } from "../../store/components"
 	import { createEventDispatcher } from "svelte"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"

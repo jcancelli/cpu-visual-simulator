@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ram, cpu, wires } from "../store/componentsStore"
+	import { ram, cpu, wires } from "../store/components"
 	import { showNodes } from "../store/debugStores"
 	import Nodes from "../wires/Nodes"
 	import Wires from "../wires/Wires.svelte"

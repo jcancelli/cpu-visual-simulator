@@ -2,7 +2,7 @@
 	import ramStore from "../../store/ramStore"
 	import { parse } from "../../instruction/instructionParser"
 	import { addressToIndex } from "../../util/ramUtil"
-	import { messageFeed } from "../../store/componentsStore"
+	import { messageFeed } from "../../store/components"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"

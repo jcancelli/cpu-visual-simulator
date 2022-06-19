@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { parse } from "../../../instruction/instructionParser"
-import { ram } from "../../../store/componentsStore"
+import { ram } from "../../../store/components"
 import ramStore from "../../../store/ramStore"
 import BinaryValue from "../../../util/BinaryValue"
 import { Cache, CacheableKey } from "../../execution"

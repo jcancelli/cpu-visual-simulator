@@ -1,6 +1,6 @@
 import Animation from "./Animation"
 import { get } from "svelte/store"
-import components from "../../../store/componentsStore"
+import components from "../../../store/components"
 import { Cache, CacheableKey } from "../../execution"
 
 export type FlashableRamComponent = "ADDRESS" | "DATA"

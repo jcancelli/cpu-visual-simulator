@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { cpu } from "../../../store/componentsStore"
+import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpuStore"
 import { Cache } from "../../execution"
 import CpuAction from "./CpuAction"

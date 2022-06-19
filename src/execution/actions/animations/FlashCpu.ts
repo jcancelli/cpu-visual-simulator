@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import components from "../../../store/componentsStore"
+import components from "../../../store/components"
 import { Cache } from "../../execution"
 import Animation from "./Animation"
 

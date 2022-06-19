@@ -5,7 +5,7 @@ import { instructionToActions } from "./actions/instructionToActionConverter"
 import Instruction from "../instruction/Instruction"
 import { Operators } from "../instruction/Opcode"
 import { LAST_ADDRESS } from "../util/ramUtil"
-import { messageFeed } from "../store/componentsStore"
+import { messageFeed } from "../store/components"
 import { FETCH, INCREMENT_PC } from "./actions/actionMacros"
 import Logger from "../util/Logger"
 

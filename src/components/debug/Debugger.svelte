@@ -4,7 +4,7 @@
 	import execution from "../../execution/execution"
 	import Instruction from "../../instruction/Instruction"
 	import { Operators } from "../../instruction/Opcode"
-	import { cpu, messageFeed, ram, wires } from "../../store/componentsStore"
+	import { cpu, messageFeed, ram, wires } from "../../store/components"
 	import cpuStore from "../../store/cpuStore"
 	import {
 		showDebugger,
