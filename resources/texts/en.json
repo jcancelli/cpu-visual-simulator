@@ -1,0 +1,79 @@
+{
+    "displayName": "English",
+    "steps": {
+        "pc_to_ram": "The value of the Program Counter is put on the address bus",
+        "memory_fetch": "A memory fetch signal is sent to the RAM",
+        "instruction_to_ir": "The instruction is loaded into the Instruction Register",
+        "opcode_to_decoder": "The opcode is sent to the Decoder",
+        "cu_sets_mux": "The Control Unit sets wether the operaand is direct or immediate",
+        "cu_sets_operation": "The Control Unit sets the operation",
+        "acc_to_alu1": "The Accumulator is loaded in the ALU",
+        "pc_increment": "The Program Counter is incremented"
+    },
+    "menu": {
+        "buttons": {
+            "settings": {
+                "title": "Settings"
+            },
+            "save": {
+                "title": "Save program"
+            },
+            "open": {
+                "title": "Load program"
+            },
+            "language": {
+                "title": "Language"
+            },
+            "help": {
+                "title": "Help"
+            }
+        }
+    },
+    "controls": {
+        "labels": {
+            "execution": "Execution",
+            "step": "Step",
+            "instruction": "Instruction",
+            "speed": "Speed"
+        },
+        "buttons": {
+            "reset": {
+                "title": "Reset"
+            },
+            "play": {
+                "title": "Play"
+            },
+            "pause": {
+                "title": "Pause"
+            },
+            "end": {
+                "title": "Skip to end"
+            },
+            "play_step": {
+                "title": "Play step"
+            },
+            "skip_step": {
+                "title": "Skip step"
+            },
+            "play_instruction": {
+                "title": "Play instruction"
+            },
+            "skip_instruction": {
+                "title": "Skip instruction"
+            }
+        },
+        "sliders": {
+            "speed": {
+                "title": "Speed"
+            }
+        },
+        "checkboxes": {
+            "binary": {
+                "text": "Binary"
+            },
+            "animations": {
+                "text": "Animations"
+            }
+        }
+    }
+}
