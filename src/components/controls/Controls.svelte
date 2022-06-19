@@ -7,6 +7,7 @@
 	import { playAnimations, displayAsBinary } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
+	import Group from "./Group.svelte"
 
 	function resetExecution() {
 		execution.reset()
@@ -34,8 +35,8 @@
 <div
 	class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3"
 >
-	<Widget>
-		<div class="flex items-center justify-center gap-5">
+	<Widget class="gap-5">
+		<Group label="Execution">
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={resetExecution} icon="reset" title="Reset" disabled />
 				<ExecutionButton
@@ -45,22 +46,25 @@
 				/>
 				<ExecutionButton on:click={skipToEnd} icon="skip" title="Skip to end" disabled />
 			</div>
+		</Group>
+		<Group label="Step">
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={playStep} icon="play" title="Play step" disabled />
 				<ExecutionButton on:click={skipStep} icon="skip" title="Skip step" disabled />
 			</div>
+		</Group>
+		<Group label="Instruction">
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={playInstruction} icon="play" title="Play instruction" />
 				<ExecutionButton on:click={skipInstruction} icon="skip" title="Skip instruction" disabled />
 			</div>
-		</div>
+		</Group>
+		<Group label="Speed">
+			<Slider bind:value={$animationSpeed} min={0.1} max={3} title="Speed" />
+		</Group>
 	</Widget>
-	<Widget>
-		<div class="flex flex-col items-center justify-center font-medium">
-			SPEED
-			<Slider bind:value={$animationSpeed} min={0.1} max={3} />
-		</div>
-		<Checkbox bind:checked={$playAnimations}>ANIMATE</Checkbox>
-		<Checkbox bind:checked={$displayAsBinary}>BINARY</Checkbox>
+	<Widget class="flex-col items-baseline justify-center text-gray-200">
+		<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>
+		<Checkbox bind:checked={$playAnimations}>Animations</Checkbox>
 	</Widget>
 </div>

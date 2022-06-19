@@ -2,15 +2,15 @@
 	class="
         w-fit
         h-full
-        bg-gray-300
+        bg-neutral-500
         shadow-component
-        py-4
         px-5
         rounded-[20px]
-        border
-        border-black
+        border-2
+        border-neutral-800
         flex
         items-center
+        {$$restProps.class}
     "
 >
 	<slot />
