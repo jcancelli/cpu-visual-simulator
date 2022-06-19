@@ -144,16 +144,18 @@
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		await showAddress(address)
-		addressElements.find(e => e.getAddress() === address).flash()
+		return showAddress(address).then(() =>
+			addressElements.find(e => e.getAddress() === address).flash()
+		)
 	}
 
 	export async function flashContent(address: number) {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		await showAddress(address)
-		return cellElements.find(e => e.getAddress() === address).flash()
+		return showAddress(address).then(() =>
+			cellElements.find(e => e.getAddress() === address).flash()
+		)
 	}
 </script>
 

@@ -12,7 +12,7 @@
 		return address
 	}
 
-	export function flash() {
+	export async function flash() {
 		return flashComponent(
 			addressDiv,
 			"background-color",

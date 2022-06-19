@@ -51,7 +51,7 @@
 		}
 	}
 
-	export function flash() {
+	export async function flash() {
 		return flashComponent(
 			cell,
 			"background-color",
