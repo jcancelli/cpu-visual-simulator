@@ -181,8 +181,8 @@
 					{address}
 					bind:this={addressElements[i]}
 					class="
-						{address === firstVisibleAddress ? 'rounded-tl-2xl border-t' : ''}
-						{address === lastVisibleAddress ? 'rounded-bl-2xl' : ''}
+						{address === firstVisibleAddress ? 'first-address' : ''}
+						{address === lastVisibleAddress ? 'last-address' : ''}
 					"
 				/>
 				<RamCell

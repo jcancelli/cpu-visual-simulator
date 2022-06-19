@@ -38,3 +38,14 @@
 >
 	{$displayAsBinary ? new BinaryValue(8, address).toBinaryString() : address}
 </div>
+
+<style lang="scss">
+	.first-address {
+		border-radius: 16px 0 0 0;
+		border-top-width: 1px;
+	}
+
+	.last-address {
+		border-radius: 0 0 0 16px;
+	}
+</style>

@@ -115,19 +115,19 @@
 
 <style lang="scss">
 	.first-cell {
-		border-radius: 0 10px 0 0;
-		border-top: thin solid black;
+		border-radius: 0 16px 0 0;
+		border-top-width: 1px;
 
 		input {
-			border-radius: 0 10px 0 0;
+			border-radius: 0 16px 0 0;
 		}
 	}
 
 	.last-cell {
-		border-radius: 0 0 10px 0;
+		border-radius: 0 0 16px 0;
 
 		input {
-			border-radius: 0 0 10px 0;
+			border-radius: 0 0 16px 0;
 		}
 	}
 </style>
