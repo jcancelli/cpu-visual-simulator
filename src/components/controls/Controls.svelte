@@ -64,7 +64,6 @@
 					on:click={playStep}
 					icon="play"
 					title={$texts.controls.buttons.play_step.title}
-					disabled
 				/>
 				<ExecutionButton
 					on:click={skipStep}

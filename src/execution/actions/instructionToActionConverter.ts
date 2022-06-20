@@ -33,6 +33,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 		case "MUL":
 		case "DIV":
 		case "AND":
+		case "NOT":
 			actions.push(
 				...DECODE_OPCODE,
 				...SET_MUX,
@@ -40,22 +41,9 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation(),
+				new ExecuteAluOperation().endstep(),
 				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW()
-			)
-			break
-
-		case "NOT":
-			actions.push(
-				...DECODE_OPCODE,
-				...SET_MUX,
-				...SET_ALU_OPERATION,
-				...LOAD_ALU2(instruction.immediateFlag()),
-				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation(),
-				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW()
+				new UpdateSW().endstep()
 			)
 			break
 
@@ -67,7 +55,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:3", "SW:1"),
-				new CompareUpdateSW()
+				new CompareUpdateSW().endstep()
 			)
 			break
 
@@ -78,7 +66,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation()
+				new ExecuteAluOperation().endstep()
 			)
 			break
 
@@ -86,11 +74,11 @@ export function instructionToActions(instruction: Instruction): Action[] {
 			actions.push(
 				...DECODE_OPCODE,
 				new FlashWire("IR:2", "RAM:ADD"),
-				new FlashRam("ADDRESS", "IR:OPR"),
+				new FlashRam("ADDRESS", "IR:OPR").endstep(),
 				new StoreCpuState("ACC").sideffects(new FlashCpu("ACC")),
-				new FlashWire("ACC:1", "RAM:DATA"),
-				new FlashWire("CU:3", "RAM:CTRL"),
-				new StoreAccToAddress("IR:OPR")
+				new FlashWire("ACC:1", "RAM:DATA").endstep(),
+				new FlashWire("CU:3", "RAM:CTRL").endstep(),
+				new StoreAccToAddress("IR:OPR").endstep()
 			)
 			break
 
@@ -123,7 +111,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 			break
 
 		case "HLT":
-			actions.push(...DECODE_OPCODE, new HaltExecution())
+			actions.push(...DECODE_OPCODE, new HaltExecution().endstep())
 			break
 
 		default:
