@@ -47,6 +47,19 @@ export function instructionToActions(instruction: Instruction): Action[] {
 			)
 			break
 
+		case "NOT":
+			actions.push(
+				...DECODE_OPCODE,
+				...SET_MUX,
+				...SET_ALU_OPERATION,
+				...LOAD_ALU2(instruction.immediateFlag()),
+				new FlashWire("ALU:4", "ACC:2"),
+				new ExecuteAluOperation().endstep(),
+				new FlashWire("ALU:3", "SW:1"),
+				new UpdateSW().endstep()
+			)
+			break
+
 		case "CMP":
 			actions.push(
 				...DECODE_OPCODE,
