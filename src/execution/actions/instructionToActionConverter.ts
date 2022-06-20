@@ -20,7 +20,10 @@ import {
 	SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG,
 	SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG,
 	SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG
-} from "./actionMacros"
+} from "./presets"
+import { TTS_FINISHED } from "./Waits"
+import Parallel from "./macro/Parallel"
+import ReadStep from "./tts/ReadStep"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
@@ -40,10 +43,18 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation().endstep(),
-				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW().endstep()
+				new Parallel(
+					new FlashWire("ALU:4", "ACC:2"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
+				new Parallel(
+					new FlashWire("ALU:3", "SW:1"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
@@ -53,10 +64,18 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation().endstep(),
-				new FlashWire("ALU:3", "SW:1"),
-				new UpdateSW().endstep()
+				new Parallel(
+					new FlashWire("ALU:4", "ACC:2"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
+				new Parallel(
+					new FlashWire("ALU:3", "SW:1"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
@@ -67,8 +86,12 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new FlashWire("ALU:3", "SW:1"),
-				new CompareUpdateSW().endstep()
+				new Parallel(
+					new FlashWire("ALU:3", "SW:1"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new CompareUpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
@@ -78,20 +101,51 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new FlashWire("ALU:4", "ACC:2"),
-				new ExecuteAluOperation().endstep()
+				new Parallel(
+					new FlashWire("ALU:4", "ACC:2"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
 		case "STO":
 			actions.push(
 				...DECODE_OPCODE,
-				new FlashWire("IR:2", "RAM:ADD"),
-				new FlashRam("ADDRESS", "IR:OPR").endstep(),
-				new StoreCpuState("ACC").sideffects(new FlashCpu("ACC")),
-				new FlashWire("ACC:1", "RAM:DATA").endstep(),
-				new FlashWire("CU:3", "RAM:CTRL").endstep(),
-				new StoreAccToAddress("IR:OPR").endstep()
+				new Parallel(
+					new FlashWire("IR:2", "RAM:ADD"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new FlashRam("ADDRESS", "IR:OPR").thenWaitFor(TTS_FINISHED).endstep(),
+				new Parallel(
+					new StoreCpuState("ACC"),
+					new FlashCpu("ACC"),
+					new ReadStep("")
+					// new ShowText("")
+				),
+				new Parallel(
+					new FlashWire("ACC:1", "RAM:DATA"),
+					new ReadStep("")
+					// new ShowText("")
+				)
+					.thenWaitFor(TTS_FINISHED)
+					.endstep(),
+				new Parallel(
+					new FlashWire("CU:3", "RAM:CTRL"),
+					new ReadStep("")
+					// new ShowText("")
+				)
+					.thenWaitFor(TTS_FINISHED)
+					.endstep(),
+				new Parallel(
+					new StoreAccToAddress("IR:OPR"),
+					new ReadStep("")
+					// new ShowText("")
+				)
+					.thenWaitFor(TTS_FINISHED)
+					.endstep()
 			)
 			break
 
@@ -124,7 +178,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 			break
 
 		case "HLT":
-			actions.push(...DECODE_OPCODE, new HaltExecution().endstep())
+			actions.push(...DECODE_OPCODE, new HaltExecution())
 			break
 
 		default:

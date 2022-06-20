@@ -4,7 +4,7 @@ import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/components"
-import { FETCH, INCREMENT_PC } from "./actions/actionMacros"
+import { FETCH, INCREMENT_PC } from "./actions/presets"
 import Logger from "../util/Logger"
 import state from "./state"
 
