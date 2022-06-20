@@ -6,6 +6,7 @@ import SpeechSynthesis from "../../../util/SpeechSynthesis"
 
 export default class ReadStep extends Action {
 	readonly step: Step
+	static utteranceEndedPromise: Promise<void>
 
 	constructor(step: Step) {
 		super()
@@ -14,6 +15,8 @@ export default class ReadStep extends Action {
 	}
 
 	protected async action(): Promise<any> {
-		SpeechSynthesis.read(get(texts).steps[this.step])
+		let resolve
+		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
+		SpeechSynthesis.read(get(texts).steps[this.step], () => resolve())
 	}
 }

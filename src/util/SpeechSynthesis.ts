@@ -1,17 +1,19 @@
 import { get } from "svelte/store"
-import { animationSpeed, language as selectedLanguage, SupportedLang } from "../store/settings"
+import { language as selectedLanguage, SupportedLang } from "../store/settings"
 
 let utterance: SpeechSynthesisUtterance = null
-let rate = get(animationSpeed)
 let language = get(selectedLanguage)
 
 init()
 
-function read(text: string) {
+function read(text: string, callback: () => void = null) {
 	utterance = new SpeechSynthesisUtterance(text)
-	utterance.rate = rate
+	utterance.rate = 1.2
 	utterance.lang = language
-	utterance.onend = utterance.onerror = () => (utterance = null)
+	utterance.onend = utterance.onerror = () => {
+		onUtteranceEnded()
+		callback?.()
+	}
 	speechSynthesis.speak(utterance)
 }
 
@@ -20,15 +22,11 @@ function endedReading() {
 }
 
 function init() {
-	animationSpeed.subscribe(onExecutionSpeedChanged)
 	selectedLanguage.subscribe(onLanguageChanged)
 }
 
-function onExecutionSpeedChanged(animSpeed: number) {
-	rate = animSpeed // this value should be scaled properly
-	if (utterance !== null) {
-		utterance.rate = rate
-	}
+function onUtteranceEnded() {
+	utterance = null
 }
 
 function onLanguageChanged(lang: SupportedLang) {
