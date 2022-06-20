@@ -2,88 +2,98 @@ import { get, writable } from "svelte/store"
 import { language, SupportedLang } from "./settings"
 
 export type Step = keyof Text["steps"]
-export type Text = typeof text_placeholder
-const text_placeholder = {
-	displayName: "",
+export type Text = typeof text_default
+const text_default = {
+	displayName: "English",
 	steps: {
-		pc_to_ram: "",
-		memory_fetch: "",
-		instruction_to_ir: "",
-		opcode_to_decoder: "",
-		cu_sets_mux: "",
-		cu_sets_operation: "",
-		acc_to_alu1: "",
-		pc_increment: ""
+		pc_to_ram: "The value of the Program Counter is put on the address bus",
+		ram_to_ir: "The instruction is loaded into the Instruction Register",
+		ir_to_cu: "The opcode is sent to the Decoder",
+		cu_to_mux: "The Control Unit sets wether the operand is direct or immediate",
+		cu_to_alu: "The Control Unit sets the operation",
+		acc_to_alu1: "The Accumulator is loaded in the ALU",
+		pc_increment: "The Program Counter is incremented",
+		ir_to_alu2: "The second operand is loaded from the Instruction Register",
+		ir_to_ram: "The operand is put on the address bus",
+		memory_read: "A memory read signal is sent to the RAM",
+		memory_fetch: "A memory fetch signal is sent to the RAM",
+		memory_write: "A memory write signal is sent to the RAM",
+		ram_to_alu2: "The second operand is loaded from the RAM",
+		ir_to_pc: "The Program Counter is set to the Instruction Register operand value",
+		execute: "The ALU execute the operation",
+		alu_to_sw: "The Status Word is updated",
+		acc_to_ram: "The value of the Accumulator is put on the data bus",
+		acc_stored_to_ram: "The value of the Accumulator is written into the RAM"
 	},
 	menu: {
 		buttons: {
 			settings: {
-				title: ""
+				title: "Settings"
 			},
 			save: {
-				title: ""
+				title: "Save program"
 			},
 			open: {
-				title: ""
+				title: "Load program"
 			},
 			language: {
-				title: ""
+				title: "Language"
 			},
 			help: {
-				title: ""
+				title: "Help"
 			}
 		}
 	},
 	controls: {
 		labels: {
-			execution: "",
-			step: "",
-			instruction: "",
-			speed: ""
+			execution: "Execution",
+			step: "Step",
+			instruction: "Instruction",
+			speed: "Speed"
 		},
 		buttons: {
 			reset: {
-				title: ""
+				title: "Reset"
 			},
 			play: {
-				title: ""
+				title: "Play"
 			},
 			pause: {
-				title: ""
+				title: "Pause"
 			},
 			end: {
-				title: ""
+				title: "Skip to end"
 			},
 			play_step: {
-				title: ""
+				title: "Play step"
 			},
 			skip_step: {
-				title: ""
+				title: "Skip step"
 			},
 			play_instruction: {
-				title: ""
+				title: "Play instruction"
 			},
 			skip_instruction: {
-				title: ""
+				title: "Skip instruction"
 			}
 		},
 		sliders: {
 			speed: {
-				title: ""
+				title: "Speed"
 			}
 		},
 		checkboxes: {
 			binary: {
-				text: ""
+				text: "Binary"
 			},
 			animations: {
-				text: ""
+				text: "Animations"
 			}
 		}
 	}
 }
 
-export const texts = writable<Text>(text_placeholder)
+export const texts = writable<Text>(text_default)
 
 fetchText(get(language))
 

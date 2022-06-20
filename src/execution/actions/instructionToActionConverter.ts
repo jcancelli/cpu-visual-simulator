@@ -45,14 +45,14 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("execute")
+					// new ShowText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("alu_to_sw")
+					// new ShowText("alu_to_sw")
 				),
 				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -66,14 +66,14 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("execute")
+					// new ShowText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("alu_to_sw")
+					// new ShowText("alu_to_sw")
 				),
 				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -88,8 +88,8 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("alu_to_sw")
+					// new ShowText("alu_to_sw")
 				),
 				new CompareUpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -103,8 +103,8 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("execute")
+					// new ShowText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -115,34 +115,29 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				new Parallel(
 					new FlashWire("IR:2", "RAM:ADD"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("ir_to_ram")
+					// new ShowText("ir_to_ram")
 				),
 				new FlashRam("ADDRESS", "IR:OPR").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new StoreCpuState("ACC"),
 					new FlashCpu("ACC"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("acc_to_ram")
+					// new ShowText("acc_to_ram")
 				),
-				new Parallel(
-					new FlashWire("ACC:1", "RAM:DATA"),
-					new ReadStep("")
-					// new ShowText("")
-				)
-					.thenWaitFor(TTS_FINISHED)
-					.endstep(),
+
+				new FlashWire("ACC:1", "RAM:DATA").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("CU:3", "RAM:CTRL"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("memory_write")
+					// new ShowText("memory_write")
 				)
 					.thenWaitFor(TTS_FINISHED)
 					.endstep(),
 				new Parallel(
 					new StoreAccToAddress("IR:OPR"),
-					new ReadStep("")
-					// new ShowText("")
+					new ReadStep("acc_stored_to_ram")
+					// new ShowText("acc_stored_to_ram")
 				)
 					.thenWaitFor(TTS_FINISHED)
 					.endstep()
