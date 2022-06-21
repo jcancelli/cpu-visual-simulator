@@ -6,3 +6,13 @@ export function download(content: any, fileName: string) {
 	a.download = fileName
 	a.click()
 }
+
+export async function upload(accept: string) {
+	return new Promise<FileList>((resolve, reject) => {
+		const input = document.createElement("input")
+		input.type = "file"
+		input.accept = accept
+		input.click()
+		input.oninput = () => resolve(input.files)
+	})
+}
