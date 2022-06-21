@@ -84,11 +84,11 @@
             "animations": {
                 "text": "Animations"
             }
-        },
-        "errors": {
-            "program_parsing": {
-                "invalid_syntax": "Invalid syntax at line {0}"
-            }
+        }
+    },
+    "errors": {
+        "program_parsing": {
+            "invalid_syntax": "Invalid syntax at line {0}"
         }
     }
 }
