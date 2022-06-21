@@ -93,7 +93,7 @@ const text_default = {
 	},
 	errors: {
 		program_parsing: {
-			invalid_syntax: "Invalid syntax at line {0}"
+			invalid_syntax: 'Invalid syntax at line {0}: "{1}"'
 		}
 	}
 }
