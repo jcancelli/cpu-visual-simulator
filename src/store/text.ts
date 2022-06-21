@@ -95,6 +95,9 @@ const text_default = {
 		program_parsing: {
 			invalid_syntax: 'Invalid syntax at line {0}: "{1}"',
 			parsing_error: 'Error on line {0}: "{1}"'
+		},
+		symbol_table: {
+			label_already_exists: "Label already exists"
 		}
 	}
 }
