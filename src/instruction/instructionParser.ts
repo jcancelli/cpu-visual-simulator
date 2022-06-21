@@ -1,5 +1,5 @@
 import InstructionParsingError from "../errors/InstructionParsingError"
-import symbolTableStore from "../store/symbolTableStore"
+import symbolTableStore from "../store/symbolTable"
 import { isSigned, pad } from "../util/binaryUtil"
 import BinaryValue from "../util/BinaryValue"
 import { isImmediateFlagSet, removeFlags, setImmediateFlag } from "../util/instructionUtil"

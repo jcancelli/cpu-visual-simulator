@@ -1,6 +1,5 @@
 <script lang="ts">
-	import symbolTableStore from "../../store/symbolTableStore"
-	import { addressToIndex } from "../../util/ramUtil"
+	import symbolTableStore from "../../store/symbolTable"
 	import { messageFeed } from "../../store/components"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"
@@ -10,7 +9,7 @@
 
 	let input: HTMLInputElement
 
-	$: label = $symbolTableStore[addressToIndex(address)]
+	$: label = $symbolTableStore[address]
 	$: inputTransition = !label
 	$: isExpanded = selected || !!label
 	$: selected && input && input.focus()
@@ -66,7 +65,7 @@
 			if (!input) return
 			Logger.info(`RamLabel input: "${input.value}"`, "USER_INPUT")
 			symbolTableStore.setLabel(address, input.value)
-			label = $symbolTableStore[addressToIndex(address)]
+			label = $symbolTableStore[address]
 		} catch (error) {
 			$messageFeed.message("ERROR", error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
