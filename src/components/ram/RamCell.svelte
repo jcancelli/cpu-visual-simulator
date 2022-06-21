@@ -7,6 +7,7 @@
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/Logger"
 	import { displayAsBinary } from "../../store/settings"
+	import symbolTable from "../../store/symbolTable"
 
 	export let address: number
 	export let selected: boolean = false
@@ -43,7 +44,7 @@
 		try {
 			if (input && input.value !== "") {
 				Logger.info(`RamCell input: "${input.value}"`, "USER_INPUT")
-				ramStore.write(address, parse(input.value.trim(), $displayAsBinary))
+				ramStore.write(address, parse(input.value.trim(), $displayAsBinary, $symbolTable))
 			}
 		} catch (error) {
 			$messageFeed.message("ERROR", error.message)
