@@ -50,11 +50,16 @@ function clear() {
 	store.set(arr)
 }
 
+function load(labels: string[]) {
+	store.set(labels)
+}
+
 export default {
 	subscribe: store.subscribe,
 	getLabel,
 	getAddress,
 	setLabel,
 	hasLabel,
-	clear
+	clear,
+	load
 }
