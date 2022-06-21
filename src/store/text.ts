@@ -90,6 +90,11 @@ const text_default = {
 				text: "Animations"
 			}
 		}
+	},
+	errors: {
+		program_parsing: {
+			invalid_syntax: "Invalid syntax at line {0}"
+		}
 	}
 }
 
