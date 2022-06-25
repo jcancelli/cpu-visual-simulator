@@ -108,6 +108,7 @@ const text_default = {
 export const texts = writable<Text>(text_default)
 
 fetchText(get(language))
+language.subscribe(fetchText)
 
 export function fetchText(lang: SupportedLang) {
 	fetch(`resources/texts/${lang}.json`)

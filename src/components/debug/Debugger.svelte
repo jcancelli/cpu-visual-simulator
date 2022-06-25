@@ -13,7 +13,13 @@
 		showNodesCoordinates
 	} from "../../store/debugStores"
 	import ramStore from "../../store/ramStore"
-	import { displayAsBinary, displayLabels, textToSpeech } from "../../store/settings"
+	import {
+		displayAsBinary,
+		displayLabels,
+		language,
+		SUPPORTED_LANGS,
+		textToSpeech
+	} from "../../store/settings"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
@@ -201,6 +207,9 @@
 				</svelte:fragment>
 			</Widget>
 			<Widget title="DISPLAY">
+				<svelte:fragment slot="inputs">
+					<Select options={[...SUPPORTED_LANGS]} bind:value={$language} class="w-fit" />
+				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>
 					<Checkbox bind:checked={$displayLabels}>Labels</Checkbox>
