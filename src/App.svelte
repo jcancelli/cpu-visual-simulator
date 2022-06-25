@@ -12,8 +12,8 @@
 	let app: HTMLDivElement
 
 	function scale() {
-		const width = 1400,
-			height = 800
+		const width = 1400
+		const height = 800
 		let widthRatio = window.innerWidth / width
 		let heightRatio = window.innerHeight / height
 		let scale = widthRatio < heightRatio ? widthRatio : heightRatio
