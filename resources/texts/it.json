@@ -1,0 +1,101 @@
+{
+    "displayName": "Italiano",
+    "steps": {
+        "pc_to_ram": "Il valore del Program Counter è messo sull'address bus",   
+        "ram_to_ir": "L'istruzione è caricata nell'Instruction Register",
+        "ir_to_cu": "Il codice operativo viene decodificato",
+        "cu_to_mux": "La Control Unit decide se l'operando è diretto o immediato",
+        "cu_to_alu": "La Control Unit setta l'operazione",
+        "acc_to_alu1": "L'accumulatore è caricato nella ALU",
+        "pc_increment": "Il Program Counter è incrementato",
+        "ir_to_alu2": "Il secondo operando viene caricato dall'Instruction Register",
+        "ir_to_ram": "L'operando viene messo sull'address bus",
+        "memory_read": "Un segnale di memory read viene mandato alla RAM",
+        "memory_fetch": "Un segnale di memory fetch viene mandato alla RAM",
+        "memory_write": "Un segnale di memory write viene mandato alla RAM",
+        "ram_to_alu2": "Il secondo operando viene caricato dalla RAM",
+        "ir_to_pc": "Il Program Counter è settato al valore dell'operando nell'Instruction Register",
+        "execute": "L'operazione viene eseguita",
+        "alu_to_sw": "La Status Word viene aggiornata",
+        "acc_to_ram": "Il valore dell'Accumulatore è messo sul data bus",
+	    "acc_stored_to_ram": "Il valore dell'Accumulatore viene scritto in RAM"
+    },
+    "menu": {
+        "buttons": {
+            "settings": {
+                "title": "Impostazioni"
+            },
+            "save": {
+                "title": "Salva programma"
+            },
+            "open": {
+                "title": "Carica programma"
+            },
+            "language": {
+                "title": "Lingua"
+            },
+            "help": {
+                "title": "Aiuto"
+            }
+        }
+    },
+    "controls": {
+        "labels": {
+            "execution": "Esecuzione",
+            "step": "Step",
+            "instruction": "Istruzione",
+            "speed": "Velocità"
+        },
+        "buttons": {
+            "reset": {
+                "title": "Reset"
+            },
+            "play": {
+                "title": "Esegui"
+            },
+            "pause": {
+                "title": "Pausa"
+            },
+            "end": {
+                "title": "Salta alla fine"
+            },
+            "play_step": {
+                "title": "Esegui step"
+            },
+            "skip_step": {
+                "title": "Salta a fine step"
+            },
+            "play_instruction": {
+                "title": "Esegui istruzione"
+            },
+            "skip_instruction": {
+                "title": "Salta a fine istruzione"
+            }
+        },
+        "sliders": {
+            "speed": {
+                "title": "Velocità"
+            }
+        },
+        "checkboxes": {
+            "binary": {
+                "text": "Binario"
+            },
+            "animations": {
+                "text": "Animazioni"
+            }
+        }
+    },
+    "errors": {
+        "program_parsing": {
+            "invalid_syntax": "Sintassi invalida a riga {0}: \"{1}\"",
+            "parsing_error": "Errore a riga {0}: \"{1}\""
+        },
+		"symbol_table": {
+			"label_already_exists": "Label esiste già"
+		},
+        "user_input": {
+            "invalid_file_name": "Nome file invalido"
+        }
+    }
+}
