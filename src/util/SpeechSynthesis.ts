@@ -8,7 +8,7 @@ init()
 
 function read(text: string, callback: () => void = null) {
 	utterance = new SpeechSynthesisUtterance(text)
-	utterance.rate = 1.2
+	utterance.rate = 1.1
 	utterance.lang = language
 	utterance.onend = utterance.onerror = () => {
 		onUtteranceEnded()
