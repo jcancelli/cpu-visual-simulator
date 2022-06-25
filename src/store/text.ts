@@ -98,6 +98,9 @@ const text_default = {
 		},
 		symbol_table: {
 			label_already_exists: "Label already exists"
+		},
+		user_input: {
+			invalid_file_name: "Invalid file name"
 		}
 	}
 }

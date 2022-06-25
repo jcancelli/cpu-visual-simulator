@@ -10,7 +10,7 @@ import {
 import ramStore from "../store/ramStore"
 import symbolTable from "../store/symbolTable"
 import texts from "../store/text"
-import { FIRST_ADDRESS, indexToAddress, WORD_SIZE } from "./ramUtil"
+import { FIRST_ADDRESS, indexToAddress, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
 import { interpolate } from "./template"
 
 type RawInstruction = {
@@ -28,7 +28,7 @@ const VALID_LINE_PATTERN = new RegExp(
 	)})( ${LABEL_PATTERN.source})?$`
 )
 
-export function load(raw: string) {
+export function load(raw: string): void {
 	const lines = raw.split(/\r\n|\r|\n/g)
 	const rawInstructions: RawInstruction[] = []
 	const labels: string[] = []
@@ -77,4 +77,20 @@ export function load(raw: string) {
 	})
 }
 
-export function save() {}
+export function save(): string {
+	const LABEL_COLUMN = 20
+	let output = ""
+	let instruction = ""
+	let space = ""
+	for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
+		instruction = ramStore.read(address).symbolic()
+		output += `\t${instruction}`
+		space = " ".repeat(LABEL_COLUMN - instruction.length)
+		if (symbolTable.getLabel(address)) {
+			output += `${space}:${symbolTable.getLabel(address)}`
+		}
+		output += "\n"
+	}
+	output = output.replace(/(\tNOP\n)*$/g, "").replace(/\n$/g, "")
+	return output
+}

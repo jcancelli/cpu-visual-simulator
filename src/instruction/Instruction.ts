@@ -48,4 +48,8 @@ export default class Instruction {
 	binaryOperand(): string {
 		return this.value.getByte(2).toBinaryString()
 	}
+
+	symbolic(): string {
+		return this.symbolicOpcode + (this.symbolicOperand !== "" ? ` ${this.symbolicOperand}` : "")
+	}
 }
