@@ -13,7 +13,7 @@
 		showNodesCoordinates
 	} from "../../store/debugStores"
 	import ramStore from "../../store/ramStore"
-	import { displayAsBinary, displayLabels } from "../../store/settings"
+	import { displayAsBinary, displayLabels, textToSpeech } from "../../store/settings"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
@@ -212,6 +212,7 @@
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
+					<Checkbox bind:checked={$textToSpeech}>TTS Enabled</Checkbox>
 				</svelte:fragment>
 			</Widget>
 		</div>
