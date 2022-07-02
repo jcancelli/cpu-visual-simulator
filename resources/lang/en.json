@@ -1,5 +1,10 @@
 {
     "displayName": "English",
+    "tts": {
+        "prefered_voices_URIs": [
+            "Google US English"
+        ]
+    },
     "steps": {
         "pc_to_ram": "The value of the Program Counter is put on the address bus",   
         "ram_to_ir": "The instruction is loaded into the Instruction Register",
@@ -91,6 +96,18 @@
             "invalid_syntax": "Invalid syntax at line {0}: \"{1}\"",
             "parsing_error": "Error on line {0}: \"{1}\""
         },
+		"instruction_parsing": {
+			"invalid_binary_input": "Invalid binary input",
+			"invalid_symbolic_input": "Invalid input",
+			"invalid_opcode": "Invalid opcode",
+			"operand_not_allowed": "Opcode doesn't allow an operand",
+			"operand_required": "Opcode requires an operand",
+			"unknown_label": "Label not found",
+			"immediate_operand_not_allowed": "Opcode doesn't allow an immediate operand",
+			"invalid_immediate_operand": "Operand is not a valid 8-bit signed value",
+			"invalid_direct_operand": "Operand is not a valid address",
+			"invalid_data": "Input is not a valid 16-bit signed value"
+		},
 		"symbol_table": {
 			"label_already_exists": "Label already exists"
 		},
