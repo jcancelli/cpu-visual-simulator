@@ -7,7 +7,7 @@ let voice: SpeechSynthesisVoice = getVoice()
 
 selectedLanguage.subscribe(() => (voice = getVoice()))
 
-function read(text: string, callbacks: (() => void)[] = []) {
+function read(text: string, ...callbacks: (() => void)[]) {
 	utterance = new SpeechSynthesisUtterance(text)
 	utterance.rate = 1.1
 	utterance.voice = voice
