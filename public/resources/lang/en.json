@@ -1,5 +1,10 @@
 {
     "displayName": "English",
+    "tts": {
+        "prefered_voices_URIs": [
+            "Google US English"
+        ]
+    },
     "steps": {
         "pc_to_ram": "The value of the Program Counter is put on the address bus",   
         "ram_to_ir": "The instruction is loaded into the Instruction Register",

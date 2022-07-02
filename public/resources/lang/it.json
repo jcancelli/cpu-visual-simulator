@@ -1,5 +1,10 @@
 {
     "displayName": "Italiano",
+    "tts": {
+        "prefered_voices_URIs": [
+            "Google italiano"
+        ]
+    },
     "steps": {
         "pc_to_ram": "Il valore del Program Counter è messo sull'address bus",   
         "ram_to_ir": "L'istruzione è caricata nell'Instruction Register",

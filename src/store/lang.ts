@@ -5,6 +5,9 @@ export type Step = keyof Lang["steps"]
 export type Lang = typeof _default
 const _default = {
 	displayName: "",
+	tts: {
+		prefered_voices_URIs: []
+	},
 	steps: {
 		pc_to_ram: "",
 		ram_to_ir: "",
@@ -117,15 +120,15 @@ const _default = {
 	}
 }
 
-export const texts = writable<Lang>(_default)
+export const lang = writable<Lang>(_default)
 
 fetchText(get(language))
 language.subscribe(fetchText)
 
-export function fetchText(lang: SupportedLang) {
-	fetch(`resources/lang/${lang}.json`)
+export function fetchText(_lang: SupportedLang) {
+	fetch(`resources/lang/${_lang}.json`)
 		.then(res => res.json())
-		.then(data => texts.set(data as Lang))
+		.then(data => lang.set(data as Lang))
 }
 
-export default texts
+export default lang
