@@ -3,14 +3,17 @@ import lang from "../store/lang"
 import { language as selectedLanguage } from "../store/settings"
 
 let utterance: SpeechSynthesisUtterance = null
+let voice: SpeechSynthesisVoice = getVoice()
 
-function read(text: string, callback: () => void = null) {
+selectedLanguage.subscribe(() => (voice = getVoice()))
+
+function read(text: string, callbacks: (() => void)[] = []) {
 	utterance = new SpeechSynthesisUtterance(text)
 	utterance.rate = 1.1
-	utterance.voice = getVoice()
+	utterance.voice = voice
 	utterance.onend = utterance.onerror = () => {
-		onUtteranceEnded()
-		callback?.()
+		utterance = null
+		callbacks.forEach(callback => callback?.())
 	}
 	speechSynthesis.speak(utterance)
 }
@@ -27,15 +30,11 @@ function getVoice(): SpeechSynthesisVoice {
 	return voices.find(v => v.lang.startsWith(get(selectedLanguage))) || voices.find(v => v.default)
 }
 
-function endedReading() {
+function isUtteranceEnded() {
 	return utterance === null
-}
-
-function onUtteranceEnded() {
-	utterance = null
 }
 
 export default {
 	read,
-	endedReading
+	isUtteranceEnded
 }
