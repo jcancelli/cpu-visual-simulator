@@ -147,6 +147,7 @@ function instruction() {
 
 function reset() {
 	pause()
+	cpuStore.setIsHalting(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")
