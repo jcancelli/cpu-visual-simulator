@@ -1,4 +1,4 @@
-import ramStore from "../../../store/ramStore"
+import ramStore from "../../../store/ram"
 import state, { Key as StateKey } from "../../state"
 import StateAction from "./StateAction"
 

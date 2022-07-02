@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ramStore from "../../store/ramStore"
+	import ramStore from "../../store/ram"
 	import { parse } from "../../instruction/instructionParser"
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/components"

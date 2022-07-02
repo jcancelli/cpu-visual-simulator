@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store"
-import cpuStore from "../store/cpuStore"
+import cpuStore from "../store/cpu"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"

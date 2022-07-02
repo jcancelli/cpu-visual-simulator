@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { parse } from "../../../instruction/instructionParser"
 import { ram } from "../../../store/components"
-import ramStore from "../../../store/ramStore"
+import ramStore from "../../../store/ram"
 import BinaryValue from "../../../util/BinaryValue"
 import state, { Key as StateKey } from "../../state"
 import RamAction from "./RamAction"

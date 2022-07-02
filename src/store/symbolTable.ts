@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store"
 import CheckedError from "../errors/CheckedError"
 import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
-import ramStore from "./ramStore"
+import ramStore from "./ram"
 import texts from "./text"
 
 const store = writable<string[]>([])

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import cpuStore from "../../store/cpuStore"
+	import cpuStore from "../../store/cpu"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"

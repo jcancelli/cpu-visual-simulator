@@ -4,7 +4,7 @@
 	import RamAddress from "./RamAddress.svelte"
 	import RamCell from "./RamCell.svelte"
 	import ComponentLabel from "../ComponentLabel.svelte"
-	import ramStore from "../../store/ramStore"
+	import ramStore from "../../store/ram"
 	import ramSelection from "../../store/ramSelection"
 	import { afterUpdate } from "svelte"
 

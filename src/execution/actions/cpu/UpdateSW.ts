@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
-import cpuStore from "../../../store/cpuStore"
+import cpuStore from "../../../store/cpu"
 import state from "../../state"
 import CpuAction from "./CpuAction"
 

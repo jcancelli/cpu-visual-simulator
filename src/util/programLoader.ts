@@ -7,7 +7,7 @@ import {
 	DATA as DATA_PATTERN,
 	parse
 } from "../instruction/instructionParser"
-import ramStore from "../store/ramStore"
+import ramStore from "../store/ram"
 import symbolTable from "../store/symbolTable"
 import texts from "../store/text"
 import { FIRST_ADDRESS, indexToAddress, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"

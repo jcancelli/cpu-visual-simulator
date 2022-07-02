@@ -5,14 +5,14 @@
 	import Instruction from "../../instruction/Instruction"
 	import { Operators } from "../../instruction/Opcode"
 	import { cpu, messageFeed, ram, wires } from "../../store/components"
-	import cpuStore from "../../store/cpuStore"
+	import cpuStore from "../../store/cpu"
 	import {
 		showDebugger,
 		showNodes,
 		showNodesNames,
 		showNodesCoordinates
 	} from "../../store/debugStores"
-	import ramStore from "../../store/ramStore"
+	import ramStore from "../../store/ram"
 	import {
 		displayAsBinary,
 		displayLabels,

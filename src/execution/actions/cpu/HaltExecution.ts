@@ -1,4 +1,4 @@
-import cpuStore from "../../../store/cpuStore"
+import cpuStore from "../../../store/cpu"
 import CpuAction from "./CpuAction"
 
 export default class HaltExecution extends CpuAction {

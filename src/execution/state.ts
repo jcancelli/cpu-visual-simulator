@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import Instruction from "../instruction/Instruction"
 import { Operators } from "../instruction/Opcode"
-import cpu from "../store/cpuStore"
+import cpu from "../store/cpu"
 
 export type Key = keyof State
 export type State = {
