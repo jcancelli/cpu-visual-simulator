@@ -9,7 +9,7 @@ import {
 } from "../instruction/instructionParser"
 import ramStore from "../store/ram"
 import symbolTable from "../store/symbolTable"
-import texts from "../store/text"
+import lang from "../store/lang"
 import { FIRST_ADDRESS, indexToAddress, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
 import { interpolate } from "./template"
 
@@ -42,7 +42,7 @@ export function load(raw: string): void {
 		if (!VALID_LINE_PATTERN.test(line)) {
 			const badInput = line.length > 30 ? `${line.slice(0, 30)}...` : line
 			throw new ProgramParsingError(
-				interpolate(get(texts).errors.program_parsing.invalid_syntax, lineNumber, badInput)
+				interpolate(get(lang).errors.program_parsing.invalid_syntax, lineNumber, badInput)
 			)
 		}
 		const [rawInstruction, label] = line.split(":").map(token => token.trim())
@@ -63,7 +63,7 @@ export function load(raw: string): void {
 		} catch (error) {
 			throw new ProgramParsingError(
 				interpolate(
-					get(texts).errors.program_parsing.parsing_error,
+					get(lang).errors.program_parsing.parsing_error,
 					rawInstruction.lineNumber,
 					error.message
 				)

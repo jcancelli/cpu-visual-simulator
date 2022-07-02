@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store"
 import CheckedError from "../errors/CheckedError"
 import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 import ramStore from "./ram"
-import texts from "./text"
+import lang from "./lang"
 
 const store = writable<string[]>([])
 
@@ -28,7 +28,7 @@ function setLabel(address: number, label: string): void {
 		return
 	}
 	if (hasLabel(label)) {
-		throw new CheckedError(get(texts).errors.symbol_table.label_already_exists)
+		throw new CheckedError(get(lang).errors.symbol_table.label_already_exists)
 	}
 	store.update(oldValues => {
 		oldValues[address] = label

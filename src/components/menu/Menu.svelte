@@ -5,7 +5,7 @@
 
 	import { messageFeed } from "../../store/components"
 
-	import texts from "../../store/text"
+	import texts from "../../store/lang"
 	import { download, upload } from "../../util/fileUtil"
 	import Logger from "../../util/Logger"
 	import { load, save } from "../../util/programLoader"

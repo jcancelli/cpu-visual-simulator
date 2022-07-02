@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import texts, { Step } from "../../../store/text"
+import lang, { Step } from "../../../store/lang"
 import Action from "../Action"
 import { TTS_ENABLED } from "../Conditions"
 import SpeechSynthesis from "../../../util/SpeechSynthesis"
@@ -17,6 +17,6 @@ export default class ReadStep extends Action {
 	protected async action(): Promise<any> {
 		let resolve
 		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
-		SpeechSynthesis.read(get(texts).steps[this.step], () => resolve())
+		SpeechSynthesis.read(get(lang).steps[this.step], () => resolve())
 	}
 }

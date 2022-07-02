@@ -6,7 +6,7 @@
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
-	import texts from "../../store/text"
+	import texts from "../../store/lang"
 
 	function resetExecution() {
 		execution.reset()
