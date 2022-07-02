@@ -47,7 +47,7 @@
 				ramStore.write(address, parse(input.value.trim(), $displayAsBinary, $symbolTable))
 			}
 		} catch (error) {
-			$messageFeed.message("ERROR", error.message)
+			$messageFeed.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 		}
 	}

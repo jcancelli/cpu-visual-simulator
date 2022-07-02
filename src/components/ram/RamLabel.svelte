@@ -67,7 +67,7 @@
 			symbolTableStore.setLabel(address, input.value)
 			label = $symbolTableStore[address]
 		} catch (error) {
-			$messageFeed.message("ERROR", error.message)
+			$messageFeed.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 		}
 	}

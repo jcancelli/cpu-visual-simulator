@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Stage from "./components/Stage.svelte"
 	import Debugger from "./components/debug/Debugger.svelte"
-	import MessageFeed from "./components/MessageFeed.svelte"
+	import MessageFeed from "./components/messages/Feed.svelte"
 	import { controls, debug, messageFeed, logger, menu } from "./store/components"
 	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"

@@ -17,7 +17,7 @@
 			load(await file.text())
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
-			$messageFeed.message("ERROR", error.message)
+			$messageFeed.error(error.message)
 		}
 		Logger.info("Program loaded from file", "USER_INPUT")
 	}
@@ -32,7 +32,7 @@
 			}
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
-			$messageFeed.message("ERROR", error.message)
+			$messageFeed.error(error.message)
 		}
 
 		Logger.info("Program saved to file", "USER_INPUT")

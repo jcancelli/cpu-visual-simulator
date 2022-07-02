@@ -4,7 +4,7 @@ import Cpu from "../components/cpu/Cpu.svelte"
 import Wires from "../wires/Wires.svelte"
 import Controls from "../components/controls/Controls.svelte"
 import Debugger from "../components/debug/Debugger.svelte"
-import MessageFeed from "../components/MessageFeed.svelte"
+import MessageFeed from "../components/messages/Feed.svelte"
 import Logger from "../components/debug/Logger.svelte"
 import Menu from "../components/menu/Menu.svelte"
 

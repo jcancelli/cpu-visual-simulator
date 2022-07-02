@@ -89,7 +89,7 @@ async function cycle() {
 		}
 	} catch (error) {
 		cpuStore.setIsHalting(true)
-		get(messageFeed).message("ERROR", error.message)
+		get(messageFeed).error(error.message)
 		Logger.error(error, "EXECUTION", error.isChecked)
 	} finally {
 		if (get(cpuStore).isHalting) {

@@ -172,10 +172,10 @@
 					<Input bind:value={message} />
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
-					<Button on:click={() => $messageFeed.message("ERROR", message)}>Error</Button>
-					<Button on:click={() => $messageFeed.message("WARNING", message)}>Warning</Button>
-					<Button on:click={() => $messageFeed.message("SUCCESS", message)}>Success</Button>
-					<Button on:click={() => $messageFeed.message("INFO", message)}>Info</Button>
+					<Button on:click={() => $messageFeed.error(message)}>Error</Button>
+					<Button on:click={() => $messageFeed.warning(message)}>Warning</Button>
+					<Button on:click={() => $messageFeed.success(message)}>Success</Button>
+					<Button on:click={() => $messageFeed.info(message)}>Info</Button>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="WIRES">
