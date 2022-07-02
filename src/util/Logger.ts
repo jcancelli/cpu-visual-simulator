@@ -1,4 +1,4 @@
-import { logsStore } from "../store/logStore"
+import { logsStore } from "../store/logs"
 
 const FIRST_TIMESTAMP = Date.now()
 

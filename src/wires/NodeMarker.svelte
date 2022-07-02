@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Node from "./Node"
-	import { showNodesNames, showNodesCoordinates } from "../store/debugStores"
+	import { showNodesNames, showNodesCoordinates } from "../store/debug"
 
 	export let node: Node
 </script>

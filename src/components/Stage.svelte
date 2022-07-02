@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ram, cpu, wires } from "../store/components"
-	import { showNodes } from "../store/debugStores"
+	import { showNodes } from "../store/debug"
 	import Nodes from "../wires/Nodes"
 	import Wires from "../wires/Wires.svelte"
 	import Cpu from "./cpu/Cpu.svelte"

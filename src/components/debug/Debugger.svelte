@@ -6,12 +6,7 @@
 	import { Operators } from "../../instruction/Opcode"
 	import { cpu, messageFeed, ram, wires } from "../../store/components"
 	import cpuStore from "../../store/cpu"
-	import {
-		showDebugger,
-		showNodes,
-		showNodesNames,
-		showNodesCoordinates
-	} from "../../store/debugStores"
+	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
 	import {
 		displayAsBinary,
