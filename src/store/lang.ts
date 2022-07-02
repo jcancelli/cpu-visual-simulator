@@ -96,6 +96,18 @@ const _default = {
 			invalid_syntax: "",
 			parsing_error: ""
 		},
+		instruction_parsing: {
+			invalid_binary_input: "",
+			invalid_symbolic_input: "",
+			invalid_opcode: "",
+			operand_not_allowed: "",
+			operand_required: "",
+			unknown_label: "",
+			immediate_operand_not_allowed: "",
+			invalid_immediate_operand: "",
+			invalid_direct_operand: "",
+			invalid_data: ""
+		},
 		symbol_table: {
 			label_already_exists: ""
 		},
