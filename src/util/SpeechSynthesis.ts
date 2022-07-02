@@ -17,13 +17,14 @@ function read(text: string, callback: () => void = null) {
 
 function getVoice(): SpeechSynthesisVoice {
 	const prefered_voices_URIs = get(lang).tts.prefered_voices_URIs
+	const voices = speechSynthesis.getVoices()
 	for (let voice_URI of prefered_voices_URIs) {
-		let voice = speechSynthesis.getVoices().find(v => v.voiceURI === voice_URI)
+		let voice = voices.find(v => v.voiceURI === voice_URI)
 		if (voice) {
 			return voice
 		}
 	}
-	return speechSynthesis.getVoices().find(v => v.lang.startsWith(get(selectedLanguage)))
+	return voices.find(v => v.lang.startsWith(get(selectedLanguage))) || voices.find(v => v.default)
 }
 
 function endedReading() {
