@@ -7,9 +7,11 @@
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
 	import lang from "../../store/lang"
+	import cpu from "../../store/cpu"
 
 	function resetExecution() {
 		execution.reset()
+		cpu.reset()
 	}
 
 	function toggleExecution() {
@@ -41,7 +43,6 @@
 					on:click={resetExecution}
 					icon="reset"
 					title={$lang.controls.buttons.reset.title}
-					disabled
 				/>
 				<ExecutionButton
 					on:click={toggleExecution}
