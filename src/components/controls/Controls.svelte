@@ -8,6 +8,8 @@
 	import Group from "./Group.svelte"
 	import lang from "../../store/lang"
 	import cpu from "../../store/cpu"
+	import StepText from "./StepText.svelte"
+	import { stepText } from "../../store/components"
 
 	function resetExecution() {
 		execution.reset()
@@ -102,4 +104,5 @@
 		<Checkbox bind:checked={$displayAsBinary}>{$lang.controls.checkboxes.binary.text}</Checkbox>
 		<Checkbox bind:checked={$playAnimations}>{$lang.controls.checkboxes.animations.text}</Checkbox>
 	</Widget>
+	<StepText bind:this={$stepText} />
 </div>
