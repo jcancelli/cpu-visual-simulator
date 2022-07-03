@@ -24,6 +24,7 @@ import {
 import { TTS_FINISHED } from "./Waits"
 import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
+import StepText from "./controls/StepText"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
@@ -45,14 +46,14 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("execute")
-					// new ShowText("execute")
+					new ReadStep("execute"),
+					new StepText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("alu_to_sw")
-					// new ShowText("alu_to_sw")
+					new ReadStep("alu_to_sw"),
+					new StepText("alu_to_sw")
 				),
 				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -66,14 +67,14 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("execute")
-					// new ShowText("execute")
+					new ReadStep("execute"),
+					new StepText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("alu_to_sw")
-					// new ShowText("alu_to_sw")
+					new ReadStep("alu_to_sw"),
+					new StepText("alu_to_sw")
 				),
 				new UpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -88,8 +89,8 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:3", "SW:1"),
-					new ReadStep("alu_to_sw")
-					// new ShowText("alu_to_sw")
+					new ReadStep("alu_to_sw"),
+					new StepText("alu_to_sw")
 				),
 				new CompareUpdateSW().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -103,8 +104,8 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
 					new FlashWire("ALU:4", "ACC:2"),
-					new ReadStep("execute")
-					// new ShowText("execute")
+					new ReadStep("execute"),
+					new StepText("execute")
 				),
 				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep()
 			)
@@ -115,29 +116,29 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...DECODE_OPCODE,
 				new Parallel(
 					new FlashWire("IR:2", "RAM:ADD"),
-					new ReadStep("ir_to_ram")
-					// new ShowText("ir_to_ram")
+					new ReadStep("ir_to_ram"),
+					new StepText("ir_to_ram")
 				),
 				new FlashRam("ADDRESS", "IR:OPR").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new StoreCpuState("ACC"),
 					new FlashCpu("ACC"),
-					new ReadStep("acc_to_ram")
-					// new ShowText("acc_to_ram")
+					new ReadStep("acc_to_ram"),
+					new StepText("acc_to_ram")
 				),
 
 				new FlashWire("ACC:1", "RAM:DATA").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					new FlashWire("CU:3", "RAM:CTRL"),
-					new ReadStep("memory_write")
-					// new ShowText("memory_write")
+					new ReadStep("memory_write"),
+					new StepText("memory_write")
 				)
 					.thenWaitFor(TTS_FINISHED)
 					.endstep(),
 				new Parallel(
 					new StoreAccToAddress("IR:OPR"),
-					new ReadStep("acc_stored_to_ram")
-					// new ShowText("acc_stored_to_ram")
+					new ReadStep("acc_stored_to_ram"),
+					new StepText("acc_stored_to_ram")
 				)
 					.thenWaitFor(TTS_FINISHED)
 					.endstep()
