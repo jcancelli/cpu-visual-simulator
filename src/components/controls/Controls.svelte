@@ -10,29 +10,52 @@
 	import cpu from "../../store/cpu"
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
+	import Logger from "../../util/Logger"
 
 	function resetExecution() {
+		Logger.info(`Reset pressed`, "USER_INPUT")
 		execution.reset()
 		cpu.reset()
 	}
 
 	function toggleExecution() {
+		Logger.info(`Toggle execution pressed`, "USER_INPUT")
 		execution.toggle()
 	}
 
-	function skipToEnd() {}
+	function skipToEnd() {
+		Logger.info(`Skip execution pressed`, "USER_INPUT")
+	}
 
 	function playStep() {
+		Logger.info(`Play step pressed`, "USER_INPUT")
 		execution.step()
 	}
 
-	function skipStep() {}
+	function skipStep() {
+		Logger.info(`Skip step pressed`, "USER_INPUT")
+	}
 
 	function playInstruction() {
+		Logger.info(`Play instruction pressed`, "USER_INPUT")
 		execution.instruction()
 	}
 
-	function skipInstruction() {}
+	function skipInstruction() {
+		Logger.info(`Skip instruction pressed`, "USER_INPUT")
+	}
+
+	function speedChanged() {
+		Logger.info(`Speed slider moved - ${$animationSpeed}`, "USER_INPUT")
+	}
+
+	function binaryToggled() {
+		Logger.info(`Binary toggle pressed - ${$displayAsBinary}`, "USER_INPUT")
+	}
+
+	function animationsToggled() {
+		Logger.info(`Animations toggle pressed - ${$playAnimations}`, "USER_INPUT")
+	}
 </script>
 
 <div
@@ -97,12 +120,17 @@
 				min={0.1}
 				max={3}
 				title={$lang.controls.sliders.speed.title}
+				on:change={speedChanged}
 			/>
 		</Group>
 	</Widget>
 	<Widget class="flex-col items-baseline justify-center text-gray-200">
-		<Checkbox bind:checked={$displayAsBinary}>{$lang.controls.checkboxes.binary.text}</Checkbox>
-		<Checkbox bind:checked={$playAnimations}>{$lang.controls.checkboxes.animations.text}</Checkbox>
+		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
+			>{$lang.controls.checkboxes.binary.text}</Checkbox
+		>
+		<Checkbox bind:checked={$playAnimations} on:click={animationsToggled}
+			>{$lang.controls.checkboxes.animations.text}</Checkbox
+		>
 	</Widget>
 	<StepText bind:this={$stepText} />
 </div>
