@@ -8,7 +8,8 @@
 		addMessage({
 			id: Math.random(),
 			type: "ERROR",
-			message
+			message,
+			timer: true
 		})
 	}
 
@@ -16,7 +17,8 @@
 		addMessage({
 			id: Math.random(),
 			type: "WARNING",
-			message
+			message,
+			timer: true
 		})
 	}
 
@@ -24,7 +26,8 @@
 		addMessage({
 			id: Math.random(),
 			type: "SUCCESS",
-			message
+			message,
+			timer: true
 		})
 	}
 
@@ -32,7 +35,17 @@
 		addMessage({
 			id: Math.random(),
 			type: "INFO",
-			message
+			message,
+			timer: true
+		})
+	}
+
+	export function bug(message: string) {
+		addMessage({
+			id: Math.random(),
+			type: "BUG",
+			message,
+			timer: false
 		})
 	}
 

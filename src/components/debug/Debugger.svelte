@@ -171,6 +171,7 @@
 					<Button on:click={() => $messageFeed.warning(message)}>Warning</Button>
 					<Button on:click={() => $messageFeed.success(message)}>Success</Button>
 					<Button on:click={() => $messageFeed.info(message)}>Info</Button>
+					<Button on:click={() => $messageFeed.bug(message)}>Bug</Button>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="WIRES">

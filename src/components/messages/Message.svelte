@@ -1,14 +1,19 @@
 <script lang="ts" context="module">
 	export type Message = {
 		id: number
-		type: "ERROR" | "WARNING" | "SUCCESS" | "INFO"
+		type: "ERROR" | "WARNING" | "SUCCESS" | "INFO" | "BUG"
 		message: string
+		timer: boolean
 	}
 </script>
 
 <script lang="ts">
 	import { createEventDispatcher, onMount } from "svelte"
 	import { slide } from "svelte/transition"
+	import lang from "../../store/lang"
+	import { logsStore } from "../../store/logs"
+	import { download } from "../../util/fileUtil"
+	import DebugButton from "../basic/buttons/Debug.svelte"
 	import Progress from "../basic/progress/Message.svelte"
 
 	const dispach = createEventDispatcher()
@@ -20,6 +25,9 @@
 	let isTimerPaused = false
 
 	onMount(() => {
+		if (!message.timer) {
+			return
+		}
 		const interval = setInterval(() => {
 			if (!isTimerPaused) {
 				secondsBeforeClose--
@@ -43,6 +51,13 @@
 	function resumeTimer() {
 		isTimerPaused = false
 	}
+
+	function exportLogs() {
+		download(
+			JSON.stringify($logsStore),
+			`cpu-visual-simultor-logs-${new Date().toDateString()}.json`
+		)
+	}
 </script>
 
 <div
@@ -54,6 +69,7 @@
 	<button
 		class="absolute bg-transparent text-white cursor-pointer font-bold right-8"
 		on:click={closeMessage}
+		title={$lang.message_feed.buttons.close_message.title}
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -68,15 +84,21 @@
 		</svg>
 	</button>
 	<p class="w-3/4 text-center text-xl">{message.message}</p>
-	<Progress
-		class="absolute left-0 bottom-0"
-		value={secondsBeforeClose}
-		max={MESSAGE_DURATION_SECONDS}
-	/>
+	{#if message.type === "BUG"}
+		<DebugButton on:click={exportLogs}>{$lang.message_feed.buttons.export_logs.text}</DebugButton>
+	{/if}
+	{#if message.timer}
+		<Progress
+			class="absolute left-0 bottom-0"
+			value={secondsBeforeClose}
+			max={MESSAGE_DURATION_SECONDS}
+		/>
+	{/if}
 </div>
 
 <style lang="scss">
-	.ERROR {
+	.ERROR,
+	.BUG {
 		background-color: firebrick;
 		border-color: darkred;
 	}

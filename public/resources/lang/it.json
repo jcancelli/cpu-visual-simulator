@@ -145,6 +145,16 @@
             }
         }
     },
+	"message_feed": {
+		"buttons": {
+			"export_logs": {
+				"text": "Esporta logs errori"
+			},
+			"close_message": {
+				"title": "Chiudi messaggio"
+			}
+		}
+	},
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Sintassi invalida a riga {0}: \"{1}\"",

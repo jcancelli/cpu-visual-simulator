@@ -148,6 +148,16 @@ const _default = {
 			}
 		}
 	},
+	message_feed: {
+		buttons: {
+			export_logs: {
+				text: ""
+			},
+			close_message: {
+				title: ""
+			}
+		}
+	},
 	errors: {
 		program_parsing: {
 			invalid_syntax: "",
