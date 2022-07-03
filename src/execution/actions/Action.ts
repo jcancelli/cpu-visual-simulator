@@ -44,6 +44,7 @@ export default abstract class Action {
 
 	async execute(): Promise<any> {
 		if (!this._conditions.reduceRight((finalVal, condition) => finalVal && condition(), true)) {
+			Logger.info(`Skipping: ${this.toString()}`, "EXECUTION")
 			return
 		}
 		Logger.info(`Executing: ${this.toString()}`, "EXECUTION")
