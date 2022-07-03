@@ -27,4 +27,8 @@ export default class SetAlu2 extends CpuAction {
 		}
 		await get(cpu).flash("ALU:2")
 	}
+
+	toString(): string {
+		return `${super.toString()}, valueFrom: ${this.value}`
+	}
 }

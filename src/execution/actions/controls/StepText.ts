@@ -14,4 +14,8 @@ export default class StepText extends Action {
 	protected async action(): Promise<any> {
 		get(stepText).setText(get(lang).steps[this.step].text)
 	}
+
+	toString(): string {
+		return `${super.toString()}, step: ${this.step}`
+	}
 }

@@ -14,4 +14,8 @@ export default class TextToSpeech extends Action {
 	protected async action(): Promise<any> {
 		SpeechSynthesis.read(this.text)
 	}
+
+	toString(): string {
+		return `${super.toString()}, text: ${this.text}`
+	}
 }

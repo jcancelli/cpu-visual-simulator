@@ -19,4 +19,8 @@ export default class ReadStep extends Action {
 		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
 		SpeechSynthesis.read(get(lang).steps[this.step].tts, () => resolve())
 	}
+
+	toString(): string {
+		return `${super.toString()}, step: ${this.step}`
+	}
 }

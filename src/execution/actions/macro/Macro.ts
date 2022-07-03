@@ -7,4 +7,8 @@ export default abstract class Macro extends Action {
 		super()
 		this.subactions = [...subactions]
 	}
+
+	toString(): string {
+		return `${super.toString()} [${this.subactions.length}]`
+	}
 }

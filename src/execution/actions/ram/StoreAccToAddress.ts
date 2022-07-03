@@ -30,4 +30,8 @@ export default class StoreAccToAddress extends RamAction {
 		}
 		await get(ram).flashContent(address)
 	}
+
+	toString(): string {
+		return `${super.toString()}, address: ${this.address}`
+	}
 }

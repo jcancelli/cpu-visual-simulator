@@ -21,4 +21,8 @@ export default class CacheRam extends StateAction {
 			data: ramStore.read(address)
 		}
 	}
+
+	toString(): string {
+		return `${super.toString()}, address: ${this.address}`
+	}
 }
