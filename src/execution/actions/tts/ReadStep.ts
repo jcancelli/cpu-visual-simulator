@@ -17,6 +17,6 @@ export default class ReadStep extends Action {
 	protected async action(): Promise<any> {
 		let resolve
 		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
-		SpeechSynthesis.read(get(lang).steps[this.step], () => resolve())
+		SpeechSynthesis.read(get(lang).steps[this.step].tts, () => resolve())
 	}
 }

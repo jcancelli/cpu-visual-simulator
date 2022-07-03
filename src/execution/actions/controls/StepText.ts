@@ -12,6 +12,6 @@ export default class StepText extends Action {
 	}
 
 	protected async action(): Promise<any> {
-		get(stepText).setText(get(lang).steps[this.step])
+		get(stepText).setText(get(lang).steps[this.step].text)
 	}
 }

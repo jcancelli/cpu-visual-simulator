@@ -9,24 +9,78 @@ const _default = {
 		prefered_voices_URIs: []
 	},
 	steps: {
-		pc_to_ram: "",
-		ram_to_ir: "",
-		ir_to_cu: "",
-		cu_to_mux: "",
-		cu_to_alu: "",
-		acc_to_alu1: "",
-		pc_increment: "",
-		ir_to_alu2: "",
-		ir_to_ram: "",
-		memory_read: "",
-		memory_fetch: "",
-		memory_write: "",
-		ram_to_alu2: "",
-		ir_to_pc: "",
-		execute: "",
-		alu_to_sw: "",
-		acc_to_ram: "",
-		acc_stored_to_ram: ""
+		pc_to_ram: {
+			tts: "",
+			text: ""
+		},
+		ram_to_ir: {
+			tts: "",
+			text: ""
+		},
+		ir_to_cu: {
+			tts: "",
+			text: ""
+		},
+		cu_to_mux: {
+			tts: "",
+			text: ""
+		},
+		cu_to_alu: {
+			tts: "",
+			text: ""
+		},
+		acc_to_alu1: {
+			tts: "",
+			text: ""
+		},
+		pc_increment: {
+			tts: "",
+			text: ""
+		},
+		ir_to_alu2: {
+			tts: "",
+			text: ""
+		},
+		ir_to_ram: {
+			tts: "",
+			text: ""
+		},
+		memory_read: {
+			tts: "",
+			text: ""
+		},
+		memory_fetch: {
+			tts: "",
+			text: ""
+		},
+		memory_write: {
+			tts: "",
+			text: ""
+		},
+		ram_to_alu2: {
+			tts: "",
+			text: ""
+		},
+		ir_to_pc: {
+			tts: "",
+			text: ""
+		},
+		execute: {
+			tts: "",
+			text: ""
+		},
+		alu_to_sw: {
+			tts: "",
+			text: ""
+		},
+		acc_to_ram: {
+			tts: "",
+			text: ""
+		},
+		acc_stored_to_ram: {
+			tts: "",
+			text: ""
+		}
 	},
 	menu: {
 		buttons: {
