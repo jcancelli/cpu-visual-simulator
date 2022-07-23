@@ -1,6 +1,6 @@
 import Animation from "./Animation"
 import { get } from "svelte/store"
-import components from "../../../store/components"
+import { ram as ramComponent } from "../../../store/components"
 import state, { Key as StateKey } from "../../state"
 
 export type FlashableRamComponent = "ADDRESS" | "DATA"
@@ -16,7 +16,7 @@ export default class FlashRam extends Animation {
 	}
 
 	protected async action(): Promise<any> {
-		const ram = get(components.ram)
+		const ram = get(ramComponent)
 		const address =
 			typeof this.address === "number" ? this.address : (state[this.address] as number)
 		if (typeof address !== "number") {

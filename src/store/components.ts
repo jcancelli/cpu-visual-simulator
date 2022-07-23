@@ -18,16 +18,3 @@ export const messageFeed = writable<MessageFeed>()
 export const logger = writable<Logger>()
 export const menu = writable<Menu>()
 export const stepText = writable<StepText>()
-
-const components = {
-	ram,
-	cpu,
-	wires,
-	controls,
-	debug,
-	messageFeed,
-	menu,
-	stepText
-}
-
-export default components
