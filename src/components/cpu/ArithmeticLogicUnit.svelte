@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ComponentLabel from "../ComponentLabel.svelte"
-	import cpuStore from "../../store/cpu"
+	import { alu1, alu2, aluOperation } from "../../store/cpu"
 	import { flash } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
 
@@ -39,11 +39,11 @@
 
 	$: {
 		if ($displayAsBinary) {
-			operand1 = $cpuStore.alu1 !== null ? splitBinString($cpuStore.alu1.toBinaryString()) : ""
-			operand2 = $cpuStore.alu2 !== null ? splitBinString($cpuStore.alu2.toBinaryString()) : ""
+			operand1 = $alu1 !== null ? splitBinString($alu1.toBinaryString()) : ""
+			operand2 = $alu2 !== null ? splitBinString($alu2.toBinaryString()) : ""
 		} else {
-			operand1 = $cpuStore.alu1 !== null ? "" + $cpuStore.alu1.signed() : ""
-			operand2 = $cpuStore.alu2 !== null ? "" + $cpuStore.alu2.signed() : ""
+			operand1 = $alu1 !== null ? "" + $alu1.signed() : ""
+			operand2 = $alu2 !== null ? "" + $alu2.signed() : ""
 		}
 	}
 
@@ -97,7 +97,7 @@
 		"
 		bind:this={operatorDiv}
 	>
-		{$cpuStore.operation}
+		{$aluOperation}
 	</div>
 	<div
 		class="

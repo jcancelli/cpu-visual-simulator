@@ -1,5 +1,5 @@
 <script lang="ts">
-	import cpuStore from "../../store/cpu"
+	import { accumulator } from "../../store/cpu"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
@@ -35,5 +35,5 @@
 	bind:this={accDiv}
 >
 	<ComponentLabel text="ACC" top="-25px" left="0" />
-	{$displayAsBinary ? $cpuStore.accumulator.toBinaryString() : $cpuStore.accumulator.signed()}
+	{$displayAsBinary ? $accumulator.toBinaryString() : $accumulator.signed()}
 </div>

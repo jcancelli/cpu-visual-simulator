@@ -1,5 +1,5 @@
 <script lang="ts">
-	import cpuStore from "../../store/cpu"
+	import { instructionRegister } from "../../store/cpu"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
@@ -19,15 +19,15 @@
 
 	$: {
 		if ($displayAsBinary) {
-			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOpcode() : ""
-			operand = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.binaryOperand() : ""
+			opcode = $instructionRegister ? $instructionRegister.binaryOpcode() : ""
+			operand = $instructionRegister ? $instructionRegister.binaryOperand() : ""
 		} else {
-			opcode = $cpuStore.instructionRegister ? $cpuStore.instructionRegister.opcode.symbolic : ""
-			if ($cpuStore.instructionRegister && $cpuStore.instructionRegister.opcode.takesOperand) {
-				if ($cpuStore.instructionRegister.immediateFlag()) {
-					operand = `#${$cpuStore.instructionRegister.numericOperand()}`
+			opcode = $instructionRegister ? $instructionRegister.opcode.symbolic : ""
+			if ($instructionRegister && $instructionRegister.opcode.takesOperand) {
+				if ($instructionRegister.immediateFlag()) {
+					operand = `#${$instructionRegister.numericOperand()}`
 				} else {
-					operand = `${$cpuStore.instructionRegister.numericOperand()}`
+					operand = `${$instructionRegister.numericOperand()}`
 				}
 			} else {
 				operand = ""

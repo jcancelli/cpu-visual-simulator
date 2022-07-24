@@ -1,5 +1,5 @@
 <script lang="ts">
-	import cpuStore from "../../store/cpu"
+	import cpuStore, { increment, programCounter } from "../../store/cpu"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
@@ -35,9 +35,7 @@
 	bind:this={pcDiv}
 >
 	<ComponentLabel text="PC" top="-25px" left="0" />
-	{$displayAsBinary
-		? $cpuStore.programCounter.toBinaryString()
-		: $cpuStore.programCounter.unsigned()}
+	{$displayAsBinary ? $programCounter.toBinaryString() : $programCounter.unsigned()}
 </div>
 <div
 	class="
@@ -57,5 +55,5 @@
 "
 	bind:this={incDiv}
 >
-	+{$displayAsBinary ? $cpuStore.increment.toBinaryString() : $cpuStore.increment.unsigned()}
+	+{$displayAsBinary ? $increment.toBinaryString() : $increment.unsigned()}
 </div>

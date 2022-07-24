@@ -1,5 +1,5 @@
 <script lang="ts">
-	import cpuStore from "../../store/cpu"
+	import { negativeFlag, zeroFlag } from "../../store/cpu"
 	import ComponentLabel from "../ComponentLabel.svelte"
 	import { flash } from "../../util/animationUtil"
 
@@ -36,11 +36,11 @@
 		bind:this={swzDiv}
 	>
 		<ComponentLabel text="Z" bottom="-21px" left="25%" />
-		{$cpuStore.zeroFlag ? "1" : "0"}
+		{$zeroFlag ? "1" : "0"}
 	</div>
 	<div class="relative h-full flex items-center justify-center w-[19%]" bind:this={swnDiv}>
 		<ComponentLabel text="N" bottom="-21px" left="25%" />
-		{$cpuStore.negativeFlag ? "1" : "0"}
+		{$negativeFlag ? "1" : "0"}
 	</div>
 	<div
 		class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md"

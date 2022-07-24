@@ -5,7 +5,16 @@
 	import Instruction from "../../instruction/Instruction"
 	import { Operators } from "../../instruction/Opcode"
 	import { cpu, messageFeed, ram, wires } from "../../store/components"
-	import cpuStore from "../../store/cpu"
+	import cpuStore, {
+		accumulator,
+		alu1,
+		alu2,
+		aluOperation,
+		instructionRegister,
+		negativeFlag,
+		programCounter,
+		zeroFlag
+	} from "../../store/cpu"
 	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
 	import {
@@ -15,6 +24,7 @@
 		SUPPORTED_LANGS,
 		textToSpeech
 	} from "../../store/settings"
+	import BinaryValue from "../../util/BinaryValue"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
@@ -113,16 +123,23 @@
 					</div>
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
-					<Button on:click={() => cpuStore.clear()}>Clear</Button>
 					<Button on:click={() => cpuStore.reset()}>Reset</Button>
-					<Button on:click={() => cpuStore.setIR(cpuInstruction)}>Set IR</Button>
-					<Button on:click={() => cpuStore.setPC(parseInt(cpuNumericValue))}>Set PC</Button>
-					<Button on:click={() => cpuStore.setALU1(parseInt(cpuNumericValue))}>Set ALU:1</Button>
-					<Button on:click={() => cpuStore.setALU2(parseInt(cpuNumericValue))}>Set ALU:2</Button>
-					<Button on:click={() => cpuStore.setOperation(cpuOperation)}>Set ALU:OPR</Button>
-					<Button on:click={() => cpuStore.setACC(parseInt(cpuNumericValue))}>Set ACC</Button>
-					<Button on:click={() => cpuStore.setZeroFlag(cpuFlag)}>Set SW:Z</Button>
-					<Button on:click={() => cpuStore.setNegativeFlag(cpuFlag)}>Set SW:N</Button>
+					<Button on:click={() => instructionRegister.set(cpuInstruction)}>Set IR</Button>
+					<Button on:click={() => programCounter.set(new BinaryValue(8, parseInt(cpuNumericValue)))}
+						>Set PC</Button
+					>
+					<Button on:click={() => alu1.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
+						>Set ALU:1</Button
+					>
+					<Button on:click={() => alu2.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
+						>Set ALU:2</Button
+					>
+					<Button on:click={() => aluOperation.set(cpuOperation)}>Set ALU:OPR</Button>
+					<Button on:click={() => accumulator.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
+						>Set ACC</Button
+					>
+					<Button on:click={() => zeroFlag.set(cpuFlag)}>Set SW:Z</Button>
+					<Button on:click={() => negativeFlag.set(cpuFlag)}>Set SW:N</Button>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="CPU ANIMATION">
