@@ -46,5 +46,5 @@
 	<Button icon="settings" title={$lang.menu.buttons.settings.title} on:click={openSettings} />
 	<Button icon="save" title={$lang.menu.buttons.save.title} on:click={saveProgram} />
 	<Button icon="open" title={$lang.menu.buttons.open.title} on:click={loadProgram} />
-	<Button icon="help" title={$lang.menu.buttons.help.title} />
+	<Button icon="help" title={$lang.menu.buttons.help.title} disabled />
 </div>

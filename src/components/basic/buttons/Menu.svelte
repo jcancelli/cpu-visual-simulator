@@ -38,7 +38,7 @@
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 48 48"
-		class="fill-neutral-800 w-8 h-8 drop-shadow-component hover:scale-105"
+		class="fill-neutral-800 w-8 h-8 drop-shadow-component {disabled ? '' : 'hover:scale-105'}"
 	>
 		<path d={PATHS[icon]} />
 	</svg>
