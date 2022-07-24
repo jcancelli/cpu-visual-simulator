@@ -4,7 +4,7 @@ export const SUPPORTED_LANGS = ["en", "it"] as const
 export type SupportedLang = typeof SUPPORTED_LANGS[number]
 export const DEFAULT_LANG = "en"
 
-export const showSettings = writable(true)
+export const showSettings = writable(false)
 export const displayAsBinary = writable(false)
 export const displayLabels = writable(true)
 export const playAnimations = writable(true)
