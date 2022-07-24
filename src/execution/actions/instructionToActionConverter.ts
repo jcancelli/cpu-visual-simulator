@@ -24,6 +24,7 @@ import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
 import LoadValueOnBus from "./bus/LoadValueOnBus"
+import SetAcc from "./cpu/SetAcc"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
@@ -49,7 +50,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep(),
+				new SetAcc().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
@@ -72,7 +73,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep(),
+				new SetAcc().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
@@ -111,7 +112,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep()
+				new SetAcc().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
