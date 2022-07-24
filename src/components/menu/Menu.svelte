@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { get } from "svelte/store"
-
 	import CheckedError from "../../errors/CheckedError"
-
 	import { messageFeed } from "../../store/components"
-
 	import lang from "../../store/lang"
+	import { showSettings } from "../../store/settings"
 	import { download, upload } from "../../util/fileUtil"
 	import Logger from "../../util/Logger"
 	import { load, save } from "../../util/programLoader"
 	import Button from "../basic/buttons/Menu.svelte"
+
+	function openSettings() {
+		$showSettings = true
+		Logger.info("Settings opened", "USER_INPUT")
+	}
 
 	async function loadProgram() {
 		try {
@@ -40,9 +43,8 @@
 </script>
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-1 z-[4]">
-	<Button icon="settings" title={$lang.menu.buttons.settings.title} />
+	<Button icon="settings" title={$lang.menu.buttons.settings.title} on:click={openSettings} />
 	<Button icon="save" title={$lang.menu.buttons.save.title} on:click={saveProgram} />
 	<Button icon="open" title={$lang.menu.buttons.open.title} on:click={loadProgram} />
-	<Button icon="language" title={$lang.menu.buttons.language.title} />
 	<Button icon="help" title={$lang.menu.buttons.help.title} />
 </div>
