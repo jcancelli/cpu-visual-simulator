@@ -49,6 +49,10 @@ async function cycle() {
 				break
 			case "ENQUEUING_INSTRUCTION":
 				queue.push(...instructionToActions(get(cpu.instructionRegister)))
+				Logger.info(
+					`Executing instruction "${get(cpu.instructionRegister).symbolic()}"`,
+					"EXECUTION"
+				)
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
