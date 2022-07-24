@@ -155,6 +155,21 @@
 			}
 		}
 	},
+    "settings": {
+		"title": "Settings",
+		"language": {
+			"title": "Language",
+			"description": "The language used for UI text and text to speech voice"
+		},
+		"dispaly_labels": {
+			"title": "Display labels",
+			"description": "Toggles labels such as 'RAM', 'IR', 'ALU' etc."
+		},
+		"tts": {
+			"title": "Text To Speech",
+			"description": "Toggles a synthetically generated voice that reads the currently executing step explaination"
+		}
+	},
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Invalid syntax at line {0}: \"{1}\"",

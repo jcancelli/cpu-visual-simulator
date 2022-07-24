@@ -155,6 +155,21 @@
 			}
 		}
 	},
+    "settings": {
+		"title": "Impostazioni",
+		"language": {
+			"title": "Lingua",
+			"description": "La lingua usata per l'interfaccia grafica e per il text to speech"
+		},
+		"dispaly_labels": {
+			"title": "Mostra etichette",
+			"description": "Attiva/disattiva etichette come 'RAM', 'IR', 'ALU' ecc."
+		},
+		"tts": {
+			"title": "Text To Speech",
+			"description": "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione dello step attualmente in esecuzione"
+		}
+	},
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Sintassi invalida a riga {0}: \"{1}\"",

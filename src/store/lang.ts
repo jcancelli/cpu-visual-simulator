@@ -158,6 +158,21 @@ const _default = {
 			}
 		}
 	},
+	settings: {
+		title: "",
+		language: {
+			title: "",
+			description: ""
+		},
+		dispaly_labels: {
+			title: "",
+			description: ""
+		},
+		tts: {
+			title: "",
+			description: ""
+		}
+	},
 	errors: {
 		program_parsing: {
 			invalid_syntax: "",
