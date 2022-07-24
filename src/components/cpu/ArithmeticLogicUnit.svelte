@@ -34,18 +34,6 @@
 	let operand1Div: HTMLDivElement
 	let operand2Div: HTMLDivElement
 	let operatorDiv: HTMLDivElement
-	let operand1 = ""
-	let operand2 = ""
-
-	$: {
-		if ($displayAsBinary) {
-			operand1 = $alu1 !== null ? splitBinString($alu1.toBinaryString()) : ""
-			operand2 = $alu2 !== null ? splitBinString($alu2.toBinaryString()) : ""
-		} else {
-			operand1 = $alu1 !== null ? "" + $alu1.signed() : ""
-			operand2 = $alu2 !== null ? "" + $alu2.signed() : ""
-		}
-	}
 
 	function splitBinString(bin: string): string {
 		return [bin.slice(0, 8), bin.slice(8)].join(" ")
@@ -77,7 +65,7 @@
 		"
 		bind:this={operand1Div}
 	>
-		{operand1}
+		{$displayAsBinary ? splitBinString($alu1.toBinaryString()) : $alu1.signed()}
 	</div>
 	<div
 		class="
@@ -115,6 +103,6 @@
 		"
 		bind:this={operand2Div}
 	>
-		{operand2}
+		{$displayAsBinary ? splitBinString($alu2.toBinaryString()) : $alu2.signed()}
 	</div>
 </div>

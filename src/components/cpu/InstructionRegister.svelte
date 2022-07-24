@@ -14,16 +14,13 @@
 
 	let opcodeDiv: HTMLDivElement
 	let operandDiv: HTMLDivElement
-	let opcode: string
 	let operand: string
 
 	$: {
 		if ($displayAsBinary) {
-			opcode = $instructionRegister ? $instructionRegister.binaryOpcode() : ""
-			operand = $instructionRegister ? $instructionRegister.binaryOperand() : ""
+			operand = $instructionRegister.binaryOperand()
 		} else {
-			opcode = $instructionRegister ? $instructionRegister.opcode.symbolic : ""
-			if ($instructionRegister && $instructionRegister.opcode.takesOperand) {
+			if ($instructionRegister.opcode.takesOperand) {
 				if ($instructionRegister.immediateFlag()) {
 					operand = `#${$instructionRegister.numericOperand()}`
 				} else {
@@ -55,7 +52,7 @@
 >
 	<ComponentLabel text="IR" top="-25px" left="10px" />
 	<div class="flex items-center justify-center w-full h-full rounded-l-md" bind:this={opcodeDiv}>
-		{opcode}
+		{$displayAsBinary ? $instructionRegister.binaryOpcode() : $instructionRegister.opcode.symbolic}
 	</div>
 	<div class="flex items-center justify-center w-full h-full rounded-r-md" bind:this={operandDiv}>
 		{operand}
