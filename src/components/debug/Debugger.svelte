@@ -22,7 +22,7 @@
 		displayLabels,
 		language,
 		SUPPORTED_LANGS,
-		textToSpeech
+		textToSpeechEnabled
 	} from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
@@ -230,7 +230,7 @@
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
-					<Checkbox bind:checked={$textToSpeech}>TTS Enabled</Checkbox>
+					<Checkbox bind:checked={$textToSpeechEnabled}>TTS Enabled</Checkbox>
 				</svelte:fragment>
 			</Widget>
 		</div>
