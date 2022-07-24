@@ -1,169 +1,50 @@
-import { Updater, writable } from "svelte/store"
+import { writable } from "svelte/store"
 import Instruction from "../instruction/Instruction"
+import { parse } from "../instruction/instructionParser"
 import { Operators } from "../instruction/Opcode"
 import BinaryValue from "../util/BinaryValue"
-import { FIRST_ADDRESS, isValidAddress, WORD_SIZE } from "../util/ramUtil"
+import { FIRST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 
-interface Cpu {
-	instructionRegister: Instruction | null
-	programCounter: BinaryValue
-	increment: BinaryValue
-	alu1: BinaryValue | null
-	alu2: BinaryValue | null
-	operation: Operators
-	accumulator: BinaryValue
-	zeroFlag: boolean
-	negativeFlag: boolean
-	isJumping: boolean
-	isHalting: boolean
-}
+export const instructionRegister = writable<Instruction>(parse("NOP", false))
+export const programCounter = writable<BinaryValue>(new BinaryValue(8, FIRST_ADDRESS))
+export const increment = writable<BinaryValue>(new BinaryValue(8, WORD_SIZE))
+export const alu1 = writable<BinaryValue>(new BinaryValue(16, 0))
+export const alu2 = writable<BinaryValue>(new BinaryValue(16, 0))
+export const aluOperation = writable<Operators>("")
+export const aluResult = writable<BinaryValue>(new BinaryValue(16, 0))
+export const accumulator = writable<BinaryValue>(new BinaryValue(16, 0))
+export const zeroFlag = writable<boolean>(true)
+export const negativeFlag = writable<boolean>(false)
+export const isJumping = writable<boolean>(false)
+export const isHalting = writable<boolean>(false)
 
-let cpu: Cpu
-const { subscribe, set, update } = writable<Cpu>()
-
-reset()
-
-// updates the store and keeps the local value in sync
-function setSync(value: Cpu) {
-	set(value)
-	cpu = value
-}
-
-// updates the store and keeps the local value in sync
-function updateSync(updater: Updater<Cpu>): void {
-	update(updater)
-	cpu = updater(cpu)
-}
-
-function reset() {
-	setSync({
-		instructionRegister: null,
-		programCounter: new BinaryValue(8, FIRST_ADDRESS),
-		increment: new BinaryValue(8, WORD_SIZE),
-		alu1: null,
-		alu2: null,
-		operation: "",
-		accumulator: new BinaryValue(16, 0),
-		zeroFlag: true,
-		negativeFlag: false,
-		isJumping: false,
-		isHalting: false
-	})
-}
-
-// clears fields such as alu1, alu2, instructionregister ...
-function clear() {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		instructionRegister: null,
-		alu1: null,
-		alu2: null,
-		operation: "",
-		isJumping: false,
-		isHalting: false
-	}))
-}
-
-function setIR(instruction: Instruction | null) {
-	if (instruction && !instruction.opcode) {
-		throw new Error("Invalid opcode")
-	}
-	updateSync(oldCpu => ({
-		...oldCpu,
-		instructionRegister: instruction
-	}))
-}
-
-function setPC(value: number | BinaryValue) {
-	if (typeof value === "number") {
-		value = new BinaryValue(8, value)
-	}
-	if (!isValidAddress(value.unsigned())) {
-		throw new Error("Invalid address")
-	}
-	updateSync(oldCpu => ({
-		...oldCpu,
-		programCounter: value as BinaryValue
-	}))
-}
-
-function setALU1(value: number | BinaryValue | null) {
-	if (typeof value === "number") {
-		value = new BinaryValue(16, value)
-	}
-	updateSync(oldCpu => ({
-		...oldCpu,
-		alu1: value === null ? null : (value as BinaryValue)
-	}))
-}
-
-function setALU2(value: number | null | BinaryValue) {
-	if (typeof value === "number") {
-		value = new BinaryValue(16, value)
-	}
-	updateSync(oldCpu => ({
-		...oldCpu,
-		alu2: value === null ? null : (value as BinaryValue)
-	}))
-}
-
-function setACC(value: number | BinaryValue) {
-	if (typeof value === "number") {
-		value = new BinaryValue(16, value)
-	}
-	updateSync(oldCpu => ({
-		...oldCpu,
-		accumulator: value as BinaryValue
-	}))
-}
-
-function setOperation(value: Operators) {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		operation: value
-	}))
-}
-
-function setZeroFlag(value: boolean) {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		zeroFlag: value
-	}))
-}
-
-function setNegativeFlag(value: boolean) {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		negativeFlag: value
-	}))
-}
-
-function setIsJumping(value: boolean) {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		isJumping: value
-	}))
-}
-
-function setIsHalting(value: boolean) {
-	updateSync(oldCpu => ({
-		...oldCpu,
-		isHalting: value
-	}))
+export function reset() {
+	instructionRegister.set(parse("NOP", false))
+	programCounter.set(new BinaryValue(8, FIRST_ADDRESS))
+	increment.set(new BinaryValue(8, WORD_SIZE))
+	alu1.set(new BinaryValue(16, 0))
+	alu2.set(new BinaryValue(16, 0))
+	aluOperation.set("")
+	aluResult.set(new BinaryValue(16, 0))
+	accumulator.set(new BinaryValue(16, 0))
+	zeroFlag.set(true)
+	negativeFlag.set(false)
+	isJumping.set(false)
+	isHalting.set(false)
 }
 
 export default {
-	subscribe,
-	reset,
-	clear,
-	setIR,
-	setPC,
-	setALU1,
-	setALU2,
-	setOperation,
-	setACC,
-	setZeroFlag,
-	setNegativeFlag,
-	setIsJumping,
-	setIsHalting
+	instructionRegister,
+	programCounter,
+	increment,
+	alu1,
+	alu2,
+	aluOperation,
+	aluResult,
+	accumulator,
+	zeroFlag,
+	negativeFlag,
+	isJumping,
+	isHalting,
+	reset
 }
