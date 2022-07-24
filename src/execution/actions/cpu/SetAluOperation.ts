@@ -3,7 +3,7 @@ import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpu"
 import CpuAction from "./CpuAction"
 
-export default class SetAluOperation extends CpuAction {
+export default class SetALUOperation extends CpuAction {
 	protected async action(): Promise<any> {
 		const operation = get(cpuStore.instructionRegister).opcode.operator
 		cpuStore.aluOperation.set(operation)

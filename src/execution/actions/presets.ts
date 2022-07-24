@@ -1,12 +1,12 @@
 import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
-import AccToAlu1 from "./cpu/AccToAlu1"
-import FetchInstruction from "./cpu/FetchInstruction"
+import SetALU1 from "./cpu/SetALU1"
+import SetIR from "./cpu/SetIR"
 import IncrementPC from "./cpu/IncrementPC"
-import JumpToIROperand from "./cpu/JumpToIROperand"
-import SetAlu2 from "./cpu/SetAlu2"
-import SetAluOperation from "./cpu/SetAluOperation"
+import SetPC from "./cpu/SetPC"
+import SetALU2 from "./cpu/SetALU2"
+import SetALUOperation from "./cpu/SetALUOperation"
 import {
 	ZERO_FLAG_SET,
 	ZERO_FLAG_NOT_SET,
@@ -45,7 +45,7 @@ export const FETCH = [
 		.endstep(),
 	new Parallel(new FlashRam("DATA"), new ReadStep("ram_to_ir"), new StepText("ram_to_ir")),
 	new Parallel(new LoadValueOnBus("RAM"), new FlashWire("RAM:DATA", "IR:1")),
-	new FetchInstruction().thenWaitFor(TTS_FINISHED).endstep()
+	new SetIR().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const DECODE_OPCODE = [
@@ -71,13 +71,13 @@ export const SET_ALU_OPERATION = [
 		new ReadStep("cu_to_alu"),
 		new StepText("cu_to_alu")
 	),
-	new SetAluOperation().thenWaitFor(TTS_FINISHED).endstep()
+	new SetALUOperation().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const LOAD_ALU1_FROM_ACC = [
 	new Parallel(new FlashCpu("ACC"), new ReadStep("acc_to_alu1"), new StepText("acc_to_alu1")),
 	new Parallel(new LoadValueOnBus("ACC"), new FlashWire("ACC:1", "ALU:1")),
-	new AccToAlu1().thenWaitFor(TTS_FINISHED).endstep()
+	new SetALU1().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export function LOAD_ALU2(immediateFlag: boolean) {
@@ -88,7 +88,7 @@ export const LOAD_ALU2_FROM_IR = [
 	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_alu2"), new StepText("ir_to_alu2")),
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "MUX:1")),
 	new Parallel(new LoadValueOnBus("IR:OPR", "mux_alu_data_bus"), new FlashWire("MUX:3", "ALU:2")),
-	new SetAlu2().thenWaitFor(TTS_FINISHED).endstep()
+	new SetALU2().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const LOAD_ALU2_FROM_RAM = [
@@ -103,13 +103,13 @@ export const LOAD_ALU2_FROM_RAM = [
 	new Parallel(new FlashRam("DATA"), new ReadStep("ram_to_alu2"), new StepText("ram_to_alu2")),
 	new Parallel(new LoadValueOnBus("RAM"), new FlashWire("RAM:DATA", "MUX:2")),
 	new Parallel(new LoadValueOnBus("RAM", "mux_alu_data_bus"), new FlashWire("MUX:3", "ALU:2")),
-	new SetAlu2().thenWaitFor(TTS_FINISHED).endstep()
+	new SetALU2().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND = [
 	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_pc"), new StepText("ir_to_pc")),
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")),
-	new JumpToIROperand().thenWaitFor(TTS_FINISHED).endstep()
+	new SetPC().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG = [
@@ -121,7 +121,7 @@ export const SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG = [
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
 		ZERO_FLAG_SET
 	),
-	new JumpToIROperand().condition(ZERO_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
+	new SetPC().condition(ZERO_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG = [
@@ -133,7 +133,7 @@ export const SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG = [
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
 		ZERO_FLAG_NOT_SET
 	),
-	new JumpToIROperand().condition(ZERO_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
+	new SetPC().condition(ZERO_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG = [
@@ -145,7 +145,7 @@ export const SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG = [
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
 		NEGATIVE_FLAG_SET
 	),
-	new JumpToIROperand().condition(NEGATIVE_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
+	new SetPC().condition(NEGATIVE_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG = [
@@ -157,5 +157,5 @@ export const SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG = [
 	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
 		NEGATIVE_FLAG_NOT_SET
 	),
-	new JumpToIROperand().condition(NEGATIVE_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
+	new SetPC().condition(NEGATIVE_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const

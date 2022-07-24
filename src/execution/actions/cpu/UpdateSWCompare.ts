@@ -3,7 +3,7 @@ import { get } from "svelte/store"
 import CpuAction from "./CpuAction"
 import { cpu } from "../../../store/components"
 
-export default class CompareUpdateSW extends CpuAction {
+export default class UpdateSWCompare extends CpuAction {
 	protected async action(): Promise<any> {
 		const alu1 = get(cpuStore.alu1)
 		const alu2 = get(cpuStore.alu2)

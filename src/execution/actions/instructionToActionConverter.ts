@@ -3,7 +3,7 @@ import Action from "./Action"
 import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
-import CompareUpdateSW from "./cpu/CompareUpdateSW"
+import UpdateSWCompare from "./cpu/UpdateSWCompare"
 import ExecuteAluOperation from "./cpu/ExecuteAluOperation"
 import UpdateSW from "./cpu/UpdateSW"
 import MemoryWrite from "./ram/MemoryWrite"
@@ -24,7 +24,7 @@ import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
 import LoadValueOnBus from "./bus/LoadValueOnBus"
-import SetAcc from "./cpu/SetAcc"
+import SetACC from "./cpu/SetACC"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
@@ -50,7 +50,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new SetAcc().thenWaitFor(TTS_FINISHED).endstep(),
+				new SetACC().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
@@ -73,7 +73,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new SetAcc().thenWaitFor(TTS_FINISHED).endstep(),
+				new SetACC().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
 					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
@@ -96,7 +96,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
 				),
-				new CompareUpdateSW().thenWaitFor(TTS_FINISHED).endstep()
+				new UpdateSWCompare().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
@@ -112,7 +112,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new SetAcc().thenWaitFor(TTS_FINISHED).endstep()
+				new SetACC().thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
