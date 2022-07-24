@@ -117,7 +117,6 @@
 							placeholder="Operation"
 							options={["+", "-", "*", "/", ":", "!", "&", "="]}
 							bind:value={cpuOperation}
-							class="w-fit"
 						/>
 						<Checkbox bind:checked={cpuFlag}>Flag</Checkbox>
 					</div>
@@ -148,7 +147,6 @@
 						placeholder="Flashable component"
 						options={flashableCpuComponents}
 						bind:value={cpuFlashableComponent}
-						class="w-fit"
 					/>
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
@@ -197,13 +195,11 @@
 						placeholder="From node"
 						options={Nodes.map(node => node.name)}
 						bind:value={fromNode}
-						class="w-fit"
 					/>
 					<Select
 						placeholder="To node"
 						options={Nodes.map(node => node.name)}
 						bind:value={toNode}
-						class="w-fit"
 					/>
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
@@ -221,7 +217,7 @@
 			</Widget>
 			<Widget title="DISPLAY">
 				<svelte:fragment slot="inputs">
-					<Select options={[...SUPPORTED_LANGS]} bind:value={$language} class="w-fit" />
+					<Select options={[...SUPPORTED_LANGS]} bind:value={$language} />
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>

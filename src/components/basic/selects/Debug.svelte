@@ -15,6 +15,7 @@
         rounded-md
         px-1
         disabled:brightness-[.6]
+		w-fit
         {$$restProps.class}
     "
 	on:input
