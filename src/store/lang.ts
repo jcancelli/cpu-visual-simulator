@@ -93,9 +93,6 @@ const _default = {
 			open: {
 				title: ""
 			},
-			language: {
-				title: ""
-			},
 			help: {
 				title: ""
 			}
