@@ -14,7 +14,7 @@ export default class MemoryWrite extends RamAction {
 			ramStore.write(address, parse(get(main_data_bus).toBinaryString(), true)) // trick to write instruction as code
 		} else {
 			// if the destination address is showing the instruction as a number
-			ramStore.write(address, parse(get(main_data_bus).toString(), false)) // write instruction as number
+			ramStore.write(address, parse(get(main_data_bus).signed().toString(), false)) // write instruction as number
 		}
 		await get(ram).flashContent(address)
 	}
