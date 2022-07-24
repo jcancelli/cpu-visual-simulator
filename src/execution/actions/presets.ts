@@ -86,12 +86,8 @@ export function LOAD_ALU2(immediateFlag: boolean) {
 
 export const LOAD_ALU2_FROM_IR = [
 	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_alu2"), new StepText("ir_to_alu2")),
-	new Parallel(
-		new LoadValueOnBus("IR:OPR"),
-		new LoadValueOnBus("IR:OPR", "mux_alu_data_bus"),
-		new FlashWire("IR:2", "MUX:1"),
-		new FlashWire("MUX:3", "ALU:2")
-	),
+	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "MUX:1")),
+	new Parallel(new LoadValueOnBus("IR:OPR", "mux_alu_data_bus"), new FlashWire("MUX:3", "ALU:2")),
 	new SetAlu2().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
@@ -105,12 +101,8 @@ export const LOAD_ALU2_FROM_RAM = [
 		new FlashWire("CU:3", "RAM:CTRL").thenWaitFor(TTS_FINISHED).endstep()
 	),
 	new Parallel(new FlashRam("DATA"), new ReadStep("ram_to_alu2"), new StepText("ram_to_alu2")),
-	new Parallel(
-		new LoadValueOnBus("RAM"),
-		new LoadValueOnBus("RAM", "mux_alu_data_bus"),
-		new FlashWire("RAM:DATA", "MUX:2"),
-		new FlashWire("MUX:3", "ALU:2")
-	),
+	new Parallel(new LoadValueOnBus("RAM"), new FlashWire("RAM:DATA", "MUX:2")),
+	new Parallel(new LoadValueOnBus("RAM", "mux_alu_data_bus"), new FlashWire("MUX:3", "ALU:2")),
 	new SetAlu2().thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
