@@ -1,13 +1,12 @@
 import { get } from "svelte/store"
+import { main_data_bus } from "../../../store/busses"
 import { cpu } from "../../../store/components"
-import cpuStore from "../../../store/cpu"
-import state from "../../state"
+import { alu1 } from "../../../store/cpu"
 import CpuAction from "./CpuAction"
 
 export default class AccToAlu1 extends CpuAction {
 	protected async action(): Promise<any> {
-		cpuStore.setALU1(state["ACC"])
+		alu1.set(get(main_data_bus))
 		await get(cpu).flash("ALU:1")
-		state["ALU:1"] = state["ACC"]
 	}
 }

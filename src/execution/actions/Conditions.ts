@@ -1,23 +1,23 @@
 import { get } from "svelte/store"
+import cpu from "../../store/cpu"
 import { playAnimations, textToSpeech } from "../../store/settings"
-import state from "../state"
 
 export type Condition = () => boolean
 
 export function ZERO_FLAG_SET(): boolean {
-	return state["SW:Z"]
+	return get(cpu.zeroFlag)
 }
 
 export function ZERO_FLAG_NOT_SET(): boolean {
-	return !state["SW:Z"]
+	return !get(cpu.zeroFlag)
 }
 
 export function NEGATIVE_FLAG_SET(): boolean {
-	return state["SW:N"]
+	return get(cpu.negativeFlag)
 }
 
 export function NEGATIVE_FLAG_NOT_SET(): boolean {
-	return !state["SW:N"]
+	return !get(cpu.negativeFlag)
 }
 
 export function IS_ANIMATING(): boolean {

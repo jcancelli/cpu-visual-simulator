@@ -1,44 +1,48 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpu"
-import state from "../../state"
+import BinaryValue from "../../../util/BinaryValue"
 import CpuAction from "./CpuAction"
 
 export default class ExecuteAluOperation extends CpuAction {
 	protected async action(): Promise<any> {
+		const operation = get(cpuStore.aluOperation)
+		const alu1 = get(cpuStore.alu1).signed()
+		const alu2 = get(cpuStore.alu2).signed()
+
 		let result: number
-		switch (state["ALU:OPR"]) {
+
+		switch (operation) {
 			case "!":
-				result = ~state["ALU:2"]
+				result = ~alu2
 				break
 			case "&":
-				result = state["ALU:1"] & state["ALU:2"]
+				result = alu1 & alu2
 				break
 			case "*":
-				result = state["ALU:1"] * state["ALU:2"]
+				result = alu1 * alu2
 				break
 			case "+":
-				result = state["ALU:1"] + state["ALU:2"]
+				result = alu1 + alu2
 				break
 			case "-":
-				result = state["ALU:1"] - state["ALU:2"]
+				result = alu1 - alu2
 				break
 			case "/":
-				if (state["ALU:2"] === 0) {
+				if (alu2 === 0) {
 					throw new Error("Division by zero")
 				}
-				result = state["ALU:1"] / state["ALU:2"]
+				result = alu1 / alu2
 				break
 			case "=":
-				result = state["ALU:2"]
+				result = alu2
 				break
 			case ":":
 			case "":
 			default:
-				throw new Error(`Operator "${state["ALU:OP"]}" doesn't set the Accumulator`)
+				throw new Error(`Unexpected ALU operation: "${operation}"`)
 		}
-		cpuStore.setACC(result)
-		await get(cpu).flash("ACC")
-		state["ACC"] = result
+
+		cpuStore.aluResult.set(new BinaryValue(16, result))
 	}
 }

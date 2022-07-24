@@ -1,12 +1,11 @@
 import { get, writable } from "svelte/store"
-import cpuStore from "../store/cpu"
+import cpu from "../store/cpu"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/components"
-import { FETCH, INCREMENT_PC } from "./actions/presets"
+import { DECODE_OPCODE, FETCH, INCREMENT_PC } from "./actions/presets"
 import Logger from "../util/Logger"
-import state from "./state"
 
 type CycleFase =
 	| "ENQUEUING_FETCH"
@@ -39,8 +38,7 @@ async function cycle() {
 	try {
 		switch (cycleFase) {
 			case "ENQUEUING_FETCH":
-				queue.push(...FETCH)
-				cpuStore.clear()
+				queue.push(...FETCH, ...DECODE_OPCODE)
 				cycleFase = "EXECUTING_FETCH"
 				break
 			case "EXECUTING_FETCH":
@@ -50,19 +48,16 @@ async function cycle() {
 				}
 				break
 			case "ENQUEUING_INSTRUCTION":
-				queue.push(...instructionToActions(state["IR"]))
+				queue.push(...instructionToActions(get(cpu.instructionRegister)))
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
 				await execute()
 				if (queueIsEmpty()) {
-					if (
-						get(cpuStore).programCounter.unsigned() === LAST_ADDRESS &&
-						!get(cpuStore).isJumping
-					) {
-						cpuStore.setIsHalting(true)
+					if (get(cpu.programCounter).unsigned() === LAST_ADDRESS && !get(cpu.isJumping)) {
+						cpu.isHalting.set(true)
 					}
-					if (get(cpuStore).isJumping) {
+					if (get(cpu.isJumping)) {
 						cycleFase = "ENQUEUING_FETCH"
 						if (isLongStepping) {
 							setIsLongStepping(false)
@@ -80,7 +75,7 @@ async function cycle() {
 				await execute()
 				if (isLongStepping) {
 					setIsLongStepping(false)
-					cpuStore.setIsHalting(true)
+					cpu.isHalting.set(true)
 				}
 				if (queueIsEmpty()) {
 					cycleFase = "ENQUEUING_FETCH"
@@ -88,11 +83,11 @@ async function cycle() {
 				break
 		}
 	} catch (error) {
-		cpuStore.setIsHalting(true)
+		cpu.isHalting.set(true)
 		get(messageFeed).error(error.message)
 		Logger.error(error, "EXECUTION", error.isChecked)
 	} finally {
-		if (get(cpuStore).isHalting) {
+		if (get(cpu.isHalting)) {
 			reset()
 		}
 		isLocked = false
@@ -147,7 +142,7 @@ function instruction() {
 
 function reset() {
 	pause()
-	cpuStore.setIsHalting(false)
+	cpu.isHalting.set(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")

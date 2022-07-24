@@ -3,14 +3,12 @@ import Action from "./Action"
 import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
-import StoreCpuState from "./state/StoreCpuState"
 import CompareUpdateSW from "./cpu/CompareUpdateSW"
 import ExecuteAluOperation from "./cpu/ExecuteAluOperation"
 import UpdateSW from "./cpu/UpdateSW"
-import StoreAccToAddress from "./ram/StoreAccToAddress"
+import MemoryWrite from "./ram/MemoryWrite"
 import HaltExecution from "./cpu/HaltExecution"
 import {
-	DECODE_OPCODE,
 	SET_MUX,
 	SET_ALU_OPERATION,
 	LOAD_ALU1_FROM_ACC,
@@ -25,6 +23,7 @@ import { TTS_FINISHED } from "./Waits"
 import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
+import LoadValueOnBus from "./bus/LoadValueOnBus"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
@@ -39,18 +38,20 @@ export function instructionToActions(instruction: Instruction): Action[] {
 		case "AND":
 		case "NOT":
 			actions.push(
-				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
+				new ExecuteAluOperation(),
 				new Parallel(
+					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
+				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
+					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
@@ -61,17 +62,19 @@ export function instructionToActions(instruction: Instruction): Action[] {
 
 		case "NOT":
 			actions.push(
-				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
+				new ExecuteAluOperation(),
 				new Parallel(
+					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep(),
+				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
+					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
@@ -82,12 +85,12 @@ export function instructionToActions(instruction: Instruction): Action[] {
 
 		case "CMP":
 			actions.push(
-				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
+					// new LoadValueOnBus(?, "alu_sw_data_bus"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
@@ -98,37 +101,35 @@ export function instructionToActions(instruction: Instruction): Action[] {
 
 		case "LOD":
 			actions.push(
-				...DECODE_OPCODE,
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
+				new ExecuteAluOperation(),
 				new Parallel(
+					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),
 					new ReadStep("execute"),
 					new StepText("execute")
 				),
-				new ExecuteAluOperation().thenWaitFor(TTS_FINISHED).endstep()
+				new FlashCpu("ACC").thenWaitFor(TTS_FINISHED).endstep()
 			)
 			break
 
 		case "STO":
 			actions.push(
-				...DECODE_OPCODE,
 				new Parallel(
+					new LoadValueOnBus("IR:OPR"),
 					new FlashWire("IR:2", "RAM:ADD"),
 					new ReadStep("ir_to_ram"),
 					new StepText("ir_to_ram")
 				),
-				new FlashRam("ADDRESS", "IR:OPR").thenWaitFor(TTS_FINISHED).endstep(),
+				new FlashRam("ADDRESS").thenWaitFor(TTS_FINISHED).endstep(),
+				new Parallel(new FlashCpu("ACC"), new ReadStep("acc_to_ram"), new StepText("acc_to_ram")),
+				new Parallel(new LoadValueOnBus("ACC"), new FlashWire("ACC:1", "RAM:DATA"))
+					.thenWaitFor(TTS_FINISHED)
+					.endstep(),
 				new Parallel(
-					new StoreCpuState("ACC"),
-					new FlashCpu("ACC"),
-					new ReadStep("acc_to_ram"),
-					new StepText("acc_to_ram")
-				),
-
-				new FlashWire("ACC:1", "RAM:DATA").thenWaitFor(TTS_FINISHED).endstep(),
-				new Parallel(
+					// new LoadValueOnBus("CU"),
 					new FlashWire("CU:3", "RAM:CTRL"),
 					new ReadStep("memory_write"),
 					new StepText("memory_write")
@@ -136,7 +137,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 					.thenWaitFor(TTS_FINISHED)
 					.endstep(),
 				new Parallel(
-					new StoreAccToAddress("IR:OPR"),
+					new MemoryWrite(),
 					new ReadStep("acc_stored_to_ram"),
 					new StepText("acc_stored_to_ram")
 				)
@@ -146,35 +147,31 @@ export function instructionToActions(instruction: Instruction): Action[] {
 			break
 
 		case "JMP":
-			actions.push(...DECODE_OPCODE, ...SET_PC_TO_IR_OPERAND)
+			actions.push(...SET_PC_TO_IR_OPERAND)
 			break
 
 		case "JZ":
-			actions.push(...DECODE_OPCODE, new FlashCpu("SW:Z"), ...SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG)
+			actions.push(new FlashCpu("SW:Z"), ...SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG)
 			break
 
 		case "JNZ":
-			actions.push(...DECODE_OPCODE, new FlashCpu("SW:Z"), ...SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG)
+			actions.push(new FlashCpu("SW:Z"), ...SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG)
 			break
 
 		case "JN":
-			actions.push(...DECODE_OPCODE, new FlashCpu("SW:N"), ...SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG)
+			actions.push(new FlashCpu("SW:N"), ...SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG)
 			break
 
 		case "JNN":
-			actions.push(
-				...DECODE_OPCODE,
-				new FlashCpu("SW:N"),
-				...SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG
-			)
+			actions.push(new FlashCpu("SW:N"), ...SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG)
 			break
 
 		case "NOP":
-			actions.push(...DECODE_OPCODE)
+			actions.push()
 			break
 
 		case "HLT":
-			actions.push(...DECODE_OPCODE, new HaltExecution())
+			actions.push(new HaltExecution())
 			break
 
 		default:

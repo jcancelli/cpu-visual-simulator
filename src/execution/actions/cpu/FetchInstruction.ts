@@ -1,15 +1,13 @@
 import { get } from "svelte/store"
+import { parse } from "../../../instruction/instructionParser"
+import { main_data_bus } from "../../../store/busses"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpu"
-import { state } from "../../state"
 import CpuAction from "./CpuAction"
 
 export default class FetchInstruction extends CpuAction {
 	protected async action(): Promise<any> {
-		cpuStore.setIR(state["RAM"].data)
+		cpuStore.instructionRegister.set(parse(get(main_data_bus).toBinaryString(), true))
 		await get(cpu).flash("IR")
-		state["IR"] = state["RAM"].data
-		state["IR:OPC"] = state["IR"].numericOpcode()
-		state["IR:OPR"] = state["IR"].numericOperand()
 	}
 }

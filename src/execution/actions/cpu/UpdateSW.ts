@@ -1,28 +1,30 @@
 import { get } from "svelte/store"
 import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpu"
-import state from "../../state"
 import CpuAction from "./CpuAction"
 
 export default class UpdateSW extends CpuAction {
 	protected async action(): Promise<any> {
-		const z = state["ACC"] === 0
-		const n = state["ACC"] < 0
-		if (z !== get(cpuStore).zeroFlag && n !== get(cpuStore).negativeFlag) {
-			cpuStore.setZeroFlag(z)
-			cpuStore.setNegativeFlag(n)
+		const acc = get(cpuStore.accumulator).signed()
+		const zeroFlag = get(cpuStore.zeroFlag)
+		const negativeFlag = get(cpuStore.negativeFlag)
+
+		const z = acc === 0
+		const n = acc < 0
+
+		if (z !== zeroFlag && n !== negativeFlag) {
+			cpuStore.zeroFlag.set(z)
+			cpuStore.negativeFlag.set(n)
 			await Promise.all([get(cpu).flash("SW:Z"), get(cpu).flash("SW:N")])
 		} else {
-			if (z !== get(cpuStore).zeroFlag) {
-				cpuStore.setZeroFlag(z)
+			if (z !== zeroFlag) {
+				cpuStore.zeroFlag.set(z)
 				await get(cpu).flash("SW:Z")
 			}
-			if (n !== get(cpuStore).negativeFlag) {
-				cpuStore.setNegativeFlag(n)
+			if (n !== negativeFlag) {
+				cpuStore.negativeFlag.set(n)
 				await get(cpu).flash("SW:N")
 			}
 		}
-		state["SW:Z"] = z
-		state["SW:N"] = n
 	}
 }
