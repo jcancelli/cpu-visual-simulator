@@ -185,7 +185,7 @@ function parseBinary(input: string): Instruction {
 	let invalidate = false
 	if (!opcode) {
 		invalidate = true
-	} else if (!opcode.takesOperand) {
+	} else if (!opcode.takesOperand && operandValue.unsigned() !== 0) {
 		invalidate = true
 	} else if (immediateFlagSet && !opcode.takesImmediate) {
 		invalidate = true
