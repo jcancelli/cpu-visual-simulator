@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { get, writable } from "svelte/store"
 
 export const SUPPORTED_LANGS = ["en", "it"] as const
 export type SupportedLang = typeof SUPPORTED_LANGS[number]
@@ -9,7 +9,7 @@ export const displayAsBinary = writable<boolean>(false)
 export const displayLabels = writable<boolean>(true)
 export const playAnimations = writable<boolean>(true)
 export const animationSpeed = writable<number>(1.6)
-export const language = writable<SupportedLang>()
+export const language = writable<SupportedLang>(getDefaultLanguage())
 export const textToSpeechEnabled = writable<boolean>(false)
 export const textToSpeechSpeed = writable<number>(1)
 export const textToSpeechVoice = writable<string>()
@@ -21,7 +21,7 @@ availableTextToSpeechVoices.subscribe(newVoices => textToSpeechVoice.set(newVoic
 window.addEventListener("load", initSettings)
 
 function initSettings() {
-	language.set(getDefaultLanguage())
+	availableTextToSpeechVoices.set(getAvailableVoices(get(language)))
 }
 
 export function getDefaultLanguage(): SupportedLang {
