@@ -2,12 +2,13 @@
 	import Stage from "./components/Stage.svelte"
 	import Debugger from "./components/debug/Debugger.svelte"
 	import MessageFeed from "./components/messages/Feed.svelte"
-	import { controls, debug, messageFeed, logger, menu } from "./store/components"
+	import { controls, debug, messageFeed, logger, menu, settings } from "./store/components"
 	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/Logger"
 	import Controls from "./components/controls/Controls.svelte"
 	import Menu from "./components/menu/Menu.svelte"
+	import Settings from "./components/settings/Settings.svelte"
 
 	let app: HTMLDivElement
 
@@ -37,6 +38,7 @@
 <Debugger bind:this={$debug} />
 <LoggerComponent bind:this={$logger} />
 <MessageFeed bind:this={$messageFeed} />
+<Settings bind:this={$settings} />
 
 <style lang="postcss" global>
 	@tailwind base;

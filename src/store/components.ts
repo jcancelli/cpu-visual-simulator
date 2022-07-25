@@ -8,6 +8,7 @@ import MessageFeed from "../components/messages/Feed.svelte"
 import Logger from "../components/debug/Logger.svelte"
 import Menu from "../components/menu/Menu.svelte"
 import StepText from "../components/controls/StepText.svelte"
+import Settings from "../components/settings/Settings.svelte"
 
 export const ram = writable<Ram>()
 export const cpu = writable<Cpu>()
@@ -18,3 +19,4 @@ export const messageFeed = writable<MessageFeed>()
 export const logger = writable<Logger>()
 export const menu = writable<Menu>()
 export const stepText = writable<StepText>()
+export const settings = writable<Settings>()
