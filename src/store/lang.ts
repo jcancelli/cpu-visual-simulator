@@ -5,9 +5,6 @@ export type Step = keyof Lang["steps"]
 export type Lang = typeof _default
 const _default = {
 	displayName: "",
-	tts: {
-		prefered_voices_URIs: []
-	},
 	steps: {
 		pc_to_ram: {
 			tts: "",

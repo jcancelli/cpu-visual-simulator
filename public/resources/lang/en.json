@@ -1,10 +1,5 @@
 {
     "displayName": "English",
-    "tts": {
-        "prefered_voices_URIs": [
-            "Google US English"
-        ]
-    },
     "steps": {
         "pc_to_ram": {
             "text": "The value of the Program Counter is put on the address bus",
