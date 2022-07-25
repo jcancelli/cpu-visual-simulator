@@ -12,10 +12,7 @@ export const animationSpeed = writable<number>(1.6)
 export const language = writable<SupportedLang>(getDefaultLanguage())
 export const textToSpeechEnabled = writable<boolean>(false)
 export const textToSpeechSpeed = writable<number>(1.1)
-export const textToSpeechLanguage = writable<SupportedLang>(getDefaultLanguage())
 export const textToSpeechVoice = writable<string>("")
-
-language.subscribe(newLanguage => textToSpeechLanguage.set(newLanguage))
 
 export function getDefaultLanguage(): SupportedLang {
 	let lang = navigator.languages !== undefined ? navigator.languages[0] : navigator.language

@@ -169,10 +169,6 @@ const _default = {
 			title: "",
 			description: ""
 		},
-		tts_language: {
-			title: "",
-			description: ""
-		},
 		tts_speed: {
 			title: "",
 			description: ""

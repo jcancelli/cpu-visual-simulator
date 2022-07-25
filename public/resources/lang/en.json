@@ -166,10 +166,6 @@
 			"title": "Text To Speech",
 			"description": "Toggles a synthetically generated voice that reads the currently executing step explaination"
 		},
-        "tts_language": {
-			"title": "Text To Speech Language",
-			"description": "Language used by the text to speech voice"
-		},
 		"tts_speed": {
 			"title": "Text To Speech speed",
 			"description": "Speed of the text to speech voice"
