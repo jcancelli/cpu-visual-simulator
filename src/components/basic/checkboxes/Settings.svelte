@@ -21,6 +21,7 @@
         box-content
         flex
         items-center
+        flex-shrink-0
         {disabled ? 'cursor-default' : 'cursor-pointer'}
         {checked ? 'bg-green-500' : 'bg-neutral-500'}
         {disabled ? 'brightness-[.6]' : ''}
