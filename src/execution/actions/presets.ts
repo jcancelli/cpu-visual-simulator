@@ -40,10 +40,7 @@ export const FETCH = [
 		.endstep(),
 	new Parallel(new FlashRam("DATA"), new ReadStep("ram_to_ir"), new StepText("ram_to_ir")),
 	new Parallel(new LoadValueOnBus("RAM"), new FlashWire("RAM:DATA", "IR:1")),
-	new SetIR().thenWaitFor(TTS_FINISHED).endstep()
-] as const
-
-export const DECODE_OPCODE = [
+	new SetIR().thenWaitFor(TTS_FINISHED).endstep(),
 	new Parallel(new FlashCpu("IR:OPC"), new ReadStep("ir_to_cu"), new StepText("ir_to_cu")),
 	new Parallel(new LoadValueOnBus("IR:OPC"), new FlashWire("IR:3", "CU:1")),
 	new FlashCpu("CU").thenWaitFor(TTS_FINISHED).endstep()
