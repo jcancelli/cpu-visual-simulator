@@ -2,14 +2,7 @@ import BinaryValueOutOfRange from "../errors/BinaryValueOutOfRange"
 import CheckedError from "../errors/CheckedError"
 import Instruction from "../instruction/Instruction"
 import { parseBinary } from "../instruction/instructionParser"
-import {
-	checkValidBitCount,
-	isValidBinary,
-	pad,
-	setBit,
-	valueIsInRange,
-	valueToBinary
-} from "./binaryUtil"
+import { checkValidBitCount, isValidBinary, pad, setBit, valueIsInRange, valueToBinary } from "./binaryUtil"
 import { positionToIndex } from "./stringUtil"
 
 export type Bits = 8 | 16 | 32
@@ -99,10 +92,7 @@ export default class BinaryValue {
 		} else if (typeof bytes[0] === "string") {
 			return new BinaryValue((bytes.length * 8) as Bits, bytes.join(""))
 		} else {
-			return new BinaryValue(
-				(bytes.length * 8) as Bits,
-				bytes.map(b => b.toBinaryString()).join("")
-			)
+			return new BinaryValue((bytes.length * 8) as Bits, bytes.map(b => b.toBinaryString()).join(""))
 		}
 	}
 }

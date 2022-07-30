@@ -7,12 +7,7 @@ import IncrementPC from "./cpu/IncrementPC"
 import SetPC from "./cpu/SetPC"
 import SetALU2 from "./cpu/SetALU2"
 import SetALUOperation from "./cpu/SetALUOperation"
-import {
-	ZERO_FLAG_SET,
-	ZERO_FLAG_NOT_SET,
-	NEGATIVE_FLAG_SET,
-	NEGATIVE_FLAG_NOT_SET
-} from "./Conditions"
+import { ZERO_FLAG_SET, ZERO_FLAG_NOT_SET, NEGATIVE_FLAG_SET, NEGATIVE_FLAG_NOT_SET } from "./Conditions"
 import ReadStep from "./tts/ReadStep"
 import Parallel from "./macro/Parallel"
 import { TTS_FINISHED } from "./Waits"
@@ -113,49 +108,33 @@ export const SET_PC_TO_IR_OPERAND = [
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_ZERO_FLAG = [
-	new Parallel(
-		new FlashCpu("IR:OPR"),
-		new ReadStep("ir_to_pc"),
-		new StepText("ir_to_pc")
-	).condition(ZERO_FLAG_SET),
-	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
+	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_pc"), new StepText("ir_to_pc")).condition(
 		ZERO_FLAG_SET
 	),
+	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(ZERO_FLAG_SET),
 	new SetPC().condition(ZERO_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_ZERO_FLAG = [
-	new Parallel(
-		new FlashCpu("IR:OPR"),
-		new ReadStep("ir_to_pc"),
-		new StepText("ir_to_pc")
-	).condition(ZERO_FLAG_NOT_SET),
-	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
+	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_pc"), new StepText("ir_to_pc")).condition(
 		ZERO_FLAG_NOT_SET
 	),
+	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(ZERO_FLAG_NOT_SET),
 	new SetPC().condition(ZERO_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG = [
-	new Parallel(
-		new FlashCpu("IR:OPR"),
-		new ReadStep("ir_to_pc"),
-		new StepText("ir_to_pc")
-	).condition(NEGATIVE_FLAG_SET),
-	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
+	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_pc"), new StepText("ir_to_pc")).condition(
 		NEGATIVE_FLAG_SET
 	),
+	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(NEGATIVE_FLAG_SET),
 	new SetPC().condition(NEGATIVE_FLAG_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const
 
 export const SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG = [
-	new Parallel(
-		new FlashCpu("IR:OPR"),
-		new ReadStep("ir_to_pc"),
-		new StepText("ir_to_pc")
-	).condition(NEGATIVE_FLAG_NOT_SET),
-	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(
+	new Parallel(new FlashCpu("IR:OPR"), new ReadStep("ir_to_pc"), new StepText("ir_to_pc")).condition(
 		NEGATIVE_FLAG_NOT_SET
 	),
+	new Parallel(new LoadValueOnBus("IR:OPR"), new FlashWire("IR:2", "PC:2")).condition(NEGATIVE_FLAG_NOT_SET),
 	new SetPC().condition(NEGATIVE_FLAG_NOT_SET).thenWaitFor(TTS_FINISHED).endstep()
 ] as const

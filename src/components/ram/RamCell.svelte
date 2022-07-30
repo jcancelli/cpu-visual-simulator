@@ -57,12 +57,7 @@
 	}
 
 	export async function flash() {
-		return flashComponent(
-			cell,
-			"background-color",
-			{ r: 211, g: 211, b: 211 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flashComponent(cell, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export function getAddress() {

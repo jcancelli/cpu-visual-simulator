@@ -53,10 +53,7 @@
 	}
 
 	function exportLogs() {
-		download(
-			JSON.stringify($logsStore),
-			`cpu-visual-simultor-logs-${new Date().toDateString()}.json`
-		)
+		download(JSON.stringify($logsStore), `cpu-visual-simultor-logs-${new Date().toDateString()}.json`)
 	}
 </script>
 
@@ -88,11 +85,7 @@
 		<DebugButton on:click={exportLogs}>{$lang.message_feed.buttons.export_logs.text}</DebugButton>
 	{/if}
 	{#if message.timer}
-		<Progress
-			class="absolute left-0 bottom-0"
-			value={secondsBeforeClose}
-			max={MESSAGE_DURATION_SECONDS}
-		/>
+		<Progress class="absolute left-0 bottom-0" value={secondsBeforeClose} max={MESSAGE_DURATION_SECONDS} />
 	{/if}
 </div>
 

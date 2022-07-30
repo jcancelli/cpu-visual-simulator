@@ -18,11 +18,10 @@
 		error = null
 		try {
 			if (opcode.takesOperand) {
-				if (immediate && opcode.takesImmediate) {
-					value = parseSymbolic(`${symbolicOpcode} #${operand}`)
-				} else {
-					value = parseSymbolic(`${symbolicOpcode} ${operand}`)
-				}
+				value =
+					immediate && opcode.takesImmediate
+						? parseSymbolic(`${symbolicOpcode} #${operand}`)
+						: parseSymbolic(`${symbolicOpcode} ${operand}`)
 			} else {
 				value = parseSymbolic(symbolicOpcode)
 			}
@@ -38,9 +37,7 @@
 	{/if}
 	<div class="flex items-center justify-center gap-1">
 		<Select bind:value={symbolicOpcode} options={opcodes.map(opc => opc.symbolic)} />
-		<Checkbox bind:checked={immediate} disabled={!opcode.takesOperand || !opcode.takesImmediate}
-			>#</Checkbox
-		>
+		<Checkbox bind:checked={immediate} disabled={!opcode.takesOperand || !opcode.takesImmediate}>#</Checkbox>
 		<Input class="w-20" type="number" bind:value={operand} disabled={!opcode.takesOperand} />
 	</div>
 </div>

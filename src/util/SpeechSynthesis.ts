@@ -1,9 +1,5 @@
 import { get } from "svelte/store"
-import {
-	availableTextToSpeechVoices,
-	textToSpeechSpeed,
-	textToSpeechVoice
-} from "../store/settings"
+import { availableTextToSpeechVoices, textToSpeechSpeed, textToSpeechVoice } from "../store/settings"
 
 let utterance: SpeechSynthesisUtterance = null
 let voice: SpeechSynthesisVoice

@@ -26,9 +26,7 @@ function write(address: number, instruction: Instruction): void {
 		throw new Error("Invalid address: " + address)
 	}
 	const index = addressToIndex(address)
-	updateSync(oldRam =>
-		oldRam.map((oldInstruction, i) => (index === i ? instruction : oldInstruction))
-	)
+	updateSync(oldRam => oldRam.map((oldInstruction, i) => (index === i ? instruction : oldInstruction)))
 }
 
 function read(address: number): Instruction {

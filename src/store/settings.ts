@@ -6,30 +6,16 @@ export type SupportedLang = typeof SUPPORTED_LANGS[number]
 export const DEFAULT_LANG = "en"
 
 export const showSettings = writable<boolean>(isSet("showSettings") ? bool("showSettings") : false)
-export const displayAsBinary = writable<boolean>(
-	isSet("displayAsBinary") ? bool("displayAsBinary") : false
-)
-export const displayLabels = writable<boolean>(
-	isSet("displayLabels") ? bool("displayLabels") : true
-)
-export const playAnimations = writable<boolean>(
-	isSet("playAnimations") ? bool("playAnimations") : true
-)
-export const animationSpeed = writable<number>(
-	isSet("animationSpeed") ? num("animationSpeed") : 1.6
-)
-export const language = writable<SupportedLang>(
-	isSet("language") ? lang("language") : getDefaultLanguage()
-)
+export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
+export const displayLabels = writable<boolean>(isSet("displayLabels") ? bool("displayLabels") : true)
+export const playAnimations = writable<boolean>(isSet("playAnimations") ? bool("playAnimations") : true)
+export const animationSpeed = writable<number>(isSet("animationSpeed") ? num("animationSpeed") : 1.6)
+export const language = writable<SupportedLang>(isSet("language") ? lang("language") : getDefaultLanguage())
 export const textToSpeechEnabled = writable<boolean>(
 	isSet("textToSpeechEnabled") ? bool("textToSpeechEnabled") : false
 )
-export const textToSpeechSpeed = writable<number>(
-	isSet("textToSpeechSpeed") ? num("textToSpeechSpeed") : 1
-)
-export const textToSpeechVoice = writable<string>(
-	isSet("textToSpeechVoice") ? str("textToSpeechVoice") : ""
-)
+export const textToSpeechSpeed = writable<number>(isSet("textToSpeechSpeed") ? num("textToSpeechSpeed") : 1)
+export const textToSpeechVoice = writable<string>(isSet("textToSpeechVoice") ? str("textToSpeechVoice") : "")
 export const availableTextToSpeechVoices = writable<SpeechSynthesisVoice[]>()
 
 language.subscribe(newLang => availableTextToSpeechVoices.set(getAvailableVoices(newLang)))

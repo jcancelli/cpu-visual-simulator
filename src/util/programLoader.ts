@@ -22,10 +22,9 @@ type RawInstruction = {
 const COMMENT_PATTERN = /;.*/g
 const LABEL_PATTERN = new RegExp(":" + LABEL.source)
 const VALID_LINE_PATTERN = new RegExp(
-	`^(${INSTRUCTION_PATTERN.source.replace(/\^|\$/g, "")}|${DATA_PATTERN.source.replace(
-		/\^|\$/g,
-		""
-	)})( ${LABEL_PATTERN.source})?$`
+	`^(${INSTRUCTION_PATTERN.source.replace(/\^|\$/g, "")}|${DATA_PATTERN.source.replace(/\^|\$/g, "")})( ${
+		LABEL_PATTERN.source
+	})?$`
 )
 
 export function load(raw: string): void {
@@ -62,11 +61,7 @@ export function load(raw: string): void {
 			instructions.push(instruction)
 		} catch (error) {
 			throw new ProgramParsingError(
-				interpolate(
-					get(lang).errors.program_parsing.parsing_error,
-					rawInstruction.lineNumber,
-					error.message
-				)
+				interpolate(get(lang).errors.program_parsing.parsing_error, rawInstruction.lineNumber, error.message)
 			)
 		}
 	})

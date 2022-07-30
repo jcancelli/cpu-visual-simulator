@@ -58,39 +58,22 @@
 	}
 </script>
 
-<div
-	class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3"
->
+<div class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3">
 	<Widget class="gap-5">
 		<Group label={$lang.controls.labels.execution}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton
-					on:click={resetExecution}
-					icon="reset"
-					title={$lang.controls.buttons.reset.title}
-				/>
+				<ExecutionButton on:click={resetExecution} icon="reset" title={$lang.controls.buttons.reset.title} />
 				<ExecutionButton
 					on:click={toggleExecution}
 					icon={$isExecuting ? "pause" : "play"}
-					title={$isExecuting
-						? $lang.controls.buttons.pause.title
-						: $lang.controls.buttons.play.title}
+					title={$isExecuting ? $lang.controls.buttons.pause.title : $lang.controls.buttons.play.title}
 				/>
-				<ExecutionButton
-					on:click={skipToEnd}
-					icon="skip"
-					title={$lang.controls.buttons.end.title}
-					disabled
-				/>
+				<ExecutionButton on:click={skipToEnd} icon="skip" title={$lang.controls.buttons.end.title} disabled />
 			</div>
 		</Group>
 		<Group label={$lang.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton
-					on:click={playStep}
-					icon="play"
-					title={$lang.controls.buttons.play_step.title}
-				/>
+				<ExecutionButton on:click={playStep} icon="play" title={$lang.controls.buttons.play_step.title} />
 				<ExecutionButton
 					on:click={skipStep}
 					icon="skip"

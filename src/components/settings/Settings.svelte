@@ -26,17 +26,12 @@
 
 {#if $showSettings}
 	<div class="fixed w-screen h-screen top-0 left-0 bg-gray-100" transition:fade={{ duration: 75 }}>
-		<div
-			class="w-full flex flex-row items-center justify-between pt-3 pb-5 px-9 border-b border-neutral-500"
-		>
+		<div class="w-full flex flex-row items-center justify-between pt-3 pb-5 px-9 border-b border-neutral-500">
 			<h1 class="text-[2.8rem] font-bold">{$lang.settings.title}</h1>
 			<CloseButton on:click={closeSettings} />
 		</div>
 		<div class="w-full flex flex-col">
-			<Widget
-				title={$lang.settings.language.title}
-				description={$lang.settings.language.description}
-			>
+			<Widget title={$lang.settings.language.title} description={$lang.settings.language.description}>
 				<Select options={[...SUPPORTED_LANGS]} bind:value={$language} />
 			</Widget>
 			<Widget
@@ -45,29 +40,17 @@
 			>
 				<Toggle bind:checked={$displayLabels} />
 			</Widget>
-			<Widget
-				title={$lang.settings.tts_enabled.title}
-				description={$lang.settings.tts_enabled.description}
-			>
+			<Widget title={$lang.settings.tts_enabled.title} description={$lang.settings.tts_enabled.description}>
 				<Toggle bind:checked={$textToSpeechEnabled} />
 			</Widget>
-			<Widget
-				title={$lang.settings.tts_speed.title}
-				description={$lang.settings.tts_speed.description}
-			>
+			<Widget title={$lang.settings.tts_speed.title} description={$lang.settings.tts_speed.description}>
 				<div class="w-36 flex flex-col items-center justify-center">
 					<p>{$textToSpeechSpeed}</p>
 					<Slider min={0.5} max={1.5} bind:value={$textToSpeechSpeed} />
 				</div>
 			</Widget>
-			<Widget
-				title={$lang.settings.tts_voice.title}
-				description={$lang.settings.tts_voice.description}
-			>
-				<Select
-					options={$availableTextToSpeechVoices.map(v => v.name)}
-					bind:value={$textToSpeechVoice}
-				/>
+			<Widget title={$lang.settings.tts_voice.title} description={$lang.settings.tts_voice.description}>
+				<Select options={$availableTextToSpeechVoices.map(v => v.name)} bind:value={$textToSpeechVoice} />
 			</Widget>
 		</div>
 	</div>

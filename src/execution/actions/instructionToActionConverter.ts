@@ -137,11 +137,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				)
 					.thenWaitFor(TTS_FINISHED)
 					.endstep(),
-				new Parallel(
-					new MemoryWrite(),
-					new ReadStep("acc_stored_to_ram"),
-					new StepText("acc_stored_to_ram")
-				)
+				new Parallel(new MemoryWrite(), new ReadStep("acc_stored_to_ram"), new StepText("acc_stored_to_ram"))
 					.thenWaitFor(TTS_FINISHED)
 					.endstep()
 			)

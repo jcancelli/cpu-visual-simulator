@@ -17,9 +17,7 @@
 
 <div
 	class="absolute w-fit font-bold cursor-default {FONT_SIZES[fontSize]} leading-tight"
-	style="top: {top}; left: {left}; bottom: {bottom}; right: {right}; font-size: {FONT_SIZES[
-		fontSize
-	]}"
+	style="top: {top}; left: {left}; bottom: {bottom}; right: {right}; font-size: {FONT_SIZES[fontSize]}"
 >
 	{$displayLabels ? text : ""}
 </div>

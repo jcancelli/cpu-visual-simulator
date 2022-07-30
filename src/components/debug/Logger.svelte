@@ -41,10 +41,7 @@
 	}
 
 	function exportLogs() {
-		download(
-			JSON.stringify($logsStore),
-			`cpu-visual-simultor-logs-${new Date().toDateString()}.json`
-		)
+		download(JSON.stringify($logsStore), `cpu-visual-simultor-logs-${new Date().toDateString()}.json`)
 	}
 </script>
 

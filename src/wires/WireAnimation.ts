@@ -76,10 +76,7 @@ export default class WireAnimation {
 				distanceToTravel--
 			}
 			increaseTransparency(0.05)
-			if (
-				this.pos.x === this.path[this.nextNodeIndex].x &&
-				this.pos.y === this.path[this.nextNodeIndex].y
-			) {
+			if (this.pos.x === this.path[this.nextNodeIndex].x && this.pos.y === this.path[this.nextNodeIndex].y) {
 				this.nextNodeIndex++
 				if (this.nextNodeIndex === this.path.length) {
 					distanceToTravel = 0

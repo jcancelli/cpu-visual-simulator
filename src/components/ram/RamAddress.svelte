@@ -12,12 +12,7 @@
 	}
 
 	export async function flash() {
-		return flashComponent(
-			addressDiv,
-			"background-color",
-			{ r: 255, g: 140, b: 0 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flashComponent(addressDiv, "background-color", { r: 255, g: 140, b: 0 }, { r: 0, g: 255, b: 0 })
 	}
 </script>
 

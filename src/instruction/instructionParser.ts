@@ -35,10 +35,7 @@ export function parseSymbolic(input: string, labels: string[] = []) {
 	} else if (DATA.test(input)) {
 		return _parseData(input)
 	} else {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_symbolic_input,
-			input
-		)
+		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_symbolic_input, input)
 	}
 }
 
@@ -46,10 +43,7 @@ export function parseBinary(input: string) {
 	if (BINARY.test(input)) {
 		return _parseBinary(input)
 	} else {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_binary_input,
-			input
-		)
+		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_binary_input, input)
 	}
 }
 
@@ -62,10 +56,7 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 	}
 	if (hasOperand) {
 		if (!opcode.takesOperand) {
-			throw new InstructionParsingError(
-				get(lang).errors.instruction_parsing.operand_not_allowed,
-				input
-			)
+			throw new InstructionParsingError(get(lang).errors.instruction_parsing.operand_not_allowed, input)
 		}
 		if (IMMEDIATE_LABEL.test(symbolicOperand)) {
 			return parseImmediateLabelOperand(input, opcode, labels)
@@ -78,10 +69,7 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 		}
 	} else {
 		if (opcode.takesOperand) {
-			throw new InstructionParsingError(
-				get(lang).errors.instruction_parsing.operand_required,
-				input
-			)
+			throw new InstructionParsingError(get(lang).errors.instruction_parsing.operand_required, input)
 		}
 		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytesValues([opcode.numeric, 0]))
 	}
@@ -111,10 +99,7 @@ function _parseImmediateNumberOperand(input: string, opcode: Opcode) {
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_immediate_operand,
-			input
-		)
+		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_immediate_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -138,10 +123,7 @@ function parseImmediateLabelOperand(input: string, opcode: Opcode, labels: strin
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_immediate_operand,
-			input
-		)
+		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_immediate_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -154,10 +136,7 @@ function _parseDirectOperand(input: string, opcode: Opcode) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const numericOperand = parseInt(symbolicOperand)
 	if (!isValidAddress(numericOperand)) {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_direct_operand,
-			input
-		)
+		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_direct_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -187,9 +166,7 @@ function _parseBinary(input: string): Instruction {
 		invalidate = true
 	}
 	const symbolicOpcode = invalidate ? value.signed().toString() : opcode.symbolic
-	let symbolicOperand = immediateFlagSet
-		? "#" + operandValue.signed()
-		: operandValue.unsigned().toString()
+	let symbolicOperand = immediateFlagSet ? "#" + operandValue.signed() : operandValue.unsigned().toString()
 	if (invalidate) {
 		symbolicOperand = ""
 	}
@@ -206,8 +183,6 @@ function _parseData(input: string): Instruction {
 	const opcode = parseOpcode(removeFlags(opcodeValue))
 	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 	const invalidate =
-		!opcode ||
-		(immediateFlagSet && !opcode.takesImmediate) ||
-		(immediateFlagSet && !opcode.takesOperand)
+		!opcode || (immediateFlagSet && !opcode.takesImmediate) || (immediateFlagSet && !opcode.takesOperand)
 	return new Instruction(input, "", value, invalidate)
 }

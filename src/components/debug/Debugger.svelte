@@ -127,12 +127,8 @@
 					<Button on:click={() => programCounter.set(new BinaryValue(8, parseInt(cpuNumericValue)))}
 						>Set PC</Button
 					>
-					<Button on:click={() => alu1.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
-						>Set ALU:1</Button
-					>
-					<Button on:click={() => alu2.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
-						>Set ALU:2</Button
-					>
+					<Button on:click={() => alu1.set(new BinaryValue(16, parseInt(cpuNumericValue)))}>Set ALU:1</Button>
+					<Button on:click={() => alu2.set(new BinaryValue(16, parseInt(cpuNumericValue)))}>Set ALU:2</Button>
 					<Button on:click={() => aluOperation.set(cpuOperation)}>Set ALU:OPR</Button>
 					<Button on:click={() => accumulator.set(new BinaryValue(16, parseInt(cpuNumericValue)))}
 						>Set ACC</Button
@@ -159,15 +155,11 @@
 					<InstructionInput bind:value={ramInstruction} />
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
-					<Button on:click={() => $ram.flashAddress(parseInt(ramNumericValue))}
-						>Flash address</Button
-					>
+					<Button on:click={() => $ram.flashAddress(parseInt(ramNumericValue))}>Flash address</Button>
 					<Button on:click={() => $ram.flashContent(parseInt(ramNumericValue))}>Flash data</Button>
 					<Button on:click={() => $ram.showAddress(parseInt(ramNumericValue))}>Show address</Button>
 					<Button on:click={() => ramStore.clear()}>Clear</Button>
-					<Button on:click={() => ramStore.write(parseInt(ramNumericValue), ramInstruction)}
-						>Write</Button
-					>
+					<Button on:click={() => ramStore.write(parseInt(ramNumericValue), ramInstruction)}>Write</Button>
 					<Button
 						on:click={() => {
 							console.log("--- RAM CONTENT ----------------")
@@ -191,16 +183,8 @@
 			</Widget>
 			<Widget title="WIRES">
 				<svelte:fragment slot="inputs">
-					<Select
-						placeholder="From node"
-						options={Nodes.map(node => node.name)}
-						bind:value={fromNode}
-					/>
-					<Select
-						placeholder="To node"
-						options={Nodes.map(node => node.name)}
-						bind:value={toNode}
-					/>
+					<Select placeholder="From node" options={Nodes.map(node => node.name)} bind:value={fromNode} />
+					<Select placeholder="To node" options={Nodes.map(node => node.name)} bind:value={toNode} />
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Button on:click={() => $wires.flashWire(fromNode, toNode)}>Flash</Button>
@@ -210,9 +194,7 @@
 				<svelte:fragment slot="buttons">
 					<Checkbox bind:checked={$showNodes}>Show nodes</Checkbox>
 					<Checkbox bind:checked={$showNodesNames} disabled={!$showNodes}>Show names</Checkbox>
-					<Checkbox bind:checked={$showNodesCoordinates} disabled={!$showNodes}
-						>Show coordinates</Checkbox
-					>
+					<Checkbox bind:checked={$showNodesCoordinates} disabled={!$showNodes}>Show coordinates</Checkbox>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="DISPLAY">
