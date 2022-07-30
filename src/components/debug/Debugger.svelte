@@ -25,6 +25,7 @@
 		textToSpeechEnabled
 	} from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
+	import { set } from "../../util/localStorage"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
@@ -76,6 +77,9 @@
 	let toNode: string
 
 	let ttsText: string
+
+	let localStorageKey: string
+	let localStorageValue: string
 
 	function toggleDebugger() {
 		$showDebugger = !$showDebugger
@@ -215,6 +219,17 @@
 					<Checkbox bind:checked={$textToSpeechEnabled}>TTS Enabled</Checkbox>
 				</svelte:fragment>
 			</Widget>
+			<Widget title="Local Storage">
+				<svelte:fragment slot="inputs">
+					<Input bind:value={localStorageKey} placeholder="Key" />
+					<Input bind:value={localStorageValue} placeholder="Value" />
+				</svelte:fragment>
+				<svelte:fragment slot="buttons">
+					<Button on:click={() => set(localStorageKey, localStorageValue)}>Set</Button>
+					<Button on:click={() => localStorage.clear()}>Clear</Button>
+				</svelte:fragment>
+			</Widget>
 		</div>
 	</div>
 {/if}
+S
