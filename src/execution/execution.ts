@@ -15,18 +15,14 @@ type CycleFase =
 	| "ENQUEUEING_PC_INCREMENT"
 	| "EXECUTING_PC_INCREMENT"
 
+export const isExecuting = writable(false)
+
 let isPlaying = false
 let isShortStepping = false // is executing a single step
 let isLongStepping = false // is executing a full instruction
 let isLocked = false // prevent concurrency
 let cycleFase: CycleFase = "ENQUEUING_FETCH"
 let queue: Action[] = [] // contains all actions to be executed
-
-const privateIsExecutingStore = {
-	...writable(false),
-	update: () => privateIsExecutingStore.set(isPlaying || isShortStepping || isLongStepping)
-}
-export const isExecuting = { subscribe: privateIsExecutingStore.subscribe } // read-only reference to isExecutingStore
 
 setInterval(cycle, 50)
 
@@ -120,7 +116,7 @@ function pause() {
 }
 
 function toggle() {
-	if (!get(privateIsExecutingStore)) {
+	if (!get(isExecuting)) {
 		start()
 	} else {
 		pause()
@@ -163,17 +159,17 @@ function queueIsEmpty() {
 
 function setIsPlaying(value: boolean) {
 	isPlaying = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 function setIsShortStepping(value: boolean) {
 	isShortStepping = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 function setIsLongStepping(value: boolean) {
 	isLongStepping = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 export default {
