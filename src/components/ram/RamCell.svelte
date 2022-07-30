@@ -5,7 +5,7 @@
 	import { messageFeed } from "../../store/components"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelection from "../../store/ramSelection"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 	import { displayAsBinary } from "../../store/settings"
 	import symbolTable from "../../store/symbolTable"
 

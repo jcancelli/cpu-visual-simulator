@@ -2,7 +2,7 @@
 	import symbolTableStore from "../../store/symbolTable"
 	import { messageFeed } from "../../store/components"
 	import ramSelection from "../../store/ramSelection"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 
 	export let address: number
 	export let selected: boolean

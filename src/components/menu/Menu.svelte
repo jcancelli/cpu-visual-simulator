@@ -5,7 +5,7 @@
 	import lang from "../../store/lang"
 	import { showSettings } from "../../store/settings"
 	import { download, upload } from "../../util/fileUtil"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 	import { load, save } from "../../util/programLoader"
 	import Button from "../basic/buttons/Menu.svelte"
 

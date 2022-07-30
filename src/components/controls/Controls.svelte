@@ -10,7 +10,7 @@
 	import cpu from "../../store/cpu"
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 
 	function resetExecution() {
 		Logger.info(`Reset pressed`, "USER_INPUT")

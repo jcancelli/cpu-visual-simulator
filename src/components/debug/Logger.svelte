@@ -2,7 +2,7 @@
 	import { onMount } from "svelte"
 	import { logsStore, loggerStore } from "../../store/logs"
 	import { download } from "../../util/fileUtil"
-	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/Logger"
+	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/logger"
 
 	let logsDiv: HTMLDivElement
 	let logs: Log[] = []

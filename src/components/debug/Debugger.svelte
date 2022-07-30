@@ -20,7 +20,7 @@
 	import { displayAsBinary, displayLabels, language, SUPPORTED_LANGS, ttsEnabled } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import { set } from "../../util/localStorage"
-	import SpeechSynthesis from "../../util/SpeechSynthesis"
+	import SpeechSynthesis from "../../util/speechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
 	import Checkbox from "../basic/checkboxes/Debug.svelte"
