@@ -1,14 +1,14 @@
 <script lang="ts">
 	import lang from "../../store/lang"
 	import {
-		availableTextToSpeechVoices,
+		availableTtsVoices,
 		displayLabels,
 		language,
 		showSettings,
 		SUPPORTED_LANGS,
-		textToSpeechEnabled,
-		textToSpeechSpeed,
-		textToSpeechVoice
+		ttsEnabled,
+		ttsSpeed,
+		ttsVoice
 	} from "../../store/settings"
 	import Logger from "../../util/Logger"
 	import CloseButton from "../basic/buttons/close/Settings.svelte"
@@ -41,16 +41,16 @@
 				<Toggle bind:checked={$displayLabels} />
 			</Widget>
 			<Widget title={$lang.settings.tts_enabled.title} description={$lang.settings.tts_enabled.description}>
-				<Toggle bind:checked={$textToSpeechEnabled} />
+				<Toggle bind:checked={$ttsEnabled} />
 			</Widget>
 			<Widget title={$lang.settings.tts_speed.title} description={$lang.settings.tts_speed.description}>
 				<div class="w-36 flex flex-col items-center justify-center">
-					<p>{$textToSpeechSpeed}</p>
-					<Slider min={0.5} max={1.5} bind:value={$textToSpeechSpeed} />
+					<p>{$ttsSpeed}</p>
+					<Slider min={0.5} max={1.5} bind:value={$ttsSpeed} />
 				</div>
 			</Widget>
 			<Widget title={$lang.settings.tts_voice.title} description={$lang.settings.tts_voice.description}>
-				<Select options={$availableTextToSpeechVoices.map(v => v.name)} bind:value={$textToSpeechVoice} />
+				<Select options={$availableTtsVoices.map(v => v.name)} bind:value={$ttsVoice} />
 			</Widget>
 		</div>
 	</div>

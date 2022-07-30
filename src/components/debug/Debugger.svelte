@@ -17,13 +17,7 @@
 	} from "../../store/cpu"
 	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
-	import {
-		displayAsBinary,
-		displayLabels,
-		language,
-		SUPPORTED_LANGS,
-		textToSpeechEnabled
-	} from "../../store/settings"
+	import { displayAsBinary, displayLabels, language, SUPPORTED_LANGS, ttsEnabled } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import { set } from "../../util/localStorage"
 	import SpeechSynthesis from "../../util/SpeechSynthesis"
@@ -216,7 +210,7 @@
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
-					<Checkbox bind:checked={$textToSpeechEnabled}>TTS Enabled</Checkbox>
+					<Checkbox bind:checked={$ttsEnabled}>TTS Enabled</Checkbox>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="Local Storage">

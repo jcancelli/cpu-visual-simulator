@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import cpu from "../../store/cpu"
-import { playAnimations, textToSpeechEnabled } from "../../store/settings"
+import { playAnimations, ttsEnabled } from "../../store/settings"
 
 export type Condition = () => boolean
 
@@ -25,5 +25,5 @@ export function IS_ANIMATING(): boolean {
 }
 
 export function TTS_ENABLED(): boolean {
-	return get(textToSpeechEnabled)
+	return get(ttsEnabled)
 }

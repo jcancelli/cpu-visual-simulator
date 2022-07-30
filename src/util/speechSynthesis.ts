@@ -1,16 +1,14 @@
 import { get } from "svelte/store"
-import { availableTextToSpeechVoices, textToSpeechSpeed, textToSpeechVoice } from "../store/settings"
+import { availableTtsVoices, ttsSpeed, ttsVoice } from "../store/settings"
 
 let utterance: SpeechSynthesisUtterance = null
 let voice: SpeechSynthesisVoice
 
-textToSpeechVoice.subscribe(
-	newVoice => (voice = get(availableTextToSpeechVoices).find(v => v.name === newVoice))
-)
+ttsVoice.subscribe(newVoice => (voice = get(availableTtsVoices).find(v => v.name === newVoice)))
 
 function read(text: string, ...callbacks: (() => void)[]) {
 	utterance = new SpeechSynthesisUtterance(text)
-	utterance.rate = get(textToSpeechSpeed)
+	utterance.rate = get(ttsSpeed)
 	utterance.voice = voice
 	utterance.onend = utterance.onerror = () => {
 		utterance = null
