@@ -162,6 +162,10 @@ const _default = {
 			title: "",
 			description: ""
 		},
+		display_step_text: {
+			title: "",
+			description: ""
+		},
 		tts_enabled: {
 			title: "",
 			description: ""

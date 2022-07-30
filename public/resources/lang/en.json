@@ -157,6 +157,10 @@
 			"title": "Display labels",
 			"description": "Toggles labels such as 'RAM', 'IR', 'ALU' etc."
 		},
+		"display_step_text": {
+			"title": "Display step text",
+			"description": "Toggles the box at the bottom right in which a text description of the step in execution is displayed"
+		},
 		"tts_enabled": {
 			"title": "Text To Speech",
 			"description": "Toggles a synthetically generated voice that reads the currently executing step explaination"

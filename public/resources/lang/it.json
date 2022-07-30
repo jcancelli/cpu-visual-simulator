@@ -157,6 +157,10 @@
 			"title": "Mostra etichette",
 			"description": "Attiva/disattiva etichette come 'RAM', 'IR', 'ALU' ecc."
 		},
+		"display_step_text": {
+			"title": "Mostra testo step",
+			"description": "Abilita/disabilita il riquadro in basso a destra in cui viene visualizzata una descrizione testuale dello step in esecuzione"
+		},
 		"tts_enabled": {
 			"title": "Text To Speech",
 			"description": "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione dello step attualmente in esecuzione"

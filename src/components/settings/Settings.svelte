@@ -3,6 +3,7 @@
 	import {
 		availableTtsVoices,
 		displayLabels,
+		displayStepText,
 		language,
 		showSettings,
 		SUPPORTED_LANGS,
@@ -10,7 +11,7 @@
 		ttsSpeed,
 		ttsVoice
 	} from "../../store/settings"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 	import CloseButton from "../basic/buttons/close/Settings.svelte"
 	import Widget from "./Widget.svelte"
 	import { fade } from "svelte/transition"
@@ -39,6 +40,12 @@
 				description={$lang.settings.dispaly_labels.description}
 			>
 				<Toggle bind:checked={$displayLabels} />
+			</Widget>
+			<Widget
+				title={$lang.settings.display_step_text.title}
+				description={$lang.settings.display_step_text.description}
+			>
+				<Toggle bind:checked={$displayStepText} />
 			</Widget>
 			<Widget title={$lang.settings.tts_enabled.title} description={$lang.settings.tts_enabled.description}>
 				<Toggle bind:checked={$ttsEnabled} />
