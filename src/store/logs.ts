@@ -1,5 +1,5 @@
 import { writable } from "svelte/store"
-import { Log } from "../util/Logger"
+import { Log } from "../util/logger"
 
 const _logsStore = writable<Log[]>([])
 

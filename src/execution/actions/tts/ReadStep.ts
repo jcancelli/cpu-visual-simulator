@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import lang, { Step } from "../../../store/lang"
 import Action from "../Action"
 import { TTS_ENABLED } from "../Conditions"
-import SpeechSynthesis from "../../../util/SpeechSynthesis"
+import SpeechSynthesis from "../../../util/speechSynthesis"
 
 export default class ReadStep extends Action {
 	readonly step: Step

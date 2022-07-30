@@ -5,7 +5,7 @@ import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/components"
 import { DECODE_OPCODE, FETCH, INCREMENT_PC } from "./actions/presets"
-import Logger from "../util/Logger"
+import Logger from "../util/logger"
 
 type CycleFase =
 	| "ENQUEUING_FETCH"
