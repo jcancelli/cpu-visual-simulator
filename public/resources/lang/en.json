@@ -177,7 +177,8 @@
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Invalid syntax at line {0}: \"{1}\"",
-            "parsing_error": "Error on line {0}: \"{1}\""
+            "parsing_error": "Error on line {0}: \"{1}\"",
+			"duplicate_label": "Duplicate label at line {0}: \"{1}\""
         },
 		"instruction_parsing": {
 			"invalid_binary_input": "Invalid binary input",

@@ -177,7 +177,8 @@
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Sintassi invalida a riga {0}: \"{1}\"",
-            "parsing_error": "Errore a riga {0}: \"{1}\""
+            "parsing_error": "Errore a riga {0}: \"{1}\"",
+			"duplicate_label": "Label duplicata a riga {0}: \"{1}\""
         },
 		"instruction_parsing": {
 			"invalid_binary_input": "Input binario invalido",

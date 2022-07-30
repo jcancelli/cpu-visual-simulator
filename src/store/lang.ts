@@ -182,7 +182,8 @@ const _default = {
 	errors: {
 		program_parsing: {
 			invalid_syntax: "",
-			parsing_error: ""
+			parsing_error: "",
+			duplicate_label: ""
 		},
 		instruction_parsing: {
 			invalid_binary_input: "",
