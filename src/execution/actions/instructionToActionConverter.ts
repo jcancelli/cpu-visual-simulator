@@ -4,7 +4,7 @@ import FlashCpu from "./animations/FlashCpu"
 import FlashRam from "./animations/FlashRam"
 import FlashWire from "./animations/FlashWire"
 import UpdateSWCompare from "./cpu/UpdateSWCompare"
-import ExecuteAluOperation from "./cpu/ExecuteAluOperation"
+import ExecuteALUOperation from "./cpu/ExecuteALUOperation"
 import UpdateSW from "./cpu/UpdateSW"
 import MemoryWrite from "./ram/MemoryWrite"
 import HaltExecution from "./cpu/HaltExecution"
@@ -43,7 +43,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_ALU_OPERATION,
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new ExecuteAluOperation(),
+				new ExecuteALUOperation(),
 				new Parallel(
 					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),
@@ -66,7 +66,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new ExecuteAluOperation(),
+				new ExecuteALUOperation(),
 				new Parallel(
 					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),
@@ -105,7 +105,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...SET_MUX,
 				...SET_ALU_OPERATION,
 				...LOAD_ALU2(instruction.immediateFlag()),
-				new ExecuteAluOperation(),
+				new ExecuteALUOperation(),
 				new Parallel(
 					new LoadValueOnBus("ALU:RES"),
 					new FlashWire("ALU:4", "ACC:2"),

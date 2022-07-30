@@ -1,10 +1,9 @@
 import { get } from "svelte/store"
-import { cpu } from "../../../store/components"
 import cpuStore from "../../../store/cpu"
 import BinaryValue from "../../../util/BinaryValue"
 import CpuAction from "./CpuAction"
 
-export default class ExecuteAluOperation extends CpuAction {
+export default class ExecuteALUOperation extends CpuAction {
 	protected async action(): Promise<any> {
 		const operation = get(cpuStore.aluOperation)
 		const alu1 = get(cpuStore.alu1).signed()
