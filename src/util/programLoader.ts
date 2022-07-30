@@ -7,16 +7,18 @@ import {
 	DATA as DATA_PATTERN,
 	parseSymbolic
 } from "../instruction/instructionParser"
-import ramStore from "../store/ram"
-import symbolTable from "../store/symbolTable"
 import lang from "../store/lang"
-import { FIRST_ADDRESS, indexToAddress, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
+import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
 import { interpolate } from "./template"
 
 type RawInstruction = {
 	text: string
 	lineNumber: number
 	address: number
+}
+type ProgramParsingOutput = {
+	instructions: Instruction[]
+	labels: string[]
 }
 
 const COMMENT_PATTERN = /;.*/g
@@ -27,8 +29,8 @@ const VALID_LINE_PATTERN = new RegExp(
 	})?$`
 )
 
-export function load(raw: string): void {
-	const lines = raw.split(/\r\n|\r|\n/g)
+export function compileProgram(program: string): ProgramParsingOutput {
+	const lines = program.split(/\r\n|\r|\n/g)
 	const rawInstructions: RawInstruction[] = []
 	const labels: string[] = []
 	let address = FIRST_ADDRESS
@@ -50,6 +52,11 @@ export function load(raw: string): void {
 			lineNumber,
 			address
 		})
+		if (label && labels.includes(label)) {
+			throw new ProgramParsingError(
+				interpolate(get(lang).errors.program_parsing.duplicate_label, lineNumber, label)
+			)
+		}
 		labels[address] = label
 		address += WORD_SIZE
 	})
@@ -57,32 +64,31 @@ export function load(raw: string): void {
 	const instructions: Instruction[] = []
 	rawInstructions.forEach((rawInstruction: RawInstruction) => {
 		try {
-			const instruction = parseSymbolic(rawInstruction.text, labels)
-			instructions.push(instruction)
+			instructions[rawInstruction.address] = parseSymbolic(rawInstruction.text, labels)
 		} catch (error) {
 			throw new ProgramParsingError(
 				interpolate(get(lang).errors.program_parsing.parsing_error, rawInstruction.lineNumber, error.message)
 			)
 		}
 	})
-	symbolTable.load(labels)
-	ramStore.clear()
-	instructions.forEach((instruction: Instruction, index: number) => {
-		ramStore.write(indexToAddress(index), instruction)
-	})
+	return {
+		instructions,
+		labels
+	}
+	// Note: both instructions and labels values are at the same index as their addresses, so not every index is valorized
 }
 
-export function save(): string {
+export function exportProgram(instructions: Instruction[], labels: string[]): string {
 	const LABEL_COLUMN = 20
 	let output = ""
 	let instruction = ""
 	let space = ""
 	for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
-		instruction = ramStore.read(address).symbolic()
+		instruction = instructions[address].symbolic()
 		output += `\t${instruction}`
 		space = " ".repeat(LABEL_COLUMN - instruction.length)
-		if (symbolTable.getLabel(address)) {
-			output += `${space}:${symbolTable.getLabel(address)}`
+		if (labels[address]) {
+			output += `${space}:${labels[address]}`
 		}
 		output += "\n"
 	}
