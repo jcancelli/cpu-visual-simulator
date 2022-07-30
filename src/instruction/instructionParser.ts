@@ -1,12 +1,12 @@
-import { get } from "svelte/store"
-import InstructionParsingError from "../errors/InstructionParsingError"
-import lang from "../store/lang"
-import { isSigned, pad } from "../util/binaryUtil"
-import BinaryValue from "../util/BinaryValue"
 import { isImmediateFlagSet, removeFlags, setImmediateFlag } from "../util/instructionUtil"
-import { isValidAddress } from "../util/ramUtil"
-import Instruction from "./Instruction"
+import InstructionParsingError from "../errors/InstructionParsingError"
 import { Opcode, opcode as parseOpcode } from "./Opcode"
+import { isSigned, pad } from "../util/binaryUtil"
+import { isValidAddress } from "../util/ramUtil"
+import BinaryValue from "../util/BinaryValue"
+import Instruction from "./Instruction"
+import { get } from "svelte/store"
+import lang from "../store/lang"
 
 export const BINARY = /^[01]{0,8}\s?[01]{1,8}?$/
 export const DATA = /^-?[0-9]{1,5}$/
@@ -29,36 +29,31 @@ export const SYMBOLIC_INSTRUCTION = new RegExp(
 		")))?$"
 )
 
-export function parse(input: string, binaryExpected: boolean, labels: string[] = []): Instruction {
-	const isBinary = BINARY.test(input)
-	const isInstruction = SYMBOLIC_INSTRUCTION.test(input)
-	const isData = DATA.test(input)
-
-	if (binaryExpected && !isBinary) {
-		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.invalid_binary_input,
-			input
-		)
-	}
-	if (!binaryExpected && !(isData || isInstruction)) {
+export function parseSymbolic(input: string, labels: string[] = []) {
+	if (SYMBOLIC_INSTRUCTION.test(input)) {
+		return _parseSymbolic(input, labels)
+	} else if (DATA.test(input)) {
+		return _parseData(input)
+	} else {
 		throw new InstructionParsingError(
 			get(lang).errors.instruction_parsing.invalid_symbolic_input,
 			input
 		)
 	}
+}
 
-	if (isInstruction) {
-		return parseInstruction(input, labels)
-	} else if (isBinary && binaryExpected) {
-		// "&& binaryExpected" so it doesn't include data similar to binary (1, 10, 11, etc)
-		return parseBinary(input)
+export function parseBinary(input: string) {
+	if (BINARY.test(input)) {
+		return _parseBinary(input)
 	} else {
-		// if isData
-		return parseData(input)
+		throw new InstructionParsingError(
+			get(lang).errors.instruction_parsing.invalid_binary_input,
+			input
+		)
 	}
 }
 
-function parseInstruction(input: string, labels: string[]): Instruction {
+function _parseSymbolic(input: string, labels: string[]): Instruction {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const hasOperand = !!symbolicOperand
 	const opcode = parseOpcode(symbolicOpcode)
@@ -73,14 +68,13 @@ function parseInstruction(input: string, labels: string[]): Instruction {
 			)
 		}
 		if (IMMEDIATE_LABEL.test(symbolicOperand)) {
-			return parseImmediateLabel(input, opcode, labels)
+			return parseImmediateLabelOperand(input, opcode, labels)
 		} else if (LABEL_PARAM.test(symbolicOperand)) {
-			return parseDirectLabel(input, opcode, labels)
+			return _parseDirectLabelOperand(input, opcode, labels)
 		} else if (IMMEDIATE_NUM.test(symbolicOperand)) {
-			return parseImmediateNumber(input, opcode)
+			return _parseImmediateNumberOperand(input, opcode)
 		} else {
-			// DIRECT
-			return parseDirect(input, opcode)
+			return _parseDirectOperand(input, opcode)
 		}
 	} else {
 		if (opcode.takesOperand) {
@@ -93,7 +87,7 @@ function parseInstruction(input: string, labels: string[]): Instruction {
 	}
 }
 
-function parseDirectLabel(input: string, opcode: Opcode, labels: string[]) {
+function _parseDirectLabelOperand(input: string, opcode: Opcode, labels: string[]) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	if (!labels.includes(symbolicOperand)) {
 		throw new InstructionParsingError(get(lang).errors.instruction_parsing.unknown_label, input)
@@ -106,7 +100,7 @@ function parseDirectLabel(input: string, opcode: Opcode, labels: string[]) {
 	)
 }
 
-function parseImmediateNumber(input: string, opcode: Opcode) {
+function _parseImmediateNumberOperand(input: string, opcode: Opcode) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const numericOpcode = setImmediateFlag(new BinaryValue(8, opcode.numeric), true).signed()
 	const numericOperand = parseInt(symbolicOperand.slice(1))
@@ -129,7 +123,7 @@ function parseImmediateNumber(input: string, opcode: Opcode) {
 	)
 }
 
-function parseImmediateLabel(input: string, opcode: Opcode, labels: string[]) {
+function parseImmediateLabelOperand(input: string, opcode: Opcode, labels: string[]) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const label = symbolicOperand.slice(1)
 	if (!labels.includes(label)) {
@@ -156,7 +150,7 @@ function parseImmediateLabel(input: string, opcode: Opcode, labels: string[]) {
 	)
 }
 
-function parseDirect(input: string, opcode: Opcode) {
+function _parseDirectOperand(input: string, opcode: Opcode) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const numericOperand = parseInt(symbolicOperand)
 	if (!isValidAddress(numericOperand)) {
@@ -172,7 +166,7 @@ function parseDirect(input: string, opcode: Opcode) {
 	)
 }
 
-function parseBinary(input: string): Instruction {
+function _parseBinary(input: string): Instruction {
 	if (input.includes(" ")) {
 		const [opc, opr] = input.split(" ")
 		input = opc + pad(opr, 8)
@@ -202,7 +196,7 @@ function parseBinary(input: string): Instruction {
 	return new Instruction(symbolicOpcode, symbolicOperand, value, invalidate)
 }
 
-function parseData(input: string): Instruction {
+function _parseData(input: string): Instruction {
 	const numericValue = parseInt(input)
 	if (!isSigned(numericValue, 16)) {
 		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_data, input)

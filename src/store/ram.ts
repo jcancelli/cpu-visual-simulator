@@ -1,6 +1,6 @@
 import { Updater, writable } from "svelte/store"
 import Instruction from "../instruction/Instruction"
-import { parse } from "../instruction/instructionParser"
+import { parseSymbolic } from "../instruction/instructionParser"
 import { addressToIndex, FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ramUtil"
 
 const { subscribe, set, update } = writable(new Array() as Instruction[])
@@ -40,7 +40,7 @@ function read(address: number): Instruction {
 
 function clear() {
 	for (let i = addressToIndex(FIRST_ADDRESS); i <= addressToIndex(LAST_ADDRESS); i++) {
-		ram[i] = parse("NOP", false)
+		ram[i] = parseSymbolic("NOP")
 	}
 	setSync(ram)
 }

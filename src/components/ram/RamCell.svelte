@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ramStore from "../../store/ram"
-	import { parse } from "../../instruction/instructionParser"
+	import { parseBinary, parseSymbolic } from "../../instruction/instructionParser"
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/components"
 	import { flash as flashComponent } from "../../util/animationUtil"
@@ -44,7 +44,11 @@
 		try {
 			if (input && input.value !== "") {
 				Logger.info(`RamCell input: "${input.value}"`, "USER_INPUT")
-				ramStore.write(address, parse(input.value.trim(), $displayAsBinary, $symbolTable))
+				if ($displayAsBinary) {
+					ramStore.write(address, parseBinary(input.value.trim()))
+				} else {
+					ramStore.write(address, parseSymbolic(input.value.trim(), $symbolTable))
+				}
 			}
 		} catch (error) {
 			$messageFeed.error(error.message)

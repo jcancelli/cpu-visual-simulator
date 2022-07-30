@@ -5,7 +5,7 @@ import {
 	LABEL_PARAM as LABEL,
 	SYMBOLIC_INSTRUCTION as INSTRUCTION_PATTERN,
 	DATA as DATA_PATTERN,
-	parse
+	parseSymbolic
 } from "../instruction/instructionParser"
 import ramStore from "../store/ram"
 import symbolTable from "../store/symbolTable"
@@ -58,7 +58,7 @@ export function load(raw: string): void {
 	const instructions: Instruction[] = []
 	rawInstructions.forEach((rawInstruction: RawInstruction) => {
 		try {
-			const instruction = parse(rawInstruction.text, false, labels)
+			const instruction = parseSymbolic(rawInstruction.text, labels)
 			instructions.push(instruction)
 		} catch (error) {
 			throw new ProgramParsingError(

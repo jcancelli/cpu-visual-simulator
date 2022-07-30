@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Instruction from "../../instruction/Instruction"
-	import { parse } from "../../instruction/instructionParser"
+	import { parseSymbolic } from "../../instruction/instructionParser"
 	import { opcodes, SymbolicOpcode, opcode as getOpcode } from "../../instruction/Opcode"
 	import Checkbox from "../basic/checkboxes/Debug.svelte"
 	import Input from "../basic/inputs/Debug.svelte"
 	import Select from "../basic/selects/Debug.svelte"
 
-	export let value: Instruction = parse("NOP", false)
+	export let value: Instruction = parseSymbolic("NOP")
 
 	let symbolicOpcode: SymbolicOpcode = "NOP"
 	$: opcode = getOpcode(symbolicOpcode)
@@ -19,12 +19,12 @@
 		try {
 			if (opcode.takesOperand) {
 				if (immediate && opcode.takesImmediate) {
-					value = parse(`${symbolicOpcode} #${operand}`, false)
+					value = parseSymbolic(`${symbolicOpcode} #${operand}`)
 				} else {
-					value = parse(`${symbolicOpcode} ${operand}`, false)
+					value = parseSymbolic(`${symbolicOpcode} ${operand}`)
 				}
 			} else {
-				value = parse(symbolicOpcode, false)
+				value = parseSymbolic(symbolicOpcode)
 			}
 		} catch (err) {
 			error = err.message
