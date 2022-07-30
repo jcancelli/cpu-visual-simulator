@@ -1,29 +1,78 @@
 {
     "displayName": "Italiano",
-    "tts": {
-        "prefered_voices_URIs": [
-            "Google italiano"
-        ]
-    },
     "steps": {
-        "pc_to_ram": "Il valore del Program Counter è messo sull'address bus",   
-        "ram_to_ir": "L'istruzione è caricata nell'Instruction Register",
-        "ir_to_cu": "Il codice operativo viene decodificato",
-        "cu_to_mux": "La Control Unit decide se l'operando è diretto o immediato",
-        "cu_to_alu": "La Control Unit setta l'operazione",
-        "acc_to_alu1": "L'accumulatore è caricato nella ALU",
-        "pc_increment": "Il Program Counter è incrementato",
-        "ir_to_alu2": "Il secondo operando viene caricato dall'Instruction Register",
-        "ir_to_ram": "L'operando viene messo sull'address bus",
-        "memory_read": "Un segnale di memory read viene mandato alla RAM",
-        "memory_fetch": "Un segnale di memory fetch viene mandato alla RAM",
-        "memory_write": "Un segnale di memory write viene mandato alla RAM",
-        "ram_to_alu2": "Il secondo operando viene caricato dalla RAM",
-        "ir_to_pc": "Il Program Counter è settato al valore dell'operando nell'Instruction Register",
-        "execute": "L'operazione viene eseguita",
-        "alu_to_sw": "La Status Word viene aggiornata",
-        "acc_to_ram": "Il valore dell'Accumulatore è messo sul data bus",
-	    "acc_stored_to_ram": "Il valore dell'Accumulatore viene scritto in RAM"
+        "pc_to_ram": {
+            "text": "Il valore del Program Counter è messo sull'address bus",
+            "tts": "Il valore del Program Counter è messo sull'address bus"
+        },
+        "ram_to_ir": {
+            "text": "L'istruzione è caricata nell'Instruction Register",
+            "tts": "L'istruzione è caricata nell'Instruction Register"
+        },
+        "ir_to_cu": {
+            "text": "Il codice operativo viene decodificato",
+            "tts": "Il codice operativo viene decodificato"
+        },
+        "cu_to_mux": {
+            "text": "La Control Unit decide se l'operando è diretto o immediato",
+            "tts": "La Control Unit decide se l'operando è diretto o immediato"
+        },
+        "cu_to_alu": {
+            "text": "La Control Unit setta l'operazione",
+            "tts": "La Control Unit setta l'operazione"
+        },
+        "acc_to_alu1": {
+            "text": "L'accumulatore è caricato nella ALU",
+            "tts": "L'accumulatore è caricato nella ALU"
+        },
+        "pc_increment": {
+            "text": "Il Program Counter è incrementato",
+            "tts": "Il Program Counter è incrementato"
+        },
+        "ir_to_alu2": {
+            "text": "Il secondo operando viene caricato dall'Instruction Register",
+            "tts": "Il secondo operando viene caricato dall'Instruction Register"
+        },
+        "ir_to_ram": {
+            "text": "L'operando viene messo sull'address bus",
+            "tts": "L'operando viene messo sull'address bus"
+        },
+        "memory_read": {
+            "text": "Un segnale di memory read viene mandato alla RAM",
+            "tts": "Un segnale di memory read viene mandato alla RAM"
+        },
+        "memory_fetch": {
+            "text": "Un segnale di memory fetch viene mandato alla RAM",
+            "tts": "Un segnale di memory fetch viene mandato alla RAM"
+        },
+        "memory_write": {
+            "text": "Un segnale di memory write viene mandato alla RAM",
+            "tts": "Un segnale di memory write viene mandato alla RAM"
+        },
+        "ram_to_alu2": {
+            "text": "Il secondo operando viene caricato dalla RAM",
+            "tts": "Il secondo operando viene caricato dalla RAM"
+        },
+        "ir_to_pc": {
+            "text": "Il Program Counter è settato al valore dell'operando nell'Instruction Register",
+            "tts": "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
+        },
+        "execute": {
+            "text": "L'operazione viene eseguita",
+            "tts": "L'operazione viene eseguita"
+        },
+        "alu_to_sw": {
+            "text": "La Status Word viene aggiornata",
+            "tts": "La Status Word viene aggiornata"
+        },
+        "acc_to_ram": {
+            "text": "Il valore dell'Accumulatore è messo sul data bus",
+            "tts": "Il valore dell'Accumulatore è messo sul data bus"
+        },
+	    "acc_stored_to_ram": {
+            "text": "Il valore dell'Accumulatore viene scritto in RAM",
+            "tts": "Il valore dell'Accumulatore viene scritto in RAM"
+        }
     },
     "menu": {
         "buttons": {
@@ -35,9 +84,6 @@
             },
             "open": {
                 "title": "Carica programma"
-            },
-            "language": {
-                "title": "Lingua"
             },
             "help": {
                 "title": "Aiuto"
@@ -91,6 +137,39 @@
             }
         }
     },
+	"message_feed": {
+		"buttons": {
+			"export_logs": {
+				"text": "Esporta logs errori"
+			},
+			"close_message": {
+				"title": "Chiudi messaggio"
+			}
+		}
+	},
+    "settings": {
+		"title": "Impostazioni",
+		"language": {
+			"title": "Lingua",
+			"description": "La lingua usata per l'interfaccia grafica"
+		},
+		"dispaly_labels": {
+			"title": "Mostra etichette",
+			"description": "Attiva/disattiva etichette come 'RAM', 'IR', 'ALU' ecc."
+		},
+		"tts_enabled": {
+			"title": "Text To Speech",
+			"description": "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione dello step attualmente in esecuzione"
+		},
+		"tts_speed": {
+			"title": "Velocità Text To Speech",
+			"description": "Velocità di lettura di text to speech"
+		},
+		"tts_voice": {
+			"title": "Voce Text To Speech",
+			"description": "Voce usata da text to speech"
+		}
+	},
     "errors": {
         "program_parsing": {
             "invalid_syntax": "Sintassi invalida a riga {0}: \"{1}\"",
