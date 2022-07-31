@@ -40,11 +40,7 @@
 	{disabled}
 	{title}
 >
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 24 24"
-		class="fill-black w-6 h-6 scale-[1.4]"
-	>
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-black w-6 h-6 scale-[1.4]">
 		<path d={PATHS[icon]} />
 	</svg>
 </button>

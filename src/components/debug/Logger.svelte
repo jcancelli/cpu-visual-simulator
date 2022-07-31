@@ -2,7 +2,7 @@
 	import { onMount } from "svelte"
 	import { logsStore, loggerStore } from "../../store/logs"
 	import { download } from "../../util/fileUtil"
-	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/Logger"
+	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/logger"
 
 	let logsDiv: HTMLDivElement
 	let logs: Log[] = []
@@ -41,10 +41,7 @@
 	}
 
 	function exportLogs() {
-		download(
-			JSON.stringify($logsStore),
-			`cpu-visual-simultor-logs-${new Date().toDateString()}.json`
-		)
+		download(JSON.stringify($logsStore), `cpu-visual-simultor-logs-${new Date().toDateString()}.json`)
 	}
 </script>
 

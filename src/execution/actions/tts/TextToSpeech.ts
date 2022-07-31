@@ -1,5 +1,5 @@
 import Action from "../Action"
-import SpeechSynthesis from "../../../util/SpeechSynthesis"
+import SpeechSynthesis from "../../../util/speechSynthesis"
 import { TTS_ENABLED } from "../Conditions"
 
 export default class TextToSpeech extends Action {

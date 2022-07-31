@@ -51,8 +51,12 @@ function clear() {
 	store.set(arr)
 }
 
-function load(labels: string[]) {
-	store.set(labels)
+function importLabels(labels: string[]) {
+	store.set([...labels])
+}
+
+function exportLabels(): string[] {
+	return [...get(store)]
 }
 
 export default {
@@ -62,5 +66,6 @@ export default {
 	setLabel,
 	hasLabel,
 	clear,
-	load
+	importLabels,
+	exportLabels
 }

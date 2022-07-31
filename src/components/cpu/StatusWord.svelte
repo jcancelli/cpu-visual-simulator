@@ -42,9 +42,7 @@
 		<ComponentLabel text="N" bottom="-21px" left="25%" />
 		{$negativeFlag ? "1" : "0"}
 	</div>
-	<div
-		class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md"
-	>
+	<div class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md">
 		------
 	</div>
 </div>

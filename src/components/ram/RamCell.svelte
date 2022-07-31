@@ -1,11 +1,11 @@
 <script lang="ts">
 	import ramStore from "../../store/ram"
-	import { parse } from "../../instruction/instructionParser"
+	import { parseBinary, parseSymbolic } from "../../instruction/instructionParser"
 	import { addressToIndex } from "../../util/ramUtil"
 	import { messageFeed } from "../../store/components"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import ramSelection from "../../store/ramSelection"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 	import { displayAsBinary } from "../../store/settings"
 	import symbolTable from "../../store/symbolTable"
 
@@ -44,7 +44,11 @@
 		try {
 			if (input && input.value !== "") {
 				Logger.info(`RamCell input: "${input.value}"`, "USER_INPUT")
-				ramStore.write(address, parse(input.value.trim(), $displayAsBinary, $symbolTable))
+				if ($displayAsBinary) {
+					ramStore.write(address, parseBinary(input.value.trim()))
+				} else {
+					ramStore.write(address, parseSymbolic(input.value.trim(), $symbolTable))
+				}
 			}
 		} catch (error) {
 			$messageFeed.error(error.message)
@@ -53,12 +57,7 @@
 	}
 
 	export async function flash() {
-		return flashComponent(
-			cell,
-			"background-color",
-			{ r: 211, g: 211, b: 211 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flashComponent(cell, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export function getAddress() {

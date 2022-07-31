@@ -2,7 +2,7 @@
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "../basic/buttons/Execution.svelte"
 	import execution, { isExecuting } from "../../execution/execution"
-	import { playAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
+	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
@@ -10,7 +10,7 @@
 	import cpu from "../../store/cpu"
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
-	import Logger from "../../util/Logger"
+	import Logger from "../../util/logger"
 
 	function resetExecution() {
 		Logger.info(`Reset pressed`, "USER_INPUT")
@@ -54,43 +54,27 @@
 	}
 
 	function animationsToggled() {
-		Logger.info(`Animations toggle pressed - ${$playAnimations}`, "USER_INPUT")
+		$minimalAnimations = !$minimalAnimations
+		Logger.info(`Animations toggle pressed - ${$minimalAnimations}`, "USER_INPUT")
 	}
 </script>
 
-<div
-	class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3"
->
+<div class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3">
 	<Widget class="gap-5">
 		<Group label={$lang.controls.labels.execution}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton
-					on:click={resetExecution}
-					icon="reset"
-					title={$lang.controls.buttons.reset.title}
-				/>
+				<ExecutionButton on:click={resetExecution} icon="reset" title={$lang.controls.buttons.reset.title} />
 				<ExecutionButton
 					on:click={toggleExecution}
 					icon={$isExecuting ? "pause" : "play"}
-					title={$isExecuting
-						? $lang.controls.buttons.pause.title
-						: $lang.controls.buttons.play.title}
+					title={$isExecuting ? $lang.controls.buttons.pause.title : $lang.controls.buttons.play.title}
 				/>
-				<ExecutionButton
-					on:click={skipToEnd}
-					icon="skip"
-					title={$lang.controls.buttons.end.title}
-					disabled
-				/>
+				<ExecutionButton on:click={skipToEnd} icon="skip" title={$lang.controls.buttons.end.title} disabled />
 			</div>
 		</Group>
 		<Group label={$lang.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton
-					on:click={playStep}
-					icon="play"
-					title={$lang.controls.buttons.play_step.title}
-				/>
+				<ExecutionButton on:click={playStep} icon="play" title={$lang.controls.buttons.play_step.title} />
 				<ExecutionButton
 					on:click={skipStep}
 					icon="skip"
@@ -128,7 +112,7 @@
 		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
 			>{$lang.controls.checkboxes.binary.text}</Checkbox
 		>
-		<Checkbox bind:checked={$playAnimations} on:click={animationsToggled}
+		<Checkbox checked={!$minimalAnimations} on:click={animationsToggled}
 			>{$lang.controls.checkboxes.animations.text}</Checkbox
 		>
 	</Widget>

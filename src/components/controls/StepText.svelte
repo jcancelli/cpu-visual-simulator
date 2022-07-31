@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { language } from "../../store/settings"
+	import { displayStepText, language } from "../../store/settings"
 
 	import Widget from "./Widget.svelte"
 
@@ -12,8 +12,10 @@
 	}
 </script>
 
-<Widget class="justify-center">
-	<p class="w-[450px] text-gray-200 overflow-hidden text-center">
-		{text}
-	</p>
-</Widget>
+{#if $displayStepText}
+	<Widget class="justify-center">
+		<p class="w-[450px] text-gray-200 overflow-hidden text-center">
+			{text}
+		</p>
+	</Widget>
+{/if}

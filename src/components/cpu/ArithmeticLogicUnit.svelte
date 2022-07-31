@@ -5,30 +5,15 @@
 	import { displayAsBinary } from "../../store/settings"
 
 	export async function flashFirstOperand() {
-		return flash(
-			operand1Div,
-			"background-color",
-			{ r: 224, g: 224, b: 224 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flash(operand1Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashSecondOperand() {
-		return flash(
-			operand2Div,
-			"background-color",
-			{ r: 224, g: 224, b: 224 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flash(operand2Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashOperator() {
-		return flash(
-			operatorDiv,
-			"background-color",
-			{ r: 224, g: 224, b: 224 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flash(operatorDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	let operand1Div: HTMLDivElement

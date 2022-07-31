@@ -9,12 +9,7 @@ export function lerp(a, b, u) {
 }
 
 //https://stackoverflow.com/a/11293378 - customized
-export async function fade(
-	element: HTMLElement | SVGSVGElement,
-	property: string,
-	start: Color,
-	end: Color
-) {
+export async function fade(element: HTMLElement | SVGSVGElement, property: string, start: Color, end: Color) {
 	return new Promise<void>((resolve, reject) => {
 		const baseDuration = 300
 		let u = 0.0

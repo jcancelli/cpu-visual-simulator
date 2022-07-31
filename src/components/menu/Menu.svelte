@@ -3,10 +3,12 @@
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import lang from "../../store/lang"
+	import ram from "../../store/ram"
 	import { showSettings } from "../../store/settings"
+	import symbolTable from "../../store/symbolTable"
 	import { download, upload } from "../../util/fileUtil"
-	import Logger from "../../util/Logger"
-	import { load, save } from "../../util/programLoader"
+	import Logger from "../../util/logger"
+	import { compileProgram, exportProgram } from "../../util/programLoader"
 	import Button from "../basic/buttons/Menu.svelte"
 
 	function openSettings() {
@@ -17,7 +19,9 @@
 	async function loadProgram() {
 		try {
 			const file = (await upload(".cpuvs"))[0]
-			load(await file.text())
+			const program = compileProgram(await file.text())
+			symbolTable.importLabels(program.labels)
+			ram.importInstructions(program.instructions)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			$messageFeed.error(error.message)
@@ -29,7 +33,7 @@
 		try {
 			let fileName = prompt("File name")
 			if (fileName) {
-				download(save(), `${fileName}.cpuvs`)
+				download(exportProgram(ram.exportInstructions(), symbolTable.exportLabels()), `${fileName}.cpuvs`)
 			} else {
 				throw new CheckedError(get(lang).errors.user_input.invalid_file_name)
 			}

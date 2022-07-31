@@ -5,12 +5,7 @@
 	import { displayAsBinary } from "../../store/settings"
 
 	export async function flash() {
-		return flashComponent(
-			accDiv,
-			"background-color",
-			{ r: 224, g: 224, b: 224 },
-			{ r: 0, g: 255, b: 0 }
-		)
+		return flashComponent(accDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	let accDiv: HTMLDivElement

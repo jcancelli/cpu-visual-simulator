@@ -6,55 +6,43 @@ export type SupportedLang = typeof SUPPORTED_LANGS[number]
 export const DEFAULT_LANG = "en"
 
 export const showSettings = writable<boolean>(isSet("showSettings") ? bool("showSettings") : false)
-export const displayAsBinary = writable<boolean>(
-	isSet("displayAsBinary") ? bool("displayAsBinary") : false
+export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
+export const displayLabels = writable<boolean>(isSet("displayLabels") ? bool("displayLabels") : true)
+export const displayStepText = writable<boolean>(isSet("displayStepText") ? bool("displayStepText") : false)
+export const minimalAnimations = writable<boolean>(
+	isSet("minimalAnimations") ? bool("minimalAnimations") : false
 )
-export const displayLabels = writable<boolean>(
-	isSet("displayLabels") ? bool("displayLabels") : true
-)
-export const playAnimations = writable<boolean>(
-	isSet("playAnimations") ? bool("playAnimations") : true
-)
-export const animationSpeed = writable<number>(
-	isSet("animationSpeed") ? num("animationSpeed") : 1.6
-)
-export const language = writable<SupportedLang>(
-	isSet("language") ? lang("language") : getDefaultLanguage()
-)
-export const textToSpeechEnabled = writable<boolean>(
-	isSet("textToSpeechEnabled") ? bool("textToSpeechEnabled") : false
-)
-export const textToSpeechSpeed = writable<number>(
-	isSet("textToSpeechSpeed") ? num("textToSpeechSpeed") : 1
-)
-export const textToSpeechVoice = writable<string>(
-	isSet("textToSpeechVoice") ? str("textToSpeechVoice") : ""
-)
-export const availableTextToSpeechVoices = writable<SpeechSynthesisVoice[]>()
+export const animationSpeed = writable<number>(isSet("animationSpeed") ? num("animationSpeed") : 1.6)
+export const language = writable<SupportedLang>(isSet("language") ? lang("language") : getDefaultLanguage())
+export const ttsEnabled = writable<boolean>(isSet("ttsEnabled") ? bool("ttsEnabled") : false)
+export const ttsSpeed = writable<number>(isSet("ttsSpeed") ? num("ttsSpeed") : 1)
+export const ttsVoice = writable<string>(isSet("ttsVoice") ? str("ttsVoice") : "")
+export const availableTtsVoices = writable<SpeechSynthesisVoice[]>()
 
-language.subscribe(newLang => availableTextToSpeechVoices.set(getAvailableVoices(newLang)))
-availableTextToSpeechVoices.subscribe(newVoices => {
-	if (isSet("textToSpeechVoice") && newVoices?.find(v => v.name === str("textToSpeechVoice"))) {
-		textToSpeechVoice.set(str("textToSpeechVoice"))
+language.subscribe(newLang => availableTtsVoices.set(getAvailableVoices(newLang)))
+availableTtsVoices.subscribe(newVoices => {
+	if (isSet("ttsVoice") && newVoices?.find(v => v.name === str("ttsVoice"))) {
+		ttsVoice.set(str("ttsVoice"))
 	} else {
-		textToSpeechVoice.set(newVoices[0]?.name || "")
+		ttsVoice.set(newVoices[0]?.name || "")
 	}
 })
 
 window.addEventListener("load", initSettings)
 
 function initSettings() {
-	availableTextToSpeechVoices.set(getAvailableVoices(get(language)))
+	availableTtsVoices.set(getAvailableVoices(get(language)))
 	// subscribers so that each value is stored locally
 	showSettings.subscribe(newValue => set("showSettings", newValue))
 	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
 	displayLabels.subscribe(newValue => set("displayLabels", newValue))
-	playAnimations.subscribe(newValue => set("playAnimations", newValue))
+	displayStepText.subscribe(newValue => set("displayStepText", newValue))
+	minimalAnimations.subscribe(newValue => set("minimalAnimations", newValue))
 	animationSpeed.subscribe(newValue => set("animationSpeed", newValue))
 	language.subscribe(newValue => set("language", newValue))
-	textToSpeechEnabled.subscribe(newValue => set("textToSpeechEnabled", newValue))
-	textToSpeechSpeed.subscribe(newValue => set("textToSpeechSpeed", newValue))
-	textToSpeechVoice.subscribe(newValue => set("textToSpeechVoice", newValue))
+	ttsEnabled.subscribe(newValue => set("ttsEnabled", newValue))
+	ttsSpeed.subscribe(newValue => set("ttsSpeed", newValue))
+	ttsVoice.subscribe(newValue => set("ttsVoice", newValue))
 }
 
 export function getDefaultLanguage(): SupportedLang {

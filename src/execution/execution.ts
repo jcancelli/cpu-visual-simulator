@@ -4,8 +4,8 @@ import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"
 import { messageFeed } from "../store/components"
-import { DECODE_OPCODE, FETCH, INCREMENT_PC } from "./actions/presets"
-import Logger from "../util/Logger"
+import { FETCH, INCREMENT_PC } from "./actions/presets"
+import Logger from "../util/logger"
 
 type CycleFase =
 	| "ENQUEUING_FETCH"
@@ -15,18 +15,14 @@ type CycleFase =
 	| "ENQUEUEING_PC_INCREMENT"
 	| "EXECUTING_PC_INCREMENT"
 
+export const isExecuting = writable(false)
+
 let isPlaying = false
 let isShortStepping = false // is executing a single step
 let isLongStepping = false // is executing a full instruction
 let isLocked = false // prevent concurrency
 let cycleFase: CycleFase = "ENQUEUING_FETCH"
 let queue: Action[] = [] // contains all actions to be executed
-
-const privateIsExecutingStore = {
-	...writable(false),
-	update: () => privateIsExecutingStore.set(isPlaying || isShortStepping || isLongStepping)
-}
-export const isExecuting = { subscribe: privateIsExecutingStore.subscribe } // read-only reference to isExecutingStore
 
 setInterval(cycle, 50)
 
@@ -38,7 +34,7 @@ async function cycle() {
 	try {
 		switch (cycleFase) {
 			case "ENQUEUING_FETCH":
-				queue.push(...FETCH, ...DECODE_OPCODE)
+				queue.push(...FETCH)
 				cycleFase = "EXECUTING_FETCH"
 				break
 			case "EXECUTING_FETCH":
@@ -49,10 +45,7 @@ async function cycle() {
 				break
 			case "ENQUEUING_INSTRUCTION":
 				queue.push(...instructionToActions(get(cpu.instructionRegister)))
-				Logger.info(
-					`Executing instruction "${get(cpu.instructionRegister).symbolic()}"`,
-					"EXECUTION"
-				)
+				Logger.info(`Executing instruction "${get(cpu.instructionRegister).symbolic()}"`, "EXECUTION")
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
@@ -62,6 +55,7 @@ async function cycle() {
 						cpu.isHalting.set(true)
 					}
 					if (get(cpu.isJumping)) {
+						cpu.isJumping.set(false)
 						cycleFase = "ENQUEUING_FETCH"
 						if (isLongStepping) {
 							setIsLongStepping(false)
@@ -123,7 +117,7 @@ function pause() {
 }
 
 function toggle() {
-	if (!get(privateIsExecutingStore)) {
+	if (!get(isExecuting)) {
 		start()
 	} else {
 		pause()
@@ -147,6 +141,7 @@ function instruction() {
 function reset() {
 	pause()
 	cpu.isHalting.set(false)
+	cpu.isJumping.set(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")
@@ -166,17 +161,17 @@ function queueIsEmpty() {
 
 function setIsPlaying(value: boolean) {
 	isPlaying = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 function setIsShortStepping(value: boolean) {
 	isShortStepping = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 function setIsLongStepping(value: boolean) {
 	isLongStepping = value
-	privateIsExecutingStore.update()
+	isExecuting.set(isPlaying || isShortStepping || isLongStepping)
 }
 
 export default {

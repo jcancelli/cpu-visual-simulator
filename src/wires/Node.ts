@@ -32,11 +32,7 @@ export default class Node implements Position {
 	connectTo(node: Node, wire: Wire): void {
 		if (!this.isAlignedTo(node)) {
 			throw new Error(
-				"Cannot connect 2 nodes that are not aligned (nodeA: " +
-					this.name +
-					" nodeB: " +
-					node.name +
-					")"
+				"Cannot connect 2 nodes that are not aligned (nodeA: " + this.name + " nodeB: " + node.name + ")"
 			)
 		}
 		if (this.isConnectedTo(node)) {

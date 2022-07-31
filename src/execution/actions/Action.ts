@@ -1,4 +1,4 @@
-import Logger from "../../util/Logger"
+import Logger from "../../util/logger"
 import { Condition } from "./Conditions"
 import { Wait } from "./Waits"
 
