@@ -54,6 +54,7 @@
 	}
 
 	function animationsToggled() {
+		$minimalAnimations = !$minimalAnimations
 		Logger.info(`Animations toggle pressed - ${$minimalAnimations}`, "USER_INPUT")
 	}
 </script>
@@ -111,7 +112,7 @@
 		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
 			>{$lang.controls.checkboxes.binary.text}</Checkbox
 		>
-		<Checkbox bind:checked={$minimalAnimations} on:click={animationsToggled}
+		<Checkbox checked={!$minimalAnimations} on:click={animationsToggled}
 			>{$lang.controls.checkboxes.animations.text}</Checkbox
 		>
 	</Widget>
