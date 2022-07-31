@@ -2,7 +2,7 @@
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "../basic/buttons/Execution.svelte"
 	import execution, { isExecuting } from "../../execution/execution"
-	import { playAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
+	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
@@ -54,7 +54,7 @@
 	}
 
 	function animationsToggled() {
-		Logger.info(`Animations toggle pressed - ${$playAnimations}`, "USER_INPUT")
+		Logger.info(`Animations toggle pressed - ${$minimalAnimations}`, "USER_INPUT")
 	}
 </script>
 
@@ -111,7 +111,7 @@
 		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
 			>{$lang.controls.checkboxes.binary.text}</Checkbox
 		>
-		<Checkbox bind:checked={$playAnimations} on:click={animationsToggled}
+		<Checkbox bind:checked={$minimalAnimations} on:click={animationsToggled}
 			>{$lang.controls.checkboxes.animations.text}</Checkbox
 		>
 	</Widget>

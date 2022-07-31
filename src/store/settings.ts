@@ -9,7 +9,9 @@ export const showSettings = writable<boolean>(isSet("showSettings") ? bool("show
 export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
 export const displayLabels = writable<boolean>(isSet("displayLabels") ? bool("displayLabels") : true)
 export const displayStepText = writable<boolean>(isSet("displayStepText") ? bool("displayStepText") : false)
-export const playAnimations = writable<boolean>(isSet("playAnimations") ? bool("playAnimations") : true)
+export const minimalAnimations = writable<boolean>(
+	isSet("minimalAnimations") ? bool("minimalAnimations") : false
+)
 export const animationSpeed = writable<number>(isSet("animationSpeed") ? num("animationSpeed") : 1.6)
 export const language = writable<SupportedLang>(isSet("language") ? lang("language") : getDefaultLanguage())
 export const ttsEnabled = writable<boolean>(isSet("ttsEnabled") ? bool("ttsEnabled") : false)
@@ -35,7 +37,7 @@ function initSettings() {
 	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
 	displayLabels.subscribe(newValue => set("displayLabels", newValue))
 	displayStepText.subscribe(newValue => set("displayStepText", newValue))
-	playAnimations.subscribe(newValue => set("playAnimations", newValue))
+	minimalAnimations.subscribe(newValue => set("minimalAnimations", newValue))
 	animationSpeed.subscribe(newValue => set("animationSpeed", newValue))
 	language.subscribe(newValue => set("language", newValue))
 	ttsEnabled.subscribe(newValue => set("ttsEnabled", newValue))
