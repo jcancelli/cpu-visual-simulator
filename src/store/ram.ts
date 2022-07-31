@@ -3,7 +3,7 @@ import Instruction from "../instruction/Instruction"
 import { parseSymbolic } from "../instruction/instructionParser"
 import { addressToIndex, FIRST_ADDRESS, isValidAddress, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 
-const { subscribe, set, update } = writable(new Array() as Instruction[])
+const { subscribe, set, update } = writable<Instruction[]>([])
 let ram: Instruction[] = []
 
 // initialize

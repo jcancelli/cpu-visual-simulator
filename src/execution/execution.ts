@@ -55,6 +55,7 @@ async function cycle() {
 						cpu.isHalting.set(true)
 					}
 					if (get(cpu.isJumping)) {
+						cpu.isJumping.set(false)
 						cycleFase = "ENQUEUING_FETCH"
 						if (isLongStepping) {
 							setIsLongStepping(false)
@@ -140,6 +141,7 @@ function instruction() {
 function reset() {
 	pause()
 	cpu.isHalting.set(false)
+	cpu.isJumping.set(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")
