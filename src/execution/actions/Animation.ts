@@ -1,5 +1,5 @@
-import Action from "../Action"
-import { MINIMAL_ANIMATIONS, NOT } from "../Conditions"
+import Action from "./Action"
+import { MINIMAL_ANIMATIONS, NOT } from "./Conditions"
 
 export default abstract class Animation extends Action {
 	constructor() {

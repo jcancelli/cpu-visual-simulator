@@ -1,13 +1,6 @@
 import Instruction from "../../instruction/Instruction"
 import Action from "./Action"
-import FlashCpu from "./animations/FlashCpu"
-import FlashRam from "./animations/FlashRam"
-import FlashWire from "./animations/FlashWire"
-import UpdateSWCompare from "./cpu/UpdateSWCompare"
-import ExecuteALUOperation from "./cpu/ExecuteALUOperation"
-import UpdateSW from "./cpu/UpdateSW"
-import MemoryWrite from "./ram/MemoryWrite"
-import HaltExecution from "./cpu/HaltExecution"
+import { TTS_FINISHED } from "./Waits"
 import {
 	SET_MUX,
 	SET_ALU_OPERATION,
@@ -19,12 +12,19 @@ import {
 	SET_PC_TO_IR_OPERAND_IF_NEGATIVE_FLAG,
 	SET_PC_TO_IR_OPERAND_IF_NOT_NEGATIVE_FLAG
 } from "./presets"
-import { TTS_FINISHED } from "./Waits"
+import ExecuteALUOperation from "./cpu/state/ExecuteALUOperation"
+import UpdateSW from "./cpu/state/UpdateSW"
+import SetACC from "./cpu/state/SetACC"
+import HaltExecution from "./cpu/state/HaltExecution"
+import UpdateSWCompare from "./cpu/state/UpdateSWCompare"
+import FlashCpu from "./cpu/animation/FlashCpu"
+import MemoryWrite from "./ram/state/MemoryWrite"
+import FlashRam from "./ram/animation/FlashRam"
+import LoadValueOnBus from "./bus/state/LoadValueOnBus"
+import FlashWire from "./bus/animation/FlashWire"
 import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
-import LoadValueOnBus from "./bus/LoadValueOnBus"
-import SetACC from "./cpu/SetACC"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {

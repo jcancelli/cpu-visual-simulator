@@ -1,8 +1,8 @@
 import { get } from "svelte/store"
-import busses, { main_address_bus } from "../../../store/busses"
-import cpu from "../../../store/cpu"
-import ram from "../../../store/ram"
-import BusAction from "./BusAction"
+import busses, { main_address_bus } from "../../../../store/busses"
+import cpu from "../../../../store/cpu"
+import ram from "../../../../store/ram"
+import BusAction from "../BusAction"
 
 export type DataBus =
 	| "main_data_bus"

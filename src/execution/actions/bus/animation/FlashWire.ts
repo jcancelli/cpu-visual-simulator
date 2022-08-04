@@ -1,6 +1,6 @@
-import Animation from "./Animation"
+import Animation from "../../Animation"
 import { get } from "svelte/store"
-import { wires } from "../../../store/components"
+import { wires } from "../../../../store/components"
 
 export default class FlashWire extends Animation {
 	protected from: string
