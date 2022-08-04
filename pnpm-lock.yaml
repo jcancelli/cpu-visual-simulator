@@ -27,10 +27,12 @@ specifiers:
   ts-jest: ^28.0.7
   tslib: ^2.4.0
   typescript: ^4.7.4
+  yaml: ^2.1.1
 
 dependencies:
   sass: 1.54.0
   sirv-cli: 2.0.2
+  yaml: 2.1.1
 
 devDependencies:
   '@rollup/plugin-commonjs': 22.0.1_rollup@2.77.2
@@ -3544,7 +3546,6 @@ packages:
   /yaml/2.1.1:
     resolution: {integrity: sha512-o96x3OPo8GjWeSLF+wOAbrPfhFOGY0W00GNaxCDv+9hkcDJEnev1yh8S7pgHF0ik6zc8sQLuL8hjHjJULZp8bw==}
     engines: {node: '>= 14'}
-    dev: true
 
   /yargs-parser/21.0.1:
     resolution: {integrity: sha512-9BK1jFpLzJROCI5TzwZL/TU4gqjK5xiHV/RfWLOahrjAko/e4DJkRDZQXfvqAsiZzzYhgAzbgz6lg48jcm4GLg==}
