@@ -1,0 +1,144 @@
+
+displayName: "Italiano"
+steps:
+    pc_to_ram:
+        text: "Il valore del Program Counter è messo sull'address bus"
+        tts: "Il valore del Program Counter è messo sull'address bus"
+    ram_to_ir:
+        text: "L'istruzione è caricata nell'Instruction Register"
+        tts: "L'istruzione è caricata nell'Instruction Register"
+    ir_to_cu:
+        text: "Il codice operativo viene decodificato"
+        tts: "Il codice operativo viene decodificato"
+    cu_to_mux:
+        text: "La Control Unit decide se l'operando è diretto o immediato"
+        tts: "La Control Unit decide se l'operando è diretto o immediato"
+    cu_to_alu:
+        text: "La Control Unit setta l'operazione"
+        tts: "La Control Unit setta l'operazione"
+    acc_to_alu1:
+        text: "L'accumulatore è caricato nella ALU"
+        tts: "L'accumulatore è caricato nella ALU"
+    pc_increment:
+        text: "Il Program Counter è incrementato"
+        tts: "Il Program Counter è incrementato"
+    ir_to_alu2:
+        text: "Il secondo operando viene caricato dall'Instruction Register"
+        tts: "Il secondo operando viene caricato dall'Instruction Register"
+    ir_to_ram:
+        text: "L'operando viene messo sull'address bus"
+        tts: "L'operando viene messo sull'address bus"
+    memory_read:
+        text: "Un segnale di memory read viene mandato alla RAM"
+        tts: "Un segnale di memory read viene mandato alla RAM"
+    memory_fetch:
+        text: "Un segnale di memory fetch viene mandato alla RAM"
+        tts: "Un segnale di memory fetch viene mandato alla RAM"
+    memory_write:
+        text: "Un segnale di memory write viene mandato alla RAM"
+        tts: "Un segnale di memory write viene mandato alla RAM"
+    ram_to_alu2:
+        text: "Il secondo operando viene caricato dalla RAM"
+        tts: "Il secondo operando viene caricato dalla RAM"
+    ir_to_pc:
+        text: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
+        tts: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
+    execute:
+        text: "L'operazione viene eseguita"
+        tts: "L'operazione viene eseguita"
+    alu_to_sw:
+        text: "La Status Word viene aggiornata"
+        tts: "La Status Word viene aggiornata"
+    acc_to_ram:
+        text: "Il valore dell'Accumulatore è messo sul data bus"
+        tts: "Il valore dell'Accumulatore è messo sul data bus"
+    acc_stored_to_ram:
+        text: "Il valore dell'Accumulatore viene scritto in RAM"
+        tts: "Il valore dell'Accumulatore viene scritto in RAM"
+menu:
+    buttons:
+        settings:
+            title: "Impostazioni"
+        save:
+            title: "Salva programma"
+        open:
+            title: "Carica programma"
+        help:
+            title: "Aiuto"
+controls:
+    labels:
+        execution: "Esecuzione"
+        step: "Step"
+        instruction: "Istruzione"
+        speed: "Velocità"
+    buttons:
+        reset:
+            title: "Reset"
+        play:
+            title: "Esegui"
+        pause:
+            title: "Pausa"
+        end:
+            title: "Salta alla fine"
+        play_step:
+            title: "Esegui step"
+        skip_step:
+            title: "Salta a fine step"
+        play_instruction:
+            title: "Esegui istruzione"
+        skip_instruction:
+            title: "Salta a fine istruzione"
+    sliders:
+        speed:
+            title: "Velocità"
+    checkboxes:
+        binary:
+            text: "Binario"
+        animations:
+            text: "Animazioni"
+message_feed:
+    buttons:
+        export_logs:
+            text: "Esporta logs errori"
+        close_message:
+            title: "Chiudi messaggio"
+settings:
+    title: "Impostazioni"
+    language:
+        title: "Lingua"
+        description: "La lingua usata per l'interfaccia grafica"
+    dispaly_labels:
+        title: "Mostra etichette"
+        description: "Attiva/disattiva etichette come 'RAM' 'IR' 'ALU' ecc."
+    display_step_text:
+        title: "Mostra testo step"
+        description: "Abilita/disabilita il riquadro in basso a destra in cui viene visualizzata una descrizione testuale dello step in esecuzione"
+    tts_enabled:
+        title: "Text To Speech"
+        description: "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione dello step attualmente in esecuzione"
+    tts_speed:
+        title: "Velocità Text To Speech"
+        description: "Velocità di lettura di text to speech"
+    tts_voice:
+        title: "Voce Text To Speech"
+        description: "Voce usata da text to speech"
+errors:
+    program_parsing:
+        invalid_syntax: "Sintassi invalida a riga {0}: {1}"
+        parsing_error: "Errore a riga {0}: {1}"
+        duplicate_label: "Label duplicata a riga {0}: {1}"
+    instruction_parsing:
+        invalid_binary_input: "Input binario invalido"
+        invalid_symbolic_input: "Input invalido"
+        invalid_opcode: "Codice operativo invalido"
+        operand_not_allowed: "Codice operativo non accetta operandi"
+        operand_required: "Codice operativo richiede un operando"
+        unknown_label: "Label non trovata"
+        immediate_operand_not_allowed: "Codice operativo non accetta operandi immediati"
+        invalid_immediate_operand: "L'operando non è un valore ad 8-bit con segno valido"
+        invalid_direct_operand: "L'operando non è un indirizzo valido"
+        invalid_data: "L'input non è un valore a 16-bit con segno valido"
+    symbol_table:
+        label_already_exists: "Label esiste già"
+    user_input:
+        invalid_file_name: "Nome file invalido"
