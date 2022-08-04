@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte"
-	import { FlashableCpuComponent } from "../../execution/actions/animations/FlashCpu"
+	import { FlashableCpuComponent } from "../../execution/actions/cpu/animation/FlashCpu"
 	import execution from "../../execution/execution"
 	import Instruction from "../../instruction/Instruction"
 	import { Operators } from "../../instruction/Opcode"

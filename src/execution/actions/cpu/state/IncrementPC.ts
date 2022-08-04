@@ -1,9 +1,9 @@
 import { get } from "svelte/store"
-import { inc_pc_address_bus } from "../../../store/busses"
-import { cpu } from "../../../store/components"
-import cpuStore from "../../../store/cpu"
-import BinaryValue from "../../../util/BinaryValue"
-import CpuAction from "./CpuAction"
+import { inc_pc_address_bus } from "../../../../store/busses"
+import { cpu } from "../../../../store/components"
+import cpuStore from "../../../../store/cpu"
+import BinaryValue from "../../../../util/BinaryValue"
+import CpuAction from "../CpuAction"
 
 export default class IncrementPC extends CpuAction {
 	protected async action(): Promise<any> {

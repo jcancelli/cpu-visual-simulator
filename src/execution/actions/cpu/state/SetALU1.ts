@@ -1,8 +1,8 @@
 import { get } from "svelte/store"
-import { main_data_bus } from "../../../store/busses"
-import { cpu } from "../../../store/components"
-import { alu1 } from "../../../store/cpu"
-import CpuAction from "./CpuAction"
+import { main_data_bus } from "../../../../store/busses"
+import { cpu } from "../../../../store/components"
+import { alu1 } from "../../../../store/cpu"
+import CpuAction from "../CpuAction"
 
 export default class SetALU1 extends CpuAction {
 	protected async action(): Promise<any> {

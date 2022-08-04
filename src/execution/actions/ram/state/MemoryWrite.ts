@@ -1,9 +1,9 @@
 import { get } from "svelte/store"
-import { parseBinary, parseSymbolic } from "../../../instruction/instructionParser"
-import { main_address_bus, main_data_bus } from "../../../store/busses"
-import { ram } from "../../../store/components"
-import ramStore from "../../../store/ram"
-import RamAction from "./RamAction"
+import { parseBinary, parseSymbolic } from "../../../../instruction/instructionParser"
+import { main_address_bus, main_data_bus } from "../../../../store/busses"
+import { ram } from "../../../../store/components"
+import ramStore from "../../../../store/ram"
+import RamAction from "../RamAction"
 
 export default class MemoryWrite extends RamAction {
 	protected async action(): Promise<any> {

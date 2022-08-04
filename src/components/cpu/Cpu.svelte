@@ -7,7 +7,7 @@
 	import ProgramCounter from "./ProgramCounter.svelte"
 	import Multiplexer from "./Multiplexer.svelte"
 	import ArithmeticLogicUnit from "./ArithmeticLogicUnit.svelte"
-	import { FlashableCpuComponent } from "../../execution/actions/animations/FlashCpu"
+	import { FlashableCpuComponent } from "../../execution/actions/cpu/animation/FlashCpu"
 
 	let ir: InstructionRegister
 	let cu: ControlUnit

@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
-import { cpu } from "../../../store/components"
-import Animation from "./Animation"
+import { cpu } from "../../../../store/components"
+import Animation from "../../Animation"
 
 export type FlashableCpuComponent =
 	| "IR"

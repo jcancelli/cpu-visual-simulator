@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
-import cpuStore from "../../../store/cpu"
-import BinaryValue from "../../../util/BinaryValue"
-import CpuAction from "./CpuAction"
+import cpuStore from "../../../../store/cpu"
+import BinaryValue from "../../../../util/BinaryValue"
+import CpuAction from "../CpuAction"
 
 export default class ExecuteALUOperation extends CpuAction {
 	protected async action(): Promise<any> {

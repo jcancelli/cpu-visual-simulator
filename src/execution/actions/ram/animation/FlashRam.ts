@@ -1,7 +1,7 @@
-import Animation from "./Animation"
+import Animation from "../../Animation"
 import { get } from "svelte/store"
-import { ram as ramComponent } from "../../../store/components"
-import { main_address_bus } from "../../../store/busses"
+import { ram as ramComponent } from "../../../../store/components"
+import { main_address_bus } from "../../../../store/busses"
 
 export type FlashableRamComponent = "ADDRESS" | "DATA"
 
