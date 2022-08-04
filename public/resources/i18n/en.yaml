@@ -1,8 +1,8 @@
 displayName: "English"
 steps: 
     pc_to_ram:
-        text: "The value of the Program Counter is put on the address bus"
-        tts: "The value of the Program Counter is put on the address bus"
+        text: "The content of the Program Counter is put on the address bus"
+        tts: "The content of the Program Counter is put on the address bus"
     ram_to_ir:
         text: "The instruction is loaded into the Instruction Register"
         tts: "The instruction is loaded into the Instruction Register"
@@ -10,38 +10,38 @@ steps:
         text: "The opcode is decoded"
         tts: "The opcode is decoded"
     cu_to_mux:
-        text: "The Control Unit sets wether the operand is direct or immediate"
-        tts: "The Control Unit sets wether the operand is direct or immediate"
+        text: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
+        tts: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
     cu_to_alu:
-        text: "The Control Unit sets the operation"
-        tts: "The Control Unit sets the operation"
+        text: "The Control Unit sets the Arithmetic Logic Unit operation"
+        tts: "The Control Unit sets the Arithmetic Logic Unit operation"
     acc_to_alu1:
-        text: "The Accumulator is loaded in the ALU"
-        tts: "The Accumulator is loaded in the ALU"
+        text: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
+        tts: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
     pc_increment:
         text: "The Program Counter is incremented"
         tts: "The Program Counter is incremented"
     ir_to_alu2:
-        text: "The second operand is loaded from the Instruction Register"
-        tts: "The second operand is loaded from the Instruction Register"
+        text: "The operand is loaded from the Instruction Register"
+        tts: "The operand is loaded from the Instruction Register"
     ir_to_ram:
-        text: "The operand is put on the address bus"
-        tts: "The operand is put on the address bus"
+        text: "The operand address is placed on the Address Bus"
+        tts: "The operand address is placed on the Address Bus"
     memory_read:
-        text: "A memory read signal is sent to the RAM"
-        tts: "A memory read signal is sent to the RAM"
+        text: "A Memory Read operation is signalled on the Control Bus"
+        tts: "A Memory Read operation is signalled on the Control Bus"
     memory_fetch:
-        text: "A memory fetch signal is sent to the RAM"
-        tts: "A memory fetch signal is sent to the RAM"
+        text: "A Fetch operation is signalled on the Control Bus"
+        tts: "A Fetch operation is signalled on the Control Bus"
     memory_write:
-        text: "A memory write signal is sent to the RAM"
-        tts: "A memory write signal is sent to the RAM"
+        text: "A Memory Write operation is signalled on the Control Bus"
+        tts: "A Memory Write operation is signalled on the Control Bus"
     ram_to_alu2:
-        text: "The second operand is loaded from the RAM"
-        tts: "The second operand is loaded from the RAM"
+        text: "The operand is loaded from the RAM"
+        tts: "The operand is loaded from the RAM"
     ir_to_pc:
-        text: "The Program Counter is set to the Instruction Register operand value"
-        tts: "The Program Counter is set to the Instruction Register operand value"
+        text: "The Program Counter is set to the operand value in the Instruction Register"
+        tts: "The Program Counter is set to the operand value in the Instruction Register"
     execute:
         text: "The operation is executed"
         tts: "The operation is executed"
@@ -49,11 +49,11 @@ steps:
         text: "The Status Word is updated"
         tts: "The Status Word is updated"
     acc_to_ram:
-        text: "The value of the Accumulator is put on the data bus"
-        tts: "The value of the Accumulator is put on the data bus"
+        text: "The content of the Accumulator is placed on the Data Bus"
+        tts: "The content of the Accumulator is placed on the Data Bus"
     acc_stored_to_ram:
-        text: "The value of the Accumulator is written into the RAM"
-        tts: "The value of the Accumulator is written into the RAM "
+        text: "The content of the Accumulator is written into the RAM"
+        tts: "The content of the Accumulator is written into the RAM "
 menu:
     buttons:
         settings:
@@ -66,8 +66,8 @@ menu:
             title: "Help"
 controls:
     labels:
-        execution: "Execution"
-        step: "Step"
+        execution: "Program"
+        step: "Micro step"
         instruction: "Instruction"
         speed: "Speed"
     buttons:
@@ -80,9 +80,9 @@ controls:
         end:
             title: "Skip to end"
         play_step:
-            title: "Play step"
+            title: "Play micro step"
         skip_step:
-            title: "Skip step"
+            title: "Skip micro step"
         play_instruction:
             title: "Play instruction"
         skip_instruction:
@@ -92,7 +92,7 @@ controls:
             title: "Speed"
     checkboxes:
         binary:
-            text: "Binary "
+            text: "Binary"
         animations:
             text: "Animations"
 message_feed:
@@ -105,13 +105,13 @@ settings:
     title: "Settings"
     language:
         title: "Language"
-        description: "The language used for UI text"
+        description: "The language used by the application"
     dispaly_labels:
         title: "Display labels"
         description: "Toggles labels such as 'RAM' 'IR' 'ALU' etc."
     display_step_text:
-        title: "Display step text"
-        description: "Toggles the box at the bottom right in which a text description of the step in execution is displayed"
+        title: "Display micro step text"
+        description: "Toggles a box where a text description of the micro step in execution is displayed"
     tts_enabled:
         title: "Text To Speech"
         description: "Toggles a synthetically generated voice that reads the currently executing step explaination"
