@@ -72,17 +72,6 @@
 				<ExecutionButton on:click={skipToEnd} icon="skip" title={$lang.controls.buttons.end.title} disabled />
 			</div>
 		</Group>
-		<Group label={$lang.controls.labels.step}>
-			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton on:click={playStep} icon="play" title={$lang.controls.buttons.play_step.title} />
-				<ExecutionButton
-					on:click={skipStep}
-					icon="skip"
-					title={$lang.controls.buttons.skip_step.title}
-					disabled
-				/>
-			</div>
-		</Group>
 		<Group label={$lang.controls.labels.instruction}>
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton
@@ -94,6 +83,17 @@
 					on:click={skipInstruction}
 					icon="skip"
 					title={$lang.controls.buttons.skip_instruction.title}
+					disabled
+				/>
+			</div>
+		</Group>
+		<Group label={$lang.controls.labels.step}>
+			<div class="flex items-center justify-center gap-1">
+				<ExecutionButton on:click={playStep} icon="play" title={$lang.controls.buttons.play_step.title} />
+				<ExecutionButton
+					on:click={skipStep}
+					icon="skip"
+					title={$lang.controls.buttons.skip_step.title}
 					disabled
 				/>
 			</div>
