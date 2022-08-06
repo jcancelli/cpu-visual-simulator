@@ -26,7 +26,7 @@ function selectDown() {
 		let tmp = (previous.address += WORD_SIZE)
 		return {
 			...previous,
-			address: tmp > LAST_ADDRESS ? FIRST_ADDRESS : tmp
+			address: tmp > LAST_ADDRESS ? LAST_ADDRESS : tmp
 		}
 	})
 }
@@ -36,7 +36,7 @@ function selectUp() {
 		let tmp = (previous.address -= WORD_SIZE)
 		return {
 			...previous,
-			address: tmp < FIRST_ADDRESS ? LAST_ADDRESS : tmp
+			address: tmp < FIRST_ADDRESS ? FIRST_ADDRESS : tmp
 		}
 	})
 }
