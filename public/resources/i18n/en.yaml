@@ -1,8 +1,8 @@
 displayName: "English"
 steps: 
     pc_to_ram:
-        text: "The content of the Program Counter is put on the address bus"
-        tts: "The content of the Program Counter is put on the address bus"
+        text: "The content of the Program Counter is placed on the address bus"
+        tts: "The content of the Program Counter is placed on the address bus"
     ram_to_ir:
         text: "The instruction is loaded into the Instruction Register"
         tts: "The instruction is loaded into the Instruction Register"
