@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { externalAddressBusColor } from "../../store/busses"
+
 	import { displayAsBinary } from "../../store/settings"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import BinaryValue from "../../util/BinaryValue"
@@ -23,12 +25,12 @@
 		flex
 		items-center
 		justify-center
-		bg-[#FF8C00]
 		border
 		border-black
 		border-t-0
 		{$$restProps.class}
 	"
+	style:background-color={$externalAddressBusColor}
 	bind:this={addressDiv}
 >
 	{$displayAsBinary ? new BinaryValue(8, address).toBinaryString() : address}
