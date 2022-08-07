@@ -13,49 +13,56 @@ export const opcodes = [
 		numeric: 0,
 		takesOperand: false,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "HLT",
 		numeric: 1,
 		takesOperand: false,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "JMP",
 		numeric: 2,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "JZ",
 		numeric: 3,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "JNZ",
 		numeric: 4,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "JN",
 		numeric: 5,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 	{
 		symbolic: "JNN",
 		numeric: 6,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "CONTROL_FLOW"
 	},
 
 	// DATA FLOW
@@ -64,14 +71,16 @@ export const opcodes = [
 		numeric: 7,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "="
+		operator: "=",
+		category: "DATA_FLOW"
 	},
 	{
 		symbolic: "STO",
 		numeric: 8,
 		takesOperand: true,
 		takesImmediate: false,
-		operator: ""
+		operator: "",
+		category: "DATA_FLOW"
 	},
 
 	// ARITHMETIC-LOGIC
@@ -80,49 +89,56 @@ export const opcodes = [
 		numeric: 9,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "+"
+		operator: "+",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "SUB",
 		numeric: 10,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "-"
+		operator: "-",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "MUL",
 		numeric: 11,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "*"
+		operator: "*",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "DIV",
 		numeric: 12,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "/"
+		operator: "/",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "AND",
 		numeric: 13,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "&"
+		operator: "&",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "CMP",
 		numeric: 14,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: ":"
+		operator: ":",
+		category: "ARITHMETIC_LOGIC"
 	},
 	{
 		symbolic: "NOT",
 		numeric: 15,
 		takesOperand: true,
 		takesImmediate: true,
-		operator: "!"
+		operator: "!",
+		category: "ARITHMETIC_LOGIC"
 	}
 ] as const
 

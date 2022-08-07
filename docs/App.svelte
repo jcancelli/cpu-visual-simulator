@@ -1,7 +1,10 @@
 <script lang="ts">
+	import OpcodesTable from "./components/OpcodesTable.svelte"
 </script>
 
-<h1 class="text-green-500">Hello</h1>
+<h1>TEST MANUAL</h1>
+
+<OpcodesTable />
 
 <style lang="postcss" global>
 	@tailwind base;
