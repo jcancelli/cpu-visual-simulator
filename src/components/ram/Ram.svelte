@@ -8,6 +8,8 @@
 	import ramSelection from "../../store/ramSelection"
 	import { beforeUpdate, afterUpdate } from "svelte"
 	import symbolTable from "../../store/symbolTable"
+	import Button from "../basic/buttons/Ram.svelte"
+	import lang from "../../store/lang"
 
 	const VISIBLE_CELLS = 18
 
@@ -166,46 +168,59 @@
 			visibleAddresses[j] = i
 		}
 	}
+
+	function clear() {
+		ram.clear()
+		symbolTable.clear()
+	}
 </script>
 
-<div class="absolute top-[115px] right-[50px] z-[3] flex" on:wheel={onWheel} use:subscribeRamKeysListener>
+<div
+	class="absolute top-[115px] right-[50px] z-[3] flex flex-col items-center justify-center"
+	use:subscribeRamKeysListener
+>
 	<ComponentLabel text="RAM" fontSize="LARGE" top="-30px" right="0" />
-	<div class="flex flex-col items-end justify-center">
-		{#each visibleAddresses as address, i (address)}
-			<Label
-				{address}
-				label={$symbolTable[address]}
-				isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
-				bind:this={labelElements[i]}
-				class="
-					{address === firstVisibleAddress ? 'first-label' : ''}
-					{address === lastVisibleAddress ? 'last-label' : ''}
-				"
-			/>
-		{/each}
+	<div class="flex" on:wheel={onWheel}>
+		<div class="flex flex-col items-end justify-center">
+			{#each visibleAddresses as address, i (address)}
+				<Label
+					{address}
+					label={$symbolTable[address]}
+					isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
+					bind:this={labelElements[i]}
+					class="
+						{address === firstVisibleAddress ? 'first-label' : ''}
+						{address === lastVisibleAddress ? 'last-label' : ''}
+					"
+				/>
+			{/each}
+		</div>
+		<div class="h-fit flex flex-col rounded-2xl shadow-cpu">
+			{#each visibleAddresses as address, i (address)}
+				<div class="flex flex-nowrap">
+					<Address
+						{address}
+						bind:this={addressElements[i]}
+						class="
+							{address === firstVisibleAddress ? 'first-address' : ''}
+							{address === lastVisibleAddress ? 'last-address' : ''}
+						"
+					/>
+					<Cell
+						{address}
+						instruction={$ram[addressToIndex(address)]}
+						isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}
+						bind:this={cellElements[i]}
+						class="
+							{address === firstVisibleAddress ? 'first-cell' : ''}
+							{address === lastVisibleAddress ? 'last-cell' : ''}
+						"
+					/>
+				</div>
+			{/each}
+		</div>
 	</div>
-	<div class="h-fit flex flex-col rounded-2xl shadow-cpu">
-		{#each visibleAddresses as address, i (address)}
-			<div class="flex flex-nowrap">
-				<Address
-					{address}
-					bind:this={addressElements[i]}
-					class="
-						{address === firstVisibleAddress ? 'first-address' : ''}
-						{address === lastVisibleAddress ? 'last-address' : ''}
-					"
-				/>
-				<Cell
-					{address}
-					instruction={$ram[addressToIndex(address)]}
-					isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}
-					bind:this={cellElements[i]}
-					class="
-						{address === firstVisibleAddress ? 'first-cell' : ''}
-						{address === lastVisibleAddress ? 'last-cell' : ''}
-					"
-				/>
-			</div>
-		{/each}
+	<div class="flex">
+		<Button on:click={clear} title={$lang.ram.buttons.clear.title}>{$lang.ram.buttons.clear.text}</Button>
 	</div>
 </div>
