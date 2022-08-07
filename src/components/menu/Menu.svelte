@@ -44,11 +44,15 @@
 
 		Logger.info("Program saved to file", "USER_INPUT")
 	}
+
+	function openDocsPage() {
+		window.open("docs", "_blank").focus()
+	}
 </script>
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-1 z-[4]">
 	<Button icon="settings" title={$lang.menu.buttons.settings.title} on:click={openSettings} />
 	<Button icon="save" title={$lang.menu.buttons.save.title} on:click={saveProgram} />
 	<Button icon="open" title={$lang.menu.buttons.open.title} on:click={loadProgram} />
-	<Button icon="help" title={$lang.menu.buttons.help.title} disabled />
+	<Button icon="help" title={$lang.menu.buttons.help.title} on:click={openDocsPage} />
 </div>

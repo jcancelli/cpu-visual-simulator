@@ -5,10 +5,11 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prettier": "prettier --write --plugin-search-dir=. ./src",
+    "prettier": "prettier --write --plugin-search-dir=. ./src ./docs",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@rgossiaux/svelte-headlessui": "^1.0.2",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.4",

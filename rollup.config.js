@@ -30,7 +30,7 @@ function serve() {
 	};
 }
 
-export default {
+const mainAppConfig = {
 	input: 'src/main.ts',
 	output: {
 		sourcemap: true,
@@ -43,7 +43,10 @@ export default {
 			preprocess: sveltePreprocess({
 				sourceMap: !production,
 				postcss: {
-					plugins: [ require("tailwindcss")(), require("autoprefixer")() ]
+					plugins: [
+						require("tailwindcss")(),
+						require("autoprefixer")()
+					]
 				}
 			}),
 			compilerOptions: {
@@ -85,4 +88,50 @@ export default {
 	watch: {
 		clearScreen: false
 	}
-};
+}
+
+const docsConfig = {
+	input: 'docs/main.ts',
+	output: {
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: 'public/build/docs.bundle.js'
+	},
+	plugins: [
+		svelte({
+			preprocess: sveltePreprocess({
+				sourceMap: !production,
+				postcss: {
+					plugins: [
+						require("tailwindcss")("./docs/tailwind.config.js"),
+						require("autoprefixer")()
+					]
+				}
+			}),
+			compilerOptions: {
+				dev: !production
+			}
+		}),
+		css({ output: 'docs.bundle.css' }),
+		resolve({
+			browser: true,
+			dedupe: ['svelte']
+		}),
+		commonjs(),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		}),
+		!production && livereload('public'),
+		production && terser()
+	],
+	watch: {
+		clearScreen: false
+	}
+}
+
+export default [
+	mainAppConfig,
+	docsConfig
+];
