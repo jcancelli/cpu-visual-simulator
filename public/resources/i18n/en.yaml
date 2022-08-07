@@ -54,6 +54,15 @@ steps:
     acc_stored_to_ram:
         text: "The content of the Accumulator is written into the RAM"
         tts: "The content of the Accumulator is written into the RAM "
+ram:
+    buttons:
+        clear:
+            text: "CLEAR"
+            title: "Clear"
+        undo:
+            title: "Undo"
+        redo:
+            title: "Redo"
 menu:
     buttons:
         settings:

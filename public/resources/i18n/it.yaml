@@ -55,6 +55,15 @@ steps:
     acc_stored_to_ram:
         text: "Il valore dell'Accumulatore viene scritto in RAM"
         tts: "Il valore dell'Accumulatore viene scritto in RAM"
+ram:
+    buttons:
+        clear:
+            text: "SVUOTA"
+            title: "Svuota"
+        undo:
+            title: "Annulla"
+        redo:
+            title: "Rifai"
 menu:
     buttons:
         settings:
