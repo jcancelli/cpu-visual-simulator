@@ -17,7 +17,13 @@
 	} from "../../store/cpu"
 	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
-	import { displayAsBinary, displayLabels, language, SUPPORTED_LANGS, ttsEnabled } from "../../store/settings"
+	import {
+		displayAsBinary,
+		displayComponentsLabels,
+		language,
+		SUPPORTED_LANGS,
+		ttsEnabled
+	} from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import { set } from "../../util/localStorage"
 	import SpeechSynthesis from "../../util/speechSynthesis"
@@ -201,7 +207,7 @@
 				</svelte:fragment>
 				<svelte:fragment slot="buttons">
 					<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>
-					<Checkbox bind:checked={$displayLabels}>Labels</Checkbox>
+					<Checkbox bind:checked={$displayComponentsLabels}>Labels</Checkbox>
 				</svelte:fragment>
 			</Widget>
 			<Widget title="TTS">

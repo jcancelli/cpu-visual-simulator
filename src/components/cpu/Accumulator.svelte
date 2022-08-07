@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { accumulator } from "../../store/cpu"
-	import ComponentLabel from "../ComponentLabel.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashComponent } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
 

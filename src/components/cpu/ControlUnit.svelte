@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ComponentLabel from "../ComponentLabel.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashComponent } from "../../util/animationUtil"
 
 	export async function flash() {

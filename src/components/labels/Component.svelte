@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { displayLabels } from "../store/settings"
+	import { displayComponentsLabels } from "../../store/settings"
 
 	export let text = ""
 	export let top = "auto"
@@ -17,7 +17,10 @@
 
 <div
 	class="absolute w-fit font-bold cursor-default {FONT_SIZES[fontSize]} leading-tight"
-	style="top: {top}; left: {left}; bottom: {bottom}; right: {right}; font-size: {FONT_SIZES[fontSize]}"
+	style:top
+	style:bottom
+	style:left
+	style:right
 >
-	{$displayLabels ? text : ""}
+	{$displayComponentsLabels ? text : ""}
 </div>

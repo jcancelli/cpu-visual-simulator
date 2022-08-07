@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { instructionRegister } from "../../store/cpu"
-	import ComponentLabel from "../ComponentLabel.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
 
