@@ -26,7 +26,11 @@
 
 <div
 	class="absolute w-fit font-bold cursor-default text-sm leading-tight"
-	style="top: {top}; left: {left}; bottom: {bottom}; right: {right}; color: {BUSSES[bus].color}"
+	style:top
+	style:bottom
+	style:left
+	style:right
+	style:color={BUSSES[bus].color}
 >
 	{$displayLabels && $displayBussesLabels ? BUSSES[bus].text : ""}
 </div>
