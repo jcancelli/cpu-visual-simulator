@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { negativeFlag, zeroFlag } from "../../store/cpu"
-	import ComponentLabel from "../ComponentLabel.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animationUtil"
 
 	export async function flashZeroFlag() {

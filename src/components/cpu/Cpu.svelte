@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ComponentLabel from "../ComponentLabel.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
 	import InstructionRegister from "./InstructionRegister.svelte"
 	import ControlUnit from "./ControlUnit.svelte"
 	import Accumulator from "./Accumulator.svelte"

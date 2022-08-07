@@ -8,6 +8,9 @@ export const DEFAULT_LANG = "en"
 export const showSettings = writable<boolean>(isSet("showSettings") ? bool("showSettings") : false)
 export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
 export const displayLabels = writable<boolean>(isSet("displayLabels") ? bool("displayLabels") : true)
+export const displayBussesLabels = writable<boolean>(
+	isSet("displayBussesLabels") ? bool("displayBussesLabels") : true
+)
 export const displayStepText = writable<boolean>(isSet("displayStepText") ? bool("displayStepText") : false)
 export const minimalAnimations = writable<boolean>(
 	isSet("minimalAnimations") ? bool("minimalAnimations") : false
@@ -36,6 +39,7 @@ function initSettings() {
 	showSettings.subscribe(newValue => set("showSettings", newValue))
 	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
 	displayLabels.subscribe(newValue => set("displayLabels", newValue))
+	displayBussesLabels.subscribe(newValue => set("displayBussesLabels", newValue))
 	displayStepText.subscribe(newValue => set("displayStepText", newValue))
 	minimalAnimations.subscribe(newValue => set("minimalAnimations", newValue))
 	animationSpeed.subscribe(newValue => set("animationSpeed", newValue))

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { displayLabels } from "../store/settings"
+	import { displayLabels } from "../../store/settings"
 
 	export let text = ""
 	export let top = "auto"

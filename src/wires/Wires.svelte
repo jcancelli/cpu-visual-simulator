@@ -4,6 +4,7 @@
 	import * as Wires from "./Wires"
 	import * as Nodes from "./Nodes"
 	import WireAnimation, * as WireAnimations from "./WireAnimation"
+	import BusLabel from "../components/labels/Bus.svelte"
 
 	const animationsCache = new Map<string, WireAnimation>()
 
@@ -57,3 +58,6 @@
 
 <canvas class="absolute z-[2] top-0 left-0 w-app h-app" bind:this={staticCanvas} />
 <canvas class="absolute z-[2] top-0 left-0 w-app h-app" bind:this={dynamicCanvas} />
+<BusLabel bus="DATA" top="62px" left="850px" />
+<BusLabel bus="ADDRESS" top="226px" left="837px" />
+<BusLabel bus="CONTROL" top="346px" left="838px" />
