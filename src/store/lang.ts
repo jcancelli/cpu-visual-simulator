@@ -178,6 +178,54 @@ const _default = {
 		tts_voice: {
 			title: "",
 			description: ""
+		},
+		databus_ext_color: {
+			title: "",
+			description: ""
+		},
+		databus_int_color: {
+			title: "",
+			description: ""
+		},
+		databus_ext_anim_color: {
+			title: "",
+			description: ""
+		},
+		databus_int_anim_color: {
+			title: "",
+			description: ""
+		},
+		addressbus_ext_color: {
+			title: "",
+			description: ""
+		},
+		addressbus_int_color: {
+			title: "",
+			description: ""
+		},
+		addressbus_ext_anim_color: {
+			title: "",
+			description: ""
+		},
+		addressbus_int_anim_color: {
+			title: "",
+			description: ""
+		},
+		controlbus_ext_color: {
+			title: "",
+			description: ""
+		},
+		controlbus_int_color: {
+			title: "",
+			description: ""
+		},
+		controlbus_ext_anim_color: {
+			title: "",
+			description: ""
+		},
+		controlbus_int_anim_color: {
+			title: "",
+			description: ""
 		}
 	},
 	errors: {
