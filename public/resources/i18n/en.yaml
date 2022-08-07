@@ -121,6 +121,42 @@ settings:
     tts_voice:
         title: "Text To Speech voice"
         description: "Voice used by text to speech"
+    databus_ext_color:
+        title: "External data bus color"
+        description: "Color of the external data bus"
+    databus_int_color:
+        title: "Internal data bus color"
+        description: "Color of the internal data bus"
+    databus_ext_anim_color:
+        title: "External data bus animation color"
+        description: "Color of the external data bus animation"
+    databus_int_anim_color:
+        title: "Internal data bus animation color"
+        description: "Color of the internal data bus animation"
+    addressbus_ext_color:
+        title: "External address bus color"
+        description: "Color of the external address bus"
+    addressbus_int_color:
+        title: "Internal address bus color"
+        description: "Color of the internal address bus"
+    addressbus_ext_anim_color:
+        title: "External address bus animation color"
+        description: "Color of the external address bus animation"
+    addressbus_int_anim_color:
+        title: "Internal address bus animation color"
+        description: "Color of the internal address bus animation"
+    controlbus_ext_color:
+        title: "External control bus color"
+        description: "Color of the external control bus"
+    controlbus_int_color:
+        title: "Internal control bus color"
+        description: "Color of the internal control bus"
+    controlbus_ext_anim_color:
+        title: "External control bus animation color"
+        description: "Color of the external control bus animation"
+    controlbus_int_anim_color:
+        title: "Internal control bus animation color"
+        description: "Color of the internal control bus animation"
 errors:
     program_parsing:
         invalid_syntax: "Invalid syntax at line {0}: {1}"

@@ -122,6 +122,42 @@ settings:
     tts_voice:
         title: "Voce Text To Speech"
         description: "Voce usata da text to speech"
+    databus_ext_color:
+        title: "Colore data bus esterno"
+        description: "Colore del data bus esterno"
+    databus_int_color:
+        title: "Colore data bus interno"
+        description: "Colore del data bus interno"
+    databus_ext_anim_color:
+        title: "Colore animazioni data bus esterno"
+        description: "Colore delle animazioni del data bus esterno"
+    databus_int_anim_color:
+        title: "Colore animazioni data bus interno"
+        description: "Colore delle animazioni del data bus interno"
+    addressbus_ext_color:
+        title: "Colore address bus esterno"
+        description: "Colore del address bus esterno"
+    addressbus_int_color:
+        title: "Colore address bus interno"
+        description: "Colore del address bus interno"
+    addressbus_ext_anim_color:
+        title: "Colore animazioni address bus esterno"
+        description: "Colore delle animazioni del address bus esterno"
+    addressbus_int_anim_color:
+        title: "Colore animazioni address bus interno"
+        description: "Color of the internal address bus animation"
+    controlbus_ext_color:
+        title: "Colore control bus esterno"
+        description: "Colore del control bus esterno"
+    controlbus_int_color:
+        title: "Colore control bus interno"
+        description: "Colore del control bus interno"
+    controlbus_ext_anim_color:
+        title: "Colore animazioni control bus esterno"
+        description: "Colore delle animazioni del control bus esterno"
+    controlbus_int_anim_color:
+        title: "Colore animazioni control bus interno"
+        description: "Colore delle animazioni del control bus interno"
 errors:
     program_parsing:
         invalid_syntax: "Sintassi invalida a riga {0}: {1}"
