@@ -107,9 +107,12 @@ settings:
     language:
         title: "Lingua"
         description: "La lingua usata dall'applicazione"
-    dispaly_labels:
-        title: "Mostra etichette"
+    dispaly_components_labels:
+        title: "Mostra etichette componenti"
         description: "Attiva/disattiva etichette come 'RAM' 'IR' 'ALU' ecc."
+    dispaly_busses_labels:
+        title: "Mostra etichette bus"
+        description: "Mostra etichette di data bus, address bus e control bus"
     display_step_text:
         title: "Mostra testo micro step"
         description: "Abilita/disabilita un riquadro in cui viene visualizzata una descrizione testuale del micro step in esecuzione"

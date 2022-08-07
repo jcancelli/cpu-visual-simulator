@@ -159,7 +159,11 @@ const _default = {
 			title: "",
 			description: ""
 		},
-		dispaly_labels: {
+		dispaly_components_labels: {
+			title: "",
+			description: ""
+		},
+		dispaly_busses_labels: {
 			title: "",
 			description: ""
 		},

@@ -106,9 +106,12 @@ settings:
     language:
         title: "Language"
         description: "The language used by the application"
-    dispaly_labels:
-        title: "Display labels"
+    dispaly_components_labels:
+        title: "Display components labels"
         description: "Toggles labels such as 'RAM' 'IR' 'ALU' etc."
+    dispaly_busses_labels:
+        title: "Display busses labels"
+        description: "Toggles data bus, address bus and control bus labels"
     display_step_text:
         title: "Display micro step text"
         description: "Toggles a box where a text description of the micro step in execution is displayed"

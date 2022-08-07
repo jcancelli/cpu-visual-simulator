@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { externalAddressBusColor, externalControlBusColor, externalDataBusColor } from "../../store/busses"
-	import { displayBussesLabels, displayLabels } from "../../store/settings"
+	import { displayBussesLabels } from "../../store/settings"
 
 	export let bus: keyof typeof BUSSES
 	export let top = "auto"
@@ -34,5 +34,5 @@
 	style:right
 	style:color={$color}
 >
-	{$displayLabels && $displayBussesLabels ? BUSSES[bus].text : ""}
+	{$displayBussesLabels ? BUSSES[bus].text : ""}
 </div>

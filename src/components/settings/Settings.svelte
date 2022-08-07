@@ -2,7 +2,8 @@
 	import lang from "../../store/lang"
 	import {
 		availableTtsVoices,
-		displayLabels,
+		displayBussesLabels,
+		displayComponentsLabels,
 		displayStepText,
 		language,
 		showSettings,
@@ -53,10 +54,16 @@
 				<Select options={[...SUPPORTED_LANGS]} bind:value={$language} />
 			</Widget>
 			<Widget
-				title={$lang.settings.dispaly_labels.title}
-				description={$lang.settings.dispaly_labels.description}
+				title={$lang.settings.dispaly_components_labels.title}
+				description={$lang.settings.dispaly_components_labels.description}
 			>
-				<Toggle bind:checked={$displayLabels} />
+				<Toggle bind:checked={$displayComponentsLabels} />
+			</Widget>
+			<Widget
+				title={$lang.settings.dispaly_busses_labels.title}
+				description={$lang.settings.dispaly_busses_labels.description}
+			>
+				<Toggle bind:checked={$displayBussesLabels} />
 			</Widget>
 			<Widget
 				title={$lang.settings.display_step_text.title}

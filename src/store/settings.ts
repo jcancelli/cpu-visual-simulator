@@ -7,7 +7,9 @@ export const DEFAULT_LANG = "en"
 
 export const showSettings = writable<boolean>(isSet("showSettings") ? bool("showSettings") : false)
 export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
-export const displayLabels = writable<boolean>(isSet("displayLabels") ? bool("displayLabels") : true)
+export const displayComponentsLabels = writable<boolean>(
+	isSet("displayLabels") ? bool("displayLabels") : true
+)
 export const displayBussesLabels = writable<boolean>(
 	isSet("displayBussesLabels") ? bool("displayBussesLabels") : true
 )
@@ -38,7 +40,7 @@ function initSettings() {
 	// subscribers so that each value is stored locally
 	showSettings.subscribe(newValue => set("showSettings", newValue))
 	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
-	displayLabels.subscribe(newValue => set("displayLabels", newValue))
+	displayComponentsLabels.subscribe(newValue => set("displayLabels", newValue))
 	displayBussesLabels.subscribe(newValue => set("displayBussesLabels", newValue))
 	displayStepText.subscribe(newValue => set("displayStepText", newValue))
 	minimalAnimations.subscribe(newValue => set("minimalAnimations", newValue))

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { displayLabels } from "../../store/settings"
+	import { displayComponentsLabels } from "../../store/settings"
 
 	export let text = ""
 	export let top = "auto"
@@ -22,5 +22,5 @@
 	style:left
 	style:right
 >
-	{$displayLabels ? text : ""}
+	{$displayComponentsLabels ? text : ""}
 </div>
