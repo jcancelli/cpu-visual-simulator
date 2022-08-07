@@ -43,7 +43,10 @@ const mainAppConfig = {
 			preprocess: sveltePreprocess({
 				sourceMap: !production,
 				postcss: {
-					plugins: [ require("tailwindcss")(), require("autoprefixer")() ]
+					plugins: [
+						require("tailwindcss")(),
+						require("autoprefixer")()
+					]
 				}
 			}),
 			compilerOptions: {
@@ -100,14 +103,17 @@ const docsConfig = {
 			preprocess: sveltePreprocess({
 				sourceMap: !production,
 				postcss: {
-					plugins: [ require("tailwindcss")(), require("autoprefixer")() ]
+					plugins: [
+						require("tailwindcss")("./docs/tailwind.config.js"),
+						require("autoprefixer")()
+					]
 				}
 			}),
 			compilerOptions: {
 				dev: !production
 			}
 		}),
-		css({ output: 'dovs.bundle.css' }),
+		css({ output: 'docs.bundle.css' }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte']
