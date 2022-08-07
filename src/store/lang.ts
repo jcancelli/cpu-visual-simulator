@@ -80,6 +80,20 @@ const _default = {
 			text: ""
 		}
 	},
+	ram: {
+		buttons: {
+			clear: {
+				text: "",
+				title: ""
+			},
+			undo: {
+				title: ""
+			},
+			redo: {
+				title: ""
+			}
+		}
+	},
 	menu: {
 		buttons: {
 			settings: {
