@@ -5,6 +5,14 @@
 	import * as Nodes from "./Nodes"
 	import WireAnimation, * as WireAnimations from "./WireAnimation"
 	import BusLabel from "../components/labels/Bus.svelte"
+	import {
+		externalAddressBusColor,
+		externalControlBusColor,
+		externalDataBusColor,
+		internalAddressBusColor,
+		internalControlBusColor,
+		internalDataBusColor
+	} from "../store/busses"
 
 	const animationsCache = new Map<string, WireAnimation>()
 
@@ -16,6 +24,13 @@
 		staticCanvas.height = dynamicCanvas.height = 800
 		drawStaticWires()
 		WireAnimations.setCanvas(dynamicCanvas)
+		// redraw static wires if one of their color is changed
+		externalDataBusColor.subscribe(newValue => drawStaticWires())
+		internalDataBusColor.subscribe(newValue => drawStaticWires())
+		externalAddressBusColor.subscribe(newValue => drawStaticWires())
+		internalAddressBusColor.subscribe(newValue => drawStaticWires())
+		externalControlBusColor.subscribe(newValue => drawStaticWires())
+		internalControlBusColor.subscribe(newValue => drawStaticWires())
 	})
 
 	export async function flashWire(fromName: string, toName: string): Promise<void> {
@@ -35,12 +50,12 @@
 		await animation.play()
 	}
 
-	export function drawStaticWires() {
+	export function drawStaticWires(): void {
 		const ctx = staticCanvas.getContext("2d")
 		ctx.lineWidth = Wire.WIDTH
 		ctx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height)
 		for (const wire of Wires.Wires) {
-			ctx.strokeStyle = wire.type.color
+			ctx.strokeStyle = wire.type.color()
 			ctx.beginPath()
 			ctx.moveTo(wire.a.x, wire.a.y)
 			ctx.lineTo(wire.b.x, wire.b.y)
@@ -49,7 +64,7 @@
 		for (const node of Nodes.Nodes.filter(n => n.intersectionType !== null)) {
 			const halfSize = Wire.WIDTH / 2 - 0.5
 			ctx.beginPath()
-			ctx.fillStyle = node.intersectionType.color
+			ctx.fillStyle = node.intersectionType.color()
 			ctx.arc(node.x, node.y, halfSize, 0, Math.PI * 2)
 			ctx.fill()
 		}

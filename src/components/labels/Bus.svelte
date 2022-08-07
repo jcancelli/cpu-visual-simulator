@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { externalAddressBusColor, externalControlBusColor, externalDataBusColor } from "../../store/busses"
 	import { displayBussesLabels, displayLabels } from "../../store/settings"
-	import { WireTypes } from "../../wires/WireType"
 
 	export let bus: keyof typeof BUSSES
 	export let top = "auto"
@@ -11,17 +11,19 @@
 	const BUSSES = {
 		DATA: {
 			text: "DATA BUS",
-			color: WireTypes.DATA_EXT.color
+			colorStore: externalDataBusColor
 		},
 		ADDRESS: {
 			text: "ADDRESS BUS",
-			color: WireTypes.ADDRESS_EXT.color
+			colorStore: externalAddressBusColor
 		},
 		CONTROL: {
 			text: "CONTROL BUS",
-			color: WireTypes.CONTROL_EXT.color
+			colorStore: externalControlBusColor
 		}
 	}
+
+	$: color = BUSSES[bus].colorStore
 </script>
 
 <div
@@ -30,7 +32,7 @@
 	style:bottom
 	style:left
 	style:right
-	style:color={BUSSES[bus].color}
+	style:color={$color}
 >
 	{$displayLabels && $displayBussesLabels ? BUSSES[bus].text : ""}
 </div>
