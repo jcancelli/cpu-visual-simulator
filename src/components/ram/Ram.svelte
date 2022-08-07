@@ -1,53 +1,112 @@
 <script lang="ts">
-	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "../../util/ramUtil"
-	import RamLabel from "./RamLabel.svelte"
-	import RamAddress from "./RamAddress.svelte"
-	import RamCell from "./RamCell.svelte"
-	import ComponentLabel from "../ComponentLabel.svelte"
-	import ramStore from "../../store/ram"
+	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE, addressToIndex } from "../../util/ramUtil"
+	import Label from "./Label.svelte"
+	import Address from "./Address.svelte"
+	import Cell from "./Cell.svelte"
+	import ComponentLabel from "../labels/Component.svelte"
+	import ram from "../../store/ram"
 	import ramSelection from "../../store/ramSelection"
-	import { afterUpdate } from "svelte"
+	import { beforeUpdate, afterUpdate } from "svelte"
+	import symbolTable from "../../store/symbolTable"
 
 	const VISIBLE_CELLS = 18
 
+	let beforeUpdateCallbacks: (() => void)[] = []
 	let afterUpdateCallbacks: (() => void)[] = []
 
-	let firstVisibleAddress = FIRST_ADDRESS
+	let firstVisibleAddress: number = FIRST_ADDRESS
 	let lastVisibleAddress: number
 	let visibleAddresses: number[]
 
+	let labelElements: Label[] = []
+	let addressElements: Address[] = []
+	let cellElements: Cell[] = []
+
 	updateVisibleAddresses()
 
-	let labelElements: RamLabel[] = []
-	let addressElements: RamAddress[] = []
-	let cellElements: RamCell[] = []
+	beforeUpdate(() => {
+		beforeUpdateCallbacks.forEach(callback => callback())
+		beforeUpdateCallbacks = []
+	})
 
 	afterUpdate(() => {
 		afterUpdateCallbacks.forEach(callback => callback())
 		afterUpdateCallbacks = []
 	})
 
-	function scroll({ deltaY }) {
+	export function scrollUp(): void {
+		scroll(-1)
+	}
+
+	export function scrollDown(): void {
+		scroll(1)
+	}
+
+	export function addressIsVisible(address: number): boolean {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		return address >= firstVisibleAddress && address <= lastVisibleAddress
+	}
+
+	export async function showAddress(address: number): Promise<void> {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		if (addressIsVisible(address)) {
+			return
+		}
+		let tmpFirstAddress = address
+		let tmpLastAddress = tmpFirstAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
+		if (tmpLastAddress > LAST_ADDRESS) {
+			tmpFirstAddress -= tmpLastAddress - LAST_ADDRESS
+		}
+		firstVisibleAddress = tmpFirstAddress
+		updateVisibleAddresses()
+		return new Promise<void>((resolve, reject) => {
+			afterUpdateCallbacks.push(resolve)
+		})
+	}
+
+	export async function flashAddress(address: number): Promise<void> {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		return showAddress(address).then(() => addressElements.find(e => e.getAddress() === address).flash())
+	}
+
+	export async function flashContent(address: number): Promise<void> {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		return showAddress(address).then(() => cellElements.find(e => e.getAddress() === address).flash())
+	}
+
+	function scroll(deltaY: number): void {
+		beforeUpdateCallbacks.push(ramSelection.deselect)
 		let newFirstVisibleAddress = firstVisibleAddress + (deltaY > 0 ? WORD_SIZE : -WORD_SIZE)
-		if (newFirstVisibleAddress < FIRST_ADDRESS)
-			newFirstVisibleAddress = LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE
-		if (newFirstVisibleAddress > LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE)
+		if (newFirstVisibleAddress < FIRST_ADDRESS) {
 			newFirstVisibleAddress = FIRST_ADDRESS
+		}
+		if (newFirstVisibleAddress > LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE) {
+			newFirstVisibleAddress = LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE
+		}
 		firstVisibleAddress = newFirstVisibleAddress
 		updateVisibleAddresses()
 	}
 
-	function onWheel({ deltaY }) {
-		ramSelection.deselect()
-		scroll({ deltaY })
+	function onWheel({ deltaY }: WheelEvent): void {
+		scroll(deltaY)
 	}
 
-	function onArrowUp(e: KeyboardEvent) {
-		if (ramSelection.noSelection()) return
+	function onArrowUp(e: KeyboardEvent): void {
+		if (ramSelection.noSelection()) {
+			return
+		}
 		if (e.ctrlKey) {
-			ramStore.moveSecondHalfUpFromAddress($ramSelection.address)
+			ram.moveSecondHalfUpFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ramStore.moveFirstHalfUpFromAddress($ramSelection.address)
+			ram.moveFirstHalfUpFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === firstVisibleAddress) {
 			scrollUp()
@@ -55,12 +114,14 @@
 		ramSelection.selectUp()
 	}
 
-	function onArrowDown(e: KeyboardEvent) {
-		if (ramSelection.noSelection()) return
+	function onArrowDown(e: KeyboardEvent): void {
+		if (ramSelection.noSelection()) {
+			return
+		}
 		if (e.ctrlKey) {
-			ramStore.moveSecondHalfDownFromAddress($ramSelection.address)
+			ram.moveSecondHalfDownFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ramStore.moveFirstHalfDownFromAddress($ramSelection.address)
+			ram.moveFirstHalfDownFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === lastVisibleAddress) {
 			scrollDown()
@@ -68,7 +129,7 @@
 		ramSelection.selectDown()
 	}
 
-	function onEnter(e: KeyboardEvent) {
+	function onEnter(e: KeyboardEvent): void {
 		if (ramSelection.noSelection()) {
 			ramSelection.select(firstVisibleAddress)
 		} else {
@@ -76,7 +137,7 @@
 		}
 	}
 
-	function ramKeysListener(node) {
+	function subscribeRamKeysListener(node: HTMLElement) {
 		const keyDownListener = (e: KeyboardEvent) => {
 			switch (e.key) {
 				case "ArrowUp":
@@ -98,70 +159,23 @@
 		}
 	}
 
-	function updateVisibleAddresses() {
+	function updateVisibleAddresses(): void {
 		lastVisibleAddress = firstVisibleAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
 		visibleAddresses = []
 		for (let i = firstVisibleAddress, j = 0; i <= lastVisibleAddress; i += WORD_SIZE, j++) {
 			visibleAddresses[j] = i
 		}
 	}
-
-	export function scrollUp() {
-		scroll({ deltaY: -1 })
-	}
-
-	export function scrollDown() {
-		scroll({ deltaY: 1 })
-	}
-
-	export function addressIsVisible(address: number): boolean {
-		if (!isValidAddress(address)) {
-			throw new Error("Invalid address")
-		}
-		return address >= firstVisibleAddress && address <= lastVisibleAddress
-	}
-
-	export async function showAddress(address: number) {
-		if (!isValidAddress(address)) {
-			throw new Error("Invalid address")
-		}
-		if (addressIsVisible(address)) {
-			return
-		}
-		let tmpFirstAddress = address
-		let tmpLastAddress = tmpFirstAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
-		if (tmpLastAddress > LAST_ADDRESS) {
-			tmpFirstAddress -= tmpLastAddress - LAST_ADDRESS
-		}
-		firstVisibleAddress = tmpFirstAddress
-		updateVisibleAddresses()
-		return new Promise<void>((resolve, reject) => {
-			afterUpdateCallbacks.push(resolve)
-		})
-	}
-
-	export async function flashAddress(address: number) {
-		if (!isValidAddress(address)) {
-			throw new Error("Invalid address")
-		}
-		return showAddress(address).then(() => addressElements.find(e => e.getAddress() === address).flash())
-	}
-
-	export async function flashContent(address: number) {
-		if (!isValidAddress(address)) {
-			throw new Error("Invalid address")
-		}
-		return showAddress(address).then(() => cellElements.find(e => e.getAddress() === address).flash())
-	}
 </script>
 
-<div class="absolute top-[115px] right-[50px] z-[3] flex" on:wheel={onWheel} use:ramKeysListener>
+<div class="absolute top-[115px] right-[50px] z-[3] flex" on:wheel={onWheel} use:subscribeRamKeysListener>
 	<ComponentLabel text="RAM" fontSize="LARGE" top="-30px" right="0" />
 	<div class="flex flex-col items-end justify-center">
-		{#each visibleAddresses as address, i}
-			<RamLabel
+		{#each visibleAddresses as address, i (address)}
+			<Label
 				{address}
-				selected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
+				label={$symbolTable[address]}
+				isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 				bind:this={labelElements[i]}
 				class="
 					{address === firstVisibleAddress ? 'first-label' : ''}
@@ -171,9 +185,9 @@
 		{/each}
 	</div>
 	<div class="h-fit flex flex-col rounded-2xl shadow-cpu">
-		{#each visibleAddresses as address, i}
+		{#each visibleAddresses as address, i (address)}
 			<div class="flex flex-nowrap">
-				<RamAddress
+				<Address
 					{address}
 					bind:this={addressElements[i]}
 					class="
@@ -181,9 +195,10 @@
 						{address === lastVisibleAddress ? 'last-address' : ''}
 					"
 				/>
-				<RamCell
+				<Cell
 					{address}
-					selected={$ramSelection.address === address && $ramSelection.column === "CELL"}
+					instruction={$ram[addressToIndex(address)]}
+					isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}
 					bind:this={cellElements[i]}
 					class="
 						{address === firstVisibleAddress ? 'first-cell' : ''}
