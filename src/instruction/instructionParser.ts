@@ -180,9 +180,13 @@ function _parseData(input: string): Instruction {
 	}
 	const value = new BinaryValue(16, numericValue)
 	const opcodeValue = value.getByte(1)
+	const operandValue = value.getByte(2)
 	const opcode = parseOpcode(removeFlags(opcodeValue))
 	const immediateFlagSet = isImmediateFlagSet(opcodeValue)
 	const invalidate =
-		!opcode || (immediateFlagSet && !opcode.takesImmediate) || (immediateFlagSet && !opcode.takesOperand)
+		!opcode ||
+		(!opcode.takesOperand && operandValue.signed() !== 0) ||
+		(!opcode.takesImmediate && immediateFlagSet) ||
+		(!opcode.takesOperand && immediateFlagSet)
 	return new Instruction(input, "", value, invalidate)
 }
