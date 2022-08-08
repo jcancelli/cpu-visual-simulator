@@ -25,10 +25,13 @@ import FlashWire from "./bus/animation/FlashWire"
 import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
+import CheckedError from "../../errors/CheckedError"
+import lang from "../../store/lang"
+import { get } from "svelte/store"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
-		throw new Error("Invalid opcode")
+		throw new CheckedError(get(lang).errors.execution.invalid_opcode)
 	}
 	const actions: Action[] = []
 	switch (instruction.opcode.symbolic) {

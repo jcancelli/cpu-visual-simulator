@@ -269,6 +269,10 @@ const _default = {
 		},
 		user_input: {
 			invalid_file_name: ""
+		},
+		execution: {
+			invalid_opcode: "",
+			division_by_zero: ""
 		}
 	}
 }
