@@ -80,6 +80,11 @@ const _default = {
 			text: ""
 		}
 	},
+	cpu: {
+		ir: {
+			invalid_instruction: ""
+		}
+	},
 	ram: {
 		buttons: {
 			clear: {

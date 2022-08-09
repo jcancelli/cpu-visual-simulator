@@ -53,7 +53,10 @@ steps:
         tts: "The content of the Accumulator is placed on the Data Bus"
     acc_stored_to_ram:
         text: "The content of the Accumulator is written into the RAM"
-        tts: "The content of the Accumulator is written into the RAM "
+        tts: "The content of the Accumulator is written into the RAM"
+cpu:
+    ir:
+        invalid_instruction: "INVALID INSTRUCTION"
 ram:
     buttons:
         clear:

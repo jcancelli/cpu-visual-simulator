@@ -55,6 +55,9 @@ steps:
     acc_stored_to_ram:
         text: "Il valore dell'Accumulatore viene scritto in RAM"
         tts: "Il valore dell'Accumulatore viene scritto in RAM"
+cpu:
+    ir:
+        invalid_instruction: "ISTRUZIONE INVALIDA"
 ram:
     buttons:
         clear:
