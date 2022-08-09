@@ -93,6 +93,7 @@
 		flex
 		items-center
 		justify-center
+		cursor-text
 	"
 	bind:this={element}
 	on:click={() => (isEditing = true)}
