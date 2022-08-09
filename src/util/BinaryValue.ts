@@ -85,10 +85,10 @@ export default class BinaryValue {
 		return new BinaryValue(this.bits(), setBit(this.value, pos, value))
 	}
 
-	static fromBytesValues(bytes: number[] | string[] | BinaryValue[]): BinaryValue {
+	static fromBytes(bytes: number[] | string[] | BinaryValue[]): BinaryValue {
 		checkValidBitCount(bytes.length * 8)
 		if (typeof bytes[0] === "number") {
-			return BinaryValue.fromBytesValues(bytes.map(b => new BinaryValue(8, b)))
+			return BinaryValue.fromBytes(bytes.map(b => new BinaryValue(8, b)))
 		} else if (typeof bytes[0] === "string") {
 			return new BinaryValue((bytes.length * 8) as Bits, bytes.join(""))
 		} else {

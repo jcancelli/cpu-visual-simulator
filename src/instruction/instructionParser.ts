@@ -71,7 +71,7 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 		if (opcode.takesOperand) {
 			throw new InstructionParsingError(get(lang).errors.instruction_parsing.operand_required, input)
 		}
-		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytesValues([opcode.numeric, 0]))
+		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytes([opcode.numeric, 0]))
 	}
 }
 
@@ -81,11 +81,7 @@ function _parseDirectLabelOperand(input: string, opcode: Opcode, labels: string[
 		throw new InstructionParsingError(get(lang).errors.instruction_parsing.unknown_label, input)
 	}
 	const address = labels.indexOf(symbolicOperand)
-	return new Instruction(
-		symbolicOpcode,
-		symbolicOperand,
-		BinaryValue.fromBytesValues([opcode.numeric, address])
-	)
+	return new Instruction(symbolicOpcode, symbolicOperand, BinaryValue.fromBytes([opcode.numeric, address]))
 }
 
 function _parseImmediateNumberOperand(input: string, opcode: Opcode) {
@@ -104,7 +100,7 @@ function _parseImmediateNumberOperand(input: string, opcode: Opcode) {
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		BinaryValue.fromBytesValues([numericOpcode, numericOperand])
+		BinaryValue.fromBytes([numericOpcode, numericOperand])
 	)
 }
 
@@ -128,7 +124,7 @@ function parseImmediateLabelOperand(input: string, opcode: Opcode, labels: strin
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		BinaryValue.fromBytesValues([numericOpcode, numericOperand])
+		BinaryValue.fromBytes([numericOpcode, numericOperand])
 	)
 }
 
@@ -141,7 +137,7 @@ function _parseDirectOperand(input: string, opcode: Opcode) {
 	return new Instruction(
 		symbolicOpcode,
 		symbolicOperand,
-		BinaryValue.fromBytesValues([opcode.numeric, numericOperand])
+		BinaryValue.fromBytes([opcode.numeric, numericOperand])
 	)
 }
 
