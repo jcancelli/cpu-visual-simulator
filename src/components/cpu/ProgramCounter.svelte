@@ -26,6 +26,11 @@
 	function commitEdit(): void {
 		try {
 			Logger.info(`ProgramCounter input: "${inputValue}"`, "USER_INPUT")
+			if (inputValue === "") {
+				syncInputValue()
+				isEditing = false
+				return
+			}
 			let newValue: BinaryValue
 			if ($displayAsBinary) {
 				newValue = new BinaryValue(8, inputValue)
