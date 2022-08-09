@@ -268,7 +268,8 @@ const _default = {
 			label_already_exists: ""
 		},
 		user_input: {
-			invalid_file_name: ""
+			invalid_file_name: "",
+			invalid_pc_value: ""
 		},
 		execution: {
 			invalid_opcode: "",

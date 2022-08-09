@@ -8,6 +8,7 @@
 	import { isValidAddress } from "../../util/ramUtil"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
+	import lang from "../../store/lang"
 
 	let element: HTMLDivElement
 	let isEditing = false
@@ -32,7 +33,7 @@
 				newValue = new BinaryValue(8, parseInt(inputValue))
 			}
 			if (!isValidAddress(newValue.unsigned())) {
-				throw new CheckedError("asd") // todo
+				throw new CheckedError($lang.errors.user_input.invalid_pc_value)
 			}
 			programCounter.set(newValue)
 		} catch (error) {
@@ -86,6 +87,7 @@
 	flex
 	items-center
 	justify-center
+	cursor-text
 "
 	bind:this={element}
 	on:click={() => (isEditing = true)}
@@ -101,6 +103,7 @@
 				bg-black
 				text-gray-200
 				text-center
+				leading-[30px]
 				selection:bg-transparent
 			"
 			use:focus

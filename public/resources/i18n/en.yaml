@@ -189,6 +189,7 @@ errors:
         label_already_exists: "Label already exists"
     user_input:
         invalid_file_name: "Invalid file name"
+        invalid_pc_value: "Invalid address"
     execution:
         invalid_opcode: "Invalid opcode found in the Instruction Register"
         division_by_zero: "Division by zero"
