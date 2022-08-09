@@ -32,10 +32,14 @@
 				return
 			}
 			let newValue: BinaryValue
-			if ($displayAsBinary) {
-				newValue = new BinaryValue(8, inputValue)
-			} else {
-				newValue = new BinaryValue(8, parseInt(inputValue))
+			try {
+				if ($displayAsBinary) {
+					newValue = new BinaryValue(8, inputValue)
+				} else {
+					newValue = new BinaryValue(8, parseInt(inputValue))
+				}
+			} catch (error) {
+				throw new CheckedError($lang.errors.user_input.invalid_pc_value)
 			}
 			if (!isValidAddress(newValue.unsigned())) {
 				throw new CheckedError($lang.errors.user_input.invalid_pc_value)
