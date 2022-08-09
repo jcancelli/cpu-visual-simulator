@@ -31,7 +31,7 @@ import { get } from "svelte/store"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
-		throw new CheckedError(get(lang).errors.execution.invalid_opcode)
+		throw new CheckedError(get(lang).errors.execution.invalid_instruction)
 	}
 	const actions: Action[] = []
 	switch (instruction.opcode.symbolic) {

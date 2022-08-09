@@ -192,5 +192,5 @@ errors:
         invalid_pc_value: "Invalid address"
         invalid_acc_value: "Invalid value"
     execution:
-        invalid_opcode: "Invalid opcode found in the Instruction Register"
+        invalid_instruction: "Invalid instruction found in the Instruction Register"
         division_by_zero: "Division by zero"

@@ -273,7 +273,7 @@ const _default = {
 			invalid_acc_value: ""
 		},
 		execution: {
-			invalid_opcode: "",
+			invalid_instruction: "",
 			division_by_zero: ""
 		}
 	}
