@@ -1,20 +1,19 @@
 <script lang="ts">
-	import { programCounter } from "../../store/cpu"
-	import ComponentLabel from "../labels/Component.svelte"
+	import { increment } from "../../store/cpu"
 	import { flash as flashElement } from "../../util/animationUtil"
 	import { displayAsBinary } from "../../store/settings"
+
+	let element: HTMLDivElement
 
 	export async function flash() {
 		return flashElement(element, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
-
-	let element: HTMLDivElement
 </script>
 
 <div
 	class="
 	absolute
-	top-[70px]
+	top-[130px]
 	left-[570px]
 	w-[100px]
 	h-[30px]
@@ -29,6 +28,5 @@
 "
 	bind:this={element}
 >
-	<ComponentLabel text="PC" top="-25px" left="0" />
-	{$displayAsBinary ? $programCounter.toBinaryString() : $programCounter.unsigned()}
+	+{$displayAsBinary ? $increment.toBinaryString() : $increment.unsigned()}
 </div>
