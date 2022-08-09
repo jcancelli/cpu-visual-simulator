@@ -191,6 +191,7 @@ errors:
     user_input:
         invalid_file_name: "Nome file invalido"
         invalid_pc_value: "Indirizzo invalido"
+        invalid_acc_value: "Valore invalido"
     execution:
         invalid_opcode: "Opcode invalido trovato nell'Instrucion Register"
         division_by_zero: "Divisione per zero"

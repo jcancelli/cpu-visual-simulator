@@ -269,7 +269,8 @@ const _default = {
 		},
 		user_input: {
 			invalid_file_name: "",
-			invalid_pc_value: ""
+			invalid_pc_value: "",
+			invalid_acc_value: ""
 		},
 		execution: {
 			invalid_opcode: "",
