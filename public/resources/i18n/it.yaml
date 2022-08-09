@@ -55,6 +55,9 @@ steps:
     acc_stored_to_ram:
         text: "Il valore dell'Accumulatore viene scritto in RAM"
         tts: "Il valore dell'Accumulatore viene scritto in RAM"
+cpu:
+    ir:
+        invalid_instruction: "ISTRUZIONE INVALIDA"
 ram:
     buttons:
         clear:
@@ -190,3 +193,8 @@ errors:
         label_already_exists: "Label esiste già"
     user_input:
         invalid_file_name: "Nome file invalido"
+        invalid_pc_value: "Indirizzo invalido"
+        invalid_acc_value: "Valore invalido"
+    execution:
+        invalid_instruction: "Istruzione invalida trovata nell'Instrucion Register"
+        division_by_zero: "Divisione per zero"

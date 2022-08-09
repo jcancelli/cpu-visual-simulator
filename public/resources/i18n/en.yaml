@@ -53,7 +53,10 @@ steps:
         tts: "The content of the Accumulator is placed on the Data Bus"
     acc_stored_to_ram:
         text: "The content of the Accumulator is written into the RAM"
-        tts: "The content of the Accumulator is written into the RAM "
+        tts: "The content of the Accumulator is written into the RAM"
+cpu:
+    ir:
+        invalid_instruction: "INVALID INSTRUCTION"
 ram:
     buttons:
         clear:
@@ -189,3 +192,8 @@ errors:
         label_already_exists: "Label already exists"
     user_input:
         invalid_file_name: "Invalid file name"
+        invalid_pc_value: "Invalid address"
+        invalid_acc_value: "Invalid value"
+    execution:
+        invalid_instruction: "Invalid instruction found in the Instruction Register"
+        division_by_zero: "Division by zero"

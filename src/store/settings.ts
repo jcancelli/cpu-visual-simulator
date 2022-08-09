@@ -5,7 +5,7 @@ export const SUPPORTED_LANGS = ["en", "it"] as const
 export type SupportedLang = typeof SUPPORTED_LANGS[number]
 export const DEFAULT_LANG = "en"
 
-export const showSettings = writable<boolean>(isSet("showSettings") ? bool("showSettings") : false)
+export const showSettings = writable<boolean>(false)
 export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
 export const displayComponentsLabels = writable<boolean>(
 	isSet("displayLabels") ? bool("displayLabels") : true
@@ -38,7 +38,6 @@ window.addEventListener("load", initSettings)
 function initSettings() {
 	availableTtsVoices.set(getAvailableVoices(get(language)))
 	// subscribers so that each value is stored locally
-	showSettings.subscribe(newValue => set("showSettings", newValue))
 	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
 	displayComponentsLabels.subscribe(newValue => set("displayLabels", newValue))
 	displayBussesLabels.subscribe(newValue => set("displayBussesLabels", newValue))

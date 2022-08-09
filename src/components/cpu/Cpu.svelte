@@ -3,6 +3,7 @@
 	import InstructionRegister from "./InstructionRegister.svelte"
 	import ControlUnit from "./ControlUnit.svelte"
 	import Accumulator from "./Accumulator.svelte"
+	import Increment from "./Increment.svelte"
 	import StatusWord from "./StatusWord.svelte"
 	import ProgramCounter from "./ProgramCounter.svelte"
 	import Multiplexer from "./Multiplexer.svelte"
@@ -12,6 +13,7 @@
 	let ir: InstructionRegister
 	let cu: ControlUnit
 	let pc: ProgramCounter
+	let inc: Increment
 	let mux: Multiplexer
 	let alu: ArithmeticLogicUnit
 	let sw: StatusWord
@@ -26,9 +28,9 @@
 			case "IR:OPR":
 				return ir.flashOperand()
 			case "PC":
-				return pc.flashPC()
+				return pc.flash()
 			case "INC":
-				return pc.flashINC()
+				return inc.flash()
 			case "MUX":
 				return mux.flash()
 			case "CU":
@@ -57,6 +59,7 @@
 	<InstructionRegister bind:this={ir} />
 	<ControlUnit bind:this={cu} />
 	<ProgramCounter bind:this={pc} />
+	<Increment bind:this={inc} />
 	<Multiplexer bind:this={mux} />
 	<ArithmeticLogicUnit bind:this={alu} />
 	<StatusWord bind:this={sw} />

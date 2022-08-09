@@ -80,6 +80,11 @@ const _default = {
 			text: ""
 		}
 	},
+	cpu: {
+		ir: {
+			invalid_instruction: ""
+		}
+	},
 	ram: {
 		buttons: {
 			clear: {
@@ -268,7 +273,13 @@ const _default = {
 			label_already_exists: ""
 		},
 		user_input: {
-			invalid_file_name: ""
+			invalid_file_name: "",
+			invalid_pc_value: "",
+			invalid_acc_value: ""
+		},
+		execution: {
+			invalid_instruction: "",
+			division_by_zero: ""
 		}
 	}
 }

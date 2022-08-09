@@ -5,8 +5,8 @@ import { cpu } from "../../../../store/components"
 
 export default class UpdateSWCompare extends CpuAction {
 	protected async action(): Promise<any> {
-		const alu1 = get(cpuStore.alu1)
-		const alu2 = get(cpuStore.alu2)
+		const alu1 = get(cpuStore.alu1).signed()
+		const alu2 = get(cpuStore.alu2).signed()
 		const zeroFlag = get(cpuStore.zeroFlag)
 		const negativeFlag = get(cpuStore.negativeFlag)
 

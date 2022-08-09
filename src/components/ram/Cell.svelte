@@ -35,7 +35,6 @@
 	function commitEdit(): void {
 		try {
 			if (inputValue !== "") {
-				console.log(inputValue)
 				Logger.info(`RamCell input: "${inputValue}"`, "USER_INPUT")
 				if ($displayAsBinary) {
 					ram.write(address, parseBinary(inputValue.trim()))
