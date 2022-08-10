@@ -1,4 +1,3 @@
-import BinaryValue, { Bits } from "./BinaryValue"
 import { positionToIndex } from "./stringUtil"
 
 export const MAX_BITS = 32 // js limit for bitwise operations
