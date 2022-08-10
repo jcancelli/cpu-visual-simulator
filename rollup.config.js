@@ -96,7 +96,7 @@ const docsConfig = {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/docs.bundle.js'
+		file: 'public/build/manual.bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -104,7 +104,7 @@ const docsConfig = {
 				sourceMap: !production,
 				postcss: {
 					plugins: [
-						require("tailwindcss")("./docs/tailwind.config.js"),
+						require("tailwindcss")("./manual/tailwind.config.js"),
 						require("autoprefixer")()
 					]
 				}
@@ -113,7 +113,7 @@ const docsConfig = {
 				dev: !production
 			}
 		}),
-		css({ output: 'docs.bundle.css' }),
+		css({ output: 'manual.bundle.css' }),
 		resolve({
 			browser: true,
 			dedupe: ['svelte']

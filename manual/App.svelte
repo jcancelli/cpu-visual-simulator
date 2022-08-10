@@ -1,8 +1,9 @@
 <script lang="ts">
 	import OpcodesTable from "./components/OpcodesTable.svelte"
+	import text from "./stores/text"
 </script>
 
-<h1>TEST MANUAL</h1>
+<h1>{$text.title}</h1>
 
 <OpcodesTable />
 
