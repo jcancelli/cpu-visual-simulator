@@ -4,7 +4,6 @@ opcodes_table:
         control_flow: "Control Flow"
         data_flow: "Data Flow"
         arithmetic_logic: "Arithmetic-Logic"
-    
     columns_titles: 
         symbolic: "Symbolic"
         binary: "Binary"
@@ -12,9 +11,6 @@ opcodes_table:
         allows_operand: "Allows operand"
         allows_immediate: "Allows immediate operand"
         description: "Description"
-    bool: 
-        yes: "yes"
-        no: "no"
     descriptions: 
         NOP: ""
         HLT: ""
@@ -32,3 +28,6 @@ opcodes_table:
         AND: ""
         CMP: ""
         NOT: ""
+bool: 
+    "true": "yes"
+    "false": "no"

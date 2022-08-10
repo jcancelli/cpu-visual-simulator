@@ -20,10 +20,6 @@ const _default = {
 			allows_immediate: "",
 			description: ""
 		},
-		bool: {
-			yes: "",
-			no: ""
-		},
 		descriptions: {
 			NOP: "",
 			HLT: "",
@@ -42,6 +38,10 @@ const _default = {
 			CMP: "",
 			NOT: ""
 		}
+	},
+	bool: {
+		true: "",
+		false: ""
 	}
 }
 
@@ -51,7 +51,7 @@ fetchText(get(language))
 language.subscribe(fetchText)
 
 export function fetchText(_lang: SupportedLang) {
-	fetch(`resources/i18n/docs/${_lang}.yaml`)
+	fetch(`resources/i18n/manual/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
 		.then(data => text.set(data as Text))

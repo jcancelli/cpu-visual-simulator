@@ -2,6 +2,7 @@
 	import { opcodes } from "../../src/instruction/Opcode"
 	import { numberToBinaryString } from "../../src/util/binaryUtil"
 	import text from "../stores/text"
+	import Boolean from "./Boolean.svelte"
 </script>
 
 <table>
@@ -23,12 +24,8 @@
 			<td>{opcode.symbolic}</td>
 			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
 			<td> {opcode.numeric}</td>
-			<td class={opcode.takesOperand ? "text-green-700" : "text-red-700"}
-				>{opcode.takesOperand ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
-			<td class={opcode.takesImmediate ? "text-green-700" : "text-red-700"}
-				>{opcode.takesImmediate ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
+			<td><Boolean value={opcode.takesOperand} /></td>
+			<td><Boolean value={opcode.takesImmediate} /></td>
 			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
@@ -50,12 +47,8 @@
 			<td>{opcode.symbolic}</td>
 			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
 			<td> {opcode.numeric}</td>
-			<td class={opcode.takesOperand ? "text-green-700" : "text-red-700"}
-				>{opcode.takesOperand ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
-			<td class={opcode.takesImmediate ? "text-green-700" : "text-red-700"}
-				>{opcode.takesImmediate ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
+			<td><Boolean value={opcode.takesOperand} /></td>
+			<td><Boolean value={opcode.takesImmediate} /></td>
 			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
@@ -77,12 +70,8 @@
 			<td>{opcode.symbolic}</td>
 			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
 			<td> {opcode.numeric}</td>
-			<td class={opcode.takesOperand ? "text-green-700" : "text-red-700"}
-				>{opcode.takesOperand ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
-			<td class={opcode.takesImmediate ? "text-green-700" : "text-red-700"}
-				>{opcode.takesImmediate ? $text.opcodes_table.bool.yes : $text.opcodes_table.bool.no}</td
-			>
+			<td><Boolean value={opcode.takesOperand} /></td>
+			<td><Boolean value={opcode.takesImmediate} /></td>
 			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
