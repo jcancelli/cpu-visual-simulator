@@ -1,92 +1,96 @@
 <script lang="ts">
-	import { opcodes } from "../../src/instruction/Opcode"
-	import { numberToBinaryString } from "../../src/util/binaryUtil"
+	import { IMMEDIATE_FLAG_POS, Opcode, opcodes } from "../../src/instruction/Opcode"
+	import { numberToBinaryString, setBit } from "../../src/util/binaryUtil"
 	import text from "../stores/text"
-	import Boolean from "./Boolean.svelte"
+
+	function direct(opcode: Opcode): string {
+		let symbolic = opcode.symbolic
+		if (opcode.takesOperand) {
+			symbolic += " X"
+		}
+		let binary = numberToBinaryString(opcode.numeric, 8)
+		return `${symbolic} ${binary}`
+	}
+
+	function immediate(opcode: Opcode): string {
+		if (!opcode.takesImmediate) {
+			return ""
+		}
+		let symbolic = `${opcode.symbolic} #X`
+		return `${symbolic} ${binaryOpcodeWithImmediateFlagSet(opcode.numeric)}`
+	}
+
+	function binaryOpcodeWithImmediateFlagSet(opcode: number): string {
+		return setBit(numberToBinaryString(opcode, 8), IMMEDIATE_FLAG_POS, true)
+	}
 </script>
 
-<table>
+<table class="text-center border-collapse shadow-lg {$$props.class}">
 	<tr class="bg-green-300">
-		<th colspan="6">
+		<th colspan="3">
 			{$text.opcodes_table.sections_titles.control_flow}
 		</th>
 	</tr>
-	<tr class="bg-green-300">
-		<th>{$text.opcodes_table.columns_titles.symbolic}</th>
-		<th>{$text.opcodes_table.columns_titles.binary}</th>
-		<th>{$text.opcodes_table.columns_titles.numeric}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_operand}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_immediate}</th>
-		<th>{$text.opcodes_table.columns_titles.description}</th>
-	</tr>
+	<!-- colgroup is in this position the last-child and first-child selectors works properly -->
+	<colgroup>
+		<col class="w-32 rounded-t" />
+		<col class="w-32" />
+		<col class="w-[40rem] text-left" />
+	</colgroup>
 	{#each opcodes.filter(opcode => opcode.category === "CONTROL_FLOW") as opcode}
-		<tr class="bg-green-300">
-			<td>{opcode.symbolic}</td>
-			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
-			<td> {opcode.numeric}</td>
-			<td><Boolean value={opcode.takesOperand} /></td>
-			<td><Boolean value={opcode.takesImmediate} /></td>
-			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
+		<tr class="bg-green-200">
+			<td>{direct(opcode)}</td>
+			<td>{immediate(opcode)}</td>
+			<td class="text-left">{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
 	<tr class="bg-red-300">
-		<th colspan="6">
+		<th colspan="3">
 			{$text.opcodes_table.sections_titles.data_flow}
 		</th>
 	</tr>
-	<tr class="bg-red-300">
-		<th>{$text.opcodes_table.columns_titles.symbolic}</th>
-		<th>{$text.opcodes_table.columns_titles.binary}</th>
-		<th>{$text.opcodes_table.columns_titles.numeric}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_operand}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_immediate}</th>
-		<th>{$text.opcodes_table.columns_titles.description}</th>
-	</tr>
 	{#each opcodes.filter(opcode => opcode.category === "DATA_FLOW") as opcode}
-		<tr class="bg-red-300">
-			<td>{opcode.symbolic}</td>
-			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
-			<td> {opcode.numeric}</td>
-			<td><Boolean value={opcode.takesOperand} /></td>
-			<td><Boolean value={opcode.takesImmediate} /></td>
-			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
+		<tr class="bg-red-200">
+			<td>{direct(opcode)}</td>
+			<td>{immediate(opcode)}</td>
+			<td class="text-left">{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
 	<tr class="bg-purple-300">
-		<th colspan="6">
+		<th colspan="3">
 			{$text.opcodes_table.sections_titles.arithmetic_logic}
 		</th>
 	</tr>
-	<tr class="bg-purple-300">
-		<th>{$text.opcodes_table.columns_titles.symbolic}</th>
-		<th>{$text.opcodes_table.columns_titles.binary}</th>
-		<th>{$text.opcodes_table.columns_titles.numeric}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_operand}</th>
-		<th>{$text.opcodes_table.columns_titles.allows_immediate}</th>
-		<th>{$text.opcodes_table.columns_titles.description}</th>
-	</tr>
 	{#each opcodes.filter(opcode => opcode.category === "ARITHMETIC_LOGIC") as opcode}
-		<tr class="bg-purple-300">
-			<td>{opcode.symbolic}</td>
-			<td>{numberToBinaryString(opcode.numeric, 8)}</td>
-			<td> {opcode.numeric}</td>
-			<td><Boolean value={opcode.takesOperand} /></td>
-			<td><Boolean value={opcode.takesImmediate} /></td>
-			<td>{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
+		<tr class="bg-purple-200">
+			<td>{direct(opcode)}</td>
+			<td>{immediate(opcode)}</td>
+			<td class="text-left">{$text.opcodes_table.descriptions[opcode.symbolic]}</td>
 		</tr>
 	{/each}
 </table>
 
 <style>
-	table {
-		border-collapse: collapse;
-	}
-
 	td,
 	th {
 		padding: 0.5rem 1rem;
-		text-align: center;
-		border-collapse: collapse;
-		border-bottom: 1px solid black;
+		border-bottom: 0.05em solid black;
+	}
+
+	tr:first-child th {
+		border-top-left-radius: 0.7rem;
+		border-top-right-radius: 0.7rem;
+	}
+
+	tr:last-child td {
+		border: 0;
+	}
+
+	tr:last-child td:first-child {
+		border-bottom-left-radius: 0.5rem;
+	}
+
+	tr:last-child td:last-child {
+		border-bottom-right-radius: 0.5rem;
 	}
 </style>
