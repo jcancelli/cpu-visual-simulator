@@ -3,9 +3,12 @@
 	import text from "./stores/text"
 </script>
 
-<h1>{$text.title}</h1>
-
-<OpcodesTable />
+<header class="p-4">
+	<h1 class="text-5xl font-bold">{$text.title}</h1>
+</header>
+<main class="flex flex-col items-center">
+	<OpcodesTable />
+</main>
 
 <style lang="postcss" global>
 	@tailwind base;
