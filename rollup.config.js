@@ -90,8 +90,8 @@ const mainAppConfig = {
 	}
 }
 
-const docsConfig = {
-	input: 'docs/main.ts',
+const manualPageConfig = {
+	input: 'manual/main.ts',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -133,5 +133,5 @@ const docsConfig = {
 
 export default [
 	mainAppConfig,
-	docsConfig
+	manualPageConfig
 ];
