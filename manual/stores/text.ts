@@ -16,7 +16,7 @@ const _default = {
 			symbolic: "",
 			binary: "",
 			numeric: "",
-			allows_operand: "",
+			requires_operand: "",
 			allows_immediate: "",
 			description: ""
 		},
