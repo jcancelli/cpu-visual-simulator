@@ -7,7 +7,7 @@ opcodes_table:
     descriptions: 
         NOP: "No Operation, go to the next instruction"
         HLT: "Halt execution"
-        JMP: "Unconditional jump to the instruction at location <operand>"
+        JMP: "Unconditional jump to the instruction at location X"
         JZ: "Jump on Zero: if Flag Z is set, go to instruction number X, otherwise go to the next instruction"
         JNZ: "Jump on Not Zero: if Flag Z is cleared, go to instruction number X, otherwise, go to the next instruction"
         JN: "Jump on Negative: if Flag N is set, go to instruction number X, otherwise go to the next instruction"
