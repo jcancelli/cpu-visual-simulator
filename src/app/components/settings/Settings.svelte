@@ -33,6 +33,7 @@
 		internalDataBusAnimationColor,
 		internalDataBusColor
 	} from "../../store/busses"
+	import LanguageSelect from "../../../shared/components/LanguageSelect.svelte"
 
 	function closeSettings() {
 		$showSettings = false
@@ -51,7 +52,7 @@
 		</div>
 		<div class="w-full flex flex-col">
 			<Widget title={$lang.settings.language.title} description={$lang.settings.language.description}>
-				<Select options={[...SUPPORTED_LANGS]} bind:value={$language} />
+				<LanguageSelect bind:value={$language} />
 			</Widget>
 			<Widget
 				title={$lang.settings.dispaly_components_labels.title}
