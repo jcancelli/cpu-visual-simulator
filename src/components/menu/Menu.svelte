@@ -46,7 +46,7 @@
 	}
 
 	function openDocsPage() {
-		window.open("docs", "_blank").focus()
+		window.open("manual", "_blank").focus()
 	}
 </script>
 

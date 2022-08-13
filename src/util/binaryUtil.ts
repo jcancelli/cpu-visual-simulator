@@ -3,7 +3,7 @@ import { positionToIndex } from "./stringUtil"
 export const MAX_BITS = 32 // js limit for bitwise operations
 export const MIN_BITS = 1
 
-export function checkValidBitCount(bits: number) {
+export function checkValidBitCount(bits: number): void {
 	if (bits < MIN_BITS || bits > MAX_BITS) {
 		throw new Error(`Binary numbers must be between ${MIN_BITS} and ${MAX_BITS} bits`)
 	}
@@ -42,7 +42,7 @@ export function minValue(bits: number): number {
 	return -Math.pow(2, bits - 1)
 }
 
-export function valueToBinary(value: number, bits: number) {
+export function numberToBinaryString(value: number, bits: number) {
 	checkValidBitCount(bits)
 	return pad((value >>> 0).toString(2), bits)
 }

@@ -2,7 +2,14 @@ import BinaryValueOutOfRange from "../errors/BinaryValueOutOfRange"
 import CheckedError from "../errors/CheckedError"
 import Instruction from "../instruction/Instruction"
 import { parseBinary } from "../instruction/instructionParser"
-import { checkValidBitCount, isValidBinary, pad, setBit, valueIsInRange, valueToBinary } from "./binaryUtil"
+import {
+	checkValidBitCount,
+	isValidBinary,
+	pad,
+	setBit,
+	valueIsInRange,
+	numberToBinaryString
+} from "./binaryUtil"
 import { positionToIndex } from "./stringUtil"
 
 export type Bits = 8 | 16 | 32
@@ -20,9 +27,9 @@ export default class BinaryValue {
 			if (!valueIsInRange(value, bits)) {
 				throw new BinaryValueOutOfRange(value, bits)
 			}
-			this.value = valueToBinary(value, bits)
+			this.value = numberToBinaryString(value, bits)
 		} else {
-			this.value = valueToBinary(value.signed(), bits) // TEST THIS
+			this.value = numberToBinaryString(value.signed(), bits) // TEST THIS
 		}
 	}
 
@@ -85,10 +92,10 @@ export default class BinaryValue {
 		return new BinaryValue(this.bits(), setBit(this.value, pos, value))
 	}
 
-	static fromBytesValues(bytes: number[] | string[] | BinaryValue[]): BinaryValue {
+	static fromBytes(bytes: number[] | string[] | BinaryValue[]): BinaryValue {
 		checkValidBitCount(bytes.length * 8)
 		if (typeof bytes[0] === "number") {
-			return BinaryValue.fromBytesValues(bytes.map(b => new BinaryValue(8, b)))
+			return BinaryValue.fromBytes(bytes.map(b => new BinaryValue(8, b)))
 		} else if (typeof bytes[0] === "string") {
 			return new BinaryValue((bytes.length * 8) as Bits, bytes.join(""))
 		} else {

@@ -1,0 +1,34 @@
+title: "MANUALE"
+sections:
+    instruction_set:
+        title: "Instruction Set"
+    ui:
+        title: "Interfaccia grafica"
+    controls:
+        title: "Controlli"
+    examples:
+        title: "Esempi"
+    credits:
+        title: "Crediti"
+opcodes_table: 
+    sections_titles: 
+        control_flow: ""
+        data_flow: ""
+        arithmetic_logic: ""
+    descriptions: 
+        NOP: ""
+        HLT: ""
+        JMP: ""
+        JZ: ""
+        JNZ: ""
+        JN: ""
+        JNN: ""
+        LOD: ""
+        STO: ""
+        ADD: ""
+        SUB: ""
+        MUL: ""
+        DIV: ""
+        AND: ""
+        CMP: ""
+        NOT: ""
