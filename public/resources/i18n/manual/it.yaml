@@ -2,6 +2,8 @@ title: "MANUALE"
 sections:
     instruction_set:
         title: "Instruction Set"
+    ui:
+        title: "Interfaccia grafica"
     controls:
         title: "Controlli"
     examples:

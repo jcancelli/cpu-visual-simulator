@@ -10,6 +10,9 @@ const _default = {
 		instruction_set: {
 			title: ""
 		},
+		ui: {
+			title: ""
+		},
 		controls: {
 			title: ""
 		},
