@@ -5,7 +5,7 @@
 	import TabPanels from "./basic/tabs/TabPanels.svelte"
 	import TabPanel from "./basic/tabs/TabPanel.svelte"
 	import text from "../stores/text"
-	import OpcodesTable from "./OpcodesTable.svelte"
+	import InstructionSetSection from "./sections/InstructionSet.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -17,7 +17,7 @@
 	</TabList>
 	<TabPanels>
 		<TabPanel>
-			<OpcodesTable class="mx-auto" />
+			<InstructionSetSection />
 		</TabPanel>
 		<TabPanel>
 			<h1>Hello world</h1>
