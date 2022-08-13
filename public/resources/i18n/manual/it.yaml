@@ -1,4 +1,13 @@
-title: "MANUAL"
+title: "MANUALE"
+sections:
+    instruction_set:
+        title: "Instruction Set"
+    controls:
+        title: "Controlli"
+    examples:
+        title: "Esempi"
+    credits:
+        title: "Crediti"
 opcodes_table: 
     sections_titles: 
         control_flow: ""
@@ -21,6 +30,3 @@ opcodes_table:
         AND: ""
         CMP: ""
         NOT: ""
-bool: 
-    "true": "sì"
-    "false": "no"

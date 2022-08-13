@@ -1,4 +1,13 @@
 title: "MANUAL"
+sections:
+    instruction_set:
+        title: "Instruction Set"
+    controls:
+        title: "Controls"
+    examples:
+        title: "Examples"
+    credits:
+        title: "Credits"
 opcodes_table: 
     sections_titles: 
         control_flow: "Control Flow"
@@ -21,6 +30,3 @@ opcodes_table:
         AND: "Bitwise AND between the Accumulator and the content of Memory Location X (or number #X). Flags are updated"
         CMP: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"
         NOT: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
-bool: 
-    "true": "yes"
-    "false": "no"

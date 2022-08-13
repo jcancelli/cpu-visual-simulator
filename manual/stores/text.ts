@@ -6,19 +6,25 @@ export type Text = typeof _default
 
 const _default = {
 	title: "",
+	sections: {
+		instruction_set: {
+			title: ""
+		},
+		controls: {
+			title: ""
+		},
+		examples: {
+			title: ""
+		},
+		credits: {
+			title: ""
+		}
+	},
 	opcodes_table: {
 		sections_titles: {
 			control_flow: "",
 			data_flow: "",
 			arithmetic_logic: ""
-		},
-		columns_titles: {
-			symbolic: "",
-			binary: "",
-			numeric: "",
-			requires_operand: "",
-			allows_immediate: "",
-			description: ""
 		},
 		descriptions: {
 			NOP: "",
@@ -38,10 +44,6 @@ const _default = {
 			CMP: "",
 			NOT: ""
 		}
-	},
-	bool: {
-		true: "",
-		false: ""
 	}
 }
 
