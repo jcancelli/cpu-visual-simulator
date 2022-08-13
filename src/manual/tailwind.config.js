@@ -16,7 +16,7 @@ module.exports = {
 				}
 			},
 			gridTemplateColumns: {
-				"tabgroup": "1.5fr 8fr"
+				tabgroup: "1.5fr 8fr"
 			}
 		}
 	},
