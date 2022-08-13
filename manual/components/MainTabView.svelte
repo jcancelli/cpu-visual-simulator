@@ -11,16 +11,26 @@
 <TabGroup class="p-5">
 	<TabList class="mt-4">
 		<Tab class="border-t border-t-gray-500">{$text.sections.instruction_set.title}</Tab>
-		<Tab>Examples</Tab>
-		<Tab>Playground</Tab>
-		<Tab>Credits</Tab>
+		<Tab>{$text.sections.ui.title}</Tab>
+		<Tab>{$text.sections.controls.title}</Tab>
+		<Tab>{$text.sections.examples.title}</Tab>
+		<Tab>{$text.sections.credits.title}</Tab>
 	</TabList>
 	<TabPanels>
 		<TabPanel>
 			<InstructionSetSection />
 		</TabPanel>
 		<TabPanel>
-			<h1>Hello world</h1>
+			<h1 class="text-center font-bold text-4xl">TODO</h1>
+		</TabPanel>
+		<TabPanel>
+			<h1 class="text-center font-bold text-4xl">TODO</h1>
+		</TabPanel>
+		<TabPanel>
+			<h1 class="text-center font-bold text-4xl">TODO</h1>
+		</TabPanel>
+		<TabPanel>
+			<h1 class="text-center font-bold text-4xl">TODO</h1>
 		</TabPanel>
 	</TabPanels>
 </TabGroup>
