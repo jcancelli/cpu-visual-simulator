@@ -290,7 +290,7 @@ fetchText(get(language))
 language.subscribe(fetchText)
 
 export function fetchText(_lang: SupportedLang) {
-	fetch(`resources/i18n/${_lang}.yaml`)
+	fetch(`resources/i18n/app/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
 		.then(data => lang.set(data as Lang))
