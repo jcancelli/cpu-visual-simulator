@@ -31,12 +31,12 @@ function serve() {
 }
 
 const mainAppConfig = {
-	input: 'src/main.ts',
+	input: 'src/app/main.ts',
 	output: {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/build/app.bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -44,7 +44,7 @@ const mainAppConfig = {
 				sourceMap: !production,
 				postcss: {
 					plugins: [
-						require("tailwindcss")(),
+						require("tailwindcss")("./src/app/tailwind.config.js"),
 						require("autoprefixer")()
 					]
 				}
@@ -56,7 +56,7 @@ const mainAppConfig = {
 		}),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
-		css({ output: 'bundle.css' }),
+		css({ output: 'app.bundle.css' }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -91,7 +91,7 @@ const mainAppConfig = {
 }
 
 const manualPageConfig = {
-	input: 'manual/main.ts',
+	input: 'src/manual/main.ts',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -104,7 +104,7 @@ const manualPageConfig = {
 				sourceMap: !production,
 				postcss: {
 					plugins: [
-						require("tailwindcss")("./manual/tailwind.config.js"),
+						require("tailwindcss")("./src/manual/tailwind.config.js"),
 						require("autoprefixer")()
 					]
 				}

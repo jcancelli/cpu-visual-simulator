@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*", "manual/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
     "moduleResolution": "node",

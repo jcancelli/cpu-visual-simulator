@@ -5,7 +5,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "prettier": "prettier --write --plugin-search-dir=. ./src ./manual",
+    "prettier": "prettier --write --plugin-search-dir=. ./src",
     "prepare": "husky install"
   },
   "devDependencies": {

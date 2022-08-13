@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { IMMEDIATE_FLAG_POS, Opcode, opcodes } from "../../src/instruction/Opcode"
-	import { numberToBinaryString, setBit } from "../../src/util/binaryUtil"
+	import { IMMEDIATE_FLAG_POS, Opcode, opcodes } from "../../app/instruction/Opcode"
+	import { numberToBinaryString, setBit } from "../../app/util/binaryUtil"
 	import text from "../stores/text"
 
 	function direct(opcode: Opcode): string {

@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store"
-import { language, SupportedLang } from "../../src/store/settings"
+import { language, SupportedLang } from "../../app/store/settings"
 import { parse as parseYaml } from "yaml"
 
 export type Text = typeof _default
