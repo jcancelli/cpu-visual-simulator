@@ -103,3 +103,25 @@ export function init() {
 		intControlBusAnimationColor.subscribe(newValue => storage.set("intControlBusAnimationColor", newValue))
 	})
 }
+
+export function reset() {
+	displayComponentsLabels.set(defaults.displayComponentsLabels)
+	displayBussesLabels.set(defaults.displayBussesLabels)
+	displayStepText.set(defaults.displayStepText)
+	animationSpeed.set(defaults.animationSpeed)
+	language.set(defaults.language)
+	ttsEnabled.set(defaults.ttsEnabled)
+	ttsSpeed.set(defaults.ttsSpeed)
+	extDataBusColor.set(defaults.extDataBusColor)
+	intDataBusColor.set(defaults.intDataBusColor)
+	extDataBusAnimationColor.set(defaults.extDataBusAnimationColor)
+	intDataBusAnimationColor.set(defaults.intDataBusAnimationColor)
+	extAddressBusColor.set(defaults.extAddressBusColor)
+	intAddressBusColor.set(defaults.intAddressBusColor)
+	extAddressBusAnimationColor.set(defaults.extAddressBusAnimationColor)
+	intAddressBusAnimationColor.set(defaults.intAddressBusAnimationColor)
+	extControlBusColor.set(defaults.extControlBusColor)
+	intControlBusColor.set(defaults.intControlBusColor)
+	extControlBusAnimationColor.set(defaults.extControlBusAnimationColor)
+	intControlBusAnimationColor.set(defaults.intControlBusAnimationColor)
+}

@@ -196,6 +196,13 @@ const _default = {
 			title: "",
 			description: ""
 		},
+		reset_all: {
+			title: "",
+			description: "",
+			button: {
+				text: ""
+			}
+		},
 		tts_enabled: {
 			title: "",
 			description: ""

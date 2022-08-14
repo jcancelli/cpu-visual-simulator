@@ -132,6 +132,11 @@ settings:
     display_step_text:
         title: "Mostra testo micro step"
         description: "Abilita/disabilita un riquadro in cui viene visualizzata una descrizione testuale del micro step in esecuzione"
+    reset_all:
+        title: "Resetta impostazioni"
+        description: "Resetta tutte le impostazioni ai loro valori di default"
+        button:
+            text: "Reset"
     tts_enabled:
         title: "Text To Speech"
         description: "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione del micro step attualmente in esecuzione"

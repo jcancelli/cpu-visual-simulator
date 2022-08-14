@@ -6,7 +6,8 @@
 		language,
 		displayComponentsLabels,
 		displayBussesLabels,
-		displayStepText
+		displayStepText,
+		reset
 	} from "../../../store/settings"
 	import Toggle from "../../basic/checkboxes/Settings.svelte"
 </script>
@@ -31,4 +32,7 @@
 	description={$text.settings.display_step_text.description}
 >
 	<Toggle bind:checked={$displayStepText} />
+</Widget>
+<Widget title={$text.settings.reset_all.title} description={$text.settings.reset_all.description}>
+	<button on:click={reset}>{$text.settings.reset_all.button.text}</button>
 </Widget>
