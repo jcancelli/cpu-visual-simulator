@@ -28,6 +28,9 @@ module.exports = {
 					700: "#707070",
 					800: "#606060"
 				}
+			},
+			gridTemplateColumns: {
+				tabgroup: "1.5fr 8fr"
 			}
 		}
 	},
