@@ -1,25 +1,27 @@
-import { SupportedLang } from "../store/settings"
+import { Language } from "../../shared/util/i18n"
+import { LocalStorage } from "../../shared/util/localStorage"
 
-export function set(key: string, value: any) {
-	localStorage.setItem(key, value.toString())
+export type AppLocalStorage = {
+	displayComponentsLabels: boolean
+	displayBussesLabels: boolean
+	displayStepText: boolean
+	animationSpeed: number
+	language: Language
+	ttsEnabled: boolean
+	ttsSpeed: number
+	ttsVoice: string
+	extDataBusColor: string
+	intDataBusColor: string
+	extDataBusAnimationColor: string
+	intDataBusAnimationColor: string
+	extAddressBusColor: string
+	intAddressBusColor: string
+	extAddressBusAnimationColor: string
+	intAddressBusAnimationColor: string
+	extControlBusColor: string
+	intControlBusColor: string
+	extControlBusAnimationColor: string
+	intControlBusAnimationColor: string
 }
 
-export function isSet(key: string): boolean {
-	return localStorage.getItem(key) !== null
-}
-
-export function bool(key: string): boolean {
-	return localStorage.getItem(key) === "true"
-}
-
-export function num(key: string): number {
-	return +localStorage.getItem(key)
-}
-
-export function str(key: string): string {
-	return localStorage.getItem(key)
-}
-
-export function lang(key: string): SupportedLang {
-	return localStorage.getItem(key) as unknown as SupportedLang
-}
+export const storage = new LocalStorage<AppLocalStorage>("app")

@@ -8,7 +8,7 @@
 	import { isValidAddress } from "../../util/ramUtil"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 
 	let element: HTMLDivElement
 	let isEditing = false
@@ -40,7 +40,7 @@
 				}
 				accumulator.set(newValue)
 			} catch (error) {
-				throw new CheckedError($lang.errors.user_input.invalid_acc_value)
+				throw new CheckedError($text.errors.user_input.invalid_acc_value)
 			}
 		} catch (error) {
 			$messageFeed?.error(error.message)

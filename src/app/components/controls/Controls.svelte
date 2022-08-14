@@ -6,7 +6,7 @@
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 	import cpu from "../../store/cpu"
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
@@ -61,59 +61,59 @@
 
 <div class="absolute top-[690px] left-0 z-[4] w-full h-[90px] flex items-center justify-center gap-3">
 	<Widget class="gap-5">
-		<Group label={$lang.controls.labels.execution}>
+		<Group label={$text.controls.labels.execution}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton on:click={resetExecution} icon="reset" title={$lang.controls.buttons.reset.title} />
+				<ExecutionButton on:click={resetExecution} icon="reset" title={$text.controls.buttons.reset.title} />
 				<ExecutionButton
 					on:click={toggleExecution}
 					icon={$isExecuting ? "pause" : "play"}
-					title={$isExecuting ? $lang.controls.buttons.pause.title : $lang.controls.buttons.play.title}
+					title={$isExecuting ? $text.controls.buttons.pause.title : $text.controls.buttons.play.title}
 				/>
-				<ExecutionButton on:click={skipToEnd} icon="skip" title={$lang.controls.buttons.end.title} disabled />
+				<ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} disabled />
 			</div>
 		</Group>
-		<Group label={$lang.controls.labels.instruction}>
+		<Group label={$text.controls.labels.instruction}>
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton
 					on:click={playInstruction}
 					icon="play"
-					title={$lang.controls.buttons.play_instruction.title}
+					title={$text.controls.buttons.play_instruction.title}
 				/>
 				<ExecutionButton
 					on:click={skipInstruction}
 					icon="skip"
-					title={$lang.controls.buttons.skip_instruction.title}
+					title={$text.controls.buttons.skip_instruction.title}
 					disabled
 				/>
 			</div>
 		</Group>
-		<Group label={$lang.controls.labels.step}>
+		<Group label={$text.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
-				<ExecutionButton on:click={playStep} icon="play" title={$lang.controls.buttons.play_step.title} />
+				<ExecutionButton on:click={playStep} icon="play" title={$text.controls.buttons.play_step.title} />
 				<ExecutionButton
 					on:click={skipStep}
 					icon="skip"
-					title={$lang.controls.buttons.skip_step.title}
+					title={$text.controls.buttons.skip_step.title}
 					disabled
 				/>
 			</div>
 		</Group>
-		<Group label={$lang.controls.labels.speed}>
+		<Group label={$text.controls.labels.speed}>
 			<Slider
 				bind:value={$animationSpeed}
 				min={0.1}
 				max={3}
-				title={$lang.controls.sliders.speed.title}
+				title={$text.controls.sliders.speed.title}
 				on:change={speedChanged}
 			/>
 		</Group>
 	</Widget>
 	<Widget class="flex-col items-baseline justify-center text-gray-200">
 		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
-			>{$lang.controls.checkboxes.binary.text}</Checkbox
+			>{$text.controls.checkboxes.binary.text}</Checkbox
 		>
 		<Checkbox checked={!$minimalAnimations} on:click={animationsToggled}
-			>{$lang.controls.checkboxes.animations.text}</Checkbox
+			>{$text.controls.checkboxes.animations.text}</Checkbox
 		>
 	</Widget>
 	<StepText bind:this={$stepText} />

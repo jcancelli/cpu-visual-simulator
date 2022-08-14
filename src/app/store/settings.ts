@@ -1,61 +1,105 @@
 import { get, writable } from "svelte/store"
-import { isSet, bool, lang, num, set, str } from "../util/localStorage"
+import { DEFAULT_LANGUAGE, Language } from "../../shared/util/i18n"
+import { storage } from "../util/localStorage"
+import speechSynthesis from "../util/speechSynthesis"
 
-export const SUPPORTED_LANGS = ["en", "it"] as const
-export type SupportedLang = typeof SUPPORTED_LANGS[number]
-export const DEFAULT_LANG = "en"
+export const showSettings = writable<boolean>()
+export const displayAsBinary = writable<boolean>()
+export const displayComponentsLabels = writable<boolean>()
+export const displayBussesLabels = writable<boolean>()
+export const displayStepText = writable<boolean>()
+export const minimalAnimations = writable<boolean>()
+export const animationSpeed = writable<number>()
+export const language = writable<Language>()
+export const ttsEnabled = writable<boolean>()
+export const ttsSpeed = writable<number>()
+export const ttsVoice = writable<string>()
+export const extDataBusColor = writable<string>()
+export const intDataBusColor = writable<string>()
+export const extDataBusAnimationColor = writable<string>()
+export const intDataBusAnimationColor = writable<string>()
+export const extAddressBusColor = writable<string>()
+export const intAddressBusColor = writable<string>()
+export const extAddressBusAnimationColor = writable<string>()
+export const intAddressBusAnimationColor = writable<string>()
+export const extControlBusColor = writable<string>()
+export const intControlBusColor = writable<string>()
+export const extControlBusAnimationColor = writable<string>()
+export const intControlBusAnimationColor = writable<string>()
 
-export const showSettings = writable<boolean>(false)
-export const displayAsBinary = writable<boolean>(isSet("displayAsBinary") ? bool("displayAsBinary") : false)
-export const displayComponentsLabels = writable<boolean>(
-	isSet("displayLabels") ? bool("displayLabels") : true
-)
-export const displayBussesLabels = writable<boolean>(
-	isSet("displayBussesLabels") ? bool("displayBussesLabels") : true
-)
-export const displayStepText = writable<boolean>(isSet("displayStepText") ? bool("displayStepText") : false)
-export const minimalAnimations = writable<boolean>(
-	isSet("minimalAnimations") ? bool("minimalAnimations") : false
-)
-export const animationSpeed = writable<number>(isSet("animationSpeed") ? num("animationSpeed") : 1.6)
-export const language = writable<SupportedLang>(isSet("language") ? lang("language") : getDefaultLanguage())
-export const ttsEnabled = writable<boolean>(isSet("ttsEnabled") ? bool("ttsEnabled") : false)
-export const ttsSpeed = writable<number>(isSet("ttsSpeed") ? num("ttsSpeed") : 1)
-export const ttsVoice = writable<string>(isSet("ttsVoice") ? str("ttsVoice") : "")
-export const availableTtsVoices = writable<SpeechSynthesisVoice[]>()
+export const defaults = {
+	showSettings: false,
+	displayAsBinary: false,
+	displayComponentsLabels: true,
+	displayBussesLabels: true,
+	displayStepText: false,
+	minimalAnimations: false,
+	animationSpeed: 1.5,
+	language: DEFAULT_LANGUAGE,
+	ttsEnabled: false,
+	ttsSpeed: 1,
+	extDataBusColor: "#0000ff",
+	intDataBusColor: "#00ffff",
+	extDataBusAnimationColor: "#00ff00",
+	intDataBusAnimationColor: "#006400",
+	extAddressBusColor: "#ff8c00",
+	intAddressBusColor: "#ffff00",
+	extAddressBusAnimationColor: "#00ff00",
+	intAddressBusAnimationColor: "#006400",
+	extControlBusColor: "#ff0000",
+	intControlBusColor: "#ff7a90",
+	extControlBusAnimationColor: "#00ff00",
+	intControlBusAnimationColor: "#00ff00"
+} as const
 
-language.subscribe(newLang => availableTtsVoices.set(getAvailableVoices(newLang)))
-availableTtsVoices.subscribe(newVoices => {
-	if (isSet("ttsVoice") && newVoices?.find(v => v.name === str("ttsVoice"))) {
-		ttsVoice.set(str("ttsVoice"))
-	} else {
-		ttsVoice.set(newVoices[0]?.name || "")
-	}
-})
+// prettier-ignore
+export function init() {
+	showSettings.set(defaults.showSettings)
+	displayAsBinary.set(defaults.displayAsBinary)
+	displayComponentsLabels.set(storage.getOrElse("displayComponentsLabels", defaults.displayComponentsLabels) === "true")
+	displayBussesLabels.set(storage.getOrElse("displayBussesLabels", defaults.displayBussesLabels) === "true")
+	displayStepText.set(storage.getOrElse("displayStepText", defaults.displayStepText) === "true")
+	minimalAnimations.set(defaults.minimalAnimations)
+	animationSpeed.set(parseFloat(storage.getOrElse("animationSpeed", defaults.animationSpeed)))
+	language.set(storage.getOrElse("language", defaults.language) as Language)
+	ttsEnabled.set(storage.getOrElse("ttsEnabled", defaults.ttsEnabled) === "true")
+	ttsSpeed.set(parseFloat(storage.getOrElse("ttsSpeed", defaults.ttsSpeed)))
+	extDataBusColor.set(storage.getOrElse("extDataBusColor", defaults.extDataBusColor))
+	intDataBusColor.set(storage.getOrElse("intDataBusColor", defaults.intDataBusColor))
+	extDataBusAnimationColor.set(storage.getOrElse("extDataBusAnimationColor", defaults.extDataBusAnimationColor))
+	intDataBusAnimationColor.set(storage.getOrElse("intDataBusAnimationColor", defaults.intDataBusAnimationColor))
+	extAddressBusColor.set(storage.getOrElse("extAddressBusColor", defaults.extAddressBusColor))
+	intAddressBusColor.set(storage.getOrElse("intAddressBusColor", defaults.intAddressBusColor))
+	extAddressBusAnimationColor.set(storage.getOrElse("extAddressBusAnimationColor", defaults.extAddressBusAnimationColor))
+	intAddressBusAnimationColor.set(storage.getOrElse("intAddressBusAnimationColor", defaults.intAddressBusAnimationColor))
+	extControlBusColor.set(storage.getOrElse("extControlBusColor", defaults.extControlBusColor))
+	intControlBusColor.set(storage.getOrElse("intControlBusColor", defaults.intControlBusColor))
+	extControlBusAnimationColor.set(storage.getOrElse("extControlBusAnimationColor", defaults.extControlBusAnimationColor))
+	intControlBusAnimationColor.set(storage.getOrElse("intControlBusAnimationColor", defaults.intControlBusAnimationColor))
 
-window.addEventListener("load", initSettings)
-
-function initSettings() {
-	availableTtsVoices.set(getAvailableVoices(get(language)))
-	// subscribers so that each value is stored locally
-	displayAsBinary.subscribe(newValue => set("displayAsBinary", newValue))
-	displayComponentsLabels.subscribe(newValue => set("displayLabels", newValue))
-	displayBussesLabels.subscribe(newValue => set("displayBussesLabels", newValue))
-	displayStepText.subscribe(newValue => set("displayStepText", newValue))
-	minimalAnimations.subscribe(newValue => set("minimalAnimations", newValue))
-	animationSpeed.subscribe(newValue => set("animationSpeed", newValue))
-	language.subscribe(newValue => set("language", newValue))
-	ttsEnabled.subscribe(newValue => set("ttsEnabled", newValue))
-	ttsSpeed.subscribe(newValue => set("ttsSpeed", newValue))
-	ttsVoice.subscribe(newValue => set("ttsVoice", newValue))
-}
-
-export function getDefaultLanguage(): SupportedLang {
-	let lang = navigator.languages !== undefined ? navigator.languages[0] : navigator.language
-	lang = lang.split("-")[0]
-	return SUPPORTED_LANGS.includes(lang as SupportedLang) ? (lang as SupportedLang) : DEFAULT_LANG
-}
-
-export function getAvailableVoices(lang: string): SpeechSynthesisVoice[] {
-	return window.speechSynthesis.getVoices().filter(v => v.lang.startsWith(lang))
+	window.addEventListener("load", () => {
+		window.speechSynthesis.addEventListener("voiceschanged", () => {
+			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(get(language))[0].name))
+		})
+		displayComponentsLabels.subscribe(newValue => storage.set("displayComponentsLabels", newValue))
+		displayBussesLabels.subscribe(newValue => storage.set("displayBussesLabels", newValue))
+		displayStepText.subscribe(newValue => storage.set("displayStepText", newValue))
+		animationSpeed.subscribe(newValue => storage.set("animationSpeed", newValue))
+		language.subscribe(newValue => storage.set("language", newValue))
+		ttsEnabled.subscribe(newValue => storage.set("ttsEnabled", newValue))
+		ttsSpeed.subscribe(newValue => storage.set("ttsSpeed", newValue))
+		ttsVoice.subscribe(newValue => storage.set("ttsVoice", newValue))
+		extDataBusColor.subscribe(newValue => storage.set("extDataBusColor", newValue))
+		intDataBusColor.subscribe(newValue => storage.set("intDataBusColor", newValue))
+		extDataBusAnimationColor.subscribe(newValue => storage.set("extDataBusAnimationColor", newValue))
+		intDataBusAnimationColor.subscribe(newValue => storage.set("intDataBusAnimationColor", newValue))
+		extAddressBusColor.subscribe(newValue => storage.set("extAddressBusColor", newValue))
+		intAddressBusColor.subscribe(newValue => storage.set("intAddressBusColor", newValue))
+		extAddressBusAnimationColor.subscribe(newValue => storage.set("extAddressBusAnimationColor", newValue))
+		intAddressBusAnimationColor.subscribe(newValue => storage.set("intAddressBusAnimationColor", newValue))
+		extControlBusColor.subscribe(newValue => storage.set("extControlBusColor", newValue))
+		intControlBusColor.subscribe(newValue => storage.set("intControlBusColor", newValue))
+		extControlBusAnimationColor.subscribe(newValue => storage.set("extControlBusAnimationColor", newValue))
+		intControlBusAnimationColor.subscribe(newValue => storage.set("intControlBusAnimationColor", newValue))
+	})
 }

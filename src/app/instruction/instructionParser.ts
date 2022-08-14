@@ -6,7 +6,7 @@ import { isValidAddress } from "../util/ramUtil"
 import BinaryValue from "../util/BinaryValue"
 import Instruction from "./Instruction"
 import { get } from "svelte/store"
-import lang from "../store/lang"
+import text from "../store/text"
 
 export const BINARY = /^[01]{0,8}\s?[01]{1,8}?$/
 export const DATA = /^-?[0-9]{1,5}$/
@@ -35,7 +35,7 @@ export function parseSymbolic(input: string, labels: string[] = []) {
 	} else if (DATA.test(input)) {
 		return _parseData(input)
 	} else {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_symbolic_input, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_symbolic_input, input)
 	}
 }
 
@@ -43,7 +43,7 @@ export function parseBinary(input: string) {
 	if (BINARY.test(input)) {
 		return _parseBinary(input)
 	} else {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_binary_input, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_binary_input, input)
 	}
 }
 
@@ -52,11 +52,11 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 	const hasOperand = !!symbolicOperand
 	const opcode = parseOpcode(symbolicOpcode)
 	if (!opcode) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_opcode, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_opcode, input)
 	}
 	if (hasOperand) {
 		if (!opcode.takesOperand) {
-			throw new InstructionParsingError(get(lang).errors.instruction_parsing.operand_not_allowed, input)
+			throw new InstructionParsingError(get(text).errors.instruction_parsing.operand_not_allowed, input)
 		}
 		if (IMMEDIATE_LABEL.test(symbolicOperand)) {
 			return parseImmediateLabelOperand(input, opcode, labels)
@@ -69,7 +69,7 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 		}
 	} else {
 		if (opcode.takesOperand) {
-			throw new InstructionParsingError(get(lang).errors.instruction_parsing.operand_required, input)
+			throw new InstructionParsingError(get(text).errors.instruction_parsing.operand_required, input)
 		}
 		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytes([opcode.numeric, 0]))
 	}
@@ -78,7 +78,7 @@ function _parseSymbolic(input: string, labels: string[]): Instruction {
 function _parseDirectLabelOperand(input: string, opcode: Opcode, labels: string[]) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	if (!labels.includes(symbolicOperand)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.unknown_label, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.unknown_label, input)
 	}
 	const address = labels.indexOf(symbolicOperand)
 	return new Instruction(symbolicOpcode, symbolicOperand, BinaryValue.fromBytes([opcode.numeric, address]))
@@ -90,12 +90,12 @@ function _parseImmediateNumberOperand(input: string, opcode: Opcode) {
 	const numericOperand = parseInt(symbolicOperand.slice(1))
 	if (!opcode.takesImmediate) {
 		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.immediate_operand_not_allowed,
+			get(text).errors.instruction_parsing.immediate_operand_not_allowed,
 			input
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_immediate_operand, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_immediate_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -108,18 +108,18 @@ function parseImmediateLabelOperand(input: string, opcode: Opcode, labels: strin
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const label = symbolicOperand.slice(1)
 	if (!labels.includes(label)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.unknown_label, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.unknown_label, input)
 	}
 	const numericOpcode = setImmediateFlag(new BinaryValue(8, opcode.numeric), true).signed()
 	const numericOperand = labels.indexOf(label)
 	if (!opcode.takesImmediate) {
 		throw new InstructionParsingError(
-			get(lang).errors.instruction_parsing.immediate_operand_not_allowed,
+			get(text).errors.instruction_parsing.immediate_operand_not_allowed,
 			input
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_immediate_operand, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_immediate_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -132,7 +132,7 @@ function _parseDirectOperand(input: string, opcode: Opcode) {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const numericOperand = parseInt(symbolicOperand)
 	if (!isValidAddress(numericOperand)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_direct_operand, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_direct_operand, input)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -167,7 +167,7 @@ function _parseBinary(input: string): Instruction {
 function _parseData(input: string): Instruction {
 	const numericValue = parseInt(input)
 	if (!isSigned(numericValue, 16)) {
-		throw new InstructionParsingError(get(lang).errors.instruction_parsing.invalid_data, input)
+		throw new InstructionParsingError(get(text).errors.instruction_parsing.invalid_data, input)
 	}
 	const value = new BinaryValue(16, numericValue)
 	const opcodeValue = value.getByte(1)

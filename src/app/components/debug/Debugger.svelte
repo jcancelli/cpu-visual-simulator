@@ -17,15 +17,8 @@
 	} from "../../store/cpu"
 	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
-	import {
-		displayAsBinary,
-		displayComponentsLabels,
-		language,
-		SUPPORTED_LANGS,
-		ttsEnabled
-	} from "../../store/settings"
+	import { ttsEnabled } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
-	import { set } from "../../util/localStorage"
 	import SpeechSynthesis from "../../util/speechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
@@ -77,9 +70,6 @@
 	let toNode: string
 
 	let ttsText: string
-
-	let localStorageKey: string
-	let localStorageValue: string
 
 	function toggleDebugger() {
 		$showDebugger = !$showDebugger
@@ -201,15 +191,6 @@
 					<Checkbox bind:checked={$showNodesCoordinates} disabled={!$showNodes}>Show coordinates</Checkbox>
 				</svelte:fragment>
 			</Widget>
-			<Widget title="DISPLAY">
-				<svelte:fragment slot="inputs">
-					<Select options={[...SUPPORTED_LANGS]} bind:value={$language} />
-				</svelte:fragment>
-				<svelte:fragment slot="buttons">
-					<Checkbox bind:checked={$displayAsBinary}>Binary</Checkbox>
-					<Checkbox bind:checked={$displayComponentsLabels}>Labels</Checkbox>
-				</svelte:fragment>
-			</Widget>
 			<Widget title="TTS">
 				<svelte:fragment slot="inputs">
 					<Input bind:value={ttsText} placeholder="Utterance" />
@@ -217,16 +198,6 @@
 				<svelte:fragment slot="buttons">
 					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
 					<Checkbox bind:checked={$ttsEnabled}>TTS Enabled</Checkbox>
-				</svelte:fragment>
-			</Widget>
-			<Widget title="Local Storage">
-				<svelte:fragment slot="inputs">
-					<Input bind:value={localStorageKey} placeholder="Key" />
-					<Input bind:value={localStorageValue} placeholder="Value" />
-				</svelte:fragment>
-				<svelte:fragment slot="buttons">
-					<Button on:click={() => set(localStorageKey, localStorageValue)}>Set</Button>
-					<Button on:click={() => localStorage.clear()}>Clear</Button>
 				</svelte:fragment>
 			</Widget>
 		</div>

@@ -1,51 +1,51 @@
 import { get } from "svelte/store"
 import {
-	externalAddressBusAnimationColor,
-	externalAddressBusColor,
-	externalControlBusAnimationColor,
-	externalControlBusColor,
-	externalDataBusAnimationColor,
-	externalDataBusColor,
-	internalAddressBusAnimationColor,
-	internalAddressBusColor,
-	internalControlBusAnimationColor,
-	internalControlBusColor,
-	internalDataBusAnimationColor,
-	internalDataBusColor
-} from "../store/busses"
+	extDataBusColor,
+	intDataBusColor,
+	extDataBusAnimationColor,
+	intDataBusAnimationColor,
+	extAddressBusColor,
+	intAddressBusColor,
+	extAddressBusAnimationColor,
+	intAddressBusAnimationColor,
+	extControlBusColor,
+	intControlBusColor,
+	extControlBusAnimationColor,
+	intControlBusAnimationColor
+} from "../store/settings"
 
 export type WireType = typeof WireTypes[keyof typeof WireTypes]
 
 export const WireTypes = {
 	DATA_INT: {
 		name: "DATA_INT",
-		color: () => get(internalDataBusColor),
-		animationColor: () => get(internalDataBusAnimationColor)
+		color: () => get(intDataBusColor),
+		animationColor: () => get(intDataBusAnimationColor)
 	},
 	DATA_EXT: {
 		name: "DATA_EXT",
-		color: () => get(externalDataBusColor),
-		animationColor: () => get(externalDataBusAnimationColor)
+		color: () => get(extDataBusColor),
+		animationColor: () => get(extDataBusAnimationColor)
 	},
 	CONTROL_INT: {
 		name: "CONTROL_INT",
-		color: () => get(internalControlBusColor),
-		animationColor: () => get(internalControlBusAnimationColor)
+		color: () => get(intControlBusColor),
+		animationColor: () => get(intControlBusAnimationColor)
 	},
 	CONTROL_EXT: {
 		name: "CONTROL_EXT",
-		color: () => get(externalControlBusColor),
-		animationColor: () => get(externalControlBusAnimationColor)
+		color: () => get(extControlBusColor),
+		animationColor: () => get(extControlBusAnimationColor)
 	},
 	ADDRESS_INT: {
 		name: "ADDRESS_INT",
-		color: () => get(internalAddressBusColor),
-		animationColor: () => get(internalAddressBusAnimationColor)
+		color: () => get(intAddressBusColor),
+		animationColor: () => get(intAddressBusAnimationColor)
 	},
 	ADDRESS_EXT: {
 		name: "ADDRESS_EXT",
-		color: () => get(externalAddressBusColor),
-		animationColor: () => get(externalAddressBusAnimationColor)
+		color: () => get(extAddressBusColor),
+		animationColor: () => get(extAddressBusAnimationColor)
 	},
 	INVISIBLE: {
 		name: "INVISIBLE",

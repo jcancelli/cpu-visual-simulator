@@ -1,4 +1,4 @@
-class LocalStorage<T> {
+export class LocalStorage<T> {
 	public readonly namespace: string
 
 	constructor(namespace: string) {
@@ -6,18 +6,18 @@ class LocalStorage<T> {
 	}
 
 	public set(key: keyof T, value: T[typeof key]): void {
-		localStorage.setItem(`${this.namespace}.${String(key)}`, value.toString())
+		localStorage.setItem(`${this.namespace}.${key.toString()}`, value.toString())
 	}
 
-	public get(key: keyof T): T[typeof key] | null {
-		return localStorage.getItem(String(key)) as unknown as T[typeof key] | null
+	public get(key: keyof T): string | null {
+		return localStorage.getItem(`${this.namespace}.${key.toString()}`)
 	}
 
-	public getOrElse(key: keyof T, orElse: T[typeof key]): T[typeof key] {
-		return this.isSet(key) ? (localStorage.getItem(String(key)) as unknown as T[typeof key] | null) : orElse
+	public getOrElse(key: keyof T, orElse: T[typeof key]): string {
+		return this.isSet(key) ? this.get(key) : orElse.toString()
 	}
 
 	public isSet(key: keyof T): boolean {
-		return localStorage.getItem(String(key)) !== null
+		return localStorage.getItem(`${this.namespace}.${key.toString()}`) !== null
 	}
 }

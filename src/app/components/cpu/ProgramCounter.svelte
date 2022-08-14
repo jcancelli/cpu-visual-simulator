@@ -8,7 +8,7 @@
 	import { isValidAddress } from "../../util/ramUtil"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 
 	let element: HTMLDivElement
 	let isEditing = false
@@ -39,10 +39,10 @@
 					newValue = new BinaryValue(8, parseInt(inputValue))
 				}
 			} catch (error) {
-				throw new CheckedError($lang.errors.user_input.invalid_pc_value)
+				throw new CheckedError($text.errors.user_input.invalid_pc_value)
 			}
 			if (!isValidAddress(newValue.unsigned())) {
-				throw new CheckedError($lang.errors.user_input.invalid_pc_value)
+				throw new CheckedError($text.errors.user_input.invalid_pc_value)
 			}
 			programCounter.set(newValue)
 		} catch (error) {

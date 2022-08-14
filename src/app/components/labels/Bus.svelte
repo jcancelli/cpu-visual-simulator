@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { externalAddressBusColor, externalControlBusColor, externalDataBusColor } from "../../store/busses"
+	import { extAddressBusColor, extControlBusColor, extDataBusColor } from "../../store/settings"
 	import { displayBussesLabels } from "../../store/settings"
 
 	export let bus: keyof typeof BUSSES
@@ -11,15 +11,15 @@
 	const BUSSES = {
 		DATA: {
 			text: "DATA BUS",
-			colorStore: externalDataBusColor
+			colorStore: extDataBusColor
 		},
 		ADDRESS: {
 			text: "ADDRESS BUS",
-			colorStore: externalAddressBusColor
+			colorStore: extAddressBusColor
 		},
 		CONTROL: {
 			text: "CONTROL BUS",
-			colorStore: externalControlBusColor
+			colorStore: extControlBusColor
 		}
 	}
 

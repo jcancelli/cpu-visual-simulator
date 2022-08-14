@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import CheckedError from "../../../../errors/CheckedError"
 import cpuStore from "../../../../store/cpu"
-import lang from "../../../../store/lang"
+import text from "../../../../store/text"
 import BinaryValue from "../../../../util/BinaryValue"
 import CpuAction from "../CpuAction"
 
@@ -31,7 +31,7 @@ export default class ExecuteALUOperation extends CpuAction {
 				break
 			case "/":
 				if (alu2 === 0) {
-					throw new CheckedError(get(lang).errors.execution.division_by_zero)
+					throw new CheckedError(get(text).errors.execution.division_by_zero)
 				}
 				result = alu1 / alu2
 				break

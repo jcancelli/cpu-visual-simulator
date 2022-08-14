@@ -9,7 +9,7 @@
 	import { beforeUpdate, afterUpdate } from "svelte"
 	import symbolTable from "../../store/symbolTable"
 	import Button from "../basic/buttons/Ram.svelte"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 
 	const VISIBLE_CELLS = 18
 
@@ -221,6 +221,6 @@
 		</div>
 	</div>
 	<div class="flex">
-		<Button on:click={clear} title={$lang.ram.buttons.clear.title}>{$lang.ram.buttons.clear.text}</Button>
+		<Button on:click={clear} title={$text.ram.buttons.clear.title}>{$text.ram.buttons.clear.text}</Button>
 	</div>
 </div>

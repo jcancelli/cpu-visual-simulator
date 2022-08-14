@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { externalAddressBusColor } from "../../store/busses"
+	import { extAddressBusColor } from "../../store/settings"
 
 	import { displayAsBinary } from "../../store/settings"
 	import { flash as flashComponent } from "../../util/animation"
@@ -30,7 +30,7 @@
 		border-t-0
 		{$$restProps.class}
 	"
-	style:background-color={$externalAddressBusColor}
+	style:background-color={$extAddressBusColor}
 	bind:this={addressDiv}
 >
 	{$displayAsBinary ? new BinaryValue(8, address).toBinaryString() : address}

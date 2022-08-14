@@ -2,7 +2,7 @@
 	import { get } from "svelte/store"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 	import ram from "../../store/ram"
 	import { showSettings } from "../../store/settings"
 	import symbolTable from "../../store/symbolTable"
@@ -35,7 +35,7 @@
 			if (fileName) {
 				download(exportProgram(ram.exportInstructions(), symbolTable.exportLabels()), `${fileName}.cpuvs`)
 			} else {
-				throw new CheckedError(get(lang).errors.user_input.invalid_file_name)
+				throw new CheckedError(get(text).errors.user_input.invalid_file_name)
 			}
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
@@ -51,8 +51,8 @@
 </script>
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-1 z-[4]">
-	<Button icon="settings" title={$lang.menu.buttons.settings.title} on:click={openSettings} />
-	<Button icon="save" title={$lang.menu.buttons.save.title} on:click={saveProgram} />
-	<Button icon="open" title={$lang.menu.buttons.open.title} on:click={loadProgram} />
-	<Button icon="help" title={$lang.menu.buttons.help.title} on:click={openDocsPage} />
+	<Button icon="settings" title={$text.menu.buttons.settings.title} on:click={openSettings} />
+	<Button icon="save" title={$text.menu.buttons.save.title} on:click={saveProgram} />
+	<Button icon="open" title={$text.menu.buttons.open.title} on:click={loadProgram} />
+	<Button icon="help" title={$text.menu.buttons.help.title} on:click={openDocsPage} />
 </div>

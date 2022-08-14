@@ -7,7 +7,7 @@ import {
 	DATA as DATA_PATTERN,
 	parseSymbolic
 } from "../instruction/instructionParser"
-import lang from "../store/lang"
+import text from "../store/text"
 import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
 import { interpolate } from "../../shared/util/template"
 
@@ -43,7 +43,7 @@ export function compileProgram(program: string): ProgramParsingOutput {
 		if (!VALID_LINE_PATTERN.test(line)) {
 			const badInput = line.length > 30 ? `${line.slice(0, 30)}...` : line
 			throw new ProgramParsingError(
-				interpolate(get(lang).errors.program_parsing.invalid_syntax, lineNumber, badInput)
+				interpolate(get(text).errors.program_parsing.invalid_syntax, lineNumber, badInput)
 			)
 		}
 		const [rawInstruction, label] = line.split(":").map(token => token.trim())
@@ -54,7 +54,7 @@ export function compileProgram(program: string): ProgramParsingOutput {
 		})
 		if (label && labels.includes(label)) {
 			throw new ProgramParsingError(
-				interpolate(get(lang).errors.program_parsing.duplicate_label, lineNumber, label)
+				interpolate(get(text).errors.program_parsing.duplicate_label, lineNumber, label)
 			)
 		}
 		labels[address] = label
@@ -67,7 +67,7 @@ export function compileProgram(program: string): ProgramParsingOutput {
 			instructions[rawInstruction.address] = parseSymbolic(rawInstruction.text, labels)
 		} catch (error) {
 			throw new ProgramParsingError(
-				interpolate(get(lang).errors.program_parsing.parsing_error, rawInstruction.lineNumber, error.message)
+				interpolate(get(text).errors.program_parsing.parsing_error, rawInstruction.lineNumber, error.message)
 			)
 		}
 	})

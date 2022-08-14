@@ -3,7 +3,7 @@
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 
 	export async function flashOpcode() {
 		if (!opcodeDiv) return
@@ -62,7 +62,7 @@
 	<ComponentLabel text="IR" top="-25px" left="10px" />
 	{#if !$instructionRegister.opcode && !$displayAsBinary}
 		<div class="w-[200px] h-[30px] rounded-md col-span-2 flex justify-center items-center leading-3">
-			{$lang.cpu.ir.invalid_instruction}
+			{$text.cpu.ir.invalid_instruction}
 		</div>
 	{:else}
 		<div class="flex items-center justify-center w-full h-full rounded-l-md" bind:this={opcodeDiv}>

@@ -1,6 +1,7 @@
 import { get, writable } from "svelte/store"
-import { language, SupportedLang } from "./settings"
+import { language } from "./settings"
 import { parse as parseYaml } from "yaml"
+import { Language } from "../../shared/util/i18n"
 
 export type Step = keyof Lang["steps"]
 export type Lang = typeof _default
@@ -286,14 +287,16 @@ const _default = {
 
 export const lang = writable<Lang>(_default)
 
-fetchText(get(language))
-language.subscribe(fetchText)
-
-export function fetchText(_lang: SupportedLang) {
+export function fetchText(_lang: Language) {
 	fetch(`resources/i18n/app/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
 		.then(data => lang.set(data as Lang))
+}
+
+export function init() {
+	fetchText(get(language))
+	language.subscribe(fetchText)
 }
 
 export default lang

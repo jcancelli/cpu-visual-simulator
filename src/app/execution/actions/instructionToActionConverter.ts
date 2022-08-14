@@ -26,12 +26,12 @@ import Parallel from "./macro/Parallel"
 import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
 import CheckedError from "../../errors/CheckedError"
-import lang from "../../store/lang"
+import text from "../../store/text"
 import { get } from "svelte/store"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
-		throw new CheckedError(get(lang).errors.execution.invalid_instruction)
+		throw new CheckedError(get(text).errors.execution.invalid_instruction)
 	}
 	const actions: Action[] = []
 	switch (instruction.opcode.symbolic) {

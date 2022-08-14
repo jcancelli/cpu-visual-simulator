@@ -1,14 +1,10 @@
-import { get } from "svelte/store"
-import { availableTtsVoices, ttsSpeed, ttsVoice } from "../store/settings"
+import { Language } from "../../shared/util/i18n"
 
 let utterance: SpeechSynthesisUtterance = null
-let voice: SpeechSynthesisVoice
 
-ttsVoice.subscribe(newVoice => (voice = get(availableTtsVoices).find(v => v.name === newVoice)))
-
-function read(text: string, ...callbacks: (() => void)[]) {
+function read(text: string, rate: number, voice: SpeechSynthesisVoice, ...callbacks: (() => void)[]) {
 	utterance = new SpeechSynthesisUtterance(text)
-	utterance.rate = get(ttsSpeed)
+	utterance.rate = rate
 	utterance.voice = voice
 	utterance.onend = utterance.onerror = () => {
 		utterance = null
@@ -21,7 +17,12 @@ function isUtteranceEnded() {
 	return utterance === null
 }
 
+function getAvailableVoices(lang: Language): SpeechSynthesisVoice[] {
+	return window.speechSynthesis.getVoices().filter(v => v.lang.startsWith(lang))
+}
+
 export default {
 	read,
-	isUtteranceEnded
+	isUtteranceEnded,
+	getAvailableVoices
 }

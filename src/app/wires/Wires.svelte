@@ -6,13 +6,13 @@
 	import WireAnimation, * as WireAnimations from "./WireAnimation"
 	import BusLabel from "../components/labels/Bus.svelte"
 	import {
-		externalAddressBusColor,
-		externalControlBusColor,
-		externalDataBusColor,
-		internalAddressBusColor,
-		internalControlBusColor,
-		internalDataBusColor
-	} from "../store/busses"
+		extDataBusColor,
+		intDataBusColor,
+		extAddressBusColor,
+		intAddressBusColor,
+		extControlBusColor,
+		intControlBusColor
+	} from "../store/settings"
 
 	const animationsCache = new Map<string, WireAnimation>()
 
@@ -25,12 +25,12 @@
 		drawStaticWires()
 		WireAnimations.setCanvas(dynamicCanvas)
 		// redraw static wires if one of their color is changed
-		externalDataBusColor.subscribe(newValue => drawStaticWires())
-		internalDataBusColor.subscribe(newValue => drawStaticWires())
-		externalAddressBusColor.subscribe(newValue => drawStaticWires())
-		internalAddressBusColor.subscribe(newValue => drawStaticWires())
-		externalControlBusColor.subscribe(newValue => drawStaticWires())
-		internalControlBusColor.subscribe(newValue => drawStaticWires())
+		extDataBusColor.subscribe(newValue => drawStaticWires())
+		intDataBusColor.subscribe(newValue => drawStaticWires())
+		extAddressBusColor.subscribe(newValue => drawStaticWires())
+		intAddressBusColor.subscribe(newValue => drawStaticWires())
+		extControlBusColor.subscribe(newValue => drawStaticWires())
+		intControlBusColor.subscribe(newValue => drawStaticWires())
 	})
 
 	export async function flashWire(fromName: string, toName: string): Promise<void> {

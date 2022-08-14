@@ -10,7 +10,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from "svelte"
 	import { slide } from "svelte/transition"
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 	import { logsStore } from "../../store/logs"
 	import { download } from "../../../shared/util/file"
 	import DebugButton from "../basic/buttons/Debug.svelte"
@@ -66,7 +66,7 @@
 	<button
 		class="absolute bg-transparent text-white cursor-pointer font-bold right-8"
 		on:click={closeMessage}
-		title={$lang.message_feed.buttons.close_message.title}
+		title={$text.message_feed.buttons.close_message.title}
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@
 	</button>
 	<p class="w-3/4 text-center text-xl">{message.message}</p>
 	{#if message.type === "BUG"}
-		<DebugButton on:click={exportLogs}>{$lang.message_feed.buttons.export_logs.text}</DebugButton>
+		<DebugButton on:click={exportLogs}>{$text.message_feed.buttons.export_logs.text}</DebugButton>
 	{/if}
 	{#if message.timer}
 		<Progress class="absolute left-0 bottom-0" value={secondsBeforeClose} max={MESSAGE_DURATION_SECONDS} />

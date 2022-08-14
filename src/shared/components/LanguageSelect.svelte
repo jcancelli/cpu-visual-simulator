@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { SvelteComponent } from "svelte"
 	import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@rgossiaux/svelte-headlessui"
-	import { SupportedLang, SUPPORTED_LANGS } from "../../app/store/settings"
 	import It from "./flags/it.svelte"
 	import En from "./flags/en.svelte"
+	import { Language, SUPPORTED_LANGUAGES } from "../util/i18n"
 
-	export let value: SupportedLang
+	export let value: Language
 
-	const flags = new Map<SupportedLang, typeof SvelteComponent>([
+	const flags = new Map<Language, typeof SvelteComponent>([
 		["en", En],
 		["it", It]
 	])
@@ -20,7 +20,7 @@
 	<ListboxOptions
 		class="absolute flex flex-col gap-1 py-2 px-1 overflow-y-auto overflow-x-hidden max-h-28 z-10 bg-gray-100 rounded-md shadow-md"
 	>
-		{#each SUPPORTED_LANGS as language (language)}
+		{#each SUPPORTED_LANGUAGES as language (language)}
 			<ListboxOption value={language}>
 				<svelte:component this={flags.get(language)} class="w-12 h-7 cursor-pointer shadow-md" />
 			</ListboxOption>

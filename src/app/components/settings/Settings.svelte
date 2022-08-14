@@ -1,13 +1,11 @@
 <script lang="ts">
-	import lang from "../../store/lang"
+	import text from "../../store/text"
 	import {
-		availableTtsVoices,
 		displayBussesLabels,
 		displayComponentsLabels,
 		displayStepText,
 		language,
 		showSettings,
-		SUPPORTED_LANGS,
 		ttsEnabled,
 		ttsSpeed,
 		ttsVoice
@@ -20,20 +18,21 @@
 	import Select from "../basic/selects/Settings.svelte"
 	import Slider from "../basic/slider/Settings.svelte"
 	import {
-		externalAddressBusAnimationColor,
-		externalAddressBusColor,
-		externalControlBusAnimationColor,
-		externalControlBusColor,
-		externalDataBusAnimationColor,
-		externalDataBusColor,
-		internalAddressBusAnimationColor,
-		internalAddressBusColor,
-		internalControlBusAnimationColor,
-		internalControlBusColor,
-		internalDataBusAnimationColor,
-		internalDataBusColor
-	} from "../../store/busses"
+		extAddressBusAnimationColor,
+		extAddressBusColor,
+		extControlBusAnimationColor,
+		extControlBusColor,
+		extDataBusAnimationColor,
+		extDataBusColor,
+		intAddressBusAnimationColor,
+		intAddressBusColor,
+		intControlBusAnimationColor,
+		intControlBusColor,
+		intDataBusAnimationColor,
+		intDataBusColor
+	} from "../../store/settings"
 	import LanguageSelect from "../../../shared/components/LanguageSelect.svelte"
+	import speechSynthesis from "../../util/speechSynthesis"
 
 	function closeSettings() {
 		$showSettings = false
@@ -47,115 +46,118 @@
 		transition:fade={{ duration: 75 }}
 	>
 		<div class="w-full flex flex-row items-center justify-between pt-3 pb-5 px-9 border-b border-neutral-500">
-			<h1 class="text-[2.8rem] font-bold">{$lang.settings.title}</h1>
+			<h1 class="text-[2.8rem] font-bold">{$text.settings.title}</h1>
 			<CloseButton on:click={closeSettings} />
 		</div>
 		<div class="w-full flex flex-col">
-			<Widget title={$lang.settings.language.title} description={$lang.settings.language.description}>
+			<Widget title={$text.settings.language.title} description={$text.settings.language.description}>
 				<LanguageSelect bind:value={$language} />
 			</Widget>
 			<Widget
-				title={$lang.settings.dispaly_components_labels.title}
-				description={$lang.settings.dispaly_components_labels.description}
+				title={$text.settings.dispaly_components_labels.title}
+				description={$text.settings.dispaly_components_labels.description}
 			>
 				<Toggle bind:checked={$displayComponentsLabels} />
 			</Widget>
 			<Widget
-				title={$lang.settings.dispaly_busses_labels.title}
-				description={$lang.settings.dispaly_busses_labels.description}
+				title={$text.settings.dispaly_busses_labels.title}
+				description={$text.settings.dispaly_busses_labels.description}
 			>
 				<Toggle bind:checked={$displayBussesLabels} />
 			</Widget>
 			<Widget
-				title={$lang.settings.display_step_text.title}
-				description={$lang.settings.display_step_text.description}
+				title={$text.settings.display_step_text.title}
+				description={$text.settings.display_step_text.description}
 			>
 				<Toggle bind:checked={$displayStepText} />
 			</Widget>
-			<Widget title={$lang.settings.tts_enabled.title} description={$lang.settings.tts_enabled.description}>
+			<Widget title={$text.settings.tts_enabled.title} description={$text.settings.tts_enabled.description}>
 				<Toggle bind:checked={$ttsEnabled} />
 			</Widget>
-			<Widget title={$lang.settings.tts_speed.title} description={$lang.settings.tts_speed.description}>
+			<Widget title={$text.settings.tts_speed.title} description={$text.settings.tts_speed.description}>
 				<div class="w-36 flex flex-col items-center justify-center">
 					<p>{$ttsSpeed}</p>
 					<Slider min={0.5} max={1.5} bind:value={$ttsSpeed} />
 				</div>
 			</Widget>
-			<Widget title={$lang.settings.tts_voice.title} description={$lang.settings.tts_voice.description}>
-				<Select options={$availableTtsVoices.map(v => v.name)} bind:value={$ttsVoice} />
+			<Widget title={$text.settings.tts_voice.title} description={$text.settings.tts_voice.description}>
+				<Select
+					options={speechSynthesis.getAvailableVoices($language).map(v => v.name)}
+					bind:value={$ttsVoice}
+				/>
 			</Widget>
 			<Widget
-				title={$lang.settings.databus_ext_color.title}
-				description={$lang.settings.databus_ext_color.description}
+				title={$text.settings.databus_ext_color.title}
+				description={$text.settings.databus_ext_color.description}
 			>
-				<input type="color" bind:value={$externalDataBusColor} />
+				<input type="color" bind:value={$extDataBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.databus_int_color.title}
-				description={$lang.settings.databus_int_color.description}
+				title={$text.settings.databus_int_color.title}
+				description={$text.settings.databus_int_color.description}
 			>
-				<input type="color" bind:value={$internalDataBusColor} />
+				<input type="color" bind:value={$intDataBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.databus_ext_anim_color.title}
-				description={$lang.settings.databus_ext_anim_color.description}
+				title={$text.settings.databus_ext_anim_color.title}
+				description={$text.settings.databus_ext_anim_color.description}
 			>
-				<input type="color" bind:value={$externalDataBusAnimationColor} />
+				<input type="color" bind:value={$extDataBusAnimationColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.databus_int_anim_color.title}
-				description={$lang.settings.databus_int_anim_color.description}
+				title={$text.settings.databus_int_anim_color.title}
+				description={$text.settings.databus_int_anim_color.description}
 			>
-				<input type="color" bind:value={$internalDataBusAnimationColor} />
+				<input type="color" bind:value={$intDataBusAnimationColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.addressbus_ext_color.title}
-				description={$lang.settings.addressbus_ext_color.description}
+				title={$text.settings.addressbus_ext_color.title}
+				description={$text.settings.addressbus_ext_color.description}
 			>
-				<input type="color" bind:value={$externalAddressBusColor} />
+				<input type="color" bind:value={$extAddressBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.addressbus_int_color.title}
-				description={$lang.settings.addressbus_int_color.description}
+				title={$text.settings.addressbus_int_color.title}
+				description={$text.settings.addressbus_int_color.description}
 			>
-				<input type="color" bind:value={$internalAddressBusColor} />
+				<input type="color" bind:value={$intAddressBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.addressbus_ext_anim_color.title}
-				description={$lang.settings.addressbus_ext_anim_color.description}
+				title={$text.settings.addressbus_ext_anim_color.title}
+				description={$text.settings.addressbus_ext_anim_color.description}
 			>
-				<input type="color" bind:value={$externalAddressBusAnimationColor} />
+				<input type="color" bind:value={$extAddressBusAnimationColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.addressbus_int_anim_color.title}
-				description={$lang.settings.addressbus_int_anim_color.description}
+				title={$text.settings.addressbus_int_anim_color.title}
+				description={$text.settings.addressbus_int_anim_color.description}
 			>
-				<input type="color" bind:value={$internalAddressBusAnimationColor} />
+				<input type="color" bind:value={$intAddressBusAnimationColor} />
 			</Widget>
 
 			<Widget
-				title={$lang.settings.controlbus_ext_color.title}
-				description={$lang.settings.controlbus_ext_color.description}
+				title={$text.settings.controlbus_ext_color.title}
+				description={$text.settings.controlbus_ext_color.description}
 			>
-				<input type="color" bind:value={$externalControlBusColor} />
+				<input type="color" bind:value={$extControlBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.controlbus_int_color.title}
-				description={$lang.settings.controlbus_int_color.description}
+				title={$text.settings.controlbus_int_color.title}
+				description={$text.settings.controlbus_int_color.description}
 			>
-				<input type="color" bind:value={$internalControlBusColor} />
+				<input type="color" bind:value={$intControlBusColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.controlbus_ext_anim_color.title}
-				description={$lang.settings.controlbus_ext_anim_color.description}
+				title={$text.settings.controlbus_ext_anim_color.title}
+				description={$text.settings.controlbus_ext_anim_color.description}
 			>
-				<input type="color" bind:value={$externalControlBusAnimationColor} />
+				<input type="color" bind:value={$extControlBusAnimationColor} />
 			</Widget>
 			<Widget
-				title={$lang.settings.controlbus_int_anim_color.title}
-				description={$lang.settings.controlbus_int_anim_color.description}
+				title={$text.settings.controlbus_int_anim_color.title}
+				description={$text.settings.controlbus_int_anim_color.description}
 			>
-				<input type="color" bind:value={$internalControlBusAnimationColor} />
+				<input type="color" bind:value={$intControlBusAnimationColor} />
 			</Widget>
 		</div>
 	</div>
