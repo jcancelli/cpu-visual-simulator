@@ -1,7 +1,12 @@
 <script lang="ts">
 	import Header from "./components/Header.svelte"
 	import MainTabView from "./components/MainTabView.svelte"
+	import text from "./stores/text"
 </script>
+
+<svelte:head>
+	<title>{$text.page_title} - CPU Visual Simulator</title>
+</svelte:head>
 
 <Header />
 <main>

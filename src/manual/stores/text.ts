@@ -6,6 +6,7 @@ export type Text = typeof _default
 
 const _default = {
 	title: "",
+	page_title: "",
 	sections: {
 		instruction_set: {
 			title: ""
