@@ -1,9 +1,9 @@
 <script lang="ts">
-	import TabGroup from "./basic/tabs/TabGroup.svelte"
-	import TabList from "./basic/tabs/TabList.svelte"
-	import Tab from "./basic/tabs/Tab.svelte"
-	import TabPanels from "./basic/tabs/TabPanels.svelte"
-	import TabPanel from "./basic/tabs/TabPanel.svelte"
+	import TabGroup from "../../shared/components/tabs/TabGroup.svelte"
+	import TabList from "../../shared/components/tabs/TabList.svelte"
+	import Tab from "../../shared/components/tabs/Tab.svelte"
+	import TabPanels from "../../shared/components/tabs/TabPanels.svelte"
+	import TabPanel from "../../shared/components/tabs/TabPanel.svelte"
 	import text from "../stores/text"
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 </script>
