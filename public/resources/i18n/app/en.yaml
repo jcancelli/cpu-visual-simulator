@@ -115,6 +115,10 @@ message_feed:
             title: "Close message"
 settings:
     title: "Settings"
+    sections_titles:
+        general: "General"
+        tts: "Text To Speech"
+        busses: "Busses"
     language:
         title: "Language"
         description: "The language used by the application"

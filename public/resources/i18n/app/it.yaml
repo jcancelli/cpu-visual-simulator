@@ -116,6 +116,10 @@ message_feed:
             title: "Chiudi messaggio"
 settings:
     title: "Impostazioni"
+    sections_titles:
+        general: "Generale"
+        tts: "Text To Speech"
+        busses: "Bus"
     language:
         title: "Lingua"
         description: "La lingua usata dall'applicazione"

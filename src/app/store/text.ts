@@ -175,6 +175,11 @@ const _default = {
 	},
 	settings: {
 		title: "",
+		sections_titles: {
+			general: "",
+			tts: "",
+			busses: ""
+		},
 		language: {
 			title: "",
 			description: ""
@@ -285,13 +290,13 @@ const _default = {
 	}
 }
 
-export const lang = writable<Lang>(_default)
+export const text = writable<Lang>(_default)
 
 export function fetchText(_lang: Language) {
 	fetch(`resources/i18n/app/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
-		.then(data => lang.set(data as Lang))
+		.then(data => text.set(data as Lang))
 }
 
 export function init() {
@@ -299,4 +304,4 @@ export function init() {
 	language.subscribe(fetchText)
 }
 
-export default lang
+export default text
