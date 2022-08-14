@@ -10,4 +10,5 @@ export const defaults = {
 
 export function init() {
 	language.set(storage.getOrElse("language", defaults.language) as Language)
+	language.subscribe(newValue => storage.set("language", newValue))
 }
