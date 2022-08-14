@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { accumulator } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
-	import { flash as flashElement } from "../../util/animationUtil"
+	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import Logger from "../../util/logger"

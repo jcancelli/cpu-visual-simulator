@@ -9,8 +9,8 @@ import {
 	setBit,
 	valueIsInRange,
 	numberToBinaryString
-} from "./binaryUtil"
-import { positionToIndex } from "./stringUtil"
+} from "./binary"
+import { positionToIndex } from "../../shared/util/string"
 
 export type Bits = 8 | 16 | 32
 

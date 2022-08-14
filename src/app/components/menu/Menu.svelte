@@ -6,7 +6,7 @@
 	import ram from "../../store/ram"
 	import { showSettings } from "../../store/settings"
 	import symbolTable from "../../store/symbolTable"
-	import { download, upload } from "../../util/fileUtil"
+	import { download, upload } from "../../../shared/util/file"
 	import Logger from "../../util/logger"
 	import { compileProgram, exportProgram } from "../../util/programLoader"
 	import Button from "../basic/buttons/Menu.svelte"

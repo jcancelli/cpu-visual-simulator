@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte"
 	import { logsStore, loggerStore } from "../../store/logs"
-	import { download } from "../../util/fileUtil"
+	import { download } from "../../../shared/util/file"
 	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/logger"
 
 	let logsDiv: HTMLDivElement

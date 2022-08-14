@@ -1,4 +1,4 @@
-import { positionToIndex } from "./stringUtil"
+import { positionToIndex } from "../../shared/util/string"
 
 export const MAX_BITS = 32 // js limit for bitwise operations
 export const MIN_BITS = 1

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { increment } from "../../store/cpu"
-	import { flash as flashElement } from "../../util/animationUtil"
+	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 
 	let element: HTMLDivElement

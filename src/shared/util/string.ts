@@ -1,4 +1,4 @@
-// takes a possibly negative number and turns it into a valid index from 0 to length-1
+// takes an either positive or negative number and turns it into a valid index from 0 to length-1
 // example: pos=-2 length=9 returns=6
 export function positionToIndex(pos: number, length: number): number {
 	if (Math.abs(pos) > length) {

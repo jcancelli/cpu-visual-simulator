@@ -2,7 +2,7 @@
 	import { externalAddressBusColor } from "../../store/busses"
 
 	import { displayAsBinary } from "../../store/settings"
-	import { flash as flashComponent } from "../../util/animationUtil"
+	import { flash as flashComponent } from "../../util/animation"
 	import BinaryValue from "../../util/BinaryValue"
 
 	export let address: number

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { negativeFlag, zeroFlag } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
-	import { flash } from "../../util/animationUtil"
+	import { flash } from "../../util/animation"
 	import Logger from "../../util/logger"
 
 	export async function flashZeroFlag() {

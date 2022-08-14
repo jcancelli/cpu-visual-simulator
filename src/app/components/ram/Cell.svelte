@@ -2,7 +2,7 @@
 	import ram from "../../store/ram"
 	import { parseBinary, parseSymbolic } from "../../instruction/instructionParser"
 	import { messageFeed } from "../../store/components"
-	import { flash as flashComponent } from "../../util/animationUtil"
+	import { flash as flashComponent } from "../../util/animation"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/logger"
 	import { displayAsBinary } from "../../store/settings"

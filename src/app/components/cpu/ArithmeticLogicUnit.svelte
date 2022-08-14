@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
 	import { alu1, alu2, aluOperation } from "../../store/cpu"
-	import { flash } from "../../util/animationUtil"
+	import { flash } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 
 	export async function flashFirstOperand() {

@@ -1,5 +1,5 @@
 import BinaryValue from "../util/BinaryValue"
-import { isImmediateFlagSet, removeFlags } from "../util/instructionUtil"
+import { isImmediateFlagSet, removeFlags } from "../util/instruction"
 import { Opcode, opcode } from "./Opcode"
 
 export default class Instruction {

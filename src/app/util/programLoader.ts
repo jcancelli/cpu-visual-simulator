@@ -9,7 +9,7 @@ import {
 } from "../instruction/instructionParser"
 import lang from "../store/lang"
 import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
-import { interpolate } from "./template"
+import { interpolate } from "../../shared/util/template"
 
 type RawInstruction = {
 	text: string

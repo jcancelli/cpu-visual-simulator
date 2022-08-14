@@ -12,7 +12,7 @@
 	import { slide } from "svelte/transition"
 	import lang from "../../store/lang"
 	import { logsStore } from "../../store/logs"
-	import { download } from "../../util/fileUtil"
+	import { download } from "../../../shared/util/file"
 	import DebugButton from "../basic/buttons/Debug.svelte"
 	import Progress from "../basic/progress/Message.svelte"
 
