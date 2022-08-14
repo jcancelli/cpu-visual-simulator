@@ -1,11 +1,11 @@
 import { writable } from "svelte/store"
-import { DEFAULT_LANGUAGE, Language } from "../../shared/util/i18n"
+import { getDefaultLanguage, Language } from "../../shared/util/i18n"
 import { storage } from "../util/localStorage"
 
 export const language = writable<Language>()
 
 export const defaults = {
-	language: DEFAULT_LANGUAGE
+	language: getDefaultLanguage()
 } as const
 
 export function init() {

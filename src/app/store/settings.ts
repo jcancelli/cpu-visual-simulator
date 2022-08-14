@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store"
-import { DEFAULT_LANGUAGE, Language } from "../../shared/util/i18n"
+import { getDefaultLanguage, Language } from "../../shared/util/i18n"
 import { storage } from "../util/localStorage"
 import speechSynthesis from "../util/speechSynthesis"
 
@@ -35,7 +35,7 @@ export const defaults = {
 	displayStepText: false,
 	minimalAnimations: false,
 	animationSpeed: 1.5,
-	language: DEFAULT_LANGUAGE,
+	language: getDefaultLanguage(),
 	ttsEnabled: false,
 	ttsSpeed: 1,
 	extDataBusColor: "#0000ff",
