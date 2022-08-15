@@ -3,6 +3,19 @@ page_title: "Manual"
 sections:
     introduction:
         title: "Introduction"
+        subsections:
+            introduction:
+                title: "Introduction"
+                text: | 
+                    CPU Visual Simulator allows you to enter and visualize the execution of assembly language code.
+                    Instructions and numeric data can be inserted or modified directly in RAM. It is possible to define
+                    "labels" (identifiers to be used in place of memory addresses): these labels can then be used as 
+                    parameters in jump instructions, or as variable identifiers. At any time, it is possible to switch 
+                    between symbolic and binary representations. It is also possible to directly modify the Program 
+                    Counter, the Accumulator or the Status Word's Negative and Zero flags. The program can be executed:
+                    normally (the CPU continues to execute instructions until execution is paused or the program ends),
+                    one statement at a time, or one step at a time. The text-to-speech function is also made available
+                    which, if enabled, activates a synthetic voice that explains what is being executed by the CPU.
     instruction_set:
         title: "Instruction Set"
         subsections:
@@ -36,5 +49,5 @@ opcodes_table:
         MUL: "Multiply the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
         DIV: "Divide the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
         AND: "Bitwise AND between the Accumulator and the content of Memory Location X (or number #X). Flags are updated"
-        CMP: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"
-        NOT: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
+        CMP: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
+        NOT: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"

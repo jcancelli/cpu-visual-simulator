@@ -10,7 +10,13 @@ const _default = {
 	page_title: "",
 	sections: {
 		introduction: {
-			title: ""
+			title: "",
+			subsections: {
+				introduction: {
+					title: "",
+					text: ""
+				}
+			}
 		},
 		instruction_set: {
 			title: "",
