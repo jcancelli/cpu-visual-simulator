@@ -10,6 +10,7 @@
 		reset
 	} from "../../../store/settings"
 	import Switch from "../../../../shared/components/Switch.svelte"
+	import RedButton from "../../../../shared/components/buttons/Red.svelte"
 </script>
 
 <Widget title={$text.settings.language.title} description={$text.settings.language.description}>
@@ -34,5 +35,5 @@
 	<Switch bind:checked={$displayStepText} />
 </Widget>
 <Widget title={$text.settings.reset_all.title} description={$text.settings.reset_all.description}>
-	<button on:click={reset}>{$text.settings.reset_all.button.text}</button>
+	<RedButton on:click={reset}>{$text.settings.reset_all.button.text}</RedButton>
 </Widget>
