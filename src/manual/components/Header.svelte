@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LanguageSelect from "../../shared/components/LanguageSelect.svelte"
+	import LanguageSelect from "../../shared/components/selects/LanguageSelect.svelte"
 	import { language } from "../stores/settings"
 	import text from "../stores/text"
 </script>

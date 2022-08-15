@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Widget from "../Widget.svelte"
-	import LanguageSelect from "../../../../shared/components/LanguageSelect.svelte"
+	import LanguageSelect from "../../../../shared/components/selects/LanguageSelect.svelte"
 	import text from "../../../store/text"
 	import {
 		language,

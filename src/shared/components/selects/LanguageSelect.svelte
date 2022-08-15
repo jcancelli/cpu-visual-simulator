@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { SvelteComponent } from "svelte"
 	import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@rgossiaux/svelte-headlessui"
-	import It from "./flags/it.svelte"
-	import En from "./flags/en.svelte"
-	import { Language, SUPPORTED_LANGUAGES } from "../util/i18n"
+	import It from "../flags/it.svelte"
+	import En from "../flags/en.svelte"
+	import { Language, SUPPORTED_LANGUAGES } from "../../util/i18n"
 
 	export let value: Language
 
