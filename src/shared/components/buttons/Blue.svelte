@@ -6,8 +6,8 @@
 
 <Base
 	class="
-        border-red-700
-        hover:bg-red-700
+        border-blue-700
+        hover:bg-blue-700
     "
 	on:click
 	on:focus
