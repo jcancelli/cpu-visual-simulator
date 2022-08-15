@@ -6,11 +6,11 @@
 	class="
         text-black
         border-2
-        border-gray-600
+        border-gray-700
         px-2
         rounded-md
         hover:text-white
-        hover:bg-gray-600
+        hover:bg-gray-700
         transition-colors
         disabled:brightness-[.6]
         disabled:cursor-default
