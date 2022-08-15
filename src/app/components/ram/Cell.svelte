@@ -83,7 +83,7 @@
 	}
 
 	function highlightText(node: HTMLInputElement): void {
-		node.select()
+		setTimeout(() => node.select())
 	}
 </script>
 
