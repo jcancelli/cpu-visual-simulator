@@ -6,6 +6,7 @@
 	import TabPanel from "../../shared/components/tabs/TabPanel.svelte"
 	import text from "../stores/text"
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
+	import Introduction from "./sections/Introduction.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -17,9 +18,9 @@
 		<Tab>{$text.sections.copyright.title}</Tab>
 		<Tab>{$text.sections.credits.title}</Tab>
 	</TabList>
-	<TabPanels>
+	<TabPanels class="py-7 px-14">
 		<TabPanel>
-			<h1 class="text-center font-bold text-4xl">TODO</h1>
+			<Introduction />
 		</TabPanel>
 		<TabPanel>
 			<InstructionSetSection />
