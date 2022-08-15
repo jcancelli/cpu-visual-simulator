@@ -15,18 +15,19 @@ export const IMMEDIATE_NUM = /#-?[0-9]{1,3}/
 export const DIRECT_PARAM = /[0-9]{1,3}/
 export const LABEL_PARAM = /[A-Z_]{1,10}/
 export const IMMEDIATE_LABEL = /#[A-Z_]{1,10}/
+// prettier-ignore
 export const SYMBOLIC_INSTRUCTION = new RegExp(
 	"^" +
-		OPCODE.source +
-		"( ((" +
-		IMMEDIATE_NUM.source +
-		")|(" +
-		IMMEDIATE_LABEL.source +
-		")|(" +
-		DIRECT_PARAM.source +
-		")|(" +
-		LABEL_PARAM.source +
-		")))?$"
+	OPCODE.source +
+	"( ((" +
+	IMMEDIATE_NUM.source +
+	")|(" +
+	IMMEDIATE_LABEL.source +
+	")|(" +
+	DIRECT_PARAM.source +
+	")|(" +
+	LABEL_PARAM.source +
+	")))?$"
 )
 
 export function parseSymbolic(input: string, labels: string[] = []) {
@@ -158,7 +159,7 @@ function _parseBinary(input: string): Instruction {
 		(!immediateFlagSet && !isValidAddress(operandValue.unsigned()))
 	const symbolicOpcode = invalidate ? value.signed().toString() : opcode.symbolic
 	let symbolicOperand = immediateFlagSet ? "#" + operandValue.signed() : operandValue.unsigned().toString()
-	if (invalidate) {
+	if (invalidate || !opcode.takesOperand) {
 		symbolicOperand = ""
 	}
 	return new Instruction(symbolicOpcode, symbolicOperand, value, invalidate)
