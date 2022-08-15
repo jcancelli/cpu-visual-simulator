@@ -1,14 +1,16 @@
 title: "MANUALE"
 page_title: "Manuale"
 sections:
+    introduction:
+        title: "Introduzione"
     instruction_set:
         title: "Instruction Set"
     ui:
         title: "Interfaccia grafica"
-    controls:
-        title: "Controlli"
     examples:
         title: "Esempi"
+    copyright:
+        title: "Copyright"
     credits:
         title: "Crediti"
 opcodes_table: 

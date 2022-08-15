@@ -10,13 +10,17 @@
 
 <TabGroup class="p-5">
 	<TabList class="mt-4">
-		<Tab class="border-t border-t-gray-500">{$text.sections.instruction_set.title}</Tab>
+		<Tab class="border-t border-t-gray-500">{$text.sections.introduction.title}</Tab>
+		<Tab>{$text.sections.instruction_set.title}</Tab>
 		<Tab>{$text.sections.ui.title}</Tab>
-		<Tab>{$text.sections.controls.title}</Tab>
 		<Tab>{$text.sections.examples.title}</Tab>
+		<Tab>{$text.sections.copyright.title}</Tab>
 		<Tab>{$text.sections.credits.title}</Tab>
 	</TabList>
 	<TabPanels>
+		<TabPanel>
+			<h1 class="text-center font-bold text-4xl">TODO</h1>
+		</TabPanel>
 		<TabPanel>
 			<InstructionSetSection />
 		</TabPanel>

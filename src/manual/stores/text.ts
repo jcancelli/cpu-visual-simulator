@@ -9,16 +9,19 @@ const _default = {
 	title: "",
 	page_title: "",
 	sections: {
+		introduction: {
+			title: ""
+		},
 		instruction_set: {
 			title: ""
 		},
 		ui: {
 			title: ""
 		},
-		controls: {
+		examples: {
 			title: ""
 		},
-		examples: {
+		copyright: {
 			title: ""
 		},
 		credits: {
