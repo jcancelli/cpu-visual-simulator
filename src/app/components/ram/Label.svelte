@@ -5,6 +5,7 @@
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/logger"
 	import symbolTable from "../../store/symbolTable"
+	import { onMount } from "svelte"
 
 	export let address: number
 	export let label: string
@@ -12,7 +13,11 @@
 
 	let inputValue: string
 
-	let delayButtonTransition: boolean // set to false by onAddressChange, set to true by the button animation. should be false only just after scroll
+	let delayButtonTransition: boolean // set to false by onAddressChange, set to true by the button animation. should be false only just after scroll. initialized to true by onMount
+
+	onMount(() => {
+		delayButtonTransition = true
+	})
 
 	$: onLabelChange(label)
 	$: onAddressChange(address)
