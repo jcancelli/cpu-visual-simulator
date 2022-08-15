@@ -13,7 +13,12 @@ const _default = {
 			title: ""
 		},
 		instruction_set: {
-			title: ""
+			title: "",
+			subsections: {
+				instruction_set: {
+					title: ""
+				}
+			}
 		},
 		ui: {
 			title: ""

@@ -5,6 +5,9 @@ sections:
         title: "Introduzione"
     instruction_set:
         title: "Instruction Set"
+        subsections:
+            instruction_set:
+                title: "Instruction Set"
     ui:
         title: "Interfaccia grafica"
     examples:
