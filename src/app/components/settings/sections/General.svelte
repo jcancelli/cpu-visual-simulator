@@ -9,7 +9,7 @@
 		displayStepText,
 		reset
 	} from "../../../store/settings"
-	import Toggle from "../../basic/checkboxes/Settings.svelte"
+	import Switch from "../../../../shared/components/Switch.svelte"
 </script>
 
 <Widget title={$text.settings.language.title} description={$text.settings.language.description}>
@@ -19,19 +19,19 @@
 	title={$text.settings.dispaly_components_labels.title}
 	description={$text.settings.dispaly_components_labels.description}
 >
-	<Toggle bind:checked={$displayComponentsLabels} />
+	<Switch bind:checked={$displayComponentsLabels} />
 </Widget>
 <Widget
 	title={$text.settings.dispaly_busses_labels.title}
 	description={$text.settings.dispaly_busses_labels.description}
 >
-	<Toggle bind:checked={$displayBussesLabels} />
+	<Switch bind:checked={$displayBussesLabels} />
 </Widget>
 <Widget
 	title={$text.settings.display_step_text.title}
 	description={$text.settings.display_step_text.description}
 >
-	<Toggle bind:checked={$displayStepText} />
+	<Switch bind:checked={$displayStepText} />
 </Widget>
 <Widget title={$text.settings.reset_all.title} description={$text.settings.reset_all.description}>
 	<button on:click={reset}>{$text.settings.reset_all.button.text}</button>
