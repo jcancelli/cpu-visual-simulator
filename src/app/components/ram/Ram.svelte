@@ -37,11 +37,11 @@
 	})
 
 	export function scrollUp(): void {
-		scroll(-1)
+		scroll(-1, true)
 	}
 
 	export function scrollDown(): void {
-		scroll(1)
+		scroll(1, true)
 	}
 
 	export function addressIsVisible(address: number): boolean {
@@ -84,8 +84,10 @@
 		return showAddress(address).then(() => cellElements.find(e => e.getAddress() === address).flash())
 	}
 
-	function scroll(deltaY: number): void {
-		beforeUpdateCallbacks.push(ramSelection.deselect)
+	function scroll(deltaY: number, deselect: boolean): void {
+		if (deselect) {
+			beforeUpdateCallbacks.push(ramSelection.deselect)
+		}
 		let newFirstVisibleAddress = firstVisibleAddress + (deltaY > 0 ? WORD_SIZE : -WORD_SIZE)
 		if (newFirstVisibleAddress < FIRST_ADDRESS) {
 			newFirstVisibleAddress = FIRST_ADDRESS
@@ -98,7 +100,7 @@
 	}
 
 	function onWheel({ deltaY }: WheelEvent): void {
-		scroll(deltaY)
+		scroll(deltaY, true)
 	}
 
 	function onArrowUp(e: KeyboardEvent): void {
@@ -111,7 +113,7 @@
 			ram.moveFirstHalfUpFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === firstVisibleAddress) {
-			scrollUp()
+			scroll(-1, false)
 		}
 		ramSelection.selectUp()
 	}
@@ -126,7 +128,7 @@
 			ram.moveFirstHalfDownFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === lastVisibleAddress) {
-			scrollDown()
+			scroll(1, false)
 		}
 		ramSelection.selectDown()
 	}
