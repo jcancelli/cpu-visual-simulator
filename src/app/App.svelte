@@ -9,6 +9,7 @@
 	import Controls from "./components/controls/Controls.svelte"
 	import Menu from "./components/menu/Menu.svelte"
 	import Settings from "./components/settings/Settings.svelte"
+	import text from "./store/text"
 
 	let app: HTMLDivElement
 
@@ -23,7 +24,7 @@
 
 	function logError(e: Event) {
 		e.preventDefault()
-		Logger.error((e as ErrorEvent).error, "UNCAUGHT")
+		Logger.error(new Error($text.errors.unchecked), "UNCAUGHT")
 	}
 
 	onMount(scale)

@@ -265,6 +265,7 @@ const _default = {
 		}
 	},
 	errors: {
+		unchecked: "",
 		program_parsing: {
 			invalid_syntax: "",
 			parsing_error: "",
