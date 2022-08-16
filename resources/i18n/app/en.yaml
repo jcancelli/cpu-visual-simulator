@@ -115,6 +115,10 @@ message_feed:
             title: "Close message"
 settings:
     title: "Settings"
+    sections_titles:
+        general: "General"
+        tts: "Text To Speech"
+        busses: "Busses"
     language:
         title: "Language"
         description: "The language used by the application"
@@ -127,6 +131,11 @@ settings:
     display_step_text:
         title: "Display micro step text"
         description: "Toggles a box where a text description of the micro step in execution is displayed"
+    reset_all:
+        title: "Reset all settings"
+        description: "Reset all settings to their default values"
+        button:
+            text: "Reset"
     tts_enabled:
         title: "Text To Speech"
         description: "Toggles a synthetically generated voice that reads the currently executing step explaination"

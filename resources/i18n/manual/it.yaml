@@ -1,34 +1,54 @@
 title: "MANUALE"
+page_title: "Manuale"
 sections:
+    introduction:
+        title: "Introduzione"
+        subsections:
+            introduction:
+                title: "Introduzione"
+                text: |
+                    CPU Visual Simulator permette di inserire e visualizzare l'esecuzione di codice in linguaggio assembly.
+                    Istruzioni e dati numerici possono essere inseriti o modificati direttamente in RAM. E' possibile definire 
+                    "labels" (identificatori utilizzabili al posto degli indirizzi di memoria): queste labels possono 
+                    poi essere utilizzate come parametri nelle istruzioni di salto, oppure come identificatori di variabili.
+                    In ogni momento è possibile passare dalla rappresentazione simbolica a quella binaria.
+                    È inoltre possibile modificare direttamente il Program Counter, l'Accumulatore e le flags Negative
+                    e Zero della Status Word. Il programma può essere eseguito: normalmente (la CPU continua ad eseguire istruzioni
+                    finche l'esecuzione non viene pausata o il programma termina), un'istruzione alla volta oppure
+                    uno step alla volta. E' inoltre resa disponibile la funzionalità text-to-speech che, se abilitata, 
+                    attiva una voce sintetica che spiega cosa stà venedo eseguito dalla CPU.
     instruction_set:
         title: "Instruction Set"
+        subsections:
+            instruction_set:
+                title: "Instruction Set"
     ui:
         title: "Interfaccia grafica"
-    controls:
-        title: "Controlli"
     examples:
         title: "Esempi"
+    copyright:
+        title: "Copyright"
     credits:
         title: "Crediti"
 opcodes_table: 
     sections_titles: 
-        control_flow: ""
-        data_flow: ""
-        arithmetic_logic: ""
+        control_flow: "Controllo flusso"
+        data_flow: "Flusso dati"
+        arithmetic_logic: "Aritmetico-Logiche"
     descriptions: 
-        NOP: ""
-        HLT: ""
-        JMP: ""
-        JZ: ""
-        JNZ: ""
-        JN: ""
-        JNN: ""
-        LOD: ""
-        STO: ""
-        ADD: ""
-        SUB: ""
-        MUL: ""
-        DIV: ""
-        AND: ""
-        CMP: ""
-        NOT: ""
+        NOP: "Nessuna operazione, vai all'istruzione successiva"
+        HLT: "Interrompi l'esecuzione"
+        JMP: "Salto incondizionato all'istruzione nella posizione di memoria X"
+        JZ: "Salta se Zero: se la Flag Z ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+        JNZ: "Salta se non Zero: se la Flag Z ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+        JN: "Salta se Negative: se la Flag N ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+        JNN: "Salta se non Negative: se la Flag N ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+        LOD: "Carica il contenuto della posizione di memoria X (o il numero #X) nell'Accumulatore"
+        STO: "Salva il valore dell'Accumulatore nella posizione di memoria X"
+        ADD: "Addiziona il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
+        SUB: "Sottrae il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
+        MUL: "Moltiplica l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+        DIV: "Divide l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+        AND: "AND logico tra l'accumulatore e il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+        CMP: "Sottrarre il contenuto della posizione di memoria X (o il numero #X) dall'Accumulatore. La Status Word viene aggiornata, ma il contenuto dell'Accumulatore non viene modificato"
+        NOT: "NOT logico del contenuto della posizione di memoria X (o numero #X). Il risultato viene memorizzato nell'Accumulatore"
