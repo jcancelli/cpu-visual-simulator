@@ -30,7 +30,15 @@ const _default = {
 			title: ""
 		},
 		examples: {
-			title: ""
+			title: "",
+			subsections: {
+				if_then_else: {
+					title: ""
+				},
+				do_while: {
+					title: ""
+				}
+			}
 		},
 		copyright: {
 			title: ""

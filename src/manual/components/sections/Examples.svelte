@@ -1,4 +1,6 @@
 <script lang="ts">
+	import text from "../../stores/text"
+
 	import CodeBlock from "../CodeBlock.svelte"
 	import SubSection from "../SubSection.svelte"
 
@@ -74,14 +76,14 @@ HLT				:ENDWHILE
 `
 </script>
 
-<SubSection title="High-level IF-THEN-ELSE example and its translation">
+<SubSection title={$text.sections.examples.subsections.if_then_else.title}>
 	<div class="w-full flex flex-wrap justify-center gap-10 mb-7">
 		<CodeBlock>{ifThenElseHighLevel}</CodeBlock>
 		<CodeBlock>{ifThenElseCode}</CodeBlock>
 		<CodeBlock>{ifThenElseAssembly}</CodeBlock>
 	</div>
 </SubSection>
-<SubSection title="High-level WHILE-DO example and its translation">
+<SubSection title={$text.sections.examples.subsections.do_while.title}>
 	<div class="w-full flex flex-wrap justify-center gap-10 mb-7">
 		<CodeBlock>{whileDoHighLevel}</CodeBlock>
 		<CodeBlock>{whileDoCode}</CodeBlock>
