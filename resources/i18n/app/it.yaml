@@ -183,6 +183,7 @@ settings:
         title: "Colore animazioni control bus interno"
         description: "Colore delle animazioni del control bus interno"
 errors:
+    unchecked: "Errore inaspettato"
     program_parsing:
         invalid_syntax: "Sintassi invalida a riga {0}: {1}"
         parsing_error: "Errore a riga {0}: {1}"

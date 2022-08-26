@@ -182,6 +182,7 @@ settings:
         title: "Internal control bus animation color"
         description: "Color of the internal control bus animation"
 errors:
+    unchecked: "Unexpected error"
     program_parsing:
         invalid_syntax: "Invalid syntax at line {0}: {1}"
         parsing_error: "Error on line {0}: {1}"
