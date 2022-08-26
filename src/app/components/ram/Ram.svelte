@@ -6,7 +6,7 @@
 	import ComponentLabel from "../labels/Component.svelte"
 	import ram from "../../store/ram"
 	import ramSelection from "../../store/ramSelection"
-	import { beforeUpdate, afterUpdate } from "svelte"
+	import { beforeUpdate, afterUpdate, tick } from "svelte"
 	import symbolTable from "../../store/symbolTable"
 	import Button from "../basic/buttons/Ram.svelte"
 	import text from "../../store/text"
@@ -74,14 +74,18 @@
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		return showAddress(address).then(() => addressElements.find(e => e.getAddress() === address).flash())
+		return showAddress(address)
+			.then(async () => await tick())
+			.then(() => addressElements.find(e => e.getAddress() === address).flash())
 	}
 
 	export async function flashContent(address: number): Promise<void> {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		return showAddress(address).then(() => cellElements.find(e => e.getAddress() === address).flash())
+		return showAddress(address)
+			.then(async () => await tick())
+			.then(() => cellElements.find(e => e.getAddress() === address).flash())
 	}
 
 	function scroll(deltaY: number, deselect: boolean): void {
