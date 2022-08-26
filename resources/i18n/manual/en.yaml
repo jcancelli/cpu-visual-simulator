@@ -25,6 +25,11 @@ sections:
         title: "User interface"
     examples:
         title: "Examples"
+        subsections:
+            if_then_else:
+                title: "High-level IF-THEN-ELSE example and its translation"
+            do_while:
+                title: "High-level WHILE-DO example and its translation"
     copyright:
         title: "Copyright"
     credits:

@@ -26,6 +26,11 @@ sections:
         title: "Interfaccia grafica"
     examples:
         title: "Esempi"
+        subsections:
+            if_then_else:
+                title: "Esempio ad alto livello di IF-THEN-ELSE e la sua traduzione"
+            do_while:
+                title: "Esempio ad alto livello di WHILE-DO e la sua traduzione"
     copyright:
         title: "Copyright"
     credits:
