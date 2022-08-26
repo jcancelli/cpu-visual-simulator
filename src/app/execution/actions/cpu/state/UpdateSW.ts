@@ -4,6 +4,11 @@ import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
 export default class UpdateSW extends CpuAction {
+	constructor() {
+		super()
+		this._name = "UpdateSW"
+	}
+
 	protected async action(): Promise<any> {
 		const acc = get(cpuStore.accumulator).signed()
 		const zeroFlag = get(cpuStore.zeroFlag)

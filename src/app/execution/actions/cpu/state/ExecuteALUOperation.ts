@@ -6,6 +6,11 @@ import BinaryValue from "../../../../util/BinaryValue"
 import CpuAction from "../CpuAction"
 
 export default class ExecuteALUOperation extends CpuAction {
+	constructor() {
+		super()
+		this._name = "ExecuteALUOperation"
+	}
+
 	protected async action(): Promise<any> {
 		const operation = get(cpuStore.aluOperation)
 		const alu1 = get(cpuStore.alu1).signed()

@@ -8,6 +8,7 @@ export default class FlashWire extends Animation {
 
 	constructor(from: string, to: string) {
 		super()
+		this._name = "FlashWire"
 		this.from = from
 		this.to = to
 	}

@@ -5,6 +5,7 @@ export default abstract class Macro extends Action {
 
 	constructor(...subactions: Action[]) {
 		super()
+		this._name = "Macro"
 		this.subactions = [...subactions]
 	}
 

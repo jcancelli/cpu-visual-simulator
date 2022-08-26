@@ -35,6 +35,7 @@ export default class LoadValueOnBus extends BusAction {
 
 	constructor(valueSource: ValueSource, bus: "default" | Bus = "default") {
 		super()
+		this._name = "LoadValueOnBus"
 		this.valueSource = valueSource
 		this.bus = bus === "default" ? DEFAULT_BUSSES[valueSource] : bus
 	}

@@ -9,6 +9,7 @@ export default class TextToSpeech extends Action {
 
 	constructor(text: string) {
 		super()
+		this._name = "TextToSpeech"
 		this.text = text
 		this.condition(TTS_ENABLED)
 	}

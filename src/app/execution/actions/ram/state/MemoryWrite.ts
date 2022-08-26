@@ -6,6 +6,11 @@ import ramStore from "../../../../store/ram"
 import RamAction from "../RamAction"
 
 export default class MemoryWrite extends RamAction {
+	constructor() {
+		super()
+		this._name = "MemoryWrite"
+	}
+
 	protected async action(): Promise<any> {
 		const address = get(main_address_bus).unsigned()
 		const prevSymbolicOpcode = ramStore.read(address).symbolicOpcode

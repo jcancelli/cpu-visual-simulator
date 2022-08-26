@@ -5,6 +5,11 @@ import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
 export default class SetALU2 extends CpuAction {
+	constructor() {
+		super()
+		this._name = "SetALU2"
+	}
+
 	protected async action(): Promise<any> {
 		cpuStore.alu2.set(get(mux_alu_data_bus))
 		await get(cpu).flash("ALU:2")

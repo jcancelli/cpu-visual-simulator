@@ -6,6 +6,11 @@ import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
 export default class SetIR extends CpuAction {
+	constructor() {
+		super()
+		this._name = "SetIR"
+	}
+
 	protected async action(): Promise<any> {
 		cpuStore.instructionRegister.set(parseBinary(get(main_data_bus).toBinaryString()))
 		await get(cpu).flash("IR")

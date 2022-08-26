@@ -8,6 +8,7 @@ export default class StepText extends Action {
 
 	constructor(step: Step) {
 		super()
+		this._name = "StepText"
 		this.step = step
 	}
 

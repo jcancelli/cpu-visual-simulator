@@ -22,6 +22,7 @@ export default class FlashCpu extends Animation {
 
 	constructor(component: FlashableCpuComponent) {
 		super()
+		this._name = "FlashCpu"
 		this.component = component
 	}
 

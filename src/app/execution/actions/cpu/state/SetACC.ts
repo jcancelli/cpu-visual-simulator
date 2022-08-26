@@ -5,6 +5,11 @@ import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
 export default class SetACC extends CpuAction {
+	constructor() {
+		super()
+		this._name = "SetACC"
+	}
+
 	protected async action(): Promise<any> {
 		cpuStore.accumulator.set(get(alu_acc_data_bus))
 		await get(cpu).flash("ACC")

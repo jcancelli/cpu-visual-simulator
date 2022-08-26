@@ -10,6 +10,7 @@ export default class FlashRam extends Animation {
 
 	constructor(component: FlashableRamComponent) {
 		super()
+		this._name = "FlashRam"
 		this.component = component
 	}
 

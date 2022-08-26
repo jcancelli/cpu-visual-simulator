@@ -3,6 +3,7 @@ import { Condition } from "./Conditions"
 import { Wait } from "./Waits"
 
 export default abstract class Action {
+	protected _name: string // needed because bundler alters this.constructor.name
 	protected _endsStep: boolean
 	protected _sideffects: Action[] // actions executed at the same time as this action (only if this action's conditions equal to true)
 	protected _conditions: Condition[] = [] // conditions that determine wether the action is executed or not
@@ -10,6 +11,7 @@ export default abstract class Action {
 	protected _waits_after: Wait[] // promises awaited after executing the action (before resolving the action's promise)
 
 	constructor() {
+		this._name = "Action"
 		this._endsStep = false
 		this._sideffects = []
 		this._conditions = []
@@ -60,6 +62,6 @@ export default abstract class Action {
 	}
 
 	toString(): string {
-		return `${this.constructor.name}`
+		return `${this._name}`
 	}
 }

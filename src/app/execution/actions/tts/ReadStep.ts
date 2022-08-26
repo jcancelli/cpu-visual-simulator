@@ -11,6 +11,7 @@ export default class ReadStep extends Action {
 
 	constructor(step: Step) {
 		super()
+		this._name = "ReadStep"
 		this.step = step
 		this.condition(TTS_ENABLED)
 	}
