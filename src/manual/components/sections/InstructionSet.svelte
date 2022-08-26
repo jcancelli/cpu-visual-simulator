@@ -5,5 +5,5 @@
 </script>
 
 <SubSection title={$text.sections.instruction_set.subsections.instruction_set.title}>
-	<OpcodesTable />
+	<OpcodesTable class="mx-auto" />
 </SubSection>

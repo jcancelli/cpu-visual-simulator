@@ -7,6 +7,7 @@
 	import text from "../stores/text"
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 	import Introduction from "./sections/Introduction.svelte"
+	import Examples from "./sections/Examples.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -29,7 +30,7 @@
 			<h1 class="text-center font-bold text-4xl">TODO</h1>
 		</TabPanel>
 		<TabPanel>
-			<h1 class="text-center font-bold text-4xl">TODO</h1>
+			<Examples />
 		</TabPanel>
 		<TabPanel>
 			<h1 class="text-center font-bold text-4xl">TODO</h1>
