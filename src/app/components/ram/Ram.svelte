@@ -190,10 +190,8 @@
 					label={$symbolTable[address]}
 					isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 					bind:this={labelElements[i]}
-					class="
-						{address === firstVisibleAddress ? 'first-label' : ''}
-						{address === lastVisibleAddress ? 'last-label' : ''}
-					"
+					isFirstLabel={address === firstVisibleAddress}
+					isLastLabel={address === lastVisibleAddress}
 				/>
 			{/each}
 		</div>

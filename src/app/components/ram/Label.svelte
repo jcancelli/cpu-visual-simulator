@@ -10,6 +10,8 @@
 	export let address: number
 	export let label: string
 	export let isSelected: boolean
+	export let isFirstLabel: boolean = false
+	export let isLastLabel: boolean = false
 
 	let inputValue: string
 
@@ -85,7 +87,7 @@
 	}
 </script>
 
-<div class="relative h-[30px] flex items-center {$$restProps.class}">
+<div class="relative h-[30px] flex items-center">
 	{#if isSelected}
 		<input
 			bind:value={inputValue}
@@ -94,6 +96,8 @@
 			use:focus
 			in:scaleX={{ condition: () => !$symbolTable[address] }}
 			out:scaleX={{ condition: () => !$symbolTable[address] }}
+			class:firstLabel={isFirstLabel}
+			class:lastLabel={isLastLabel}
 			class="
 				absolute
 				right-0
@@ -115,6 +119,8 @@
 		<div
 			on:input={formatInput}
 			on:click={select}
+			class:firstLabel={isFirstLabel}
+			class:lastLabel={isLastLabel}
 			class="
 				absolute
 				right-0
@@ -161,11 +167,11 @@
 </div>
 
 <style>
-	.first-label input {
+	.firstLabel {
 		border-radius: 5px 10px 0 5px;
 	}
 
-	.last-label input {
+	.lastLabel {
 		border-radius: 5px 0 10px 5px;
 	}
 </style>
