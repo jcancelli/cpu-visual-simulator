@@ -21,6 +21,11 @@ sections:
         subsections:
             instruction_set:
                 title: "Instruction Set"
+            instruction_structure:
+                title: "Instruction structure"
+                opcode_desc: "Determines the operation to be executed"
+                immediate_flag_desc: "Determines wether the operand is immediate or direct"
+                operand_desc: "The value on which the instruction operates"
     ui:
         title: "User interface"
     examples:

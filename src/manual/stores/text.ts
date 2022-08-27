@@ -23,6 +23,12 @@ const _default = {
 			subsections: {
 				instruction_set: {
 					title: ""
+				},
+				instruction_structure: {
+					title: "",
+					opcode_desc: "",
+					immediate_flag_desc: "",
+					operand_desc: ""
 				}
 			}
 		},
