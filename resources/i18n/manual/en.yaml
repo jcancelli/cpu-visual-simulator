@@ -21,6 +21,26 @@ sections:
         subsections:
             instruction_set:
                 title: "Instruction Set"
+            instruction_structure:
+                title: "Instruction structure"
+                opcode_desc: "Determines the operation to be executed"
+                immediate_flag_desc: "Determines wether the operand is immediate or direct"
+                operand_desc: "The value on which the instruction operates"
+            addressing_modes: 
+              title: "Addressing modes"
+              subsections: 
+                immediate: 
+                  title: "Immediate"
+                  paragraphs:
+                    - "An immediate operand is an operand preceded by the \"#\" symbol."
+                    - "The value of an immediate operand must be in the 8-bit range (127 to -128)."
+                    - "If the operand is a label, the address at which that label is associated will be used as operand."
+                direct: 
+                  title: "Direct"
+                  paragraphs:
+                    - "An operand with no \"#\" symbol is a direct operand."
+                    - "A direct operand represent the address at which the operand value is stored."
+                    - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
     ui:
         title: "User interface"
     examples:
