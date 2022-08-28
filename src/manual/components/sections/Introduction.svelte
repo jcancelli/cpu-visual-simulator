@@ -1,9 +1,8 @@
 <script lang="ts">
 	import text from "../../stores/text"
-
-	import SubSection from "../SubSection.svelte"
+	import Section from "../Section.svelte"
 </script>
 
-<SubSection title={$text.sections.introduction.subsections.introduction.title}>
+<Section title={$text.sections.introduction.subsections.introduction.title}>
 	<p>{$text.sections.introduction.subsections.introduction.text}</p>
-</SubSection>
+</Section>

@@ -1,16 +1,17 @@
 <script lang="ts">
 	import text from "../../stores/text"
+	import CodeBlock from "../CodeBlock.svelte"
 	import OpcodesTable from "../OpcodesTable.svelte"
-	import SubSection from "../SubSection.svelte"
+	import Section from "../Section.svelte"
 </script>
 
-<SubSection title={$text.sections.instruction_set.subsections.instruction_set.title}>
-	<OpcodesTable class="mx-auto mb-10" />
-</SubSection>
+<Section title={$text.sections.instruction_set.subsections.instruction_set.title} h={2}>
+	<OpcodesTable class="mx-auto" />
+</Section>
 
-<SubSection title={$text.sections.instruction_set.subsections.instruction_structure.title}>
+<Section title={$text.sections.instruction_set.subsections.instruction_structure.title} h={2}>
 	<div class="flex flex-wrap itmes-center justify-evenly">
-		<div class="p-1">
+		<div class="p-1 mb-7">
 			<div class="w-fit px-7 py-4 mx-auto text-3xl flex items-center justify-center rounded-lg bg-gray-500">
 				<div class="flex flex-col items-center text-green-700">
 					<div>ADD</div>
@@ -91,4 +92,27 @@
 			</div>
 		</div>
 	</div>
-</SubSection>
+</Section>
+
+<Section title="Addressing modes" h={2}>
+	<Section title="Immediate" h={3}>
+		<p>An operand is immediate when its values is preceded by an "#" symbol.</p>
+		<p>The value of an immediate operand must be in a valid 8-bit range (127 to -128).</p>
+		<!-- prettier-ignore -->
+		<CodeBlock class="text-base mt-3 px-6">
+LOD #120
+MUL -1
+LOD #LABEL
+		</CodeBlock>
+	</Section>
+	<Section title="Direct" h={3}>
+		<p>An operand without the "#" symbol is a direct operand.</p>
+		<p>A direct operand represent the address at which the operand value is stored.</p>
+		<p>A valid direct operand must be a valid address, so it should be and even value between 0 and 254</p>
+		<!-- prettier-ignore -->
+		<CodeBlock class="text-base mt-3 px-6">
+MUL 22
+DIV LABEL
+		</CodeBlock>
+	</Section>
+</Section>
