@@ -27,6 +27,21 @@ sections:
                 opcode_desc: "Determina l'operazione che verrà eseguita"
                 immediate_flag_desc: "Determina se l'operando è diretto o immediato"
                 operand_desc: "Il valore su cui l'istruzione va ad operare"
+            addressing_modes: 
+              title: "Modalità di indirizzamento"
+              subsections: 
+                immediate: 
+                  title: "Immediata"
+                  paragraphs:
+                    - "Un operando immeidato è un operando preceduto dal simbolo \"#\"."
+                    - "Il valore di un operando immediato deve essere a 8-bit (da 127 a -128)."
+                    - "Se l'operando è una label, l'indirizzo a cui la label è associata sarà usato come operando."
+                direct: 
+                  title: "Diretta"
+                  paragraphs:
+                    - "Un operando che non è preceduto dal simbolo \"#\" è un operando diretto."
+                    - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
+                    - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
     ui:
         title: "Interfaccia grafica"
     examples:

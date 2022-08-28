@@ -94,21 +94,25 @@
 	</div>
 </Section>
 
-<Section title="Addressing modes" h={2}>
-	<Section title="Immediate" h={3}>
-		<p>An operand is immediate when its values is preceded by an "#" symbol.</p>
-		<p>The value of an immediate operand must be in a valid 8-bit range (127 to -128).</p>
+<Section title={$text.sections.instruction_set.subsections.addressing_modes.title} h={2}>
+	<Section
+		title={$text.sections.instruction_set.subsections.addressing_modes.subsections.immediate.title}
+		h={3}
+	>
+		{#each $text.sections.instruction_set.subsections.addressing_modes.subsections.immediate.paragraphs as paragraph}
+			<p>{paragraph}</p>
+		{/each}
 		<!-- prettier-ignore -->
 		<CodeBlock class="text-base mt-3 px-6">
 LOD #120
-MUL -1
+MUL #-1
 LOD #LABEL
 		</CodeBlock>
 	</Section>
-	<Section title="Direct" h={3}>
-		<p>An operand without the "#" symbol is a direct operand.</p>
-		<p>A direct operand represent the address at which the operand value is stored.</p>
-		<p>A valid direct operand must be a valid address, so it should be and even value between 0 and 254</p>
+	<Section title={$text.sections.instruction_set.subsections.addressing_modes.subsections.direct.title} h={3}>
+		{#each $text.sections.instruction_set.subsections.addressing_modes.subsections.direct.paragraphs as paragraph}
+			<p>{paragraph}</p>
+		{/each}
 		<!-- prettier-ignore -->
 		<CodeBlock class="text-base mt-3 px-6">
 MUL 22

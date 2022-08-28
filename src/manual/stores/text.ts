@@ -29,6 +29,19 @@ const _default = {
 					opcode_desc: "",
 					immediate_flag_desc: "",
 					operand_desc: ""
+				},
+				addressing_modes: {
+					title: "",
+					subsections: {
+						immediate: {
+							title: "",
+							paragraphs: []
+						},
+						direct: {
+							title: "",
+							paragraphs: []
+						}
+					}
 				}
 			}
 		},
