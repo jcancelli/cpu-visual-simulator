@@ -17,9 +17,7 @@
 	} from "../../store/cpu"
 	import { showDebugger, showNodes, showNodesNames, showNodesCoordinates } from "../../store/debug"
 	import ramStore from "../../store/ram"
-	import { ttsEnabled } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
-	import SpeechSynthesis from "../../util/speechSynthesis"
 	import Nodes from "../../wires/Nodes"
 	import Button from "../basic/buttons/Debug.svelte"
 	import Checkbox from "../basic/checkboxes/Debug.svelte"
@@ -68,8 +66,6 @@
 
 	let fromNode: string
 	let toNode: string
-
-	let ttsText: string
 
 	function toggleDebugger() {
 		$showDebugger = !$showDebugger
@@ -191,16 +187,6 @@
 					<Checkbox bind:checked={$showNodesCoordinates} disabled={!$showNodes}>Show coordinates</Checkbox>
 				</svelte:fragment>
 			</Widget>
-			<Widget title="TTS">
-				<svelte:fragment slot="inputs">
-					<Input bind:value={ttsText} placeholder="Utterance" />
-				</svelte:fragment>
-				<svelte:fragment slot="buttons">
-					<Button on:click={() => SpeechSynthesis.read(ttsText)}>Speak</Button>
-					<Checkbox bind:checked={$ttsEnabled}>TTS Enabled</Checkbox>
-				</svelte:fragment>
-			</Widget>
 		</div>
 	</div>
 {/if}
-S
