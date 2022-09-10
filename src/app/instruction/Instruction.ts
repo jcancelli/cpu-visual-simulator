@@ -8,6 +8,8 @@ export default class Instruction {
 	readonly symbolicOpcode: string
 	readonly symbolicOperand: string
 
+	static readonly NOP: Instruction = new Instruction("NOP", "", new BinaryValue(16, opcode("NOP").numeric))
+
 	constructor(symOpc: string, symOpr: string, value: BinaryValue, invalidate = false) {
 		if (value.bits() !== 16) {
 			throw new Error("Value must be 16 bit")
