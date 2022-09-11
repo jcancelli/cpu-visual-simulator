@@ -139,7 +139,10 @@ export default class Ram {
 	*[Symbol.iterator]() {
 		const instructions = this._instructions.get()
 		for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
-			yield instructions[address]
+			yield {
+				address,
+				instruction: instructions[address]
+			}
 		}
 	}
 }
