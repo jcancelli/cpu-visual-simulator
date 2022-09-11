@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { writable } from "../util/customStores"
 import Ram from "../components/ram/Ram.svelte"
 import Cpu from "../components/cpu/Cpu.svelte"
 import Wires from "../wires/Wires.svelte"

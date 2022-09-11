@@ -1,4 +1,5 @@
-import { get, writable } from "svelte/store"
+import { get } from "svelte/store"
+import { writable } from "../util/customStores"
 import { language } from "./settings"
 import { parse as parseYaml } from "yaml"
 import { Language } from "../../shared/util/i18n"
