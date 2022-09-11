@@ -37,9 +37,9 @@
 			if (inputValue !== "") {
 				Logger.info(`RamCell input: "${inputValue}"`, "USER_INPUT")
 				if ($displayAsBinary) {
-					ram.write(address, parseBinary(inputValue.trim()))
+					$ram.write(address, parseBinary(inputValue.trim()))
 				} else {
-					ram.write(address, parseSymbolic(inputValue.trim(), $symbolTable))
+					$ram.write(address, parseSymbolic(inputValue.trim(), $symbolTable))
 				}
 			}
 		} catch (error) {

@@ -24,6 +24,8 @@
 	let addressElements: Address[] = []
 	let cellElements: Cell[] = []
 
+	$: instructions = $ram.instructions
+
 	updateVisibleAddresses()
 
 	beforeUpdate(() => {
@@ -112,9 +114,9 @@
 			return
 		}
 		if (e.ctrlKey) {
-			ram.moveSecondHalfUpFromAddress($ramSelection.address)
+			$ram.moveSecondHalfUpFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ram.moveFirstHalfUpFromAddress($ramSelection.address)
+			$ram.moveFirstHalfUpFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === firstVisibleAddress) {
 			scroll(-1, false)
@@ -127,9 +129,9 @@
 			return
 		}
 		if (e.ctrlKey) {
-			ram.moveSecondHalfDownFromAddress($ramSelection.address)
+			$ram.moveSecondHalfDownFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			ram.moveFirstHalfDownFromAddress($ramSelection.address)
+			$ram.moveFirstHalfDownFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === lastVisibleAddress) {
 			scroll(1, false)
@@ -176,7 +178,7 @@
 	}
 
 	function clear() {
-		ram.clear()
+		$ram.clear()
 		symbolTable.clear()
 	}
 </script>
@@ -212,7 +214,7 @@
 					/>
 					<Cell
 						{address}
-						instruction={$ram[addressToIndex(address)]}
+						instruction={$instructions[address]}
 						isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}
 						bind:this={cellElements[i]}
 						class="

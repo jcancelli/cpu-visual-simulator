@@ -47,7 +47,8 @@ export default class LoadValueOnBus extends BusAction {
 	protected getValueFromSource() {
 		switch (this.valueSource) {
 			case "RAM":
-				return ram.read(get(main_address_bus).unsigned()).value
+				const address = get(main_address_bus).unsigned()
+				return get(ram).read(address).value
 			case "IR:OPC":
 				return get(cpu.instructionRegister).opcodeValue()
 			case "IR:OPR":
