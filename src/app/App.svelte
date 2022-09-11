@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Stage from "./components/Stage.svelte"
-	import Debugger from "./components/debug/Debugger.svelte"
 	import MessageFeed from "./components/messages/Feed.svelte"
-	import { controls, debug, messageFeed, logger, menu, settings } from "./store/components"
+	import { controls, messageFeed, logger, menu, settings } from "./store/components"
 	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/logger"
@@ -36,7 +35,6 @@
 	<Controls bind:this={$controls} />
 	<Menu bind:this={$menu} />
 </div>
-<Debugger bind:this={$debug} />
 <LoggerComponent bind:this={$logger} />
 <MessageFeed bind:this={$messageFeed} />
 <Settings bind:this={$settings} />
