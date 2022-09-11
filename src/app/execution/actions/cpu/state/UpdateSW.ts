@@ -1,5 +1,4 @@
-import { get } from "svelte/store"
-import { cpu } from "../../../../store/components"
+import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
@@ -10,25 +9,26 @@ export default class UpdateSW extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		const acc = get(cpuStore.accumulator).signed()
-		const zeroFlag = get(cpuStore.zeroFlag)
-		const negativeFlag = get(cpuStore.negativeFlag)
+		const cpu = cpuStore.get()
+		const acc = cpu.accumulator.get().signed()
+		const zeroFlag = cpu.zeroFlag.get()
+		const negativeFlag = cpu.negativeFlag.get()
 
 		const z = acc === 0
 		const n = acc < 0
 
 		if (z !== zeroFlag && n !== negativeFlag) {
-			cpuStore.zeroFlag.set(z)
-			cpuStore.negativeFlag.set(n)
-			await Promise.all([get(cpu).flash("SW:Z"), get(cpu).flash("SW:N")])
+			cpu.zeroFlag.set(z)
+			cpu.negativeFlag.set(n)
+			await Promise.all([cpuComponent.get().flash("SW:Z"), cpuComponent.get().flash("SW:N")])
 		} else {
 			if (z !== zeroFlag) {
-				cpuStore.zeroFlag.set(z)
-				await get(cpu).flash("SW:Z")
+				cpu.zeroFlag.set(z)
+				await cpuComponent.get().flash("SW:Z")
 			}
 			if (n !== negativeFlag) {
-				cpuStore.negativeFlag.set(n)
-				await get(cpu).flash("SW:N")
+				cpu.negativeFlag.set(n)
+				await cpuComponent.get().flash("SW:N")
 			}
 		}
 	}

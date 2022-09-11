@@ -1,6 +1,5 @@
 import Animation from "../../Animation"
-import { get } from "svelte/store"
-import { wires } from "../../../../store/components"
+import { wires as wiresComponent } from "../../../../store/components"
 
 export default class FlashWire extends Animation {
 	protected from: string
@@ -14,7 +13,7 @@ export default class FlashWire extends Animation {
 	}
 
 	protected async action(): Promise<any> {
-		return get(wires).flashWire(this.from, this.to)
+		return wiresComponent.get().flashWire(this.from, this.to)
 	}
 
 	toString(): string {

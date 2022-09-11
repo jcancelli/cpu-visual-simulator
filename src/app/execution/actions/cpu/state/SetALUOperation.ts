@@ -1,5 +1,4 @@
-import { get } from "svelte/store"
-import { cpu } from "../../../../store/components"
+import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
@@ -10,8 +9,9 @@ export default class SetALUOperation extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		const operation = get(cpuStore.instructionRegister).opcode.operator
-		cpuStore.aluOperation.set(operation)
-		await get(cpu).flash("ALU:OPR")
+		const cpu = cpuStore.get()
+		const operation = cpu.instructionRegister.get().opcode.operator
+		cpu.aluOperation.set(operation)
+		await cpuComponent.get().flash("ALU:OPR")
 	}
 }

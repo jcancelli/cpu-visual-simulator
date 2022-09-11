@@ -8,6 +8,6 @@ export default class HaltExecution extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		cpuStore.isHalting.set(true)
+		cpuStore.get().isHalting.set(true)
 	}
 }

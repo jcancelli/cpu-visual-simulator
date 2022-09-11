@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { programCounter } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
@@ -9,11 +8,15 @@
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import text from "../../store/text"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
 
 	let element: HTMLDivElement
 	let isEditing = false
 	let inputValue: string
 
+	$: programCounter = cpu.programCounter
 	$: onProgramCounterChange($programCounter)
 	$: onDisplayAsBinaryChange($displayAsBinary)
 

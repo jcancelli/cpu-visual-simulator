@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { increment } from "../../store/cpu"
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
 
 	let element: HTMLDivElement
+
+	$: increment = cpu.increment
 
 	export async function flash() {
 		return flashElement(element, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })

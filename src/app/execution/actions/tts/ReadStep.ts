@@ -20,7 +20,7 @@ export default class ReadStep extends Action {
 		let resolve
 		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
 		speechSynthesis.read(
-			get(text).steps[this.step].tts,
+			text.get().steps[this.step].tts,
 			get(ttsSpeed),
 			speechSynthesis.getAvailableVoices(get(language)).find(voice => voice.name === get(ttsVoice)),
 			() => resolve()

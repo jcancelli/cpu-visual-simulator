@@ -1,8 +1,18 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
-	import { alu1, alu2, aluOperation } from "../../store/cpu"
 	import { flash } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
+
+	let operand1Div: HTMLDivElement
+	let operand2Div: HTMLDivElement
+	let operatorDiv: HTMLDivElement
+
+	$: alu1 = cpu.alu1
+	$: alu2 = cpu.alu2
+	$: aluOperation = cpu.aluOperation
 
 	export async function flashFirstOperand() {
 		return flash(operand1Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
@@ -15,10 +25,6 @@
 	export async function flashOperator() {
 		return flash(operatorDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
-
-	let operand1Div: HTMLDivElement
-	let operand2Div: HTMLDivElement
-	let operatorDiv: HTMLDivElement
 
 	function splitBinString(bin: string): string {
 		return [bin.slice(0, 8), bin.slice(8)].join(" ")

@@ -1,4 +1,4 @@
-import { get, writable } from "svelte/store"
+import { writable } from "../util/customStores"
 import cpu from "../store/cpu"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
@@ -44,18 +44,18 @@ async function cycle() {
 				}
 				break
 			case "ENQUEUING_INSTRUCTION":
-				queue.push(...instructionToActions(get(cpu.instructionRegister)))
-				Logger.info(`Executing instruction "${get(cpu.instructionRegister).symbolic()}"`, "EXECUTION")
+				queue.push(...instructionToActions(cpu.get().instructionRegister.get()))
+				Logger.info(`Executing instruction "${cpu.get().instructionRegister.get().symbolic()}"`, "EXECUTION")
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
 				await execute()
 				if (queueIsEmpty()) {
-					if (get(cpu.programCounter).unsigned() === LAST_ADDRESS && !get(cpu.isJumping)) {
-						cpu.isHalting.set(true)
+					if (cpu.get().programCounter.get().unsigned() === LAST_ADDRESS && !cpu.get().isJumping.get()) {
+						cpu.get().isHalting.set(true)
 					}
-					if (get(cpu.isJumping)) {
-						cpu.isJumping.set(false)
+					if (cpu.get().isJumping.get()) {
+						cpu.get().isJumping.set(false)
 						cycleFase = "ENQUEUING_FETCH"
 						if (isLongStepping) {
 							setIsLongStepping(false)
@@ -73,7 +73,7 @@ async function cycle() {
 				await execute()
 				if (isLongStepping) {
 					setIsLongStepping(false)
-					cpu.isHalting.set(true)
+					cpu.get().isHalting.set(true)
 				}
 				if (queueIsEmpty()) {
 					cycleFase = "ENQUEUING_FETCH"
@@ -81,11 +81,11 @@ async function cycle() {
 				break
 		}
 	} catch (error) {
-		cpu.isHalting.set(true)
-		get(messageFeed).error(error.message)
+		cpu.get().isHalting.set(true)
+		messageFeed.get().error(error.message)
 		Logger.error(error, "EXECUTION", error.isChecked)
 	} finally {
-		if (get(cpu.isHalting)) {
+		if (cpu.get().isHalting.get()) {
 			reset()
 		}
 		isLocked = false
@@ -117,7 +117,7 @@ function pause() {
 }
 
 function toggle() {
-	if (!get(isExecuting)) {
+	if (!isExecuting.get()) {
 		start()
 	} else {
 		pause()
@@ -140,8 +140,8 @@ function instruction() {
 
 function reset() {
 	pause()
-	cpu.isHalting.set(false)
-	cpu.isJumping.set(false)
+	cpu.get().isHalting.set(false)
+	cpu.get().isJumping.set(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")

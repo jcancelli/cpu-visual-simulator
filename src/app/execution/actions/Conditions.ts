@@ -1,15 +1,15 @@
 import { get } from "svelte/store"
-import cpu from "../../store/cpu"
+import cpuStore from "../../store/cpu"
 import { minimalAnimations, ttsEnabled } from "../../store/settings"
 
 export type Condition = () => boolean
 
 export function ZERO_FLAG_SET(): boolean {
-	return get(cpu.zeroFlag)
+	return cpuStore.get().zeroFlag.get()
 }
 
 export function NEGATIVE_FLAG_SET(): boolean {
-	return get(cpu.negativeFlag)
+	return cpuStore.get().negativeFlag.get()
 }
 
 export function MINIMAL_ANIMATIONS(): boolean {

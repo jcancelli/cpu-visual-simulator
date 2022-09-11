@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import text, { Step } from "../../../store/text"
 import Action from "../Action"
-import { stepText } from "../../../store/components"
+import { stepText as stepTextComponent } from "../../../store/components"
 
 export default class StepText extends Action {
 	readonly step: Step
@@ -13,7 +13,7 @@ export default class StepText extends Action {
 	}
 
 	protected async action(): Promise<any> {
-		get(stepText).setText(get(text).steps[this.step].text)
+		stepTextComponent.get().setText(text.get().steps[this.step].text)
 	}
 
 	toString(): string {

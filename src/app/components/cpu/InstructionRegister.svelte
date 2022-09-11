@@ -1,19 +1,11 @@
 <script lang="ts">
-	import { instructionRegister } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import text from "../../store/text"
+	import Cpu from "../../model/Cpu"
 
-	export async function flashOpcode() {
-		if (!opcodeDiv) return
-		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
-	}
-
-	export async function flashOperand() {
-		if (!operandDiv) return
-		return flash(operandDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
-	}
+	export let cpu: Cpu
 
 	let opcodeDiv: HTMLDivElement
 	let operandDiv: HTMLDivElement
@@ -21,6 +13,7 @@
 	let opcode: string
 	let operand: string
 
+	$: instructionRegister = cpu.instructionRegister
 	$: {
 		if ($displayAsBinary) {
 			opcode = $instructionRegister.binaryOpcode()
@@ -39,6 +32,16 @@
 				}
 			}
 		}
+	}
+
+	export async function flashOpcode() {
+		if (!opcodeDiv) return
+		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+	}
+
+	export async function flashOperand() {
+		if (!operandDiv) return
+		return flash(operandDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 </script>
 

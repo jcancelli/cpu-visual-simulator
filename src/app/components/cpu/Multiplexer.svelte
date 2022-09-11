@@ -1,12 +1,15 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashComponent } from "../../util/animation"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
+
+	let muxElement: SVGSVGElement
 
 	export async function flash() {
 		return flashComponent(muxElement, "fill", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
-
-	let muxElement: SVGSVGElement
 </script>
 
 <div

@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { negativeFlag, zeroFlag } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animation"
 	import Logger from "../../util/logger"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
+
+	let swzDiv: HTMLDivElement
+	let swnDiv: HTMLDivElement
+
+	$: negativeFlag = cpu.negativeFlag
+	$: zeroFlag = cpu.zeroFlag
 
 	export async function flashZeroFlag() {
 		return flash(swzDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
@@ -11,9 +19,6 @@
 	export async function flashNegativeFlag() {
 		return flash(swnDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
-
-	let swzDiv: HTMLDivElement
-	let swnDiv: HTMLDivElement
 
 	function toggleZeroFlag() {
 		Logger.info(`Toggled zero flag: "${!$zeroFlag}"`, "USER_INPUT")

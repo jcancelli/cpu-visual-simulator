@@ -27,11 +27,10 @@ import ReadStep from "./tts/ReadStep"
 import StepText from "./controls/StepText"
 import CheckedError from "../../errors/CheckedError"
 import text from "../../store/text"
-import { get } from "svelte/store"
 
 export function instructionToActions(instruction: Instruction): Action[] {
 	if (!instruction.opcode) {
-		throw new CheckedError(get(text).errors.execution.invalid_instruction)
+		throw new CheckedError(text.get().errors.execution.invalid_instruction)
 	}
 	const actions: Action[] = []
 	switch (instruction.opcode.symbolic) {

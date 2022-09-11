@@ -1,6 +1,5 @@
-import { get } from "svelte/store"
 import { main_address_bus } from "../../../../store/busses"
-import { cpu } from "../../../../store/components"
+import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"
 import CpuAction from "../CpuAction"
 
@@ -11,8 +10,9 @@ export default class SetPC extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		cpuStore.isJumping.set(true)
-		cpuStore.programCounter.set(get(main_address_bus))
-		await get(cpu).flash("PC")
+		const cpu = cpuStore.get()
+		cpu.isJumping.set(true)
+		cpu.programCounter.set(main_address_bus.get())
+		await cpuComponent.get().flash("PC")
 	}
 }

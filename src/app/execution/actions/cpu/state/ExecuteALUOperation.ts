@@ -1,4 +1,3 @@
-import { get } from "svelte/store"
 import CheckedError from "../../../../errors/CheckedError"
 import cpuStore from "../../../../store/cpu"
 import text from "../../../../store/text"
@@ -12,9 +11,11 @@ export default class ExecuteALUOperation extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		const operation = get(cpuStore.aluOperation)
-		const alu1 = get(cpuStore.alu1).signed()
-		const alu2 = get(cpuStore.alu2).signed()
+		const cpu = cpuStore.get()
+
+		const operation = cpu.aluOperation.get()
+		const alu1 = cpu.alu1.get().signed()
+		const alu2 = cpu.alu2.get().signed()
 
 		let result: number
 
@@ -36,7 +37,7 @@ export default class ExecuteALUOperation extends CpuAction {
 				break
 			case "/":
 				if (alu2 === 0) {
-					throw new CheckedError(get(text).errors.execution.division_by_zero)
+					throw new CheckedError(text.get().errors.execution.division_by_zero)
 				}
 				result = alu1 / alu2
 				break
@@ -48,7 +49,6 @@ export default class ExecuteALUOperation extends CpuAction {
 			default:
 				throw new Error(`Unexpected ALU operation: "${operation}"`)
 		}
-
-		cpuStore.aluResult.set(new BinaryValue(16, result))
+		cpu.aluResult.set(new BinaryValue(16, result))
 	}
 }

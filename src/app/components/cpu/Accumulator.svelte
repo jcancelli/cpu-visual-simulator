@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { accumulator } from "../../store/cpu"
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import BinaryValue from "../../util/BinaryValue"
 	import Logger from "../../util/logger"
-	import { isValidAddress } from "../../util/ramUtil"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import text from "../../store/text"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
 
 	let element: HTMLDivElement
 	let isEditing = false
 	let inputValue: string
 
+	$: accumulator = cpu.accumulator
 	$: onAccumulatorChange($accumulator)
 	$: onDisplayAsBinaryChange($displayAsBinary)
 

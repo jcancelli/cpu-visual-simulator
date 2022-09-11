@@ -1,5 +1,4 @@
-import { get } from "svelte/store"
-import { cpu } from "../../../../store/components"
+import { cpu as cpuComponent } from "../../../../store/components"
 import Animation from "../../Animation"
 
 export type FlashableCpuComponent =
@@ -27,7 +26,7 @@ export default class FlashCpu extends Animation {
 	}
 
 	protected async action(): Promise<any> {
-		return get(cpu).flash(this.component)
+		return cpuComponent.get().flash(this.component)
 	}
 
 	toString(): string {

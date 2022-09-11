@@ -1,5 +1,4 @@
 import Animation from "../../Animation"
-import { get } from "svelte/store"
 import { ram as ramComponent } from "../../../../store/components"
 import { main_address_bus } from "../../../../store/busses"
 
@@ -17,9 +16,9 @@ export default class FlashRam extends Animation {
 	protected async action(): Promise<any> {
 		switch (this.component) {
 			case "ADDRESS":
-				return get(ramComponent).flashAddress(get(main_address_bus).unsigned())
+				return ramComponent.get().flashAddress(main_address_bus.get().unsigned())
 			case "DATA":
-				return get(ramComponent).flashContent(get(main_address_bus).unsigned())
+				return ramComponent.get().flashContent(main_address_bus.get().unsigned())
 		}
 	}
 

@@ -9,6 +9,9 @@
 	import Multiplexer from "./Multiplexer.svelte"
 	import ArithmeticLogicUnit from "./ArithmeticLogicUnit.svelte"
 	import { FlashableCpuComponent } from "../../execution/actions/cpu/animation/FlashCpu"
+	import Cpu from "../../model/Cpu"
+
+	export let cpu: Cpu
 
 	let ir: InstructionRegister
 	let cu: ControlUnit
@@ -56,12 +59,12 @@
 />
 <div class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[3] rounded-[30px] border border-black">
 	<ComponentLabel text="CPU" fontSize="LARGE" top="-30px" left="47%" />
-	<InstructionRegister bind:this={ir} />
-	<ControlUnit bind:this={cu} />
-	<ProgramCounter bind:this={pc} />
-	<Increment bind:this={inc} />
-	<Multiplexer bind:this={mux} />
-	<ArithmeticLogicUnit bind:this={alu} />
-	<StatusWord bind:this={sw} />
-	<Accumulator bind:this={acc} />
+	<InstructionRegister bind:this={ir} {cpu} />
+	<ControlUnit bind:this={cu} {cpu} />
+	<ProgramCounter bind:this={pc} {cpu} />
+	<Increment bind:this={inc} {cpu} />
+	<Multiplexer bind:this={mux} {cpu} />
+	<ArithmeticLogicUnit bind:this={alu} {cpu} />
+	<StatusWord bind:this={sw} {cpu} />
+	<Accumulator bind:this={acc} {cpu} />
 </div>

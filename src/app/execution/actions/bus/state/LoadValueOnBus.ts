@@ -1,4 +1,3 @@
-import { get } from "svelte/store"
 import busses, { main_address_bus } from "../../../../store/busses"
 import cpu from "../../../../store/cpu"
 import ram from "../../../../store/ram"
@@ -47,22 +46,21 @@ export default class LoadValueOnBus extends BusAction {
 	protected getValueFromSource() {
 		switch (this.valueSource) {
 			case "RAM":
-				const address = get(main_address_bus).unsigned()
-				return get(ram).read(address).value
+				return ram.get().read(main_address_bus.get().unsigned()).value
 			case "IR:OPC":
-				return get(cpu.instructionRegister).opcodeValue()
+				return cpu.get().instructionRegister.get().opcodeValue()
 			case "IR:OPR":
-				return get(cpu.instructionRegister).operandValue()
+				return cpu.get().instructionRegister.get().operandValue()
 			case "ALU:RES":
-				return get(cpu.aluResult)
+				return cpu.get().aluResult.get()
 			case "ACC":
-				return get(cpu.accumulator)
+				return cpu.get().accumulator.get()
 			case "CU":
 				throw new Error("CU value not implemented")
 			case "PC":
-				return get(cpu.programCounter)
+				return cpu.get().programCounter.get()
 			case "INC":
-				return get(cpu.increment)
+				return cpu.get().increment.get()
 			default:
 				throw new Error(this.valueSource + " value not implemented")
 		}
