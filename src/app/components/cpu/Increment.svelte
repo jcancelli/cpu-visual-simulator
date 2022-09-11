@@ -7,7 +7,7 @@
 
 	let element: HTMLDivElement
 
-	$: increment = cpu.increment
+	const increment = cpu.increment
 
 	export async function flash() {
 		return flashElement(element, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })

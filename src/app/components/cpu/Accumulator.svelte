@@ -15,7 +15,8 @@
 	let isEditing = false
 	let inputValue: string
 
-	$: accumulator = cpu.accumulator
+	const accumulator = cpu.accumulator
+
 	$: onAccumulatorChange($accumulator)
 	$: onDisplayAsBinaryChange($displayAsBinary)
 

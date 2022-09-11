@@ -13,7 +13,8 @@
 	let opcode: string
 	let operand: string
 
-	$: instructionRegister = cpu.instructionRegister
+	const instructionRegister = cpu.instructionRegister
+
 	$: {
 		if ($displayAsBinary) {
 			opcode = $instructionRegister.binaryOpcode()

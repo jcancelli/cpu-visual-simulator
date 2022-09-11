@@ -9,8 +9,8 @@
 	let swzDiv: HTMLDivElement
 	let swnDiv: HTMLDivElement
 
-	$: negativeFlag = cpu.negativeFlag
-	$: zeroFlag = cpu.zeroFlag
+	const negativeFlag = cpu.negativeFlag
+	const zeroFlag = cpu.zeroFlag
 
 	export async function flashZeroFlag() {
 		return flash(swzDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })

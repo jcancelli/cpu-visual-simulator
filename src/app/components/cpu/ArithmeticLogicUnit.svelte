@@ -10,9 +10,9 @@
 	let operand2Div: HTMLDivElement
 	let operatorDiv: HTMLDivElement
 
-	$: alu1 = cpu.alu1
-	$: alu2 = cpu.alu2
-	$: aluOperation = cpu.aluOperation
+	const alu1 = cpu.alu1
+	const alu2 = cpu.alu2
+	const aluOperation = cpu.aluOperation
 
 	export async function flashFirstOperand() {
 		return flash(operand1Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })

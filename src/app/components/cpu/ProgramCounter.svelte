@@ -16,7 +16,8 @@
 	let isEditing = false
 	let inputValue: string
 
-	$: programCounter = cpu.programCounter
+	const programCounter = cpu.programCounter
+
 	$: onProgramCounterChange($programCounter)
 	$: onDisplayAsBinaryChange($displayAsBinary)
 
