@@ -1,5 +1,5 @@
 import { writable } from "../util/customStores"
-import cpu from "../store/cpu"
+import cpuStore from "../store/cpu"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ramUtil"
@@ -31,6 +31,7 @@ async function cycle() {
 		return
 	}
 	isLocked = true
+	const cpu = cpuStore.get()
 	try {
 		switch (cycleFase) {
 			case "ENQUEUING_FETCH":
@@ -44,18 +45,19 @@ async function cycle() {
 				}
 				break
 			case "ENQUEUING_INSTRUCTION":
-				queue.push(...instructionToActions(cpu.get().instructionRegister.get()))
-				Logger.info(`Executing instruction "${cpu.get().instructionRegister.get().symbolic()}"`, "EXECUTION")
+				const ir = cpu.instructionRegister.get()
+				queue.push(...instructionToActions(ir))
+				Logger.info(`Executing instruction "${ir.symbolic()}"`, "EXECUTION")
 				cycleFase = "EXECUTING_INSTRUCTION"
 				break
 			case "EXECUTING_INSTRUCTION":
 				await execute()
 				if (queueIsEmpty()) {
-					if (cpu.get().programCounter.get().unsigned() === LAST_ADDRESS && !cpu.get().isJumping.get()) {
-						cpu.get().isHalting.set(true)
+					if (cpu.programCounter.get().unsigned() === LAST_ADDRESS && !cpu.isJumping.get()) {
+						cpu.isHalting.set(true)
 					}
-					if (cpu.get().isJumping.get()) {
-						cpu.get().isJumping.set(false)
+					if (cpu.isJumping.get()) {
+						cpu.isJumping.set(false)
 						cycleFase = "ENQUEUING_FETCH"
 						if (isLongStepping) {
 							setIsLongStepping(false)
@@ -73,7 +75,7 @@ async function cycle() {
 				await execute()
 				if (isLongStepping) {
 					setIsLongStepping(false)
-					cpu.get().isHalting.set(true)
+					cpu.isHalting.set(true)
 				}
 				if (queueIsEmpty()) {
 					cycleFase = "ENQUEUING_FETCH"
@@ -81,11 +83,11 @@ async function cycle() {
 				break
 		}
 	} catch (error) {
-		cpu.get().isHalting.set(true)
+		cpu.isHalting.set(true)
 		messageFeed.get().error(error.message)
 		Logger.error(error, "EXECUTION", error.isChecked)
 	} finally {
-		if (cpu.get().isHalting.get()) {
+		if (cpu.isHalting.get()) {
 			reset()
 		}
 		isLocked = false
@@ -139,9 +141,10 @@ function instruction() {
 }
 
 function reset() {
+	const cpu = cpuStore.get()
 	pause()
-	cpu.get().isHalting.set(false)
-	cpu.get().isJumping.set(false)
+	cpu.isHalting.set(false)
+	cpu.isJumping.set(false)
 	cycleFase = "ENQUEUING_FETCH"
 	emptyExecutionQueue()
 	Logger.info("Execution - RESET", "EXECUTION")
