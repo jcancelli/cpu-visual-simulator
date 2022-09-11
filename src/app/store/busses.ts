@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { writable } from "../util/customStores"
 import BinaryValue from "../util/BinaryValue"
 
 export const main_data_bus = writable<BinaryValue>(new BinaryValue(16, 0))

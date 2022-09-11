@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { writable } from "../util/customStores"
 import Ram from "../model/Ram"
 
 const ram = writable<Ram>()

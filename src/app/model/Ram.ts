@@ -1,8 +1,8 @@
-import { derived, get, Readable, writable, Writable } from "svelte/store"
+import { derived, Readable, writable, Writable } from "../util/customStores"
 import Instruction from "../instruction/Instruction"
 import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 
-/** Class that represents the RAM */
+/** Class that represents the RAM state */
 export default class Ram {
 	/** Read-only store of the instructions */
 	public readonly instructions: Readable<Instruction[]>
@@ -40,7 +40,7 @@ export default class Ram {
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address: " + address)
 		}
-		return get(this._instructions)[address]
+		return this._instructions.get()[address]
 	}
 
 	/** Sets all addresses values to NOP */
@@ -137,7 +137,7 @@ export default class Ram {
 	}
 
 	*[Symbol.iterator]() {
-		const instructions = get(this._instructions)
+		const instructions = this._instructions.get()
 		for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
 			yield instructions[address]
 		}
