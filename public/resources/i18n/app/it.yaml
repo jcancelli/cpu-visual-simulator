@@ -70,13 +70,17 @@ ram:
 menu:
     buttons:
         settings:
-            title: "Impostazioni"
+            text: "Impostazioni"
+            title: "Impostazioni" 
         save:
+            text: "Salva"
             title: "Salva programma"
-        open:
+        load:
+            text: "Carica"
             title: "Carica programma"
-        help:
-            title: "Aiuto"
+        manual:
+            text: "Manuale"
+            title: "Manuale"
 controls:
     labels:
         execution: "Programma"

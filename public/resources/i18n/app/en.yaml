@@ -69,13 +69,17 @@ ram:
 menu:
     buttons:
         settings:
+            text: "Settings"
             title: "Settings" 
         save:
+            text: "Save"
             title: "Save program"
-        open:
+        load:
+            text: "Load"
             title: "Load program"
-        help:
-            title: "Help"
+        manual:
+            text: "Manual"
+            title: "Manual"
 controls:
     labels:
         execution: "Program"

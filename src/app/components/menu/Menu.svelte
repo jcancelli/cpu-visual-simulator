@@ -9,7 +9,7 @@
 	import { download, upload } from "../../../shared/util/file"
 	import Logger from "../../util/logger"
 	import { compileProgram, exportProgram } from "../../util/programLoader"
-	import Button from "../basic/buttons/Menu.svelte"
+	import MenuItem from "./MenuItem.svelte"
 
 	function openSettings() {
 		$showSettings = true
@@ -51,8 +51,20 @@
 </script>
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-1 z-[4]">
-	<Button icon="settings" title={$text.menu.buttons.settings.title} on:click={openSettings} />
-	<Button icon="save" title={$text.menu.buttons.save.title} on:click={saveProgram} />
-	<Button icon="open" title={$text.menu.buttons.open.title} on:click={loadProgram} />
-	<Button icon="help" title={$text.menu.buttons.help.title} on:click={openDocsPage} />
+	<button on:click={openSettings}>
+		<MenuItem
+			text={$text.menu.buttons.settings.text}
+			title={$text.menu.buttons.settings.title}
+			icon="settings"
+		/>
+	</button>
+	<button on:click={saveProgram}>
+		<MenuItem text={$text.menu.buttons.save.text} title={$text.menu.buttons.save.title} icon="save" />
+	</button>
+	<button on:click={loadProgram}>
+		<MenuItem text={$text.menu.buttons.load.text} title={$text.menu.buttons.load.title} icon="open" />
+	</button>
+	<button on:click={openDocsPage}>
+		<MenuItem text={$text.menu.buttons.manual.text} title={$text.menu.buttons.manual.title} icon="manual" />
+	</button>
 </div>

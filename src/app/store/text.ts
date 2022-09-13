@@ -103,15 +103,19 @@ const _default = {
 	menu: {
 		buttons: {
 			settings: {
+				text: "",
 				title: ""
 			},
 			save: {
+				text: "",
 				title: ""
 			},
-			open: {
+			load: {
+				text: "",
 				title: ""
 			},
-			help: {
+			manual: {
+				text: "",
 				title: ""
 			}
 		}
