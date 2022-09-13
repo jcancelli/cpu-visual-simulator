@@ -69,13 +69,30 @@ ram:
 menu:
     buttons:
         settings:
-            title: "Settings" 
+            text: "Settings"
+            title: "Open settings" 
         save:
+            text: "Save"
             title: "Save program"
-        open:
+        load:
+            text: "Load"
             title: "Load program"
-        help:
-            title: "Help"
+        examples:
+            text: "Examples"
+            title: "Load example"
+            examples:
+              if_then_else:
+                  text: "If then else"
+                  title: "If then else"
+              while_do:
+                  text: "While do"
+                  title: "While do"
+              array_sum:
+                  text: "Array sum"
+                  title: "Array sum"
+        manual:
+            text: "Manual"
+            title: "Open manual"
 controls:
     labels:
         execution: "Program"

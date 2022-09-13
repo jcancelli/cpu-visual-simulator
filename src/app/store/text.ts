@@ -104,15 +104,37 @@ const _default = {
 	menu: {
 		buttons: {
 			settings: {
+				text: "",
 				title: ""
 			},
 			save: {
+				text: "",
 				title: ""
 			},
-			open: {
+			load: {
+				text: "",
 				title: ""
 			},
-			help: {
+			examples: {
+				text: "",
+				title: "",
+				examples: {
+					if_then_else: {
+						text: "",
+						title: ""
+					},
+					while_do: {
+						text: "",
+						title: ""
+					},
+					array_sum: {
+						text: "",
+						title: ""
+					}
+				}
+			},
+			manual: {
+				text: "",
 				title: ""
 			}
 		}
