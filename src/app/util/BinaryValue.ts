@@ -1,7 +1,4 @@
 import BinaryValueOutOfRange from "../errors/BinaryValueOutOfRange"
-import CheckedError from "../errors/CheckedError"
-import Instruction from "../instruction/Instruction"
-import { parseBinary } from "../instruction/instructionParser"
 import {
 	checkValidBitCount,
 	isValidBinary,
@@ -47,14 +44,6 @@ export default class BinaryValue {
 
 	toBinaryString(): string {
 		return this.value
-	}
-
-	toInstruction(): Instruction {
-		try {
-			return parseBinary(this.toBinaryString())
-		} catch (error) {
-			throw new CheckedError("Not a vali instruction")
-		}
 	}
 
 	bits(): Bits {
