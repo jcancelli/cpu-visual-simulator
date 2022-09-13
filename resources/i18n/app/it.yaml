@@ -70,13 +70,30 @@ ram:
 menu:
     buttons:
         settings:
-            title: "Impostazioni"
+            text: "Impostazioni"
+            title: "Apri impostazioni" 
         save:
+            text: "Salva"
             title: "Salva programma"
-        open:
+        load:
+            text: "Carica"
             title: "Carica programma"
-        help:
-            title: "Aiuto"
+        examples:
+            text: "Esempi"
+            title: "Carica esempio"
+            examples:
+              if_then_else:
+                  text: "If then else"
+                  title: "If then else"
+              while_do:
+                  text: "While do"
+                  title: "While do"
+              array_sum:
+                  text: "Somma array"
+                  title: "Somma array"
+        manual:
+            text: "Manuale"
+            title: "Apri manuale"
 controls:
     labels:
         execution: "Programma"
