@@ -4,14 +4,20 @@
 	import Address from "./Address.svelte"
 	import Cell from "./Cell.svelte"
 	import ComponentLabel from "../labels/Component.svelte"
-	import ram from "../../store/ram"
 	import ramSelection from "../../store/ramSelection"
 	import { beforeUpdate, afterUpdate, tick } from "svelte"
-	import symbolTable from "../../store/symbolTable"
 	import Button from "../basic/buttons/Ram.svelte"
 	import text from "../../store/text"
+	import Ram from "../../model/Ram"
+	import SymbolTable from "../../model/SymbolTable"
+
+	export let ram: Ram
+	export let symbolTable: SymbolTable
 
 	const VISIBLE_CELLS = 18
+
+	const instructions = ram.instructions
+	const labels = symbolTable.labels
 
 	let beforeUpdateCallbacks: (() => void)[] = []
 	let afterUpdateCallbacks: (() => void)[] = []
@@ -23,8 +29,6 @@
 	let labelElements: Label[] = []
 	let addressElements: Address[] = []
 	let cellElements: Cell[] = []
-
-	$: instructions = $ram.instructions
 
 	updateVisibleAddresses()
 
@@ -114,9 +118,9 @@
 			return
 		}
 		if (e.ctrlKey) {
-			$ram.moveSecondHalfUpFromAddress($ramSelection.address)
+			ram.moveSecondHalfUpFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			$ram.moveFirstHalfUpFromAddress($ramSelection.address)
+			ram.moveFirstHalfUpFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === firstVisibleAddress) {
 			scroll(-1, false)
@@ -129,9 +133,9 @@
 			return
 		}
 		if (e.ctrlKey) {
-			$ram.moveSecondHalfDownFromAddress($ramSelection.address)
+			ram.moveSecondHalfDownFromAddress($ramSelection.address)
 		} else if (e.shiftKey) {
-			$ram.moveFirstHalfDownFromAddress($ramSelection.address)
+			ram.moveFirstHalfDownFromAddress($ramSelection.address)
 		}
 		if ($ramSelection.address === lastVisibleAddress) {
 			scroll(1, false)
@@ -178,7 +182,7 @@
 	}
 
 	function clear() {
-		$ram.clear()
+		ram.clear()
 		symbolTable.clear()
 	}
 </script>
@@ -192,8 +196,9 @@
 		<div class="flex flex-col items-end justify-center">
 			{#each visibleAddresses as address, i (address)}
 				<Label
+					{symbolTable}
 					{address}
-					label={$symbolTable[address]}
+					label={$labels[address]}
 					isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 					bind:this={labelElements[i]}
 					isFirstLabel={address === firstVisibleAddress}
@@ -213,6 +218,7 @@
 						"
 					/>
 					<Cell
+						{symbolTable}
 						{address}
 						instruction={$instructions[address]}
 						isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}

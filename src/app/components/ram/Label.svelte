@@ -4,9 +4,11 @@
 	import { messageFeed } from "../../store/components"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/logger"
-	import symbolTable from "../../store/symbolTable"
 	import { onMount } from "svelte"
+	import SymbolTable from "../../model/SymbolTable"
+	import { MAX_LABEL_LENGTH, NOT_ALLOWED_CHARS } from "../../util/label"
 
+	export let symbolTable: SymbolTable
 	export let address: number
 	export let label: string
 	export let isSelected: boolean
@@ -32,7 +34,7 @@
 		} catch (error) {
 			$messageFeed?.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
-			inputValue = label
+			inputValue = label === SymbolTable.NO_LABEL ? "" : label
 		} finally {
 			deselect()
 		}
@@ -50,24 +52,21 @@
 
 	function onAddressChange(newAddress: number): void {
 		delayButtonTransition = false
-		inputValue = label
+		inputValue = label === SymbolTable.NO_LABEL ? "" : label
 	}
 
 	function onLabelChange(newLabel: string): void {
-		inputValue = label
+		inputValue = label === SymbolTable.NO_LABEL ? "" : label
 	}
 
 	function onSelectedChange(isNowSelected: boolean): void {
 		if (isNowSelected) {
-			inputValue = label
+			inputValue = label === SymbolTable.NO_LABEL ? "" : label
 		}
 	}
 
 	function formatInput(): void {
-		inputValue = inputValue
-			.toUpperCase()
-			.replace(/[^A-Z_]/g, "")
-			.slice(0, 10)
+		inputValue = inputValue.toUpperCase().replace(NOT_ALLOWED_CHARS, "").slice(0, MAX_LABEL_LENGTH)
 	}
 
 	function focus(node: HTMLElement): void {
@@ -94,8 +93,8 @@
 			on:input={formatInput}
 			on:focusout={commitEdit}
 			use:focus
-			in:scaleX={{ condition: () => !$symbolTable[address] }}
-			out:scaleX={{ condition: () => !$symbolTable[address] }}
+			in:scaleX={{ condition: () => !symbolTable.addressIsLabeled(address) }}
+			out:scaleX={{ condition: () => !symbolTable.addressIsLabeled(address) }}
 			class:firstLabel={isFirstLabel}
 			class:lastLabel={isLastLabel}
 			class="
@@ -142,7 +141,7 @@
 				cursor-text
 			"
 		>
-			{$symbolTable[address]} :
+			{label} :
 		</div>
 	{:else}
 		<button

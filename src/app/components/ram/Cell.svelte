@@ -6,9 +6,10 @@
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/logger"
 	import { displayAsBinary } from "../../store/settings"
-	import symbolTable from "../../store/symbolTable"
 	import Instruction from "../../instruction/Instruction"
+	import SymbolTable from "../../model/SymbolTable"
 
+	export let symbolTable: SymbolTable
 	export let address: number
 	export let instruction: Instruction
 	export let isSelected: boolean
@@ -39,7 +40,7 @@
 				if ($displayAsBinary) {
 					$ram.write(address, parseBinary(inputValue.trim()))
 				} else {
-					$ram.write(address, parseSymbolic(inputValue.trim(), $symbolTable))
+					$ram.write(address, parseSymbolic(inputValue.trim(), symbolTable))
 				}
 			}
 		} catch (error) {

@@ -201,6 +201,7 @@ errors:
         invalid_data: "L'input non è un valore a 16-bit con segno valido"
     symbol_table:
         label_already_exists: "Label esiste già"
+        invalid_label: "Label invalida"
     user_input:
         invalid_file_name: "Nome file invalido"
         invalid_pc_value: "Indirizzo invalido"

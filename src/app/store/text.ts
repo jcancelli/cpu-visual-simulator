@@ -285,7 +285,8 @@ const _default = {
 			invalid_data: ""
 		},
 		symbol_table: {
-			label_already_exists: ""
+			label_already_exists: "",
+			invalid_label: ""
 		},
 		user_input: {
 			invalid_file_name: "",

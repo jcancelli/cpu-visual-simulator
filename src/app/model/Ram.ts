@@ -111,7 +111,7 @@ export default class Ram {
 
 	/**
 	 * Shifts all the instructions of address < of the specified address by +2 addresses (+1 position).
-	 * The instruction inside the specified address is overwritten and the instruction that was at the first address is replaced by a NOP
+	 * The instruction inside the specified address is overwritten by the one before it and the instruction that was at the first address is replaced by a NOP
 	 * @param {number} address
 	 */
 	moveFirstHalfDownFromAddress(address: number): void {

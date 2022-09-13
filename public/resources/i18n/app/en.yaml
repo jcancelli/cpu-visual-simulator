@@ -199,7 +199,8 @@ errors:
         invalid_direct_operand: "Operand is not a valid address"
         invalid_data: "Input is not a valid 16-bit signed value"
     symbol_table:
-        label_already_exists: "Label already exists"
+        label_already_exists: "Label already exists"      
+        invalid_label: "Invalid label"
     user_input:
         invalid_file_name: "Invalid file name"
         invalid_pc_value: "Invalid address"

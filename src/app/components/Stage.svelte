@@ -7,12 +7,14 @@
 	import cpuStore from "../store/cpu"
 	import Ram from "./ram/Ram.svelte"
 	import NodeMarker from "../wires/NodeMarker.svelte"
+	import symbolTableStore from "../store/symbolTable"
+	import ramStore from "../store/ram"
 </script>
 
 <div class="absolute top-0 left-0 w-app h-app">
 	<Wires bind:this={$wiresComponent} />
 	<Cpu bind:this={$cpuComponent} cpu={$cpuStore} />
-	<Ram bind:this={$ramComponent} />
+	<Ram bind:this={$ramComponent} ram={$ramStore} symbolTable={$symbolTableStore} />
 	{#if $showNodes}
 		{#each Nodes as node}
 			<NodeMarker {node} />
