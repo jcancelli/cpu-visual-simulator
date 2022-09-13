@@ -114,6 +114,24 @@ const _default = {
 				text: "",
 				title: ""
 			},
+			examples: {
+				text: "",
+				title: "",
+				examples: {
+					if_then_else: {
+						text: "",
+						title: ""
+					},
+					while_do: {
+						text: "",
+						title: ""
+					},
+					array_sum: {
+						text: "",
+						title: ""
+					}
+				}
+			},
 			manual: {
 				text: "",
 				title: ""

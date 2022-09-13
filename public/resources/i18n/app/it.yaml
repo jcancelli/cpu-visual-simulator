@@ -71,16 +71,29 @@ menu:
     buttons:
         settings:
             text: "Impostazioni"
-            title: "Impostazioni" 
+            title: "Apri impostazioni" 
         save:
             text: "Salva"
             title: "Salva programma"
         load:
             text: "Carica"
             title: "Carica programma"
+        examples:
+            text: "Esempi"
+            title: "Carica esempio"
+            examples:
+              if_then_else:
+                  text: "If then else"
+                  title: "If then else"
+              while_do:
+                  text: "While do"
+                  title: "While do"
+              array_sum:
+                  text: "Somma array"
+                  title: "Somma array"
         manual:
             text: "Manuale"
-            title: "Manuale"
+            title: "Apri manuale"
 controls:
     labels:
         execution: "Programma"
