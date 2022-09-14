@@ -1,7 +1,7 @@
 import { mux_alu_data_bus } from "../../../../store/busses"
 import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"
-import BinaryValue from "../../../../util/BinaryValue"
+import BinaryValue from "../../../../model/BinaryValue"
 import CpuAction from "../CpuAction"
 
 export default class SetALU2 extends CpuAction {

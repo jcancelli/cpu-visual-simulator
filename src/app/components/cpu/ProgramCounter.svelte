@@ -2,7 +2,7 @@
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
-	import BinaryValue from "../../util/BinaryValue"
+	import BinaryValue from "../../model/BinaryValue"
 	import Logger from "../../util/logger"
 	import { isValidAddress } from "../../util/ramUtil"
 	import CheckedError from "../../errors/CheckedError"

@@ -1,5 +1,5 @@
 import { writable } from "../util/customStores"
-import BinaryValue from "../util/BinaryValue"
+import BinaryValue from "../model/BinaryValue"
 
 export const main_data_bus = writable<BinaryValue>(new BinaryValue(16, 0))
 export const ir_cu_data_bus = writable<BinaryValue>(new BinaryValue(16, 0))

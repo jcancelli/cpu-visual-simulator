@@ -3,7 +3,7 @@
 
 	import { displayAsBinary } from "../../store/settings"
 	import { flash as flashComponent } from "../../util/animation"
-	import BinaryValue from "../../util/BinaryValue"
+	import BinaryValue from "../../model/BinaryValue"
 
 	export let address: number
 

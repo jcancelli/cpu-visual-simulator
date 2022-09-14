@@ -1,4 +1,4 @@
-import BinaryValue from "../util/BinaryValue"
+import BinaryValue from "../model/BinaryValue"
 
 export type Opcode = typeof opcodes[number]
 export type SymbolicOpcode = typeof opcodes[number]["symbolic"]

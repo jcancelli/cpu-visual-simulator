@@ -1,4 +1,4 @@
-import BinaryValue from "../util/BinaryValue"
+import BinaryValue from "../model/BinaryValue"
 import { isImmediateFlagSet, removeFlags } from "../util/instruction"
 import { Opcode, opcode } from "./Opcode"
 

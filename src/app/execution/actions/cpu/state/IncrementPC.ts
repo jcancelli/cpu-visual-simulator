@@ -1,7 +1,7 @@
 import { inc_pc_address_bus } from "../../../../store/busses"
 import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"
-import BinaryValue from "../../../../util/BinaryValue"
+import BinaryValue from "../../../../model/BinaryValue"
 import CpuAction from "../CpuAction"
 
 export default class IncrementPC extends CpuAction {

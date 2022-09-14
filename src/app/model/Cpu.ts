@@ -1,7 +1,7 @@
 import { writable, Writable } from "../util/customStores"
 import Instruction from "../instruction/Instruction"
 import { Operators } from "../instruction/Opcode"
-import BinaryValue from "../util/BinaryValue"
+import BinaryValue from "./BinaryValue"
 import { FIRST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 
 /** Class that represents the CPU state */

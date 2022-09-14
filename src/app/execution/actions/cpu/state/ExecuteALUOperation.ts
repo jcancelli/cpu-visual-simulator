@@ -1,7 +1,7 @@
 import CheckedError from "../../../../errors/CheckedError"
 import cpuStore from "../../../../store/cpu"
 import text from "../../../../store/text"
-import BinaryValue from "../../../../util/BinaryValue"
+import BinaryValue from "../../../../model/BinaryValue"
 import CpuAction from "../CpuAction"
 
 export default class ExecuteALUOperation extends CpuAction {

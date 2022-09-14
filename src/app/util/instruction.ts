@@ -1,4 +1,4 @@
-import BinaryValue from "./BinaryValue"
+import BinaryValue from "../model/BinaryValue"
 import { IMMEDIATE_FLAG_POS } from "../instruction/Opcode"
 
 export function isImmediateFlagSet(value: BinaryValue): boolean {
