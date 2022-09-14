@@ -2,7 +2,8 @@ import CheckedError from "../errors/CheckedError"
 import text from "../store/text"
 import { derived, Readable, writable, Writable } from "../util/customStores"
 import { isValidLabel } from "../util/label"
-import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
+import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ram"
+import { WORD_SIZE } from "../util/cpu"
 
 /** Event fired when a label is edited (not fired when the label is removed) */
 export type LabelEditedEvent = {

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE, addressToIndex } from "../../util/ramUtil"
+	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS } from "../../util/ram"
+	import { WORD_SIZE } from "../../util/cpu"
 	import Label from "./Label.svelte"
 	import Address from "./Address.svelte"
 	import Cell from "./Cell.svelte"

@@ -4,7 +4,7 @@
 	import { displayAsBinary } from "../../store/settings"
 	import BinaryValue from "../../model/BinaryValue"
 	import Logger from "../../util/logger"
-	import { isValidAddress } from "../../util/ramUtil"
+	import { isValidAddress } from "../../util/ram"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import text from "../../store/text"

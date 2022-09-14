@@ -5,7 +5,7 @@ import BinaryValue from "../model/BinaryValue"
 import Instruction from "../model/Instruction"
 import SymbolTable from "../model/SymbolTable"
 import { isSigned, pad } from "./binary"
-import { isValidAddress } from "./ramUtil"
+import { isValidAddress } from "./ram"
 import text from "../store/text"
 
 /** Valid binary input pattern */

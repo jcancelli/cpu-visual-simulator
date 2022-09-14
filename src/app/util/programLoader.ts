@@ -1,15 +1,16 @@
 import ProgramParsingError from "../errors/ProgramParsingError"
+import text from "../store/text"
+import { FIRST_ADDRESS, LAST_ADDRESS } from "./ram"
+import { WORD_SIZE } from "./cpu"
+import { interpolate } from "../../shared/util/template"
+import SymbolTable from "../model/SymbolTable"
+import Ram from "../model/Ram"
 import {
 	LABEL_PARAM as LABEL,
 	SYMBOLIC_INSTRUCTION as INSTRUCTION_PATTERN,
 	DATA as DATA_PATTERN,
 	parseSymbolic
 } from "./instructionParser"
-import text from "../store/text"
-import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
-import { interpolate } from "../../shared/util/template"
-import SymbolTable from "../model/SymbolTable"
-import Ram from "../model/Ram"
 
 type RawInstruction = {
 	text: string

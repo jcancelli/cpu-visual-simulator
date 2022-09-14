@@ -1,5 +1,6 @@
 import { Updater, writable } from "svelte/store"
-import { WORD_SIZE, LAST_ADDRESS, FIRST_ADDRESS, isValidAddress } from "../util/ramUtil"
+import { LAST_ADDRESS, FIRST_ADDRESS, isValidAddress } from "../util/ram"
+import { WORD_SIZE } from "../util/cpu"
 
 type Column = "CELL" | "LABEL"
 

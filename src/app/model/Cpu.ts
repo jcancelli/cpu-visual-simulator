@@ -2,7 +2,8 @@ import { writable, Writable } from "../util/customStores"
 import Instruction from "../model/Instruction"
 import { Operators } from "../model/InstructionSet"
 import BinaryValue from "./BinaryValue"
-import { FIRST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
+import { FIRST_ADDRESS } from "../util/ram"
+import { WORD_SIZE } from "../util/cpu"
 
 /** Class that represents the CPU state */
 export default class Cpu {
