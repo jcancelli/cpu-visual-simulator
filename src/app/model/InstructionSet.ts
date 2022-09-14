@@ -1,13 +1,12 @@
-import BinaryValue from "../model/BinaryValue"
+import BinaryValue from "./BinaryValue"
 
 export type Opcode = typeof opcodes[number]
 export type SymbolicOpcode = typeof opcodes[number]["symbolic"]
 export type NumericOpcode = typeof opcodes[number]["numeric"]
 export type Operators = typeof opcodes[number]["operator"]
-export const IMMEDIATE_FLAG_POS = 1 // the most significant bit
 
+/** All the opcodes */
 export const opcodes = [
-	// CONTROL FLOW
 	{
 		symbolic: "NOP",
 		numeric: 0,
@@ -64,8 +63,6 @@ export const opcodes = [
 		operator: "",
 		category: "CONTROL_FLOW"
 	},
-
-	// DATA FLOW
 	{
 		symbolic: "LOD",
 		numeric: 7,
@@ -82,8 +79,6 @@ export const opcodes = [
 		operator: "",
 		category: "DATA_FLOW"
 	},
-
-	// ARITHMETIC-LOGIC
 	{
 		symbolic: "ADD",
 		numeric: 9,

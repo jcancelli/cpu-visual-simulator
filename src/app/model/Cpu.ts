@@ -1,6 +1,6 @@
 import { writable, Writable } from "../util/customStores"
-import Instruction from "../instruction/Instruction"
-import { Operators } from "../instruction/Opcode"
+import Instruction from "../model/Instruction"
+import { Operators } from "../model/InstructionSet"
 import BinaryValue from "./BinaryValue"
 import { FIRST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 

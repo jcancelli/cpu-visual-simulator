@@ -1,5 +1,5 @@
 import { derived, Readable, writable, Writable } from "../util/customStores"
-import Instruction from "../instruction/Instruction"
+import Instruction from "../model/Instruction"
 import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS, WORD_SIZE } from "../util/ramUtil"
 
 /** Class that represents the RAM state */
@@ -64,9 +64,9 @@ export default class Ram {
 			for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
 				const instruction = newState[address]
 				if (instruction.symbolicOperand === oldLabel) {
-					newState[address] = new Instruction(instruction.symbolicOpcode, newLabel, instruction.value)
+					newState[address] = new Instruction(instruction.symbolicOpcode, newLabel, instruction)
 				} else if (instruction.symbolicOperand === `#${oldLabel}`) {
-					newState[address] = new Instruction(instruction.symbolicOpcode, `#${newLabel}`, instruction.value)
+					newState[address] = new Instruction(instruction.symbolicOpcode, `#${newLabel}`, instruction)
 				}
 			}
 			return newState
@@ -86,13 +86,13 @@ export default class Ram {
 					newState[address] = new Instruction(
 						instruction.symbolicOpcode,
 						instruction.numericOperand().toString(),
-						instruction.value
+						instruction
 					)
 				} else if (instruction.symbolicOperand === `#${label}`) {
 					newState[address] = new Instruction(
 						instruction.symbolicOpcode,
 						`#${instruction.numericOperand()}`,
-						instruction.value
+						instruction
 					)
 				}
 			}

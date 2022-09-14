@@ -1,4 +1,4 @@
-import Instruction from "../../instruction/Instruction"
+import Instruction from "../../model/Instruction"
 import Action from "./Action"
 import { TTS_FINISHED } from "./Waits"
 import {

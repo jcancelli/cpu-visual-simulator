@@ -4,7 +4,7 @@ import {
 	SYMBOLIC_INSTRUCTION as INSTRUCTION_PATTERN,
 	DATA as DATA_PATTERN,
 	parseSymbolic
-} from "../instruction/instructionParser"
+} from "./instructionParser"
 import text from "../store/text"
 import { FIRST_ADDRESS, LAST_ADDRESS, WORD_SIZE } from "./ramUtil"
 import { interpolate } from "../../shared/util/template"

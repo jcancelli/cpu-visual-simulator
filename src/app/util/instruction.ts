@@ -1,5 +1,6 @@
 import BinaryValue from "../model/BinaryValue"
-import { IMMEDIATE_FLAG_POS } from "../instruction/Opcode"
+
+export const IMMEDIATE_FLAG_POS = 1 // the most significant bit
 
 export function isImmediateFlagSet(value: BinaryValue): boolean {
 	return value.isBitSet(IMMEDIATE_FLAG_POS)

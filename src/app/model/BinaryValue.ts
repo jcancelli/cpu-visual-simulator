@@ -14,6 +14,7 @@ export type BinaryValueSize = 8 | 16 | 32
 
 /** Represents a numeric value */
 export default class BinaryValue {
+	/** The value of its instance represented as a binary string */
 	protected readonly value: string
 
 	/**

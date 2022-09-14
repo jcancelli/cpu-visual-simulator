@@ -1,4 +1,4 @@
-import { parseBinary } from "../../../../instruction/instructionParser"
+import { parseBinary } from "../../../../util/instructionParser"
 import { main_data_bus } from "../../../../store/busses"
 import { cpu as cpuComponent } from "../../../../store/components"
 import cpuStore from "../../../../store/cpu"

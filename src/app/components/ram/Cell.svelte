@@ -1,12 +1,12 @@
 <script lang="ts">
 	import ram from "../../store/ram"
-	import { parseBinary, parseSymbolic } from "../../instruction/instructionParser"
 	import { messageFeed } from "../../store/components"
-	import { flash as flashComponent } from "../../util/animation"
 	import ramSelection from "../../store/ramSelection"
-	import Logger from "../../util/logger"
 	import { displayAsBinary } from "../../store/settings"
-	import Instruction from "../../instruction/Instruction"
+	import { parseBinary, parseSymbolic } from "../../util/instructionParser"
+	import { flash as flashComponent } from "../../util/animation"
+	import Logger from "../../util/logger"
+	import Instruction from "../../model/Instruction"
 	import SymbolTable from "../../model/SymbolTable"
 
 	export let symbolTable: SymbolTable

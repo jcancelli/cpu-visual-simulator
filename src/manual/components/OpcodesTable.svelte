@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { IMMEDIATE_FLAG_POS, Opcode, opcodes } from "../../app/instruction/Opcode"
+	import { Opcode, opcodes } from "../../app/model/InstructionSet"
+	import { IMMEDIATE_FLAG_POS } from "../../app/util/instruction"
 	import { numberToBinaryString, setBit } from "../../app/util/binary"
 	import text from "../stores/text"
 
