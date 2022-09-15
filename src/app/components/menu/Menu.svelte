@@ -3,7 +3,7 @@
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import text from "../../store/text"
-	import ram from "../../store/ram"
+	import { ramStore } from "../../store/state"
 	import { showSettings } from "../../store/settings"
 	import symbolTable from "../../store/symbolTable"
 	import { download, upload } from "../../../shared/util/file"
@@ -37,7 +37,7 @@
 			const file = (await upload(".cpuvs"))[0]
 			const program = compileProgram(await file.text())
 			symbolTable.importLabels(program.labels)
-			ram.importInstructions(program.instructions)
+			ramStore.importInstructions(program.instructions)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			$messageFeed.error(error.message)
@@ -50,7 +50,7 @@
 			const example = await fetch(exampleUrl).then(res => res.text())
 			const program = compileProgram(example)
 			symbolTable.importLabels(program.labels)
-			ram.importInstructions(program.instructions)
+			ramStore.importInstructions(program.instructions)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			$messageFeed.error(error.message)
@@ -62,7 +62,10 @@
 		try {
 			let fileName = prompt("File name")
 			if (fileName) {
-				download(exportProgram(ram.exportInstructions(), symbolTable.exportLabels()), `${fileName}.cpuvs`)
+				download(
+					exportProgram(ramStore.exportInstructions(), symbolTable.exportLabels()),
+					`${fileName}.cpuvs`
+				)
 			} else {
 				throw new CheckedError(get(text).errors.user_input.invalid_file_name)
 			}

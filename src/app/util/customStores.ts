@@ -4,7 +4,6 @@ import {
 	writable as svelteWritable,
 	readable as svelteReadable,
 	derived as svelteDerived,
-	Unsubscriber,
 	StartStopNotifier,
 	get
 } from "svelte/store"

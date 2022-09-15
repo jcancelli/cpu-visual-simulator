@@ -1,6 +1,6 @@
 import busses, { main_address_bus } from "../../../../store/busses"
 import cpu from "../../../../store/cpu"
-import ram from "../../../../store/ram"
+import { ramStore } from "../../../../store/state"
 import BusAction from "../BusAction"
 
 export type DataBus =
@@ -46,7 +46,7 @@ export default class LoadValueOnBus extends BusAction {
 	protected getValueFromSource() {
 		switch (this.valueSource) {
 			case "RAM":
-				return ram.get().read(main_address_bus.get().unsigned()).value
+				return ramStore.get().read(main_address_bus.get().unsigned())
 			case "IR:OPC":
 				return cpu.get().instructionRegister.get().opcodeValue()
 			case "IR:OPR":

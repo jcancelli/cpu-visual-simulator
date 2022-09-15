@@ -1,7 +1,7 @@
 import { parseBinary, parseSymbolic } from "../../../../util/instructionParser"
 import { main_address_bus, main_data_bus } from "../../../../store/busses"
 import { ram as ramComponent } from "../../../../store/components"
-import ramStore from "../../../../store/ram"
+import { ramStore } from "../../../../store/state"
 import RamAction from "../RamAction"
 
 export default class MemoryWrite extends RamAction {

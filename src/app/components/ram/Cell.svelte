@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ram from "../../store/ram"
+	import { ramStore } from "../../store/state"
 	import { messageFeed } from "../../store/components"
 	import ramSelection from "../../store/ramSelection"
 	import { displayAsBinary } from "../../store/settings"
@@ -38,9 +38,9 @@
 			if (inputValue !== "") {
 				Logger.info(`RamCell input: "${inputValue}"`, "USER_INPUT")
 				if ($displayAsBinary) {
-					$ram.write(address, parseBinary(inputValue.trim()))
+					$ramStore.write(address, parseBinary(inputValue.trim()))
 				} else {
-					$ram.write(address, parseSymbolic(inputValue.trim(), symbolTable))
+					$ramStore.write(address, parseSymbolic(inputValue.trim(), symbolTable))
 				}
 			}
 		} catch (error) {
