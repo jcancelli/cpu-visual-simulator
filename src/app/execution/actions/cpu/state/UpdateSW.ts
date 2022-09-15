@@ -1,5 +1,5 @@
 import { cpu as cpuComponent } from "../../../../store/components"
-import cpuStore from "../../../../store/cpu"
+import { cpuStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
 
 export default class UpdateSW extends CpuAction {

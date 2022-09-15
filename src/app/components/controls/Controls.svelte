@@ -7,7 +7,7 @@
 	import Slider from "../basic/slider/Control.svelte"
 	import Group from "./Group.svelte"
 	import text from "../../store/text"
-	import cpu from "../../store/cpu"
+	import { cpuStore } from "../../store/state"
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
 	import Logger from "../../util/logger"
@@ -15,7 +15,7 @@
 	function resetExecution() {
 		Logger.info(`Reset pressed`, "USER_INPUT")
 		execution.reset()
-		cpu.reset()
+		$cpuStore.reset()
 	}
 
 	function toggleExecution() {

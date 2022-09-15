@@ -1,5 +1,5 @@
 import CheckedError from "../../../../errors/CheckedError"
-import cpuStore from "../../../../store/cpu"
+import { cpuStore } from "../../../../store/state"
 import text from "../../../../store/text"
 import BinaryValue from "../../../../model/BinaryValue"
 import CpuAction from "../CpuAction"

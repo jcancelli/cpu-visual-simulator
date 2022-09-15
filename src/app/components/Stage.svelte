@@ -4,11 +4,10 @@
 	import Nodes from "../wires/Nodes"
 	import Wires from "../wires/Wires.svelte"
 	import Cpu from "./cpu/Cpu.svelte"
-	import cpuStore from "../store/cpu"
 	import Ram from "./ram/Ram.svelte"
 	import NodeMarker from "../wires/NodeMarker.svelte"
 	import symbolTableStore from "../store/symbolTable"
-	import { ramStore } from "../store/state"
+	import { ramStore, cpuStore } from "../store/state"
 </script>
 
 <div class="absolute top-0 left-0 w-app h-app">

@@ -1,6 +1,5 @@
 import busses, { main_address_bus } from "../../../../store/busses"
-import cpu from "../../../../store/cpu"
-import { ramStore } from "../../../../store/state"
+import { ramStore, cpuStore } from "../../../../store/state"
 import BusAction from "../BusAction"
 
 export type DataBus =
@@ -48,19 +47,19 @@ export default class LoadValueOnBus extends BusAction {
 			case "RAM":
 				return ramStore.get().read(main_address_bus.get().unsigned())
 			case "IR:OPC":
-				return cpu.get().instructionRegister.get().opcodeValue()
+				return cpuStore.get().instructionRegister.get().opcodeValue()
 			case "IR:OPR":
-				return cpu.get().instructionRegister.get().operandValue()
+				return cpuStore.get().instructionRegister.get().operandValue()
 			case "ALU:RES":
-				return cpu.get().aluResult.get()
+				return cpuStore.get().aluResult.get()
 			case "ACC":
-				return cpu.get().accumulator.get()
+				return cpuStore.get().accumulator.get()
 			case "CU":
 				throw new Error("CU value not implemented")
 			case "PC":
-				return cpu.get().programCounter.get()
+				return cpuStore.get().programCounter.get()
 			case "INC":
-				return cpu.get().increment.get()
+				return cpuStore.get().increment.get()
 			default:
 				throw new Error(this.valueSource + " value not implemented")
 		}

@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import cpuStore from "../../store/cpu"
+import { cpuStore } from "../../store/state"
 import { minimalAnimations, ttsEnabled } from "../../store/settings"
 
 export type Condition = () => boolean

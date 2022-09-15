@@ -1,5 +1,5 @@
 import { writable } from "../util/customStores"
-import cpuStore from "../store/cpu"
+import { cpuStore } from "../store/state"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ram"
