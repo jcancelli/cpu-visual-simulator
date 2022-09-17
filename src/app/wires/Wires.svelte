@@ -13,6 +13,8 @@
 		extControlBusColor,
 		intControlBusColor
 	} from "../store/settings"
+	import { showNodes } from "../store/debug"
+	import NodeMarker from "./NodeMarker.svelte"
 
 	const animationsCache = new Map<string, WireAnimation>()
 
@@ -76,3 +78,8 @@
 <BusLabel bus="DATA" top="62px" left="850px" />
 <BusLabel bus="ADDRESS" top="226px" left="837px" />
 <BusLabel bus="CONTROL" top="346px" left="838px" />
+{#if $showNodes}
+	{#each Nodes.Nodes as node}
+		<NodeMarker {node} />
+	{/each}
+{/if}

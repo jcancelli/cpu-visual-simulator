@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { ram as ramComponent, cpu as cpuComponent, wires as wiresComponent } from "../store/components"
-	import { showNodes } from "../store/debug"
-	import Nodes from "../wires/Nodes"
 	import Wires from "../wires/Wires.svelte"
 	import Cpu from "./cpu/Cpu.svelte"
 	import CpuModel from "../model/Cpu"
 	import RamModel from "../model/Ram"
 	import SymbolTableModel from "../model/SymbolTable"
 	import Ram from "./ram/Ram.svelte"
-	import NodeMarker from "../wires/NodeMarker.svelte"
 
 	export let cpu: CpuModel
 	export let ram: RamModel
@@ -19,9 +16,4 @@
 	<Wires bind:this={$wiresComponent} />
 	<Cpu bind:this={$cpuComponent} {cpu} />
 	<Ram bind:this={$ramComponent} {ram} {symbolTable} />
-	{#if $showNodes}
-		{#each Nodes as node}
-			<NodeMarker {node} />
-		{/each}
-	{/if}
 </div>
