@@ -21,6 +21,11 @@ type ProgramParsingOutput = {
 	symbolTable: SymbolTable
 }
 
+/**
+ * Takes a string that contains a program written in the CPUVS programming language
+ * and returns a ram and a symbol table that contain the instructions and the labels of such program
+ * @param {string} input - The string that contains the program
+ */
 export function parseProgram(input: string): ProgramParsingOutput {
 	const ram = new Ram()
 	const symbolTable = new SymbolTable()
@@ -78,6 +83,11 @@ export function parseProgram(input: string): ProgramParsingOutput {
 	}
 }
 
+/**
+ * Takes a ram and a symbol table and returns the program contained in them as a string written in the CPUVS programming language
+ * @param {Ram} ram - The ram object that contains the instructions
+ * @param {SymbolTable} symbolTable - The symbol table object that contains the labels
+ */
 export function exportProgram(ram: Ram, symbolTable: SymbolTable): string {
 	let output = ""
 	let instruction = ""
@@ -95,23 +105,42 @@ export function exportProgram(ram: Ram, symbolTable: SymbolTable): string {
 	return output.replace(/\n(\s*NOP\n)*$/g, "\n").replace(/\n$/g, "") // removes all trailing NOP
 }
 
+/**
+ * Removes comments from lines of code
+ * @param {string} line - The line of code that should be transformed
+ */
 function removeComment(line: string): string {
 	return line.replace(COMMENT_PATTERN, "")
 }
 
+/**
+ * Reduces multiple sequential whitespaces characters into a single one
+ * @param {string} line - The line of code that should be transformed
+ */
 function reduceSpaces(line: string): string {
 	return line.replace(/\s+/g, " ")
 }
 
+/**
+ * Returns true if the line of code passed as parameter contains a label
+ * @param {string} line - The line of code that should be checked
+ */
 function isLabeled(line: string): boolean {
 	return LABEL_PATTERN.test(line)
 }
 
-/** line must contain a label */
+/**
+ * Returns the label contained in a line of code (removes the instruction part)
+ * @param {string} line - The code line that contains the instruction
+ */
 function extractLabel(line: string): string {
 	return line.split(":")[0].trim()
 }
 
+/**
+ * Returns the instruction contained in a line of code (removing eventual labels)
+ * @param {string} line - The code line that contains the instruction
+ */
 function extractInstruction(line: string): string {
 	return isLabeled(line) ? line.split(":")[1].trim() : line
 }
