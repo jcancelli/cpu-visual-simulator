@@ -1,16 +1,16 @@
-LOD X
-CMP #3
-JNZ ELSE
-LOD #5		:THEN
-ADD Y
-STO Y
-JMP ENDIF
-LOD #2		:ELSE
-ADD Z
-STO Z
-LOD #8		:ENDIF
-STO X
-HLT
-3			:X
-0			:Y
-0			:Z
+               LOD X
+               CMP #3
+               JNZ ELSE
+THEN:          LOD #5
+               ADD Y
+               STO Y
+               JMP ENDIF
+ELSE:          LOD #2
+               ADD Z
+               STO Z
+ENDIF:         LOD #8
+               STO X
+               HLT
+X:             3
+Y:             0
+Z:             0

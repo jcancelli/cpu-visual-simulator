@@ -102,6 +102,15 @@ export default class Ram {
 	}
 
 	/**
+	 * Overwrites its instance instructions with the instructions of the ram object passed as argument.
+	 * Doesn't fire any listener (except for the ones directly subscribed to the instructions store)
+	 * @param {Ram} ram - Tha Ram object that should be imported
+	 */
+	import(ram: Ram): void {
+		this._instructions.set([...ram.instructions.get()])
+	}
+
+	/**
 	 * Shifts all the instructions of address <= of the specified address by -2 addresses (-1 position).
 	 * The instruction inside the first address is lost and the instruction that was at the specified address is replaced by a NOP
 	 * @param {number} address

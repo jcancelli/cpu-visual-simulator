@@ -290,9 +290,9 @@ const _default = {
 	errors: {
 		unchecked: "",
 		program_parsing: {
-			invalid_syntax: "",
-			parsing_error: "",
-			duplicate_label: ""
+			invalid_instruction: "",
+			invalid_label: "",
+			duplicated_label: ""
 		},
 		instruction_parsing: {
 			invalid_binary_input: "",

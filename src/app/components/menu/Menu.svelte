@@ -7,7 +7,7 @@
 	import { showSettings } from "../../store/settings"
 	import { download, upload } from "../../../shared/util/file"
 	import Logger from "../../util/logger"
-	import { compileProgram, exportProgram } from "../../util/programLoader"
+	import { parseProgram, exportProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
 	import MenuItemIcon from "./MenuItem.svelte"
 
@@ -34,9 +34,9 @@
 	async function loadProgram(): Promise<void> {
 		try {
 			const file = (await upload(".cpuvs"))[0]
-			const program = compileProgram(await file.text())
-			symbolTableStore.importLabels(program.labels)
-			ramStore.importInstructions(program.instructions)
+			const program = parseProgram(await file.text())
+			symbolTableStore.get().import(program.symbolTable)
+			ramStore.get().import(program.ram)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			$messageFeed.error(error.message)
@@ -47,9 +47,9 @@
 	async function loadExample(exampleUrl: string): Promise<void> {
 		try {
 			const example = await fetch(exampleUrl).then(res => res.text())
-			const program = compileProgram(example)
-			symbolTableStore.importLabels(program.labels)
-			ramStore.importInstructions(program.instructions)
+			const program = parseProgram(example)
+			symbolTableStore.get().import(program.symbolTable)
+			ramStore.get().import(program.ram)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			$messageFeed.error(error.message)
@@ -61,10 +61,7 @@
 		try {
 			let fileName = prompt("File name")
 			if (fileName) {
-				download(
-					exportProgram(ramStore.exportInstructions(), symbolTableStore.exportLabels()),
-					`${fileName}.cpuvs`
-				)
+				download(exportProgram(ramStore.get(), symbolTableStore.get()), `${fileName}.cpuvs`)
 			} else {
 				throw new CheckedError(get(text).errors.user_input.invalid_file_name)
 			}

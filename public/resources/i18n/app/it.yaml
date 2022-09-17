@@ -202,9 +202,9 @@ settings:
 errors:
     unchecked: "Errore inaspettato"
     program_parsing:
-        invalid_syntax: "Sintassi invalida a riga {0}: {1}"
-        parsing_error: "Errore a riga {0}: {1}"
-        duplicate_label: "Label duplicata a riga {0}: {1}"
+        invalid_instruction: "Riga {0} - Istruzione invalida - {1}"    
+        invalid_label: "Riga {0} - Label invalida - {1}"
+        duplicated_label: "Riga {0} - Label duplicata - '{1}'"
     instruction_parsing:
         invalid_binary_input: "Input binario invalido"
         invalid_symbolic_input: "Input invalido"
@@ -217,9 +217,9 @@ errors:
         invalid_direct_operand: "L'operando non è un indirizzo valido"
         invalid_data: "L'input non è un valore a 16-bit con segno valido"
     label_parsing:
-        invalid_character: "Carattere invalido trovato nella label: '{0}'"
-        label_too_short: "Label troppo corta. Lunghezza minima: {0} caratteri"
-        label_too_long: "Label troppo lunga. Lunghezza massima: {0} caratteri"
+        invalid_character: "Il carattere '{0}' non è ammesso"
+        label_too_short: "Lunghezza minima: {0} caratteri"
+        label_too_long: "Lunghezza massima: {0} caratteri"
     symbol_table:
         label_already_exists: "Label esiste già"
         invalid_label: "Label invalida"

@@ -201,9 +201,9 @@ settings:
 errors:
     unchecked: "Unexpected error"
     program_parsing:
-        invalid_syntax: "Invalid syntax at line {0}: {1}"
-        parsing_error: "Error on line {0}: {1}"
-        duplicate_label: "Duplicate label at line {0}: {1}"
+        invalid_instruction: "Line {0} - Invalid instruction - {1}"
+        invalid_label: "Line {0} - Invalid label - {1}"
+        duplicated_label: "Line {0} - Duplicate label - '{1}'"
     instruction_parsing:
         invalid_binary_input: "Invalid binary input"
         invalid_symbolic_input: "Invalid input"
@@ -216,9 +216,9 @@ errors:
         invalid_direct_operand: "Operand is not a valid address"
         invalid_data: "Input is not a valid 16-bit signed value"
     label_parsing:
-        invalid_character: "Invalid character found in label: '{0}'"
-        label_too_short: "Label too short. Minimum length: {0}"
-        label_too_long: "Label too long. Maximum length: {0}"
+        invalid_character: "The character '{0}' is not allowed"
+        label_too_short: "Minimum length: {0}"
+        label_too_long: "Maximum length: {0}"
     symbol_table:
         label_already_exists: "Label already exists"      
         invalid_label: "Invalid label"

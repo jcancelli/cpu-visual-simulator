@@ -28,22 +28,23 @@ X = 8
 		</CodeBlock>
 		<!-- prettier-ignore -->
 		<CodeBlock>
-LOD X
-CMP #3
-JNZ ELSE
-LOD #5		:THEN
-ADD Y
-STO Y
-JMP ENDIF
-LOD #2		:ELSE
-ADD Z
-STO Z
-LOD #8		:ENDIF
-STO X
-HLT
-3			:X
-0			:Y
-0			:Z
+			<!-- &zwnj; is there so that leading whitespaces are not removed, it should be an invisible character -->
+&zwnj;               LOD X
+               CMP #3
+               JNZ ELSE
+THEN:          LOD #5
+               ADD Y
+               STO Y
+               JMP ENDIF
+ELSE:          LOD #2
+               ADD Z
+               STO Z
+ENDIF:         LOD #8
+               STO X
+               HLT
+X:             3
+Y:             0
+Z:             0
 		</CodeBlock>
 	</div>
 </Section>
@@ -70,21 +71,22 @@ ENDWHILE
 		</CodeBlock>
 		<!-- prettier-ignore -->
 		<CodeBlock>
-LOD #0
-STO SUM
-STO COUNT
-LOD COUNT		:WHILE
-CMP MAX
-JZ ENDWHILE
-ADD #1
-STO COUNT
-ADD SUM
-STO SUM
-JMP WHILE
-HLT				:ENDWHILE
-5				:MAX
-0				:COUNT
-0				:SUM
+			<!-- &zwnj; is there so that leading whitespaces are not removed, it should be an invisible character -->
+&zwnj;               LOD #0
+               STO SUM
+               STO COUNT
+WHILE:         LOD COUNT
+               CMP MAX
+               JZ ENDWHILE
+               ADD #1
+               STO COUNT
+               ADD SUM
+               STO SUM
+               JMP WHILE
+ENDWHILE:      HLT
+MAX:           5
+COUNT:         0
+SUM:           0
 		</CodeBlock>
 	</div>
 </Section>

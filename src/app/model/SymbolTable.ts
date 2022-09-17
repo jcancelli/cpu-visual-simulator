@@ -155,6 +155,15 @@ export default class SymbolTable {
 	}
 
 	/**
+	 * Overwrites its instance labels with the labels of the symbolTable object passed as argument.
+	 * Doesn't fire any listener (except for the ones directly subscribed to the labels store)
+	 * @param {SymbolTable} symbolTable - Tha SymbolTable object that should be imported
+	 */
+	import(symbolTable: SymbolTable): void {
+		this._labels.set([...symbolTable.labels.get()])
+	}
+
+	/**
 	 * Shifts all the labels of address <= of the specified address by -2 addresses (-1 position).
 	 * The label of the first address is lost
 	 * @param {number} address
