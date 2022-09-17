@@ -306,6 +306,11 @@ const _default = {
 			invalid_direct_operand: "",
 			invalid_data: ""
 		},
+		label_parsing: {
+			invalid_character: "",
+			label_too_short: "",
+			label_too_long: ""
+		},
 		symbol_table: {
 			label_already_exists: "",
 			invalid_label: ""

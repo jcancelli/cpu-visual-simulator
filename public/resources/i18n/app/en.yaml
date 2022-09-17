@@ -215,6 +215,10 @@ errors:
         invalid_immediate_operand: "Operand is not a valid 8-bit signed value"
         invalid_direct_operand: "Operand is not a valid address"
         invalid_data: "Input is not a valid 16-bit signed value"
+    label_parsing:
+        invalid_character: "Invalid character found in label: '{0}'"
+        label_too_short: "Label too short. Minimum length: {0}"
+        label_too_long: "Label too long. Maximum length: {0}"
     symbol_table:
         label_already_exists: "Label already exists"      
         invalid_label: "Invalid label"
