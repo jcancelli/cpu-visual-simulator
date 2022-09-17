@@ -7,11 +7,14 @@ import SymbolTable from "../model/SymbolTable"
 import { isSigned, pad } from "./binary"
 import { isValidAddress } from "./ram"
 import text from "../store/text"
+import { interpolate } from "../../shared/util/template"
+import { shorten } from "../../shared/util/string"
+import { MAX_LABEL_LENGTH } from "./label"
 
 /** Valid binary input pattern */
 export const BINARY = /^[01]{0,8}\s?[01]{1,8}?$/
 /** Valid numeric input pattern */
-export const DATA = /^-?[0-9]{1,5}$/
+export const DATA = /^-?[0-9]+$/
 /** Valid symbolic opcode pattern */
 export const OPCODE = /[A-Z]{2,3}/
 /** Valid immediate operand pattern */
@@ -47,12 +50,10 @@ const EMPTY_SYMBOL_TABLE = new SymbolTable()
  * @returns {Instruction}
  */
 export function parseSymbolic(input: string, symbolTable: SymbolTable = EMPTY_SYMBOL_TABLE): Instruction {
-	if (SYMBOLIC_INSTRUCTION.test(input)) {
-		return _parseSymbolic(input, symbolTable)
-	} else if (DATA.test(input)) {
+	if (DATA.test(input)) {
 		return _parseData(input)
 	} else {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_symbolic_input, input)
+		return _parseSymbolic(input, symbolTable)
 	}
 }
 
@@ -80,11 +81,17 @@ function _parseSymbolic(input: string, symbolTable: SymbolTable): Instruction {
 	const hasOperand = !!symbolicOperand
 	const opcode = parseOpcode(symbolicOpcode)
 	if (!opcode) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_opcode, input)
+		throw new InstructionParsingError(
+			interpolate(text.get().errors.instruction_parsing.invalid_opcode, shorten(symbolicOpcode, 10)),
+			input
+		)
 	}
 	if (hasOperand) {
 		if (!opcode.takesOperand) {
-			throw new InstructionParsingError(text.get().errors.instruction_parsing.operand_not_allowed, input)
+			throw new InstructionParsingError(
+				interpolate(text.get().errors.instruction_parsing.operand_not_allowed, shorten(opcode.symbolic, 10)),
+				input
+			)
 		}
 		if (IMMEDIATE_LABEL.test(symbolicOperand)) {
 			return _parseImmediateLabelOperand(input, opcode, symbolTable)
@@ -97,7 +104,10 @@ function _parseSymbolic(input: string, symbolTable: SymbolTable): Instruction {
 		}
 	} else {
 		if (opcode.takesOperand) {
-			throw new InstructionParsingError(text.get().errors.instruction_parsing.operand_required, input)
+			throw new InstructionParsingError(
+				interpolate(text.get().errors.instruction_parsing.operand_required, shorten(opcode.symbolic, 10)),
+				input
+			)
 		}
 		return new Instruction(symbolicOpcode, "", BinaryValue.fromBytes([opcode.numeric, 0]))
 	}
@@ -113,7 +123,13 @@ function _parseSymbolic(input: string, symbolTable: SymbolTable): Instruction {
 function _parseDirectLabelOperand(input: string, opcode: Opcode, symbolTable: SymbolTable): Instruction {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	if (!symbolTable.hasLabel(symbolicOperand)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.unknown_label, input)
+		throw new InstructionParsingError(
+			interpolate(
+				text.get().errors.instruction_parsing.unknown_label,
+				shorten(symbolicOperand, MAX_LABEL_LENGTH)
+			),
+			input
+		)
 	}
 	const address = symbolTable.getAddress(symbolicOperand)
 	return new Instruction(symbolicOpcode, symbolicOperand, BinaryValue.fromBytes([opcode.numeric, address]))
@@ -123,7 +139,6 @@ function _parseDirectLabelOperand(input: string, opcode: Opcode, symbolTable: Sy
  * Parse an instruction in its symbolic form that has an immediate number as operand
  * @param {string} input - The string containing the instruction to parse
  * @param {Opcode} opcode - The opcode of the instruction
- * @param {SymbolTable} symbolTable - A symbol table that may contain an eventual label referenced in the input string
  * @returns {Instruction}
  */
 function _parseImmediateNumberOperand(input: string, opcode: Opcode): Instruction {
@@ -132,12 +147,21 @@ function _parseImmediateNumberOperand(input: string, opcode: Opcode): Instructio
 	const numericOperand = parseInt(symbolicOperand.slice(1))
 	if (!opcode.takesImmediate) {
 		throw new InstructionParsingError(
-			text.get().errors.instruction_parsing.immediate_operand_not_allowed,
+			interpolate(
+				text.get().errors.instruction_parsing.immediate_operand_not_allowed,
+				shorten(opcode.symbolic, 10)
+			),
 			input
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_immediate_operand, input)
+		throw new InstructionParsingError(
+			interpolate(
+				text.get().errors.instruction_parsing.invalid_immediate_operand,
+				shorten(numericOperand.toString(), 10)
+			),
+			input
+		)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -157,18 +181,33 @@ function _parseImmediateLabelOperand(input: string, opcode: Opcode, symbolTable:
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const label = symbolicOperand.slice(1)
 	if (!symbolTable.hasLabel(label)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.unknown_label, input)
+		throw new InstructionParsingError(
+			interpolate(
+				text.get().errors.instruction_parsing.unknown_label,
+				shorten(symbolicOperand, MAX_LABEL_LENGTH)
+			),
+			input
+		)
 	}
 	const numericOpcode = setImmediateFlag(new BinaryValue(8, opcode.numeric), true).signed()
 	const numericOperand = symbolTable.getAddress(label)
 	if (!opcode.takesImmediate) {
 		throw new InstructionParsingError(
-			text.get().errors.instruction_parsing.immediate_operand_not_allowed,
+			interpolate(
+				text.get().errors.instruction_parsing.immediate_operand_not_allowed,
+				shorten(opcode.symbolic, 10)
+			),
 			input
 		)
 	}
 	if (!isSigned(numericOperand, 8)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_immediate_operand, input)
+		throw new InstructionParsingError(
+			interpolate(
+				text.get().errors.instruction_parsing.invalid_immediate_operand,
+				shorten(numericOperand.toString(), 10)
+			),
+			input
+		)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -181,14 +220,19 @@ function _parseImmediateLabelOperand(input: string, opcode: Opcode, symbolTable:
  * Parse an instruction in its symbolic form that has a ram address as operand
  * @param {string} input - The string containing the instruction to parse
  * @param {Opcode} opcode - The opcode of the instruction
- * @param {SymbolTable} symbolTable - A symbol table that may contain an eventual label referenced in the input string
  * @returns {Instruction}
  */
 function _parseDirectOperand(input: string, opcode: Opcode): Instruction {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
 	const numericOperand = parseInt(symbolicOperand)
 	if (!isValidAddress(numericOperand)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_direct_operand, input)
+		throw new InstructionParsingError(
+			interpolate(
+				text.get().errors.instruction_parsing.invalid_direct_operand,
+				shorten(numericOperand.toString(), 10)
+			),
+			input
+		)
 	}
 	return new Instruction(
 		symbolicOpcode,
@@ -233,7 +277,10 @@ function _parseBinary(input: string): Instruction {
 function _parseData(input: string): Instruction {
 	const numericValue = parseInt(input)
 	if (!isSigned(numericValue, 16)) {
-		throw new InstructionParsingError(text.get().errors.instruction_parsing.invalid_data, input)
+		throw new InstructionParsingError(
+			interpolate(text.get().errors.instruction_parsing.invalid_data, shorten(numericValue.toString(), 10)),
+			input
+		)
 	}
 	const value = new BinaryValue(16, numericValue)
 	const opcodeValue = value.getByte(1)
