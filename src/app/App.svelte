@@ -9,6 +9,15 @@
 	import Menu from "./components/menu/Menu.svelte"
 	import Settings from "./components/settings/Settings.svelte"
 	import text from "./store/text"
+	import Cpu from "./model/Cpu"
+	import Ram from "./model/Ram"
+	import SymbolTable from "./model/SymbolTable"
+	import ProgramExecution from "./execution/ProgramExecution"
+
+	export let cpu: Cpu
+	export let ram: Ram
+	export let symbolTable: SymbolTable
+	export let programExecution: ProgramExecution
 
 	let app: HTMLDivElement
 
@@ -31,8 +40,8 @@
 
 <svelte:window on:resize={scale} on:error={logError} />
 <div class="relative w-app h-app origin-top-left" bind:this={app}>
-	<Stage />
-	<Controls bind:this={$controls} />
+	<Stage {cpu} {ram} {symbolTable} />
+	<Controls bind:this={$controls} {programExecution} />
 	<Menu bind:this={$menu} />
 </div>
 <LoggerComponent bind:this={$logger} />

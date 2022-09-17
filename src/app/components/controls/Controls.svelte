@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "../basic/buttons/Execution.svelte"
-	import execution, { isExecuting } from "../../execution/execution"
 	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
 	import Slider from "../basic/slider/Control.svelte"
@@ -11,16 +10,21 @@
 	import StepText from "./StepText.svelte"
 	import { stepText } from "../../store/components"
 	import Logger from "../../util/logger"
+	import ProgramExecution from "../../execution/ProgramExecution"
+
+	export let programExecution: ProgramExecution
+
+	const isProgramExecuting = programExecution.isExecuting
 
 	function resetExecution() {
 		Logger.info(`Reset pressed`, "USER_INPUT")
-		execution.reset()
+		programExecution.reset()
 		$cpuStore.reset()
 	}
 
 	function toggleExecution() {
 		Logger.info(`Toggle execution pressed`, "USER_INPUT")
-		execution.toggle()
+		programExecution.toggle()
 	}
 
 	function skipToEnd() {
@@ -29,7 +33,7 @@
 
 	function playStep() {
 		Logger.info(`Play step pressed`, "USER_INPUT")
-		execution.step()
+		programExecution.step()
 	}
 
 	function skipStep() {
@@ -38,7 +42,7 @@
 
 	function playInstruction() {
 		Logger.info(`Play instruction pressed`, "USER_INPUT")
-		execution.instruction()
+		programExecution.instruction()
 	}
 
 	function skipInstruction() {
@@ -66,8 +70,8 @@
 				<ExecutionButton on:click={resetExecution} icon="reset" title={$text.controls.buttons.reset.title} />
 				<ExecutionButton
 					on:click={toggleExecution}
-					icon={$isExecuting ? "pause" : "play"}
-					title={$isExecuting ? $text.controls.buttons.pause.title : $text.controls.buttons.play.title}
+					icon={$isProgramExecuting ? "pause" : "play"}
+					title={$isProgramExecuting ? $text.controls.buttons.pause.title : $text.controls.buttons.play.title}
 				/>
 				<ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} disabled />
 			</div>
