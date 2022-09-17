@@ -1,7 +1,7 @@
 import CheckedError from "../errors/CheckedError"
 import text from "../store/text"
 import { derived, Readable, writable, Writable } from "../util/customStores"
-import { isValidLabel } from "../util/label"
+import { validateLabel } from "../util/label"
 import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ram"
 import { WORD_SIZE } from "../util/cpu"
 
@@ -57,9 +57,9 @@ export default class SymbolTable {
 		} else if (label === "") {
 			this.unlabelAddress(address)
 			return
-		} else if (!isValidLabel(label)) {
-			throw new CheckedError(text.get().errors.symbol_table.invalid_label)
-		} else if (this.hasLabel(label)) {
+		}
+		validateLabel(label) // throws error if invalid label
+		if (this.hasLabel(label)) {
 			throw new CheckedError(text.get().errors.symbol_table.label_already_exists)
 		}
 		this._labels.update(oldState => {
