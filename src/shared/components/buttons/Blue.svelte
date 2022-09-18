@@ -10,7 +10,9 @@
         px-2
         rounded-md
         hover:text-white
+        focus:text-white
         hover:bg-blue-700
+        focus:bg-blue-700
         transition-colors
         disabled:brightness-[.6]
         disabled:cursor-default
