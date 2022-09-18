@@ -9,6 +9,7 @@
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
 	import Copyright from "./sections/Copyright.svelte"
+	import Credits from "./sections/Credits.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -37,7 +38,7 @@
 			<Copyright />
 		</TabPanel>
 		<TabPanel>
-			<h1 class="text-center font-bold text-4xl">TODO</h1>
+			<Credits />
 		</TabPanel>
 	</TabPanels>
 </TabGroup>

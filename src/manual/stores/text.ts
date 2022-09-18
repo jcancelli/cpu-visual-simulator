@@ -70,7 +70,13 @@ const _default = {
 			}
 		},
 		credits: {
-			title: ""
+			title: "",
+			subsections: {
+				credits: {
+					title: "",
+					paragraphs: []
+				}
+			}
 		}
 	},
 	opcodes_table: {
