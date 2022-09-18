@@ -94,6 +94,19 @@ menu:
         manual:
             text: "Manuale"
             title: "Apri manuale"
+    overlays:
+        save_to_file:
+            title: "Salva programma"
+            buttons:
+                save:
+                    text: "Salva"
+                    title: "Salva"
+                cancel:
+                    text: "Annulla"
+                    title: "Annulla"
+            inputs:
+                filename:
+                    placeholder: "Nome file"
 controls:
     labels:
         execution: "Programma"

@@ -137,6 +137,26 @@ const _default = {
 				text: "",
 				title: ""
 			}
+		},
+		overlays: {
+			save_to_file: {
+				title: "",
+				buttons: {
+					save: {
+						text: "",
+						title: ""
+					},
+					cancel: {
+						text: "",
+						title: ""
+					}
+				},
+				inputs: {
+					filename: {
+						placeholder: ""
+					}
+				}
+			}
 		}
 	},
 	controls: {

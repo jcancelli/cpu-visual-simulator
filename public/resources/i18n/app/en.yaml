@@ -93,6 +93,19 @@ menu:
         manual:
             text: "Manual"
             title: "Open manual"
+    overlays:
+        save_to_file:
+            title: "Save program"
+            buttons:
+                save:
+                    text: "Save"
+                    title: "Save"
+                cancel:
+                    text: "Cancel"
+                    title: "Cancel"
+            inputs:
+                filename:
+                    placeholder: "File name"
 controls:
     labels:
         execution: "Program"

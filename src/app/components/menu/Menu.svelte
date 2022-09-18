@@ -10,6 +10,7 @@
 	import { parseProgram, exportProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
 	import MenuItemIcon from "./MenuItem.svelte"
+	import SaveToFileDialog from "./SaveToFileDialog.svelte"
 
 	const examples = [
 		{
@@ -25,6 +26,8 @@
 			url: "resources/examples/array_sum.cpuvs"
 		}
 	] as const
+
+	let showSaveFileDialog = false
 
 	function openSettings(): void {
 		$showSettings = true
@@ -58,17 +61,7 @@
 	}
 
 	function saveProgram(): void {
-		try {
-			let fileName = prompt("File name")
-			if (fileName) {
-				download(exportProgram(ramStore.get(), symbolTableStore.get()), `${fileName}.cpuvs`)
-			} else {
-				throw new CheckedError(get(text).errors.user_input.invalid_file_name)
-			}
-		} catch (error) {
-			Logger.error(error, "USER_INPUT", error.isChecked)
-			$messageFeed.error(error.message)
-		}
+		showSaveFileDialog = true
 
 		Logger.info("Program saved to file", "USER_INPUT")
 	}
@@ -136,3 +129,4 @@
 		/>
 	</button>
 </div>
+<SaveToFileDialog open={showSaveFileDialog} on:close={() => (showSaveFileDialog = false)} />
