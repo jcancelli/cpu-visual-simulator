@@ -1,21 +1,21 @@
-LOD INDEX       :LOOP
-CMP ARR_LENGTH
-JZ END_LOOP
-ADD #1
-STO INDEX
-LOD SUM
-ADD ARRAY       :A
-STO SUM
-LOD A
-ADD #2
-STO A
-JMP LOOP
-HLT             :END_LOOP
-0               :INDEX
-0				:SUM
-5               :ARR_LENGTH
-0               :ARRAY
-1
-2
-3
-4
+LOOP:          LOD INDEX
+               CMP ARR_LENGTH
+               JZ END_LOOP
+               ADD #1
+               STO INDEX
+               LOD SUM
+A:             ADD ARRAY
+               STO SUM
+               LOD A
+               ADD #2
+               STO A
+               JMP LOOP
+END_LOOP:      HLT
+INDEX:         0
+SUM:           0
+ARR_LENGTH:    5
+ARRAY:         0
+               1
+               2
+               3
+               4

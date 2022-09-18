@@ -93,6 +93,19 @@ menu:
         manual:
             text: "Manual"
             title: "Open manual"
+    overlays:
+        save_to_file:
+            title: "Save program"
+            buttons:
+                save:
+                    text: "Save"
+                    title: "Save"
+                cancel:
+                    text: "Cancel"
+                    title: "Cancel"
+            inputs:
+                filename:
+                    placeholder: "File name"
 controls:
     labels:
         execution: "Program"
@@ -201,22 +214,26 @@ settings:
 errors:
     unchecked: "Unexpected error"
     program_parsing:
-        invalid_syntax: "Invalid syntax at line {0}: {1}"
-        parsing_error: "Error on line {0}: {1}"
-        duplicate_label: "Duplicate label at line {0}: {1}"
+        invalid_instruction: "Line {0} - Invalid instruction - {1}"
+        invalid_label: "Line {0} - Invalid label - {1}"
+        duplicated_label: "Line {0} - Duplicate label - '{1}'"
     instruction_parsing:
         invalid_binary_input: "Invalid binary input"
-        invalid_symbolic_input: "Invalid input"
-        invalid_opcode: "Invalid opcode"
-        operand_not_allowed: "Opcode doesn't allow an operand"
-        operand_required: "Opcode requires an operand"
-        unknown_label: "Label not found"
-        immediate_operand_not_allowed: "Opcode doesn't allow an immediate operand"
-        invalid_immediate_operand: "Operand is not a valid 8-bit signed value"
-        invalid_direct_operand: "Operand is not a valid address"
-        invalid_data: "Input is not a valid 16-bit signed value"
+        invalid_opcode: "'{0}' is not a valid opcode"
+        operand_not_allowed: "Opcode'{0}' does not take operands"
+        operand_required: "Opcode '{0}' requires an operand"
+        unknown_label: "Label '{0}' is not defined"
+        immediate_operand_not_allowed: "Opcode '{0}' doesn't allow an immediate operand"
+        invalid_immediate_operand: "Operand '{0}' is not a valid 8-bit signed integer"
+        invalid_direct_operand: "Operand '{0}' is not a valid address"
+        invalid_data: "The value '{0}' is not a valid 16-bit signed integer"
+    label_parsing:
+        invalid_character: "The character '{0}' is not allowed"
+        label_too_short: "Minimum length: {0}"
+        label_too_long: "Maximum length: {0}"
     symbol_table:
-        label_already_exists: "Label already exists"
+        label_already_exists: "Label already exists"      
+        invalid_label: "Invalid label"
     user_input:
         invalid_file_name: "Invalid file name"
         invalid_pc_value: "Invalid address"

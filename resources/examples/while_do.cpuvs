@@ -1,15 +1,15 @@
-LOD #0
-STO SUM
-STO COUNT
-LOD COUNT		:WHILE
-CMP MAX
-JZ ENDWHILE
-ADD #1
-STO COUNT
-ADD SUM
-STO SUM
-JMP WHILE
-HLT				:ENDWHILE
-5				:MAX
-0				:COUNT
-0				:SUM
+               LOD #0
+               STO SUM
+               STO COUNT
+WHILE:         LOD COUNT
+               CMP MAX
+               JZ ENDWHILE
+               ADD #1
+               STO COUNT
+               ADD SUM
+               STO SUM
+               JMP WHILE
+ENDWHILE:      HLT
+MAX:           5
+COUNT:         0
+SUM:           0

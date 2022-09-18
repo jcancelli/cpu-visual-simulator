@@ -94,6 +94,19 @@ menu:
         manual:
             text: "Manuale"
             title: "Apri manuale"
+    overlays:
+        save_to_file:
+            title: "Salva programma"
+            buttons:
+                save:
+                    text: "Salva"
+                    title: "Salva"
+                cancel:
+                    text: "Annulla"
+                    title: "Annulla"
+            inputs:
+                filename:
+                    placeholder: "Nome file"
 controls:
     labels:
         execution: "Programma"
@@ -202,22 +215,26 @@ settings:
 errors:
     unchecked: "Errore inaspettato"
     program_parsing:
-        invalid_syntax: "Sintassi invalida a riga {0}: {1}"
-        parsing_error: "Errore a riga {0}: {1}"
-        duplicate_label: "Label duplicata a riga {0}: {1}"
+        invalid_instruction: "Riga {0} - Istruzione invalida - {1}"    
+        invalid_label: "Riga {0} - Label invalida - {1}"
+        duplicated_label: "Riga {0} - Label duplicata - '{1}'"
     instruction_parsing:
         invalid_binary_input: "Input binario invalido"
-        invalid_symbolic_input: "Input invalido"
-        invalid_opcode: "Codice operativo invalido"
-        operand_not_allowed: "Codice operativo non accetta operandi"
-        operand_required: "Codice operativo richiede un operando"
-        unknown_label: "Label non trovata"
-        immediate_operand_not_allowed: "Codice operativo non accetta operandi immediati"
-        invalid_immediate_operand: "L'operando non è un valore ad 8-bit con segno valido"
-        invalid_direct_operand: "L'operando non è un indirizzo valido"
-        invalid_data: "L'input non è un valore a 16-bit con segno valido"
+        invalid_opcode: "'{0}' non è un codice operativo valido"
+        operand_not_allowed: "Il codice operativo '{0}' non accetta operandi"
+        operand_required: "Il codice operativo '{0}' richiede un operando"
+        unknown_label: "Label '{0}' non è definita"
+        immediate_operand_not_allowed: "Il codice operativo '{0}' non accetta operandi immediati"
+        invalid_immediate_operand: "L'operando '{0}' non è un intero con segno a 8-bit valido"
+        invalid_direct_operand: "L'operando '{0}' non è un indirizzo valido"
+        invalid_data: "Il valore '{0}' non è un intero con segno a 16-bit valido"
+    label_parsing:
+        invalid_character: "Il carattere '{0}' non è ammesso"
+        label_too_short: "Lunghezza minima: {0} caratteri"
+        label_too_long: "Lunghezza massima: {0} caratteri"
     symbol_table:
         label_already_exists: "Label esiste già"
+        invalid_label: "Label invalida"
     user_input:
         invalid_file_name: "Nome file invalido"
         invalid_pc_value: "Indirizzo invalido"
