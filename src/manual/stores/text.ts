@@ -60,7 +60,14 @@ const _default = {
 			}
 		},
 		copyright: {
-			title: ""
+			title: "",
+			subsections: {
+				copyright_notice: {
+					title: "",
+					paragraphs: [],
+					disclaimer: ""
+				}
+			}
 		},
 		credits: {
 			title: ""

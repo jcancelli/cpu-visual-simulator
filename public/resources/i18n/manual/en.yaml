@@ -52,6 +52,15 @@ sections:
                 title: "High-level WHILE-DO example and its translation"
     copyright:
         title: "Copyright"
+        subsections:
+          copyright_notice:
+            title: "Copyright notice"
+            paragraphs:
+              - "Copyright 2022 Jonathan Cancelli"
+              - "This simulator can be used exclusively for non-commercial, educational activities"
+            disclaimer: |
+              Disclaimer: To our best knowledge, this brand-new application does not infringe any IP rights (our own new design,
+              no reuse of pre-existing code), but if anyone thinks otherwise, please contact us at 
     credits:
         title: "Credits"
 opcodes_table: 

@@ -8,6 +8,7 @@
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
+	import Copyright from "./sections/Copyright.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -33,7 +34,7 @@
 			<Examples />
 		</TabPanel>
 		<TabPanel>
-			<h1 class="text-center font-bold text-4xl">TODO</h1>
+			<Copyright />
 		</TabPanel>
 		<TabPanel>
 			<h1 class="text-center font-bold text-4xl">TODO</h1>
