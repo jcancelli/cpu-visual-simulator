@@ -30,7 +30,7 @@
             rounded-[50%]
             transition-transform
             shadow-lg
-            {checked ? 'translate-x-full' : ''}
+            {checked ? 'translate-x-8' : ''}
         "
 	/>
 </Switch>
