@@ -83,7 +83,7 @@
 		}
 		return showAddress(address)
 			.then(async () => await tick())
-			.then(() => addressElements.find(e => e.getAddress() === address).flash())
+			.then(() => addressElements.find(addressElement => addressElement?.getAddress?.() === address)?.flash())
 	}
 
 	export async function flashContent(address: number): Promise<void> {
@@ -92,7 +92,7 @@
 		}
 		return showAddress(address)
 			.then(async () => await tick())
-			.then(() => cellElements.find(e => e.getAddress() === address).flash())
+			.then(() => cellElements.find(cellElement => cellElement?.getAddress?.() === address)?.flash()) // sometimes throws a "cellElement.getAddress() is not a function" error, idk why, therefore the "?." operator. Don't even kwon how to replicate the error
 	}
 
 	function scroll(deltaY: number, deselect: boolean): void {
