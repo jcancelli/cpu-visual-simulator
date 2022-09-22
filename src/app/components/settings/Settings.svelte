@@ -2,7 +2,7 @@
 	import text from "../../store/text"
 	import { showSettings } from "../../store/settings"
 	import Logger from "../../util/logger"
-	import CloseButton from "../basic/buttons/close/Settings.svelte"
+	import CloseButton from "./CloseButton.svelte"
 	import { fade } from "svelte/transition"
 	import TabGroup from "../../../shared/components/tabs/TabGroup.svelte"
 	import Tab from "../../../shared/components/tabs/Tab.svelte"

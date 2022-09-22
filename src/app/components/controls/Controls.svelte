@@ -2,7 +2,7 @@
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "./ExecutionButton.svelte"
 	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
-	import Checkbox from "../basic/checkboxes/Control.svelte"
+	import Checkbox from "./Checkbox.svelte"
 	import Slider from "../../../shared/components/slider/Control.svelte"
 	import Group from "./Group.svelte"
 	import text from "../../store/text"
