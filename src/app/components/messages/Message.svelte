@@ -13,7 +13,7 @@
 	import text from "../../store/text"
 	import { logsStore } from "../../store/logs"
 	import { download } from "../../../shared/util/file"
-	import DebugButton from "../basic/buttons/Debug.svelte"
+	import WhiteButton from "../../../shared/components/buttons/White.svelte"
 	import Progress from "../basic/progress/Message.svelte"
 
 	const dispach = createEventDispatcher()
@@ -82,7 +82,7 @@
 	</button>
 	<p class="w-3/4 text-center text-xl">{message.message}</p>
 	{#if message.type === "BUG"}
-		<DebugButton on:click={exportLogs}>{$text.message_feed.buttons.export_logs.text}</DebugButton>
+		<WhiteButton on:click={exportLogs}>{$text.message_feed.buttons.export_logs.text}</WhiteButton>
 	{/if}
 	{#if message.timer}
 		<Progress class="absolute left-0 bottom-0" value={secondsBeforeClose} max={MESSAGE_DURATION_SECONDS} />

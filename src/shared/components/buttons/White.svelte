@@ -4,13 +4,15 @@
 
 <button
 	class="
-        text-white
-        border
+        text-black
+        border-2
         border-white
         px-2
         rounded-md
         hover:text-black
+        focus:text-black
         hover:bg-white
+        focus:bg-white
         transition-colors
         disabled:brightness-[.6]
         disabled:cursor-default
