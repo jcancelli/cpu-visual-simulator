@@ -3,7 +3,7 @@
 	import text from "../../../store/text"
 	import { language, ttsEnabled, ttsSpeed, ttsVoice } from "../../../store/settings"
 	import Slider from "../../../../shared/components/slider/Settings.svelte"
-	import Select from "../../basic/selects/Settings.svelte"
+	import Select from "../Select.svelte"
 	import speechSynthesis from "../../../util/speechSynthesis"
 	import Switch from "../../../../shared/components/Switch.svelte"
 </script>

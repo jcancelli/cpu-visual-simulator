@@ -14,7 +14,7 @@
 	import { logsStore } from "../../store/logs"
 	import { download } from "../../../shared/util/file"
 	import WhiteButton from "../../../shared/components/buttons/White.svelte"
-	import Progress from "../basic/progress/Message.svelte"
+	import Progress from "./ProgressBar.svelte"
 
 	const dispach = createEventDispatcher()
 
