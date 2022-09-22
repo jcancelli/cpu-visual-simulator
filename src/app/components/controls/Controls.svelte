@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Widget from "./Widget.svelte"
-	import ExecutionButton from "../basic/buttons/Execution.svelte"
+	import ExecutionButton from "./ExecutionButton.svelte"
 	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "../basic/checkboxes/Control.svelte"
-	import Slider from "../basic/slider/Control.svelte"
+	import Slider from "../../../shared/components/slider/Control.svelte"
 	import Group from "./Group.svelte"
 	import text from "../../store/text"
 	import { cpuStore } from "../../store/state"

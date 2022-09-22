@@ -7,7 +7,7 @@
 	import ComponentLabel from "../labels/Component.svelte"
 	import ramSelection from "../../store/ramSelection"
 	import { beforeUpdate, afterUpdate, tick } from "svelte"
-	import Button from "../basic/buttons/Ram.svelte"
+	import Button from "./Button.svelte"
 	import text from "../../store/text"
 	import Ram from "../../model/Ram"
 	import SymbolTable from "../../model/SymbolTable"
