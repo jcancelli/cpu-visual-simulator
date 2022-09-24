@@ -2,7 +2,7 @@
 	import { ramStore } from "../../store/state"
 	import { messageFeed } from "../../store/components"
 	import ramSelection from "../../store/ramSelection"
-	import { displayAsBinary } from "../../store/settings"
+	import { animationsEnabled, displayAsBinary } from "../../store/settings"
 	import { parseBinary, parseSymbolic } from "../../util/instructionParser"
 	import { flash as flashComponent } from "../../util/animation"
 	import Logger from "../../util/logger"
@@ -26,6 +26,7 @@
 	let inputValue: string
 
 	export async function flash(): Promise<void> {
+		if (!$animationsEnabled) return
 		return flashComponent(cell, "background-color", { r: 211, g: 211, b: 211 }, { r: 0, g: 255, b: 0 })
 	}
 

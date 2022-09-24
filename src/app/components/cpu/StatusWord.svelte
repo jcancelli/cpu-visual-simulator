@@ -5,6 +5,7 @@
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let swzDiv: HTMLDivElement
 	let swnDiv: HTMLDivElement
@@ -13,10 +14,12 @@
 	const zeroFlag = cpu.zeroFlag
 
 	export async function flashZeroFlag() {
+		if (!animationsEnabled) return
 		return flash(swzDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashNegativeFlag() {
+		if (!animationsEnabled) return
 		return flash(swnDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 

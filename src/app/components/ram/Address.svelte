@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { extAddressBusColor } from "../../store/settings"
+	import { animationsEnabled, extAddressBusColor } from "../../store/settings"
 
 	import { displayAsBinary } from "../../store/settings"
 	import { flash as flashComponent } from "../../util/animation"
@@ -14,6 +14,7 @@
 	}
 
 	export async function flash() {
+		if (!$animationsEnabled) return
 		return flashComponent(addressDiv, "background-color", { r: 255, g: 140, b: 0 }, { r: 0, g: 255, b: 0 })
 	}
 </script>

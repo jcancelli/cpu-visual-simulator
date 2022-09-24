@@ -12,6 +12,7 @@
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let ir: InstructionRegister
 	let cu: ControlUnit
@@ -23,6 +24,7 @@
 	let acc: Accumulator
 
 	export async function flash(component: FlashableCpuComponent) {
+		if (!animationsEnabled) return
 		switch (component) {
 			case "IR":
 				return Promise.all([ir.flashOpcode(), ir.flashOperand()])
@@ -59,12 +61,12 @@
 />
 <div class="absolute left-[50px] top-[50px] w-[700px] h-[620px] z-[3] rounded-[30px] border border-black">
 	<ComponentLabel text="CPU" fontSize="LARGE" top="-30px" left="47%" />
-	<InstructionRegister bind:this={ir} {cpu} />
-	<ControlUnit bind:this={cu} {cpu} />
-	<ProgramCounter bind:this={pc} {cpu} />
-	<Increment bind:this={inc} {cpu} />
-	<Multiplexer bind:this={mux} {cpu} />
-	<ArithmeticLogicUnit bind:this={alu} {cpu} />
-	<StatusWord bind:this={sw} {cpu} />
-	<Accumulator bind:this={acc} {cpu} />
+	<InstructionRegister bind:this={ir} {cpu} {animationsEnabled} />
+	<ControlUnit bind:this={cu} {animationsEnabled} />
+	<ProgramCounter bind:this={pc} {cpu} {animationsEnabled} />
+	<Increment bind:this={inc} {cpu} {animationsEnabled} />
+	<Multiplexer bind:this={mux} {animationsEnabled} />
+	<ArithmeticLogicUnit bind:this={alu} {cpu} {animationsEnabled} />
+	<StatusWord bind:this={sw} {cpu} {animationsEnabled} />
+	<Accumulator bind:this={acc} {cpu} {animationsEnabled} />
 </div>

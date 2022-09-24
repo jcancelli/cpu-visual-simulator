@@ -49,7 +49,7 @@
 <svelte:window on:resize={scale} on:error={logError} />
 <div class="relative w-app h-app origin-top-left" bind:this={app}>
 	<Stage {cpu} {ram} {symbolTable} />
-	<Controls bind:this={$controls} {programExecution} />
+	<Controls bind:this={$controls} {cpu} {programExecution} />
 	<Menu bind:this={$menu} />
 </div>
 <LoggerComponent bind:this={$logger} />

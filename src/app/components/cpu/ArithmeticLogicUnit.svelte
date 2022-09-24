@@ -5,6 +5,7 @@
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let operand1Div: HTMLDivElement
 	let operand2Div: HTMLDivElement
@@ -15,14 +16,17 @@
 	const aluOperation = cpu.aluOperation
 
 	export async function flashFirstOperand() {
+		if (!animationsEnabled) return
 		return flash(operand1Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashSecondOperand() {
+		if (!animationsEnabled) return
 		return flash(operand2Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashOperator() {
+		if (!animationsEnabled) return
 		return flash(operatorDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 

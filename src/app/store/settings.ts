@@ -9,6 +9,7 @@ export const displayComponentsLabels = writable<boolean>()
 export const displayBussesLabels = writable<boolean>()
 export const displayStepText = writable<boolean>()
 export const minimalAnimations = writable<boolean>()
+export const animationsEnabled = writable<boolean>()
 export const animationSpeed = writable<number>()
 export const language = writable<Language>()
 export const ttsEnabled = writable<boolean>()
@@ -34,6 +35,7 @@ export const defaults = {
 	displayBussesLabels: true,
 	displayStepText: false,
 	minimalAnimations: false,
+	animationsEnabled: true,
 	animationSpeed: 1.5,
 	language: getDefaultLanguage(),
 	ttsEnabled: false,
@@ -60,6 +62,7 @@ export function init() {
 	displayBussesLabels.set(storage.getOrElse("displayBussesLabels", defaults.displayBussesLabels) === "true")
 	displayStepText.set(storage.getOrElse("displayStepText", defaults.displayStepText) === "true")
 	minimalAnimations.set(defaults.minimalAnimations)
+	animationsEnabled.set(defaults.animationsEnabled)
 	animationSpeed.set(parseFloat(storage.getOrElse("animationSpeed", defaults.animationSpeed)))
 	language.set(storage.getOrElse("language", defaults.language) as Language)
 	ttsEnabled.set(storage.getOrElse("ttsEnabled", defaults.ttsEnabled) === "true")

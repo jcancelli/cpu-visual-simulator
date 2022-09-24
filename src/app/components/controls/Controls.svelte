@@ -1,17 +1,19 @@
 <script lang="ts">
+	import { minimalAnimations, displayAsBinary, animationSpeed, animationsEnabled } from "../../store/settings"
+	import text from "../../store/text"
+	import { stepText } from "../../store/components"
 	import Widget from "./Widget.svelte"
 	import ExecutionButton from "./ExecutionButton.svelte"
-	import { minimalAnimations, displayAsBinary, animationSpeed } from "../../store/settings"
 	import Checkbox from "./Checkbox.svelte"
 	import Slider from "../../../shared/components/slider/Control.svelte"
 	import Group from "./Group.svelte"
-	import text from "../../store/text"
-	import { cpuStore } from "../../store/state"
 	import StepText from "./StepText.svelte"
-	import { stepText } from "../../store/components"
 	import Logger from "../../util/logger"
 	import ProgramExecution from "../../execution/ProgramExecution"
+	import ThreeStatesCheckbox, { State } from "./ThreeStatesCheckbox.svelte"
+	import Cpu from "../../model/Cpu"
 
+	export let cpu: Cpu
 	export let programExecution: ProgramExecution
 
 	const isProgramExecuting = programExecution.isExecuting
@@ -19,7 +21,7 @@
 	function resetExecution() {
 		Logger.info(`Reset pressed`, "USER_INPUT")
 		programExecution.reset()
-		$cpuStore.reset()
+		cpu.reset()
 	}
 
 	function toggleExecution() {
@@ -57,9 +59,22 @@
 		Logger.info(`Binary toggle pressed - ${$displayAsBinary}`, "USER_INPUT")
 	}
 
-	function animationsToggled() {
-		$minimalAnimations = !$minimalAnimations
-		Logger.info(`Animations toggle pressed - ${$minimalAnimations}`, "USER_INPUT")
+	function animationsToggled(event: CustomEvent) {
+		switch (event.detail.value) {
+			case State.OFF:
+				$minimalAnimations = false
+				$animationsEnabled = false
+				break
+			case State.HALF:
+				$minimalAnimations = true
+				$animationsEnabled = true
+				break
+			case State.ON:
+				$minimalAnimations = false
+				$animationsEnabled = true
+				break
+		}
+		Logger.info(`Animations toggle pressed - ${event.detail.value}`, "USER_INPUT")
 	}
 </script>
 
@@ -73,7 +88,7 @@
 					icon={$isProgramExecuting ? "pause" : "play"}
 					title={$isProgramExecuting ? $text.controls.buttons.pause.title : $text.controls.buttons.play.title}
 				/>
-				<ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} disabled />
+				<!-- <ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} disabled /> -->
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.instruction}>
@@ -83,23 +98,23 @@
 					icon="play"
 					title={$text.controls.buttons.play_instruction.title}
 				/>
-				<ExecutionButton
+				<!-- <ExecutionButton
 					on:click={skipInstruction}
 					icon="skip"
 					title={$text.controls.buttons.skip_instruction.title}
 					disabled
-				/>
+				/> -->
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={playStep} icon="play" title={$text.controls.buttons.play_step.title} />
-				<ExecutionButton
+				<!-- <ExecutionButton
 					on:click={skipStep}
 					icon="skip"
 					title={$text.controls.buttons.skip_step.title}
 					disabled
-				/>
+				/> -->
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.speed}>
@@ -113,12 +128,16 @@
 		</Group>
 	</Widget>
 	<Widget class="flex-col items-baseline justify-center text-gray-200">
-		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}
-			>{$text.controls.checkboxes.binary.text}</Checkbox
+		<Checkbox bind:checked={$displayAsBinary} on:click={binaryToggled}>
+			{$text.controls.checkboxes.binary.text}
+		</Checkbox>
+		<ThreeStatesCheckbox
+			value={$animationsEnabled ? ($minimalAnimations ? State.HALF : State.ON) : State.OFF}
+			on:change={animationsToggled}
+			descending={true}
 		>
-		<Checkbox checked={!$minimalAnimations} on:click={animationsToggled}
-			>{$text.controls.checkboxes.animations.text}</Checkbox
-		>
+			{$text.controls.checkboxes.animations.text}
+		</ThreeStatesCheckbox>
 	</Widget>
 	<StepText bind:this={$stepText} />
 </div>

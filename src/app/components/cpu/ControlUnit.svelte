@@ -1,13 +1,13 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashComponent } from "../../util/animation"
-	import Cpu from "../../model/Cpu"
 
-	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let cuDiv: HTMLDivElement
 
 	export async function flash() {
+		if (!animationsEnabled) return
 		return flashComponent(cuDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 </script>

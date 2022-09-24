@@ -16,6 +16,8 @@
 	import { showNodes } from "../store/debug"
 	import NodeMarker from "./NodeMarker.svelte"
 
+	export let animationsEnabled: boolean
+
 	const animationsCache = new Map<string, WireAnimation>()
 
 	let staticCanvas: HTMLCanvasElement
@@ -36,6 +38,7 @@
 	})
 
 	export async function flashWire(fromName: string, toName: string): Promise<void> {
+		if (!animationsEnabled) return
 		const from = Nodes.node(fromName),
 			to = Nodes.node(toName)
 		if (!from) throw new Error("Node " + fromName + " is undefined")

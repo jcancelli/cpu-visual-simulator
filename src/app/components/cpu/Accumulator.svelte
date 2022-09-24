@@ -10,6 +10,7 @@
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let element: HTMLDivElement
 	let isEditing = false
@@ -23,6 +24,7 @@
 	syncInputValue()
 
 	export async function flash(): Promise<void> {
+		if (!animationsEnabled) return
 		return flashElement(element, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 

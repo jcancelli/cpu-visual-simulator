@@ -6,6 +6,7 @@
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
+	export let animationsEnabled: boolean
 
 	let opcodeDiv: HTMLDivElement
 	let operandDiv: HTMLDivElement
@@ -36,11 +37,13 @@
 	}
 
 	export async function flashOpcode() {
+		if (!animationsEnabled) return
 		if (!opcodeDiv) return
 		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
 
 	export async function flashOperand() {
+		if (!animationsEnabled) return
 		if (!operandDiv) return
 		return flash(operandDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
 	}
