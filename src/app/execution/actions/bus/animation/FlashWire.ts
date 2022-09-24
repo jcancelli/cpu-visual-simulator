@@ -1,5 +1,5 @@
+import { ExecutionContext } from "../../../ExecutionContext"
 import Animation from "../../Animation"
-import { wires as wiresComponent } from "../../../../store/components"
 
 export default class FlashWire extends Animation {
 	protected from: string
@@ -12,8 +12,8 @@ export default class FlashWire extends Animation {
 		this.to = to
 	}
 
-	protected async action(): Promise<any> {
-		return wiresComponent.get().flashWire(this.from, this.to)
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		return ctx.wires.component.flashWire(this.from, this.to)
 	}
 
 	toString(): string {

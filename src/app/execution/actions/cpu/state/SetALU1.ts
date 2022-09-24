@@ -1,6 +1,5 @@
-import { cpu as cpuComponent } from "../../../../store/components"
-import { cpuStore, wiresStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class SetALU1 extends CpuAction {
 	constructor() {
@@ -8,8 +7,8 @@ export default class SetALU1 extends CpuAction {
 		this._name = "SetALU1"
 	}
 
-	protected async action(): Promise<any> {
-		cpuStore.get().alu1.set(wiresStore.get().data_main.get())
-		await cpuComponent.get().flash("ALU:1")
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		ctx.cpu.model.alu1.set(ctx.wires.model.data_main.get())
+		await ctx.cpu.component.flash("ALU:1")
 	}
 }

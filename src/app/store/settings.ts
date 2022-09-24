@@ -1,4 +1,4 @@
-import { get, writable } from "svelte/store"
+import { writable } from "../util/customStores"
 import { getDefaultLanguage, Language } from "../../shared/util/i18n"
 import { storage } from "../util/localStorage"
 import speechSynthesis from "../util/speechSynthesis"
@@ -79,7 +79,7 @@ export function init() {
 
 	window.addEventListener("load", () => {
 		window.speechSynthesis.addEventListener("voiceschanged", () => {
-			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(get(language))[0].name))
+			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
 		})
 		displayComponentsLabels.subscribe(newValue => storage.set("displayComponentsLabels", newValue))
 		displayBussesLabels.subscribe(newValue => storage.set("displayBussesLabels", newValue))

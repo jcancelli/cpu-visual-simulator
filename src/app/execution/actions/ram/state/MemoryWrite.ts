@@ -1,7 +1,6 @@
-import { parseBinary, parseSymbolic } from "../../../../util/instructionParser"
-import { ram as ramComponent } from "../../../../store/components"
-import { ramStore, wiresStore } from "../../../../store/state"
 import RamAction from "../RamAction"
+import { parseBinary, parseSymbolic } from "../../../../util/instructionParser"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class MemoryWrite extends RamAction {
 	constructor() {
@@ -9,17 +8,16 @@ export default class MemoryWrite extends RamAction {
 		this._name = "MemoryWrite"
 	}
 
-	protected async action(): Promise<any> {
-		const ram = ramStore.get()
-		const address = wiresStore.get().addr_main.get().unsigned()
-		const prevSymbolicOpcode = ram.read(address).symbolicOpcode
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		const address = ctx.wires.model.addr_main.get().unsigned()
+		const prevSymbolicOpcode = ctx.ram.model.read(address).symbolicOpcode
 		// if the destination address is showing the instruction as code but is not "NOP"
 		if (/^[A-Z]+$/.test(prevSymbolicOpcode) && prevSymbolicOpcode !== "NOP") {
-			ram.write(address, parseBinary(wiresStore.get().data_main.get().toBinaryString())) // trick to write instruction as code
+			ctx.ram.model.write(address, parseBinary(ctx.wires.model.data_main.get().toBinaryString())) // trick to write instruction as code
 		} else {
 			// if the destination address is showing the instruction as a number
-			ram.write(address, parseSymbolic(wiresStore.get().data_main.get().signed().toString())) // write instruction as number
+			ctx.ram.model.write(address, parseSymbolic(ctx.wires.model.data_main.get().signed().toString())) // write instruction as number
 		}
-		await ramComponent.get().flashContent(address)
+		await ctx.ram.component.flashContent(address)
 	}
 }

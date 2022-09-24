@@ -1,5 +1,5 @@
-import { ramStore, cpuStore, wiresStore } from "../../../../store/state"
 import BusAction from "../BusAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export type DataBus = "data_main" | "data_ir_cu" | "data_alu_acc" | "data_alu_sw" | "data_mux_alu"
 export type ControlBus = "ctrl_cu_mux" | "ctrl_cu_ram" | "ctrl_cu_alu"
@@ -32,28 +32,28 @@ export default class LoadValueOnBus extends BusAction {
 		this.bus = bus === "default" ? DEFAULT_BUSSES[valueSource] : bus
 	}
 
-	protected async action(): Promise<any> {
-		wiresStore.get()[this.bus].set(this.getValueFromSource())
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		ctx.wires.model[this.bus].set(this.getValueFromSource(ctx))
 	}
 
-	protected getValueFromSource() {
+	protected getValueFromSource(ctx: ExecutionContext) {
 		switch (this.valueSource) {
 			case "RAM":
-				return ramStore.get().read(wiresStore.get().addr_main.get().unsigned())
+				return ctx.ram.model.read(ctx.wires.model.addr_main.get().unsigned())
 			case "IR:OPC":
-				return cpuStore.get().instructionRegister.get().opcodeValue()
+				return ctx.cpu.model.instructionRegister.get().opcodeValue()
 			case "IR:OPR":
-				return cpuStore.get().instructionRegister.get().operandValue()
+				return ctx.cpu.model.instructionRegister.get().operandValue()
 			case "ALU:RES":
-				return cpuStore.get().aluResult.get()
+				return ctx.cpu.model.aluResult.get()
 			case "ACC":
-				return cpuStore.get().accumulator.get()
+				return ctx.cpu.model.accumulator.get()
 			case "CU":
 				throw new Error("CU value not implemented")
 			case "PC":
-				return cpuStore.get().programCounter.get()
+				return ctx.cpu.model.programCounter.get()
 			case "INC":
-				return cpuStore.get().increment.get()
+				return ctx.cpu.model.increment.get()
 			default:
 				throw new Error(this.valueSource + " value not implemented")
 		}

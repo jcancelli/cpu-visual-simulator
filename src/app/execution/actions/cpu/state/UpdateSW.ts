@@ -1,6 +1,5 @@
-import { cpu as cpuComponent } from "../../../../store/components"
-import { cpuStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class UpdateSW extends CpuAction {
 	constructor() {
@@ -8,27 +7,26 @@ export default class UpdateSW extends CpuAction {
 		this._name = "UpdateSW"
 	}
 
-	protected async action(): Promise<any> {
-		const cpu = cpuStore.get()
-		const acc = cpu.accumulator.get().signed()
-		const zeroFlag = cpu.zeroFlag.get()
-		const negativeFlag = cpu.negativeFlag.get()
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		const acc = ctx.cpu.model.accumulator.get().signed()
+		const zeroFlag = ctx.cpu.model.zeroFlag.get()
+		const negativeFlag = ctx.cpu.model.negativeFlag.get()
 
 		const z = acc === 0
 		const n = acc < 0
 
 		if (z !== zeroFlag && n !== negativeFlag) {
-			cpu.zeroFlag.set(z)
-			cpu.negativeFlag.set(n)
-			await Promise.all([cpuComponent.get().flash("SW:Z"), cpuComponent.get().flash("SW:N")])
+			ctx.cpu.model.zeroFlag.set(z)
+			ctx.cpu.model.negativeFlag.set(n)
+			await Promise.all([ctx.cpu.component.flash("SW:Z"), ctx.cpu.component.flash("SW:N")])
 		} else {
 			if (z !== zeroFlag) {
-				cpu.zeroFlag.set(z)
-				await cpuComponent.get().flash("SW:Z")
+				ctx.cpu.model.zeroFlag.set(z)
+				await ctx.cpu.component.flash("SW:Z")
 			}
 			if (n !== negativeFlag) {
-				cpu.negativeFlag.set(n)
-				await cpuComponent.get().flash("SW:N")
+				ctx.cpu.model.negativeFlag.set(n)
+				await ctx.cpu.component.flash("SW:N")
 			}
 		}
 	}

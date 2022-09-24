@@ -1,5 +1,5 @@
-import { cpuStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class HaltExecution extends CpuAction {
 	constructor() {
@@ -7,7 +7,7 @@ export default class HaltExecution extends CpuAction {
 		this._name = "HaltExecution"
 	}
 
-	protected async action(): Promise<any> {
-		cpuStore.get().isHalting.set(true)
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		ctx.cpu.model.isHalting.set(true)
 	}
 }

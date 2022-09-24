@@ -1,8 +1,8 @@
 import CheckedError from "../../../../errors/CheckedError"
-import { cpuStore } from "../../../../store/state"
 import text from "../../../../store/text"
 import BinaryValue from "../../../../model/BinaryValue"
 import CpuAction from "../CpuAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class ExecuteALUOperation extends CpuAction {
 	constructor() {
@@ -10,8 +10,8 @@ export default class ExecuteALUOperation extends CpuAction {
 		this._name = "ExecuteALUOperation"
 	}
 
-	protected async action(): Promise<any> {
-		const cpu = cpuStore.get()
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		const cpu = ctx.cpu.model
 
 		const operation = cpu.aluOperation.get()
 		const alu1 = cpu.alu1.get().signed()

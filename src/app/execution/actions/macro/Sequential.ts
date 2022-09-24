@@ -1,5 +1,6 @@
 import Action from "../Action"
 import Macro from "./Macro"
+import { ExecutionContext } from "../../ExecutionContext"
 
 export default class Sequantial extends Macro {
 	constructor(...subactions: Action[]) {
@@ -7,9 +8,9 @@ export default class Sequantial extends Macro {
 		this._name = "Sequential"
 	}
 
-	protected async action(): Promise<any> {
+	protected async action(ctx: ExecutionContext): Promise<any> {
 		for (let action of this.subactions) {
-			await action.execute()
+			await action.execute(ctx)
 		}
 	}
 }

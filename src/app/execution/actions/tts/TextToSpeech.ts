@@ -1,8 +1,8 @@
 import Action from "../Action"
 import speechSynthesis from "../../../util/speechSynthesis"
 import { TTS_ENABLED } from "../Conditions"
-import { get } from "svelte/store"
 import { language, ttsSpeed, ttsVoice } from "../../../store/settings"
+import { ExecutionContext } from "../../ExecutionContext"
 
 export default class TextToSpeech extends Action {
 	readonly text: string
@@ -14,11 +14,11 @@ export default class TextToSpeech extends Action {
 		this.condition(TTS_ENABLED)
 	}
 
-	protected async action(): Promise<any> {
+	protected async action(ctx: ExecutionContext): Promise<any> {
 		speechSynthesis.read(
 			this.text,
-			get(ttsSpeed),
-			speechSynthesis.getAvailableVoices(get(language)).find(voice => voice.name === get(ttsVoice))
+			ttsSpeed.get(),
+			speechSynthesis.getAvailableVoices(language.get()).find(voice => voice.name === ttsVoice.get())
 		)
 	}
 

@@ -1,6 +1,5 @@
-import { cpu as cpuComponent } from "../../../../store/components"
-import { cpuStore, wiresStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export default class SetPC extends CpuAction {
 	constructor() {
@@ -8,10 +7,9 @@ export default class SetPC extends CpuAction {
 		this._name = "SetPC"
 	}
 
-	protected async action(): Promise<any> {
-		const cpu = cpuStore.get()
-		cpu.isJumping.set(true)
-		cpu.programCounter.set(wiresStore.get().addr_main.get())
-		await cpuComponent.get().flash("PC")
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		ctx.cpu.model.isJumping.set(true)
+		ctx.cpu.model.programCounter.set(ctx.wires.model.addr_main.get())
+		await ctx.cpu.component.flash("PC")
 	}
 }

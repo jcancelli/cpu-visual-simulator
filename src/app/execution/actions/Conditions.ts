@@ -1,33 +1,54 @@
-import { get } from "svelte/store"
-import { cpuStore } from "../../store/state"
 import { minimalAnimations, ttsEnabled } from "../../store/settings"
+import { ExecutionContext } from "../ExecutionContext"
 
-export type Condition = () => boolean
+/** A function that takes an execution context and returns a boolean. Represents a condition for an action */
+export type Condition = (ctx: ExecutionContext) => boolean
 
-export function ZERO_FLAG_SET(): boolean {
-	return cpuStore.get().zeroFlag.get()
+/** Returns true if the zero flag of the cpu passed in the execution context is set */
+export function ZERO_FLAG_SET(ctx: ExecutionContext): boolean {
+	return ctx.cpu.model.zeroFlag.get()
 }
 
-export function NEGATIVE_FLAG_SET(): boolean {
-	return cpuStore.get().negativeFlag.get()
+/** Returns true if the negative flag of the cpu passed in the execution context is set */
+export function NEGATIVE_FLAG_SET(ctx: ExecutionContext): boolean {
+	return ctx.cpu.model.negativeFlag.get()
 }
 
-export function MINIMAL_ANIMATIONS(): boolean {
-	return get(minimalAnimations)
+/** Returns true if the minimal animations setting is set to true */
+export function MINIMAL_ANIMATIONS(ctx: ExecutionContext): boolean {
+	return minimalAnimations.get()
 }
 
-export function TTS_ENABLED(): boolean {
-	return get(ttsEnabled)
+/** Returns true if the text to speech enabled setting is set to true */
+export function TTS_ENABLED(ctx: ExecutionContext): boolean {
+	return ttsEnabled.get()
 }
 
+/**
+ * Takes a condition and returns a condition that represents the logical NOT of the input condition
+ * @param condition - The condition that should be negated
+ * @returns A condition that represents the logical NOT of the input condition
+ */
 export function NOT(condition: Condition): Condition {
-	return () => !condition()
+	return (ctx: ExecutionContext) => !condition(ctx)
 }
 
+/**
+ * Takes two conditions and returns a condition that represents the logical AND of the input conditions
+ * @param conditionA - A condition
+ * @param conditionB - Another condition
+ * @returns A condition that represents the logical AND of the input conditions
+ */
 export function AND(conditionA: Condition, conditionB: Condition): Condition {
-	return () => conditionA() && conditionB()
+	return (ctx: ExecutionContext) => conditionA(ctx) && conditionB(ctx)
 }
 
+/**
+ * Takes two conditions and returns a condition that represents the logical OR of the input conditions
+ * @param conditionA - A condition
+ * @param conditionB - Another condition
+ * @returns A condition that represents the logical OR of the input conditions
+ */
 export function OR(conditionA: Condition, conditionB: Condition): Condition {
-	return () => conditionA() || conditionB()
+	return (ctx: ExecutionContext) => conditionA(ctx) || conditionB(ctx)
 }

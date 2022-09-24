@@ -1,5 +1,5 @@
-import { cpu as cpuComponent } from "../../../../store/components"
 import Animation from "../../Animation"
+import { ExecutionContext } from "../../../ExecutionContext"
 
 export type FlashableCpuComponent =
 	| "IR"
@@ -25,8 +25,8 @@ export default class FlashCpu extends Animation {
 		this.component = component
 	}
 
-	protected async action(): Promise<any> {
-		return cpuComponent.get().flash(this.component)
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		return ctx.cpu.component.flash(this.component)
 	}
 
 	toString(): string {

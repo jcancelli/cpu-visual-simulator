@@ -14,7 +14,8 @@ import {
 import {
 	cpu as cpuComponentStore,
 	ram as ramComponentStore,
-	wires as wiresComponentStore
+	wires as wiresComponentStore,
+	stepText as stepTextComponentStore
 } from "./store/components"
 import { init as initSettings } from "./store/settings"
 import { init as initText } from "./store/text"
@@ -47,14 +48,17 @@ const initExecution = () => {
 	const cpuComponent = cpuComponentStore.get()
 	const ramComponent = ramComponentStore.get()
 	const wiresComponent = wiresComponentStore.get()
+	const stepTextComponent = stepTextComponentStore.get()
 
 	if (!cpuComponent) throw new Error("cpu component not yet initialized")
 	if (!ramComponent) throw new Error("ram component not yet initialized")
 	if (!wiresComponent) throw new Error("wires component not yet initialized")
+	if (!stepTextComponent) throw new Error("step text component not yet initialized")
 
 	programExecution.executionContext.cpu.component = cpuComponent
 	programExecution.executionContext.ram.component = ramComponent
 	programExecution.executionContext.wires.component = wiresComponent
+	programExecution.executionContext.stepTextComponent = stepTextComponent
 
 	programExecutionLoop.start()
 }

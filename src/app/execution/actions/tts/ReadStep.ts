@@ -1,9 +1,9 @@
-import { get } from "svelte/store"
-import text, { Step } from "../../../store/text"
 import Action from "../Action"
+import text, { Step } from "../../../store/text"
 import { TTS_ENABLED } from "../Conditions"
 import speechSynthesis from "../../../util/speechSynthesis"
 import { language, ttsSpeed, ttsVoice } from "../../../store/settings"
+import { ExecutionContext } from "../../ExecutionContext"
 
 export default class ReadStep extends Action {
 	readonly step: Step
@@ -16,13 +16,13 @@ export default class ReadStep extends Action {
 		this.condition(TTS_ENABLED)
 	}
 
-	protected async action(): Promise<any> {
+	protected async action(ctx: ExecutionContext): Promise<any> {
 		let resolve
 		ReadStep.utteranceEndedPromise = new Promise<void>(res => (resolve = res))
 		speechSynthesis.read(
 			text.get().steps[this.step].tts,
-			get(ttsSpeed),
-			speechSynthesis.getAvailableVoices(get(language)).find(voice => voice.name === get(ttsVoice)),
+			ttsSpeed.get(),
+			speechSynthesis.getAvailableVoices(language.get()).find(voice => voice.name === ttsVoice.get()),
 			() => resolve()
 		)
 	}

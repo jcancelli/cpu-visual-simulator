@@ -1,5 +1,6 @@
 import Action from "../Action"
 import Macro from "./Macro"
+import { ExecutionContext } from "../../ExecutionContext"
 
 export default class Parallel extends Macro {
 	constructor(...subactions: Action[]) {
@@ -7,7 +8,7 @@ export default class Parallel extends Macro {
 		this._name = "Parallel"
 	}
 
-	protected async action(): Promise<any> {
-		return Promise.all(this.subactions.map(subaction => subaction.execute()))
+	protected async action(ctx: ExecutionContext): Promise<any> {
+		return Promise.all(this.subactions.map(subaction => subaction.execute(ctx)))
 	}
 }

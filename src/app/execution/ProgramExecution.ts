@@ -73,7 +73,8 @@ export default class ProgramExecution implements Cyclable {
 				model: wires,
 				component: null // will be set when application mounts
 			},
-			symbolTable
+			symbolTable,
+			stepTextComponent: null // will be set when application mounts
 		}
 	}
 
@@ -149,7 +150,7 @@ export default class ProgramExecution implements Cyclable {
 	protected async execute(): Promise<void> {
 		while (!this.queueIsEmpty() && this.shouldExecute()) {
 			const action = this.queue.shift()!
-			await action.execute()
+			await action.execute(this.executionContext)
 			if (this.isPlayingMicrostep && action.doesEndStep()) {
 				this.setIsPlayingMicrostep(false)
 			}

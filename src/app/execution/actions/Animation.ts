@@ -7,6 +7,4 @@ export default abstract class Animation extends Action {
 		this._name = "Animation"
 		this.condition(NOT(MINIMAL_ANIMATIONS))
 	}
-
-	protected abstract action(): Promise<any>
 }
