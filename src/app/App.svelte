@@ -2,7 +2,7 @@
 	import Stage from "./components/Stage.svelte"
 	import MessageFeed from "./components/messages/Feed.svelte"
 	import { controls, messageFeed, logger, menu, settings } from "./store/components"
-	import { onMount } from "svelte"
+	import { createEventDispatcher, onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/logger"
 	import Controls from "./components/controls/Controls.svelte"
@@ -20,8 +20,11 @@
 	export let symbolTable: SymbolTable
 	export let wires: Wires
 	export let programExecution: ProgramExecution
+	export let initExecution: () => void
 
 	let app: HTMLDivElement
+
+	const dispatch = createEventDispatcher()
 
 	function scale() {
 		const width = 1400
@@ -37,7 +40,10 @@
 		Logger.error(new Error($text.errors.unchecked), "UNCAUGHT")
 	}
 
-	onMount(scale)
+	onMount(() => {
+		scale()
+		initExecution()
+	})
 </script>
 
 <svelte:window on:resize={scale} on:error={logError} />

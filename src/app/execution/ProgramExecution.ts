@@ -7,6 +7,10 @@ import { FETCH, INCREMENT_PC } from "./actions/presets"
 import Logger from "../util/logger"
 import { Cyclable } from "./NonBlockingLoop"
 import Cpu from "../model/Cpu"
+import { ExecutionContext } from "./ExecutionContext"
+import Ram from "../model/Ram"
+import SymbolTable from "../model/SymbolTable"
+import Wires from "../model/Wires"
 
 // Note: it could be possible that the execution of the actions could be implemented without an infinite non-blocking loop. An analysis should be made. Could improve performance / be more elegant
 
@@ -35,16 +39,20 @@ export default class ProgramExecution implements Cyclable {
 	protected cyclePhase: CyclePhase
 	/** The queue that contains the actions to be executed */
 	protected queue: Action[]
-	/** Reference to the Cpu on which the actions will be executed */
-	protected cpu: Cpu
+	/** Object that allows actions to access the simulator components  */
+	public executionContext: ExecutionContext
 
 	/**
-	 * @param {Cpu} cpu - A reference to the Cpu on which the execution will perform actions on
+	 * @param cpu
+	 * @param ram
+	 * @param symbolTable
+	 * @param wires
 	 */
-	constructor(cpu: Cpu /*, ram: Ram, logger: Logger, messageFeed: MessageFeed*/) {
-		if (!cpu) {
-			throw new Error("Null or undefined cpu")
-		}
+	constructor(cpu: Cpu, ram: Ram, symbolTable: SymbolTable, wires: Wires) {
+		if (!cpu) throw new Error("Null or undefined cpu")
+		if (!ram) throw new Error("Null or undefined ram")
+		if (!symbolTable) throw new Error("Null or undefined symbolTable")
+		if (!wires) throw new Error("Null or undefined wires")
 		this._isExecuting = writable(false)
 		this.isExecuting = derived(this._isExecuting, value => value)
 		this.isPlayingProgram = false
@@ -52,7 +60,21 @@ export default class ProgramExecution implements Cyclable {
 		this.isPlayingInstruction = false
 		this.cyclePhase = "ENQUEUING_FETCH"
 		this.queue = []
-		this.cpu = cpu
+		this.executionContext = {
+			cpu: {
+				model: cpu,
+				component: null // will be set when application mounts
+			},
+			ram: {
+				model: ram,
+				component: null // will be set when application mounts
+			},
+			wires: {
+				model: wires,
+				component: null // will be set when application mounts
+			},
+			symbolTable
+		}
 	}
 
 	async cycle(): Promise<void> {
@@ -72,7 +94,7 @@ export default class ProgramExecution implements Cyclable {
 					}
 					break
 				case "ENQUEUING_INSTRUCTION":
-					const ir = this.cpu.instructionRegister.get()
+					const ir = this.executionContext.cpu.model.instructionRegister.get()
 					this.queue.push(...instructionToActions(ir))
 					Logger.info(`Executing instruction "${ir.symbolic()}"`, "EXECUTION")
 					this.cyclePhase = "EXECUTING_INSTRUCTION"
@@ -80,11 +102,14 @@ export default class ProgramExecution implements Cyclable {
 				case "EXECUTING_INSTRUCTION":
 					await this.execute()
 					if (this.queueIsEmpty()) {
-						if (this.cpu.programCounter.get().unsigned() === LAST_ADDRESS && !this.cpu.isJumping.get()) {
-							this.cpu.isHalting.set(true)
+						if (
+							this.executionContext.cpu.model.programCounter.get().unsigned() === LAST_ADDRESS &&
+							!this.executionContext.cpu.model.isJumping.get()
+						) {
+							this.executionContext.cpu.model.isHalting.set(true)
 						}
-						if (this.cpu.isJumping.get()) {
-							this.cpu.isJumping.set(false)
+						if (this.executionContext.cpu.model.isJumping.get()) {
+							this.executionContext.cpu.model.isJumping.set(false)
 							this.cyclePhase = "ENQUEUING_FETCH"
 							if (this.isPlayingInstruction) {
 								this.setIsPlayingInstruction(false)
@@ -102,7 +127,7 @@ export default class ProgramExecution implements Cyclable {
 					await this.execute()
 					if (this.isPlayingInstruction) {
 						this.setIsPlayingInstruction(false)
-						this.cpu.isHalting.set(true)
+						this.executionContext.cpu.model.isHalting.set(true)
 					}
 					if (this.queueIsEmpty()) {
 						this.cyclePhase = "ENQUEUING_FETCH"
@@ -110,11 +135,11 @@ export default class ProgramExecution implements Cyclable {
 					break
 			}
 		} catch (error) {
-			this.cpu.isHalting.set(true)
+			this.executionContext.cpu.model.isHalting.set(true)
 			messageFeedComponent.get().error(error.message)
 			Logger.error(error, "EXECUTION", error.isChecked)
 		} finally {
-			if (this.cpu.isHalting.get()) {
+			if (this.executionContext.cpu.model.isHalting.get()) {
 				this.reset()
 			}
 		}
@@ -175,8 +200,8 @@ export default class ProgramExecution implements Cyclable {
 	/** Pauses and reset the execution. All actions ready to be executed won't be executed */
 	public reset(): void {
 		this.pause()
-		this.cpu.isHalting.set(false)
-		this.cpu.isJumping.set(false)
+		this.executionContext.cpu.model.isHalting.set(false)
+		this.executionContext.cpu.model.isJumping.set(false)
 		this.cyclePhase = "ENQUEUING_FETCH"
 		this.emptyExecutionQueue()
 		Logger.info("Execution - RESET", "EXECUTION")
