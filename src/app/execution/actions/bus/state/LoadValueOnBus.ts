@@ -1,15 +1,9 @@
-import busses, { main_address_bus } from "../../../../store/busses"
-import { ramStore, cpuStore } from "../../../../store/state"
+import { ramStore, cpuStore, wiresStore } from "../../../../store/state"
 import BusAction from "../BusAction"
 
-export type DataBus =
-	| "main_data_bus"
-	| "ir_cu_data_bus"
-	| "alu_acc_data_bus"
-	| "alu_sw_data_bus"
-	| "mux_alu_data_bus"
-export type ControlBus = "cu_mux_ctrl_bus" | "cu_ram_ctrl_bus" | "cu_alu_ctrl_bus"
-export type AddressBus = "main_address_bus" | "inc_pc_address_bus"
+export type DataBus = "data_main" | "data_ir_cu" | "data_alu_acc" | "data_alu_sw" | "data_mux_alu"
+export type ControlBus = "ctrl_cu_mux" | "ctrl_cu_ram" | "ctrl_cu_alu"
+export type AddressBus = "addr_main" | "addr_inc_pc"
 export type Bus = DataBus | ControlBus | AddressBus
 
 export type DataBusValueSource = "RAM" | "IR:OPC" | "IR:OPR" | "ALU:RES" | "ACC"
@@ -18,13 +12,13 @@ export type AddressBusValueSource = "PC" | "INC" | "IR:OPR"
 export type ValueSource = DataBusValueSource | ControlBusValueSource | AddressBusValueSource
 
 const DEFAULT_BUSSES = {
-	RAM: "main_data_bus",
-	"IR:OPC": "ir_cu_data_bus",
-	"IR:OPR": "main_address_bus",
-	"ALU:RES": "alu_acc_data_bus",
-	ACC: "main_data_bus",
-	PC: "main_address_bus",
-	INC: "inc_pc_address_bus"
+	RAM: "data_main",
+	"IR:OPC": "data_ir_cu",
+	"IR:OPR": "addr_main",
+	"ALU:RES": "data_alu_acc",
+	ACC: "data_main",
+	PC: "addr_main",
+	INC: "addr_inc_pc"
 } as const
 
 export default class LoadValueOnBus extends BusAction {
@@ -39,13 +33,13 @@ export default class LoadValueOnBus extends BusAction {
 	}
 
 	protected async action(): Promise<any> {
-		busses[this.bus].set(this.getValueFromSource())
+		wiresStore.get()[this.bus].set(this.getValueFromSource())
 	}
 
 	protected getValueFromSource() {
 		switch (this.valueSource) {
 			case "RAM":
-				return ramStore.get().read(main_address_bus.get().unsigned())
+				return ramStore.get().read(wiresStore.get().addr_main.get().unsigned())
 			case "IR:OPC":
 				return cpuStore.get().instructionRegister.get().opcodeValue()
 			case "IR:OPR":

@@ -1,6 +1,5 @@
-import { alu_acc_data_bus } from "../../../../store/busses"
 import { cpu as cpuComponent } from "../../../../store/components"
-import { cpuStore } from "../../../../store/state"
+import { cpuStore, wiresStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
 
 export default class SetACC extends CpuAction {
@@ -10,7 +9,7 @@ export default class SetACC extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		cpuStore.get().accumulator.set(alu_acc_data_bus.get())
+		cpuStore.get().accumulator.set(wiresStore.get().data_alu_acc.get())
 		await cpuComponent.get().flash("ACC")
 	}
 }

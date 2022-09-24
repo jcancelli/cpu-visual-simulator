@@ -12,11 +12,13 @@
 	import Cpu from "./model/Cpu"
 	import Ram from "./model/Ram"
 	import SymbolTable from "./model/SymbolTable"
+	import Wires from "./model/Wires"
 	import ProgramExecution from "./execution/ProgramExecution"
 
 	export let cpu: Cpu
 	export let ram: Ram
 	export let symbolTable: SymbolTable
+	export let wires: Wires
 	export let programExecution: ProgramExecution
 
 	let app: HTMLDivElement

@@ -1,6 +1,5 @@
-import { main_data_bus } from "../../../../store/busses"
 import { cpu as cpuComponent } from "../../../../store/components"
-import { cpuStore } from "../../../../store/state"
+import { cpuStore, wiresStore } from "../../../../store/state"
 import CpuAction from "../CpuAction"
 
 export default class SetALU1 extends CpuAction {
@@ -10,7 +9,7 @@ export default class SetALU1 extends CpuAction {
 	}
 
 	protected async action(): Promise<any> {
-		cpuStore.get().alu1.set(main_data_bus.get())
+		cpuStore.get().alu1.set(wiresStore.get().data_main.get())
 		await cpuComponent.get().flash("ALU:1")
 	}
 }

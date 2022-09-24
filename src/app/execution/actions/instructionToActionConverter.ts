@@ -54,7 +54,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				),
 				new SetACC().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
-					// new LoadValueOnBus(?, "alu_sw_data_bus"),
+					// new LoadValueOnBus(?, "data_alu_sw"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
@@ -77,7 +77,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				),
 				new SetACC().thenWaitFor(TTS_FINISHED).endstep(),
 				new Parallel(
-					// new LoadValueOnBus(?, "alu_sw_data_bus"),
+					// new LoadValueOnBus(?, "data_alu_sw"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")
@@ -93,7 +93,7 @@ export function instructionToActions(instruction: Instruction): Action[] {
 				...LOAD_ALU1_FROM_ACC,
 				...LOAD_ALU2(instruction.immediateFlag()),
 				new Parallel(
-					// new LoadValueOnBus(?, "alu_sw_data_bus"),
+					// new LoadValueOnBus(?, "data_alu_sw"),
 					new FlashWire("ALU:3", "SW:1"),
 					new ReadStep("alu_to_sw"),
 					new StepText("alu_to_sw")

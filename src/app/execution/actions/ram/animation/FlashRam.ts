@@ -1,6 +1,6 @@
 import Animation from "../../Animation"
 import { ram as ramComponent } from "../../../../store/components"
-import { main_address_bus } from "../../../../store/busses"
+import { wiresStore } from "../../../../store/state"
 
 export type FlashableRamComponent = "ADDRESS" | "DATA"
 
@@ -16,9 +16,9 @@ export default class FlashRam extends Animation {
 	protected async action(): Promise<any> {
 		switch (this.component) {
 			case "ADDRESS":
-				return ramComponent.get().flashAddress(main_address_bus.get().unsigned())
+				return ramComponent.get().flashAddress(wiresStore.get().addr_main.get().unsigned())
 			case "DATA":
-				return ramComponent.get().flashContent(main_address_bus.get().unsigned())
+				return ramComponent.get().flashContent(wiresStore.get().addr_main.get().unsigned())
 		}
 	}
 
