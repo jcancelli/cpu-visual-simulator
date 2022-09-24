@@ -21,6 +21,8 @@ import { init as initSettings } from "./store/settings"
 import { init as initText } from "./store/text"
 import ProgramExecution from "./execution/ProgramExecution"
 import NonBlockingLoop from "./execution/NonBlockingLoop"
+import { storage } from "./util/localStorage"
+import { exportProgram, parseProgram } from "./util/programParser"
 
 const ram = new Ram()
 const cpu = new Cpu()
@@ -32,8 +34,20 @@ cpuStore.set(cpu)
 symbolTableStore.set(symbolTable)
 wiresStore.set(wires)
 
+// when a label is edited in the symbol table, all its occurences in the ram are synched
 symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, event.newLabel))
+// when a label is deleted from the symbol table, all its occurences in the ram are replaced by the address that label was mapped to
 symbolTable.addLabelRemovedListener(event => ram.removeLabel(event.removedLabel))
+
+// loads the program stored in local storage into the ram (restores previous session)
+const program = parseProgram(storage.getOrElse("program", "NOP"))
+console.log(program.ram.instructions.get())
+ram.import(program.ram)
+symbolTable.import(program.symbolTable)
+
+// when the state of the ram or of the symbol table is altered, the program stored in them is saved to local storage
+ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
+symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 
 initSettings()
 initText()
@@ -44,7 +58,20 @@ const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
 programExecutionStore.set(programExecution)
 programExecutionLoopStore.set(programExecutionLoop)
 
-const initExecution = () => {
+const app = new App({
+	target: document.body,
+	props: {
+		cpu,
+		ram,
+		symbolTable,
+		programExecution,
+		initExecution
+	}
+})
+
+export default app
+
+function initExecution() {
 	const cpuComponent = cpuComponentStore.get()
 	const ramComponent = ramComponentStore.get()
 	const wiresComponent = wiresComponentStore.get()
@@ -62,16 +89,3 @@ const initExecution = () => {
 
 	programExecutionLoop.start()
 }
-
-const app = new App({
-	target: document.body,
-	props: {
-		cpu,
-		ram,
-		symbolTable,
-		programExecution,
-		initExecution
-	}
-})
-
-export default app

@@ -22,6 +22,7 @@ export type AppLocalStorage = {
 	intControlBusColor: string
 	extControlBusAnimationColor: string
 	intControlBusAnimationColor: string
+	program: string
 }
 
 export const storage = new LocalStorage<AppLocalStorage>("app")
