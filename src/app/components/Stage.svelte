@@ -6,15 +6,15 @@
 	import RamModel from "../model/Ram"
 	import SymbolTableModel from "../model/SymbolTable"
 	import Ram from "./ram/Ram.svelte"
-	import { animationsEnabled } from "../store/settings"
 
 	export let cpu: CpuModel
 	export let ram: RamModel
 	export let symbolTable: SymbolTableModel
+	export let animationsEnabled: boolean
 </script>
 
 <div class="absolute top-0 left-0 w-app h-app">
-	<Wires bind:this={$wiresComponent} animationsEnabled={$animationsEnabled} />
-	<Cpu bind:this={$cpuComponent} animationsEnabled={$animationsEnabled} {cpu} />
-	<Ram bind:this={$ramComponent} animationsEnabled={$animationsEnabled} {ram} {symbolTable} />
+	<Wires bind:this={$wiresComponent} {animationsEnabled} />
+	<Cpu bind:this={$cpuComponent} {animationsEnabled} {cpu} />
+	<Ram bind:this={$ramComponent} {animationsEnabled} {ram} {symbolTable} />
 </div>

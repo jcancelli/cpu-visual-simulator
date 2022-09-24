@@ -69,7 +69,6 @@ const app = new App({
 		cpu,
 		ram,
 		symbolTable,
-		wires,
 		programExecution,
 		initExecution
 	}

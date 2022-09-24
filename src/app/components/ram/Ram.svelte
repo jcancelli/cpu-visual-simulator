@@ -11,10 +11,10 @@
 	import text from "../../store/text"
 	import Ram from "../../model/Ram"
 	import SymbolTable from "../../model/SymbolTable"
-	import { animationsEnabled } from "../../store/settings"
 
 	export let ram: Ram
 	export let symbolTable: SymbolTable
+	export let animationsEnabled: boolean
 
 	const VISIBLE_CELLS = 18
 
@@ -82,7 +82,7 @@
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		if (!$animationsEnabled) return
+		if (!animationsEnabled) return
 		return showAddress(address)
 			.then(async () => await tick())
 			.then(() => addressElements.find(addressElement => addressElement?.getAddress?.() === address)?.flash())
@@ -92,7 +92,7 @@
 		if (!isValidAddress(address)) {
 			throw new Error("Invalid address")
 		}
-		if (!$animationsEnabled) return
+		if (!animationsEnabled) return
 		return showAddress(address)
 			.then(async () => await tick())
 			.then(() => cellElements.find(cellElement => cellElement?.getAddress?.() === address)?.flash()) // sometimes throws a "cellElement.getAddress() is not a function" error, idk why, therefore the "?." operator. Don't even kwon how to replicate the error

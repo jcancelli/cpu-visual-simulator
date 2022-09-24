@@ -2,7 +2,7 @@
 	import Stage from "./components/Stage.svelte"
 	import MessageFeed from "./components/messages/Feed.svelte"
 	import { controls, messageFeed, logger, menu, settings } from "./store/components"
-	import { createEventDispatcher, onMount } from "svelte"
+	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
 	import Logger from "./util/logger"
 	import Controls from "./components/controls/Controls.svelte"
@@ -12,19 +12,16 @@
 	import Cpu from "./model/Cpu"
 	import Ram from "./model/Ram"
 	import SymbolTable from "./model/SymbolTable"
-	import Wires from "./model/Wires"
 	import ProgramExecution from "./execution/ProgramExecution"
+	import { animationsEnabled } from "./store/settings"
 
 	export let cpu: Cpu
 	export let ram: Ram
 	export let symbolTable: SymbolTable
-	export let wires: Wires
 	export let programExecution: ProgramExecution
 	export let initExecution: () => void
 
 	let app: HTMLDivElement
-
-	const dispatch = createEventDispatcher()
 
 	function scale() {
 		const width = 1400
@@ -48,7 +45,7 @@
 
 <svelte:window on:resize={scale} on:error={logError} />
 <div class="relative w-app h-app origin-top-left" bind:this={app}>
-	<Stage {cpu} {ram} {symbolTable} />
+	<Stage {cpu} {ram} {symbolTable} animationsEnabled={$animationsEnabled} />
 	<Controls bind:this={$controls} {cpu} {programExecution} />
 	<Menu bind:this={$menu} />
 </div>
