@@ -43,10 +43,10 @@ export default class ProgramExecution implements Cyclable {
 	public executionContext: ExecutionContext
 
 	/**
-	 * @param cpu
-	 * @param ram
-	 * @param symbolTable
-	 * @param wires
+	 * @param cpu - Reference to the cpu used to perform the actions
+	 * @param ram - Reference to the ram used to perform the actions
+	 * @param symbolTable - Reference to the symbol table used to perform the actions
+	 * @param wires - Reference to the wires used to perform the actions
 	 */
 	constructor(cpu: Cpu, ram: Ram, symbolTable: SymbolTable, wires: Wires) {
 		if (!cpu) throw new Error("Null or undefined cpu")
