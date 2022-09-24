@@ -41,7 +41,6 @@ symbolTable.addLabelRemovedListener(event => ram.removeLabel(event.removedLabel)
 
 // loads the program stored in local storage into the ram (restores previous session)
 const program = parseProgram(storage.getOrElse("program", "NOP"))
-console.log(program.ram.instructions.get())
 ram.import(program.ram)
 symbolTable.import(program.symbolTable)
 
