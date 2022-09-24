@@ -31,6 +31,9 @@
 
 	function skipToEnd() {
 		Logger.info(`Skip execution pressed`, "USER_INPUT")
+		$animationsEnabled = false
+		$minimalAnimations = false
+		programExecution.start()
 	}
 
 	function playStep() {
@@ -40,6 +43,9 @@
 
 	function skipStep() {
 		Logger.info(`Skip step pressed`, "USER_INPUT")
+		$animationsEnabled = false
+		$minimalAnimations = false
+		programExecution.step()
 	}
 
 	function playInstruction() {
@@ -49,6 +55,9 @@
 
 	function skipInstruction() {
 		Logger.info(`Skip instruction pressed`, "USER_INPUT")
+		$animationsEnabled = false
+		$minimalAnimations = false
+		programExecution.instruction()
 	}
 
 	function speedChanged() {
@@ -88,7 +97,7 @@
 					icon={$isProgramExecuting ? "pause" : "play"}
 					title={$isProgramExecuting ? $text.controls.buttons.pause.title : $text.controls.buttons.play.title}
 				/>
-				<!-- <ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} disabled /> -->
+				<ExecutionButton on:click={skipToEnd} icon="skip" title={$text.controls.buttons.end.title} />
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.instruction}>
@@ -98,23 +107,17 @@
 					icon="play"
 					title={$text.controls.buttons.play_instruction.title}
 				/>
-				<!-- <ExecutionButton
+				<ExecutionButton
 					on:click={skipInstruction}
 					icon="skip"
 					title={$text.controls.buttons.skip_instruction.title}
-					disabled
-				/> -->
+				/>
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={playStep} icon="play" title={$text.controls.buttons.play_step.title} />
-				<!-- <ExecutionButton
-					on:click={skipStep}
-					icon="skip"
-					title={$text.controls.buttons.skip_step.title}
-					disabled
-				/> -->
+				<ExecutionButton on:click={skipStep} icon="skip" title={$text.controls.buttons.skip_step.title} />
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.speed}>

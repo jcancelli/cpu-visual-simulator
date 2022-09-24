@@ -39,7 +39,7 @@ initSettings()
 initText()
 
 const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
-const programExecutionLoop = new NonBlockingLoop(programExecution, 10)
+const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
 
 programExecutionStore.set(programExecution)
 programExecutionLoopStore.set(programExecutionLoop)
