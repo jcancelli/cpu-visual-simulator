@@ -1,10 +1,6 @@
 import BusAction from "../BusAction"
 import { ExecutionContext } from "../../../ExecutionContext"
-
-export type DataBus = "data_main" | "data_ir_cu" | "data_alu_acc" | "data_alu_sw" | "data_mux_alu"
-export type ControlBus = "ctrl_cu_mux" | "ctrl_cu_ram" | "ctrl_cu_alu"
-export type AddressBus = "addr_main" | "addr_inc_pc"
-export type Bus = DataBus | ControlBus | AddressBus
+import { Bus } from "../../../../model/Wires"
 
 export type DataBusValueSource = "RAM" | "IR:OPC" | "IR:OPR" | "ALU:RES" | "ACC"
 export type ControlBusValueSource = "CU"

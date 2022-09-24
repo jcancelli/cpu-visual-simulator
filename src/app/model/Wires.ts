@@ -1,6 +1,11 @@
 import { Writable, writable } from "../util/customStores"
 import BinaryValue from "./BinaryValue"
 
+export type DataBus = "data_main" | "data_ir_cu" | "data_alu_acc" | "data_alu_sw" | "data_mux_alu"
+export type ControlBus = "ctrl_cu_mux" | "ctrl_cu_ram" | "ctrl_cu_alu"
+export type AddressBus = "addr_main" | "addr_inc_pc"
+export type Bus = DataBus | ControlBus | AddressBus
+
 /** Class that represents the state of the wires */
 export default class Wires {
 	public readonly data_main: Writable<BinaryValue>
