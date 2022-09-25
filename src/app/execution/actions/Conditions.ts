@@ -1,4 +1,4 @@
-import { minimalAnimations, ttsEnabled } from "../../store/settings"
+import { animationsEnabled, displayStepText, minimalAnimations, ttsEnabled } from "../../store/settings"
 import { ExecutionContext } from "../ExecutionContext"
 
 /** A function that takes an execution context and returns a boolean. Represents a condition for an action */
@@ -14,6 +14,11 @@ export function NEGATIVE_FLAG_SET(ctx: ExecutionContext): boolean {
 	return ctx.cpu.model.negativeFlag.get()
 }
 
+/** Returns true if the animations enabled setting is set to true */
+export function ANIMATIONS_ENABLED(ctx: ExecutionContext): boolean {
+	return animationsEnabled.get()
+}
+
 /** Returns true if the minimal animations setting is set to true */
 export function MINIMAL_ANIMATIONS(ctx: ExecutionContext): boolean {
 	return minimalAnimations.get()
@@ -22,6 +27,11 @@ export function MINIMAL_ANIMATIONS(ctx: ExecutionContext): boolean {
 /** Returns true if the text to speech enabled setting is set to true */
 export function TTS_ENABLED(ctx: ExecutionContext): boolean {
 	return ttsEnabled.get()
+}
+
+/** Returns true if the step text component is showing */
+export function STEP_TEXT_IS_SHOWING(ctx: ExecutionContext): boolean {
+	return displayStepText.get()
 }
 
 /**
