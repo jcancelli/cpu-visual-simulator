@@ -64,18 +64,19 @@
 	grid
 	items-center
 	grid-cols-2
+	font-mono
 "
 >
 	<ComponentLabel text="IR" top="-25px" left="10px" />
 	{#if !$instructionRegister.opcode && !$displayAsBinary}
-		<div class="w-[200px] h-[30px] rounded-md col-span-2 flex justify-center items-center leading-3">
+		<div class="w-[200px] h-[30px] leading-[30px] col-span-2 text-center rounded-md">
 			{$text.cpu.ir.invalid_instruction}
 		</div>
 	{:else}
-		<div class="flex items-center justify-center w-full h-full rounded-l-md" bind:this={opcodeDiv}>
+		<div class="w-full h-[28px] leading-[30px] text-center rounded-l-md" bind:this={opcodeDiv}>
 			{opcode}
 		</div>
-		<div class="flex items-center justify-center w-full h-full rounded-r-md" bind:this={operandDiv}>
+		<div class="w-full h-[28px] leading-[30px] text-center rounded-r-md" bind:this={operandDiv}>
 			{operand}
 		</div>
 	{/if}

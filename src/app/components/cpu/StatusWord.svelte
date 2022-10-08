@@ -49,11 +49,12 @@
 	flex
 	items-center
 	justify-center
+	font-mono
 "
 >
 	<ComponentLabel text="SW" top="-25px" left="0" />
 	<div
-		class="relative h-full flex items-center justify-center w-[19%] border border-r-black rounded-l-md cursor-pointer"
+		class="relative h-full flex items-center justify-center w-[19%] border border-r-black rounded-l-md cursor-pointer select-none"
 		bind:this={swzDiv}
 		on:click={toggleZeroFlag}
 	>
@@ -61,14 +62,16 @@
 		{$zeroFlag ? "1" : "0"}
 	</div>
 	<div
-		class="relative h-full flex items-center justify-center w-[19%] cursor-pointer"
+		class="relative h-full flex items-center justify-center w-[19%] cursor-pointer select-none"
 		bind:this={swnDiv}
 		on:click={toggleNegativeFlag}
 	>
 		<ComponentLabel text="N" bottom="-21px" left="25%" />
 		{$negativeFlag ? "1" : "0"}
 	</div>
-	<div class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md">
+	<div
+		class="relative h-full flex items-center justify-center w-[62%] border border-l-black rounded-r-md select-none"
+	>
 		------
 	</div>
 </div>

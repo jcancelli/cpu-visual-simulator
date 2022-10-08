@@ -102,6 +102,7 @@
 		border-black
 		border-t-0
 		border-l-0
+		font-mono
 		{$$restProps.class}
 	"
 	on:click={select}

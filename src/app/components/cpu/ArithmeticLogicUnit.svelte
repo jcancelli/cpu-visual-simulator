@@ -57,6 +57,7 @@
 			text-center
 			leading-tight
 			rounded-lg
+			font-mono
 		"
 		bind:this={operand1Div}
 	>
@@ -95,6 +96,7 @@
 			text-center
 			leading-tight
 			rounded-lg
+			font-mono
 		"
 		bind:this={operand2Div}
 	>

@@ -29,6 +29,7 @@
 		border
 		border-black
 		border-t-0
+		font-mono
 		{$$restProps.class}
 	"
 	style:background-color={$extAddressBusColor}

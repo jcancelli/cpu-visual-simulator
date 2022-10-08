@@ -99,6 +99,7 @@
 		items-center
 		justify-center
 		cursor-text
+		font-mono
 	"
 	bind:this={element}
 	on:click={() => (isEditing = true)}

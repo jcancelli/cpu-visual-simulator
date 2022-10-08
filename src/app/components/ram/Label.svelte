@@ -86,7 +86,7 @@
 	}
 </script>
 
-<div class="relative h-[30px] flex items-center">
+<div class="relative h-[30px] flex items-center font-mono">
 	{#if isSelected}
 		<input
 			bind:value={inputValue}

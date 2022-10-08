@@ -16,7 +16,7 @@
 </script>
 
 <div
-	class="absolute w-fit font-bold cursor-default {FONT_SIZES[fontSize]} leading-tight"
+	class="absolute w-fit font-bold font-sans cursor-default {FONT_SIZES[fontSize]} leading-tight"
 	style:top
 	style:bottom
 	style:left

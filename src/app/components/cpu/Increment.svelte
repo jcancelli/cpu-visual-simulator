@@ -23,14 +23,14 @@
 	left-[570px]
 	w-[100px]
 	h-[30px]
+	leading-[30px]
+	text-center
 	border
 	border-black
 	rounded-md
 	bg-gray-100
 	shadow-component
-	flex
-	items-center
-	justify-center
+	font-mono
 "
 	bind:this={element}
 >
