@@ -128,9 +128,11 @@
 			"
 		/>
 	{:else}
-		<div class="h-[30px] w-[190px] flex items-center justify-start pl-[10px]">{opcode}</div>
+		<div class="h-[30px] w-[95px] leading-[30px] text-left pl-[10px]">{opcode}</div>
 		{#if operand}
-			<div class="h-[30px] w-[190px] flex items-center justify-start overflow-hidden">
+			<div
+				class="h-[30px] w-[95px] min-w-0 leading-[30px] text-left overflow-hidden text-ellipsis whitespace-nowrap"
+			>
 				{operand}
 			</div>
 		{/if}
