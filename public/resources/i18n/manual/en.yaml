@@ -50,29 +50,6 @@ sections:
                 title: "High-level IF-THEN-ELSE example and its translation"
             do_while:
                 title: "High-level WHILE-DO example and its translation"
-    copyright:
-        title: "Copyright"
-        subsections:
-          copyright_notice:
-            title: "Copyright notice"
-            paragraphs:
-              - "Copyright 2022 Jonathan Cancelli"
-              - "This simulator can be used exclusively for non-commercial, educational activities"
-            disclaimer: |
-              Disclaimer: To our best knowledge, this brand-new application does not infringe any IP rights (our own new design,
-              no reuse of pre-existing code), but if anyone thinks otherwise, please contact us on 
-    credits:
-        title: "Credits"
-        subsections:
-          credits:
-            title: "Credits"
-            paragraphs:
-              - |
-                The design of this simulator (CPUVSIM) was based on the evaluation [1] of a pre-existing CPU Visual Simulator,
-                developed by Jonathan Cancelli, Alessandro Belotti, Davide Riva, and Nicola Preda, as an OER-enabled pedagogy
-                project coordinated by Renato Cortinovis [2]. That CPU Visual Simulator was derived (substantially redesigned and extended)
-                in 2021 from an Applet called PIPPIN (© 1998 PWS Publishing Company), with permission from Cengage Learning Inc.
-              - "This CPUVSIM simulator is a brand-new application developed by Jonathan Cancelli, in collaboration with Renato Cortinovis, without reusing any pre-existing code."
 opcodes_table: 
     sections_titles: 
         control_flow: "Control Flow"

@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { get } from "svelte/store"
-	import CheckedError from "../../errors/CheckedError"
 	import { messageFeed } from "../../store/components"
 	import text from "../../store/text"
 	import { ramStore, symbolTableStore } from "../../store/state"
 	import { showSettings } from "../../store/settings"
-	import { download, upload } from "../../../shared/util/file"
+	import { upload } from "../../../shared/util/file"
 	import Logger from "../../util/logger"
-	import { parseProgram, exportProgram } from "../../util/programParser"
+	import { parseProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
 	import MenuItemIcon from "./MenuItem.svelte"
 	import SaveToFileDialog from "./SaveToFileDialog.svelte"
+	import CopyrightDialog from "./CopyrightDialog.svelte"
 
 	const examples = [
 		{
@@ -28,6 +27,7 @@
 	] as const
 
 	let showSaveFileDialog = false
+	let showCopyrightDialog = false
 
 	function openSettings(): void {
 		$showSettings = true
@@ -62,12 +62,16 @@
 
 	function saveProgram(): void {
 		showSaveFileDialog = true
-
 		Logger.info("Program saved to file", "USER_INPUT")
 	}
 
 	function openDocsPage(): void {
 		window.open("manual", "_blank").focus()
+	}
+
+	function openCopyrightNotice(): void {
+		showCopyrightDialog = true
+		Logger.info("Program saved to file", "USER_INPUT")
 	}
 </script>
 
@@ -128,5 +132,13 @@
 			icon="manual"
 		/>
 	</button>
+	<button on:click={openCopyrightNotice}>
+		<MenuItemIcon
+			text={$text.menu.buttons.copyright.text}
+			title={$text.menu.buttons.copyright.title}
+			icon="copyright"
+		/>
+	</button>
 </div>
 <SaveToFileDialog open={showSaveFileDialog} on:close={() => (showSaveFileDialog = false)} />
+<CopyrightDialog open={showCopyrightDialog} on:close={() => (showCopyrightDialog = false)} />

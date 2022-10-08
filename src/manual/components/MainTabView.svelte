@@ -8,8 +8,6 @@
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
-	import Copyright from "./sections/Copyright.svelte"
-	import Credits from "./sections/Credits.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -18,8 +16,6 @@
 		<Tab>{$text.sections.instruction_set.title}</Tab>
 		<Tab>{$text.sections.ui.title}</Tab>
 		<Tab>{$text.sections.examples.title}</Tab>
-		<Tab>{$text.sections.copyright.title}</Tab>
-		<Tab>{$text.sections.credits.title}</Tab>
 	</TabList>
 	<TabPanels class="py-7 px-14">
 		<TabPanel>
@@ -33,12 +29,6 @@
 		</TabPanel>
 		<TabPanel>
 			<Examples />
-		</TabPanel>
-		<TabPanel>
-			<Copyright />
-		</TabPanel>
-		<TabPanel>
-			<Credits />
 		</TabPanel>
 	</TabPanels>
 </TabGroup>

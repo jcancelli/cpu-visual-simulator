@@ -136,6 +136,10 @@ const _default = {
 			manual: {
 				text: "",
 				title: ""
+			},
+			copyright: {
+				text: "",
+				title: ""
 			}
 		},
 		overlays: {
@@ -154,6 +158,19 @@ const _default = {
 				inputs: {
 					filename: {
 						placeholder: ""
+					}
+				}
+			},
+			copyright: {
+				subsections: {
+					copyright_notice: {
+						title: "",
+						paragraphs: [],
+						disclaimer: ""
+					},
+					credits: {
+						title: "",
+						paragraphs: []
 					}
 				}
 			}

@@ -58,25 +58,6 @@ const _default = {
 					title: ""
 				}
 			}
-		},
-		copyright: {
-			title: "",
-			subsections: {
-				copyright_notice: {
-					title: "",
-					paragraphs: [],
-					disclaimer: ""
-				}
-			}
-		},
-		credits: {
-			title: "",
-			subsections: {
-				credits: {
-					title: "",
-					paragraphs: []
-				}
-			}
 		}
 	},
 	opcodes_table: {

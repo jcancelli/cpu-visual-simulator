@@ -94,6 +94,9 @@ menu:
         manual:
             text: "Manuale"
             title: "Apri manuale"
+        copyright:
+            text: "Copyright"
+            title: "Avviso copyright"
     overlays:
         save_to_file:
             title: "Salva programma"
@@ -107,6 +110,25 @@ menu:
             inputs:
                 filename:
                     placeholder: "Nome file"
+        copyright:
+            subsections:
+                copyright_notice:
+                    title: "Avviso di copyright"
+                    paragraphs:
+                        - "Copyright 2022 Jonathan Cancelli"
+                        - "Questo simulatore può essere utilizzato esclusivamente per attività didattiche non commerciali"
+                    disclaimer: |
+                        Disclaimer: per quanto ne sappiamo, questa nuova applicazione non viola alcun diritto di proprietà intellettuale (un nostro nuovo design,
+                        nessun riutilizzo di codice preesistente), ma se qualcuno la pensa diversamente, vi preghiamo di contattarci su
+                credits:
+                    title: "Crediti"
+                    paragraphs:
+                        - |
+                          La progettazione di questo simulatore (CPUVSIM) è stata basata sulla valutazione [1] di un simulatore visivo di CPU preesistente,
+                          sviluppato da Jonathan Cancelli, Alessandro Belotti, Davide Riva e Nicola Preda, come un progetto pedagogico OER-enabled
+                          coordinato da Renato Cortinovis [2]. CPU Visual Simulator è stato derivato (sostanzialmente ridisegnato ed esteso)
+                          nel 2021 da un'applet chiamata PIPPIN (© 1998 PWS Publishing Company), con il permesso di Cengage Learning Inc.
+                        - "Il simulatore CPUVSIM è una nuova applicazione sviluppata da Jonathan Cancelli, in collaborazione con Renato Cortinovis, senza riutilizzare alcun codice preesistente."
 controls:
     labels:
         execution: "Programma"
