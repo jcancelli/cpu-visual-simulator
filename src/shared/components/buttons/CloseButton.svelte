@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let disabled = false
+	export let size = 40
 </script>
 
 <button
@@ -21,7 +22,9 @@
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
 		fill="#FFFFFF"
-		class="h-10 w-10 {disabled ? '' : 'hover:scale-105'} fill-black"
+		class="{disabled ? '' : 'hover:scale-105'} fill-black"
+		style:width={size}
+		style:height={size}
 	>
 		<path d="M0 0h24v24H0V0z" fill="none" />
 		<path
