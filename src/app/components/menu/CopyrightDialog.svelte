@@ -37,12 +37,12 @@
 			items-center
 			justify-center
 			gap-6
-			p-8
-			rounded-lg
+			p-10
+			rounded-2xl
 			shadow-lg
 		"
 	>
-		<CloseButton class="absolute top-2 right-2" on:click={onClose} />
+		<CloseButton class="absolute top-3 right-3" on:click={onClose} size={30} />
 		<div class="text-center">
 			<h2 class="text-lg font-semibold mb-2">
 				{$text.menu.overlays.copyright.subsections.copyright_notice.title}
