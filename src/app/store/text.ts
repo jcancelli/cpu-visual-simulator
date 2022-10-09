@@ -187,25 +187,25 @@ const _default = {
 			reset: {
 				title: ""
 			},
-			play: {
+			play_program: {
 				title: ""
 			},
-			pause: {
+			pause_program: {
 				title: ""
 			},
-			end: {
+			fast_program: {
 				title: ""
 			},
 			play_step: {
 				title: ""
 			},
-			skip_step: {
+			fast_step: {
 				title: ""
 			},
 			play_instruction: {
 				title: ""
 			},
-			skip_instruction: {
+			fast_instruction: {
 				title: ""
 			}
 		},

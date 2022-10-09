@@ -137,20 +137,20 @@ controls:
     buttons:
         reset:
             title: "Reset"
-        play:
+        play_program:
             title: "Play"
-        pause:
+        pause_program:
             title: "Pause"
-        end:
-            title: "Skip to end"
+        fast_program:
+            title: "Fast execution"
         play_step:
             title: "Play micro step"
-        skip_step:
-            title: "Skip micro step"
+        fast_step:
+            title: "Fast execution"
         play_instruction:
             title: "Play instruction"
-        skip_instruction:
-            title: "Skip instruction"
+        fast_instruction:
+            title: "Fast execution"
     sliders:
         speed:
             title: "Speed"
