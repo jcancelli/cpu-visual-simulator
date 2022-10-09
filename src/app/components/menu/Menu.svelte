@@ -76,6 +76,13 @@
 </script>
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-2 z-[4]">
+	<button on:click={openCopyrightNotice}>
+		<MenuItemIcon
+			text={$text.menu.buttons.copyright.text}
+			title={$text.menu.buttons.copyright.title}
+			icon="copyright"
+		/>
+	</button>
 	<button on:click={openSettings}>
 		<MenuItemIcon
 			text={$text.menu.buttons.settings.text}
@@ -130,13 +137,6 @@
 			text={$text.menu.buttons.manual.text}
 			title={$text.menu.buttons.manual.title}
 			icon="manual"
-		/>
-	</button>
-	<button on:click={openCopyrightNotice}>
-		<MenuItemIcon
-			text={$text.menu.buttons.copyright.text}
-			title={$text.menu.buttons.copyright.title}
-			icon="copyright"
 		/>
 	</button>
 </div>
