@@ -41,6 +41,8 @@ sections:
                     - "An operand with no \"#\" symbol is a direct operand."
                     - "A direct operand represent the address at which the operand value is stored."
                     - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
+    file_syntax:
+        title: "Files syntax"
     ui:
         title: "User interface"
     examples:
