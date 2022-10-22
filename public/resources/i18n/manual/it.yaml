@@ -42,6 +42,8 @@ sections:
                     - "Un operando che non è preceduto dal simbolo \"#\" è un operando diretto."
                     - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
                     - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
+    file_syntax:
+        title: "Sintassi files"
     ui:
         title: "Interfaccia grafica"
     examples:

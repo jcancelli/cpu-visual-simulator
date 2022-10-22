@@ -9,12 +9,14 @@
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
 	import UserInterface from "./sections/UserInterface.svelte"
+	import FileSynthax from "./sections/FileSynthax.svelte"
 </script>
 
 <TabGroup class="p-5">
 	<TabList class="mt-4">
 		<Tab class="border-t border-t-gray-500">{$text.sections.introduction.title}</Tab>
 		<Tab>{$text.sections.instruction_set.title}</Tab>
+		<Tab>{$text.sections.file_syntax.title}</Tab>
 		<Tab>{$text.sections.ui.title}</Tab>
 		<Tab>{$text.sections.examples.title}</Tab>
 	</TabList>
@@ -24,6 +26,9 @@
 		</TabPanel>
 		<TabPanel>
 			<InstructionSetSection />
+		</TabPanel>
+		<TabPanel>
+			<FileSynthax />
 		</TabPanel>
 		<TabPanel>
 			<UserInterface />

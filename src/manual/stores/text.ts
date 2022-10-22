@@ -45,6 +45,9 @@ const _default = {
 				}
 			}
 		},
+		file_syntax: {
+			title: ""
+		},
 		ui: {
 			title: ""
 		},
