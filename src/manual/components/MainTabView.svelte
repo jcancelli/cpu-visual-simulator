@@ -8,6 +8,7 @@
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
+	import UserInterface from "./sections/UserInterface.svelte"
 </script>
 
 <TabGroup class="p-5">
@@ -25,7 +26,7 @@
 			<InstructionSetSection />
 		</TabPanel>
 		<TabPanel>
-			<h1 class="text-center font-bold text-4xl">TODO</h1>
+			<UserInterface />
 		</TabPanel>
 		<TabPanel>
 			<Examples />
