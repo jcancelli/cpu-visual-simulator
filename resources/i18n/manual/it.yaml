@@ -42,9 +42,31 @@ sections:
                     - "Un operando che non è preceduto dal simbolo \"#\" è un operando diretto."
                     - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
                     - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
-    file_syntax:
-        title: "Sintassi files"
-    ui:
+    code_files:
+        title: "File di codice"
+        subsections:
+          code_files:
+            title: "File di codice"
+            paragraphs:
+              - "CPUVS può caricare/salvare programmi da/su dei semplici file di testo che hanno l'estensione \".cpuvs\""
+          new_lines:
+            title: "Nuove righe"
+            paragraphs:
+              - "In un file -cpuvs, ogni riga può contenere una singola istruzione."
+              - "Una riga che non contiene un istruzione valida può contenere un commento."
+              - "Empty lines are allowed and will be ignored."
+              - "Righe lasciate vuote sono permesse e saranno ignorate."
+              - "Il contenuto di ogni riga sarà salvato in un indirizzo di memoria partendo dall'indirizzo 0."
+              - "Righe vuote o righe che contengono solamente un commento saranno ignorate."
+          syntax:
+            title: "Sintassi"
+            paragraphs:
+              - "Una riga valida ha il seguente formato: 'LABEL: ISTRUZIONE' (escluse le virgolette)."
+              - "LABEL: Questo campo è opzionale. Se questo campo viene omesso, anche il simbolo \":\" deve essere omesso."
+              - "ISTRUZIONE: Questo campo rappresenta il contenuto di un indirizzo- La sintassi è identica a quella usata per inserire un'istruzione direttamente in RAM e tutto quello che è permesso scrivere in una cella della ram può essere scritto qui (eccetto input di valori binary)."
+              - "Spazi e caratteri di tab all'inizio e alla fine di ogni riga sono ignorati."
+              - "Se il file che stai provando a caricare in CPUVS contiene un errore, un messaggio di errore con i dettagli dell'errore sarà mostrato nel bordo superiore del simulatore."
+    ui: 
         title: "Interfaccia grafica"
     examples:
         title: "Esempi"
