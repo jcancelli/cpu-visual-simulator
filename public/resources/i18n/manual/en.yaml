@@ -41,9 +41,30 @@ sections:
                     - "An operand with no \"#\" symbol is a direct operand."
                     - "A direct operand represent the address at which the operand value is stored."
                     - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
-    file_syntax:
-        title: "Files syntax"
-    ui:
+    code_files:
+        title: "Code files"
+        subsections:
+          code_files:
+            title: "Code files"
+            paragraphs:
+              - "CPUVS can load or store programs from/to simple plain text files that have the \".cpuvs\" extension."
+          new_lines:
+            title: "New lines"
+            paragraphs:
+              - "In a .cpuvs file, each line may contain a single instruction."
+              - "A line that doesn't contain a valid instruction may only contain a comment."
+              - "Empty lines are allowed and will be ignored."
+              - "The content of each line will be stored in a memory address starting from address 0."
+              - "Empty lines or lines that contains only a comment will be ignored."
+          syntax:
+            title: "Syntax"
+            paragraphs:
+              - "A valid line has the following format: 'LABEL: INSTRUCTION' (without single quotes)."
+              - "LABEL: This field is optional. If this field is omitted, the \":\" symbol should also be omitted."
+              - "INSTRUCTION: This field represents the content of an address. The syntax is identical to the one used to input instructions directly into the RAM and everything that can be written into a RAM cell can be written here (except binary input)."
+              - "Leading and trailing whitespaces and tab characters are ignored."
+              - "If the file you are trying to load into CPUVS contains an error, an error message with the details of the error will be displayed on the top edge of the simulator."
+    ui:     
         title: "User interface"
     examples:
         title: "Examples"

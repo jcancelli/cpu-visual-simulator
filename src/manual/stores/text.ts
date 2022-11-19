@@ -45,8 +45,22 @@ const _default = {
 				}
 			}
 		},
-		file_syntax: {
-			title: ""
+		code_files: {
+			title: "",
+			subsections: {
+				code_files: {
+					title: "",
+					paragraphs: []
+				},
+				new_lines: {
+					title: "",
+					paragraphs: []
+				},
+				syntax: {
+					title: "",
+					paragraphs: []
+				}
+			}
 		},
 		ui: {
 			title: ""
