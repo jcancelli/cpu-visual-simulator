@@ -26,6 +26,11 @@
 
 	function toggleExecution() {
 		Logger.info(`Toggle execution pressed`, "USER_INPUT")
+		programExecution.toggle()
+	}
+
+	function fastProgram() {
+		Logger.info(`Skip execution pressed`, "USER_INPUT")
 		let currentAnimationsState: AnimationsState
 		if ($minimalAnimations && $animationsEnabled) {
 			currentAnimationsState = AnimationsState.HALF
@@ -37,14 +42,9 @@
 		const resetAnimationsStateCallback: ExecutionCallback = ctx => {
 			toggleAnimations(currentAnimationsState)
 		}
-		programExecution.toggle(resetAnimationsStateCallback)
-	}
-
-	function fastProgram() {
-		Logger.info(`Skip execution pressed`, "USER_INPUT")
 		$animationsEnabled = false
 		$minimalAnimations = false
-		programExecution.start()
+		programExecution.start(resetAnimationsStateCallback)
 	}
 
 	function playStep() {
@@ -52,11 +52,22 @@
 		programExecution.step()
 	}
 
-	function skipStep() {
+	function fastStep() {
 		Logger.info(`Skip step pressed`, "USER_INPUT")
+		let currentAnimationsState: AnimationsState
+		if ($minimalAnimations && $animationsEnabled) {
+			currentAnimationsState = AnimationsState.HALF
+		} else if (!$minimalAnimations && !$animationsEnabled) {
+			currentAnimationsState = AnimationsState.OFF
+		} else {
+			currentAnimationsState = AnimationsState.ON
+		}
+		const resetAnimationsStateCallback: ExecutionCallback = ctx => {
+			toggleAnimations(currentAnimationsState)
+		}
 		$animationsEnabled = false
 		$minimalAnimations = false
-		programExecution.step()
+		programExecution.step(resetAnimationsStateCallback)
 	}
 
 	function playInstruction() {
@@ -66,9 +77,20 @@
 
 	function fastInstruction() {
 		Logger.info(`Skip instruction pressed`, "USER_INPUT")
+		let currentAnimationsState: AnimationsState
+		if ($minimalAnimations && $animationsEnabled) {
+			currentAnimationsState = AnimationsState.HALF
+		} else if (!$minimalAnimations && !$animationsEnabled) {
+			currentAnimationsState = AnimationsState.OFF
+		} else {
+			currentAnimationsState = AnimationsState.ON
+		}
+		const resetAnimationsStateCallback: ExecutionCallback = ctx => {
+			toggleAnimations(currentAnimationsState)
+		}
 		$animationsEnabled = false
 		$minimalAnimations = false
-		programExecution.instruction()
+		programExecution.instruction(resetAnimationsStateCallback)
 	}
 
 	function speedChanged() {
@@ -138,7 +160,7 @@
 		<Group label={$text.controls.labels.step}>
 			<div class="flex items-center justify-center gap-1">
 				<ExecutionButton on:click={playStep} icon="play" title={$text.controls.buttons.play_step.title} />
-				<ExecutionButton on:click={skipStep} icon="fast" title={$text.controls.buttons.fast_step.title} />
+				<ExecutionButton on:click={fastStep} icon="fast" title={$text.controls.buttons.fast_step.title} />
 			</div>
 		</Group>
 		<Group label={$text.controls.labels.speed}>

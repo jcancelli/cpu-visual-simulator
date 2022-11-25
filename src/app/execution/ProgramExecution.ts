@@ -191,7 +191,8 @@ export default class ProgramExecution implements Cyclable {
 	}
 
 	/** Executes a single microstep */
-	public step(): void {
+	public step(...executionEndedCallbacks: ExecutionCallback[]): void {
+		this.executionEndedCallbacks.push(...executionEndedCallbacks)
 		this.setIsPlayingProgram(false)
 		this.setIsPlayingMicrostep(true)
 		this.setIsPlayingInstruction(false)
@@ -199,7 +200,8 @@ export default class ProgramExecution implements Cyclable {
 	}
 
 	/** Executes a single instruction */
-	public instruction(): void {
+	public instruction(...executionEndedCallbacks: ExecutionCallback[]): void {
+		this.executionEndedCallbacks.push(...executionEndedCallbacks)
 		this.setIsPlayingProgram(false)
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(true)
