@@ -9,8 +9,8 @@
 	import Group from "./Group.svelte"
 	import StepText from "./StepText.svelte"
 	import Logger from "../../util/logger"
-	import ProgramExecution from "../../execution/ProgramExecution"
-	import ThreeStatesCheckbox, { State } from "./ThreeStatesCheckbox.svelte"
+	import ProgramExecution, { ExecutionCallback } from "../../execution/ProgramExecution"
+	import ThreeStatesCheckbox, { State as AnimationsState } from "./ThreeStatesCheckbox.svelte"
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
@@ -26,7 +26,18 @@
 
 	function toggleExecution() {
 		Logger.info(`Toggle execution pressed`, "USER_INPUT")
-		programExecution.toggle()
+		let currentAnimationsState: AnimationsState
+		if ($minimalAnimations && $animationsEnabled) {
+			currentAnimationsState = AnimationsState.HALF
+		} else if (!$minimalAnimations && !$animationsEnabled) {
+			currentAnimationsState = AnimationsState.OFF
+		} else {
+			currentAnimationsState = AnimationsState.ON
+		}
+		const resetAnimationsStateCallback: ExecutionCallback = ctx => {
+			toggleAnimations(currentAnimationsState)
+		}
+		programExecution.toggle(resetAnimationsStateCallback)
 	}
 
 	function fastProgram() {
@@ -68,22 +79,26 @@
 		Logger.info(`Binary toggle pressed - ${$displayAsBinary}`, "USER_INPUT")
 	}
 
-	function animationsToggled(event: CustomEvent) {
-		switch (event.detail.value) {
-			case State.OFF:
+	function onAnimationsToggled(event: CustomEvent) {
+		toggleAnimations(event.detail.value)
+		Logger.info(`Animations toggle pressed - ${event.detail.value}`, "USER_INPUT")
+	}
+
+	function toggleAnimations(state: AnimationsState): void {
+		switch (state) {
+			case AnimationsState.OFF:
 				$minimalAnimations = false
 				$animationsEnabled = false
 				break
-			case State.HALF:
+			case AnimationsState.HALF:
 				$minimalAnimations = true
 				$animationsEnabled = true
 				break
-			case State.ON:
+			case AnimationsState.ON:
 				$minimalAnimations = false
 				$animationsEnabled = true
 				break
 		}
-		Logger.info(`Animations toggle pressed - ${event.detail.value}`, "USER_INPUT")
 	}
 </script>
 
@@ -141,8 +156,12 @@
 			{$text.controls.checkboxes.binary.text}
 		</Checkbox>
 		<ThreeStatesCheckbox
-			value={$animationsEnabled ? ($minimalAnimations ? State.HALF : State.ON) : State.OFF}
-			on:change={animationsToggled}
+			value={$animationsEnabled
+				? $minimalAnimations
+					? AnimationsState.HALF
+					: AnimationsState.ON
+				: AnimationsState.OFF}
+			on:change={onAnimationsToggled}
 			descending={true}
 		>
 			{$text.controls.checkboxes.animations.text}

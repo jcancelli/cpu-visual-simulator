@@ -14,6 +14,9 @@ import Wires from "../model/Wires"
 
 // Note: it could be possible that the execution of the actions could be implemented without an infinite non-blocking loop. An analysis should be made. Could improve performance / be more elegant
 
+/** A function that can be executed at specific points of the execution */
+export type ExecutionCallback = (ctx: ExecutionContext) => void
+
 /** All the phases of an instruction execution cycle */
 type CyclePhase =
 	| "ENQUEUING_FETCH"
@@ -41,6 +44,8 @@ export default class ProgramExecution implements Cyclable {
 	protected queue: Action[]
 	/** Object that allows actions to access the simulator components  */
 	public executionContext: ExecutionContext
+	/** Callbacks executed when the execution is paused */
+	protected executionEndedCallbacks: ExecutionCallback[]
 
 	/**
 	 * @param cpu - Reference to the cpu used to perform the actions
@@ -76,6 +81,7 @@ export default class ProgramExecution implements Cyclable {
 			symbolTable,
 			stepTextComponent: null // will be set when application mounts
 		}
+		this.executionEndedCallbacks = []
 	}
 
 	async cycle(): Promise<void> {
@@ -158,7 +164,8 @@ export default class ProgramExecution implements Cyclable {
 	}
 
 	/** Start the execution of the program. The program will stop only if it encounters an error, reaches its end or the execution is paused */
-	public start(): void {
+	public start(...executionEndedCallbacks: ExecutionCallback[]): void {
+		this.executionEndedCallbacks.push(...executionEndedCallbacks)
 		this.setIsPlayingProgram(true)
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(false)
@@ -170,13 +177,14 @@ export default class ProgramExecution implements Cyclable {
 		this.setIsPlayingProgram(false)
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(false)
+		this.executeExecutionEndedCallbacks()
 		Logger.info("Execution - PAUSE", "EXECUTION")
 	}
 
 	/** Toggles the state of the execution between executing and paused */
-	public toggle(): void {
+	public toggle(...executionEndedCallbacks: ExecutionCallback[]): void {
 		if (!this.isExecuting.get()) {
-			this.start()
+			this.start(...executionEndedCallbacks)
 		} else {
 			this.pause()
 		}
@@ -239,5 +247,11 @@ export default class ProgramExecution implements Cyclable {
 	protected setIsPlayingInstruction(value: boolean): void {
 		this.isPlayingInstruction = value
 		this._isExecuting.set(this.isPlayingProgram || this.isPlayingMicrostep || this.isPlayingInstruction)
+	}
+
+	/** Executes all the executionEndedCallbacks, called each time the execution is paused */
+	protected executeExecutionEndedCallbacks(): void {
+		this.executionEndedCallbacks.forEach(callback => callback(this.executionContext))
+		this.executionEndedCallbacks = []
 	}
 }
