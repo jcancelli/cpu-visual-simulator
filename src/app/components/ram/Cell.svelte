@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ramStore } from "../../store/state"
-	import { messageFeed } from "../../store/components"
+	import { messageFeedStore } from "../../store/state"
 	import ramSelection from "../../store/ramSelection"
 	import { animationsEnabled, displayAsBinary } from "../../store/settings"
 	import { parseBinary, parseSymbolic } from "../../util/instructionParser"
@@ -45,7 +45,7 @@
 				}
 			}
 		} catch (error) {
-			$messageFeed?.error(error.message)
+			$messageFeedStore?.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 		} finally {
 			deselect()

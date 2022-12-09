@@ -5,7 +5,7 @@
 	import BinaryValue from "../../model/BinaryValue"
 	import Logger from "../../util/logger"
 	import CheckedError from "../../errors/CheckedError"
-	import { messageFeed } from "../../store/components"
+	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import Cpu from "../../model/Cpu"
 
@@ -48,7 +48,7 @@
 				throw new CheckedError($text.errors.user_input.invalid_acc_value)
 			}
 		} catch (error) {
-			$messageFeed?.error(error.message)
+			$messageFeedStore?.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			syncInputValue()
 		} finally {

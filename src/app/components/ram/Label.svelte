@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TransitionConfig } from "svelte/types/runtime/transition"
 	import { fade as svelteFade } from "svelte/transition"
-	import { messageFeed } from "../../store/components"
+	import { messageFeedStore } from "../../store/state"
 	import ramSelection from "../../store/ramSelection"
 	import Logger from "../../util/logger"
 	import { onMount } from "svelte"
@@ -32,7 +32,7 @@
 			Logger.info(`RamLabel input: "${inputValue}"`, "USER_INPUT")
 			symbolTable.setLabel(address, inputValue)
 		} catch (error) {
-			$messageFeed?.error(error.message)
+			$messageFeedStore?.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			inputValue = label === SymbolTable.NO_LABEL ? "" : label
 		} finally {

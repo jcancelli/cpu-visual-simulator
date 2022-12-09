@@ -1,12 +1,3 @@
-<script lang="ts" context="module">
-	export type Message = {
-		id: number
-		type: "ERROR" | "WARNING" | "SUCCESS" | "INFO" | "BUG"
-		message: string
-		timer: boolean
-	}
-</script>
-
 <script lang="ts">
 	import { createEventDispatcher, onMount } from "svelte"
 	import { slide } from "svelte/transition"
@@ -15,19 +6,20 @@
 	import { download } from "../../../shared/util/file"
 	import WhiteButton from "../../../shared/components/buttons/White.svelte"
 	import Progress from "./ProgressBar.svelte"
+	import { Message, MessageType } from "../../model/MessageFeed"
 
 	const dispach = createEventDispatcher()
 
 	export let message: Message
 
-	const MESSAGE_DURATION_SECONDS = 5
-	let secondsBeforeClose = MESSAGE_DURATION_SECONDS
+	let secondsBeforeClose: number
 	let isTimerPaused = false
 
 	onMount(() => {
-		if (!message.timer) {
+		if (message.expiresInSec === -1) {
 			return
 		}
+		secondsBeforeClose = message.expiresInSec
 		const interval = setInterval(() => {
 			if (!isTimerPaused) {
 				secondsBeforeClose--
@@ -44,7 +36,7 @@
 	}
 
 	function pauseTimer() {
-		secondsBeforeClose = MESSAGE_DURATION_SECONDS
+		secondsBeforeClose = message.expiresInSec
 		isTimerPaused = true
 	}
 
@@ -81,11 +73,11 @@
 		</svg>
 	</button>
 	<p class="w-3/4 text-center text-xl">{message.message}</p>
-	{#if message.type === "BUG"}
+	{#if message.type === MessageType.BUG}
 		<WhiteButton on:click={exportLogs}>{$text.message_feed.buttons.export_logs.text}</WhiteButton>
 	{/if}
-	{#if message.timer}
-		<Progress class="absolute left-0 bottom-0" value={secondsBeforeClose} max={MESSAGE_DURATION_SECONDS} />
+	{#if message.expiresInSec !== -1}
+		<Progress class="absolute left-0 bottom-0" value={secondsBeforeClose} max={message.expiresInSec} />
 	{/if}
 </div>
 

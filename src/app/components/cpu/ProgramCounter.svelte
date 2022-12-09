@@ -6,7 +6,7 @@
 	import Logger from "../../util/logger"
 	import { isValidAddress } from "../../util/ram"
 	import CheckedError from "../../errors/CheckedError"
-	import { messageFeed } from "../../store/components"
+	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import Cpu from "../../model/Cpu"
 
@@ -52,7 +52,7 @@
 			}
 			programCounter.set(newValue)
 		} catch (error) {
-			$messageFeed?.error(error.message)
+			$messageFeedStore?.error(error.message)
 			Logger.error(error, "USER_INPUT", error.isChecked)
 			syncInputValue()
 		} finally {

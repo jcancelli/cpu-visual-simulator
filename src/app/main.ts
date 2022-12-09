@@ -5,6 +5,7 @@ import SymbolTable from "./model/SymbolTable"
 import Wires from "./model/Wires"
 import {
 	cpuStore,
+	messageFeedStore,
 	programExecutionLoopStore,
 	programExecutionStore,
 	ramStore,
@@ -17,22 +18,26 @@ import {
 	wires as wiresComponentStore,
 	stepText as stepTextComponentStore
 } from "./store/components"
-import { init as initSettings } from "./store/settings"
-import { init as initText } from "./store/text"
+import { init as initSettings, language } from "./store/settings"
+import text, { init as initText } from "./store/text"
 import ProgramExecution from "./execution/ProgramExecution"
 import NonBlockingLoop from "./execution/NonBlockingLoop"
 import { storage } from "./util/localStorage"
 import { exportProgram, parseProgram } from "./util/programParser"
+import MessageFeed, { MessageType } from "./model/MessageFeed"
+import { interpolate } from "../shared/util/template"
 
 const ram = new Ram()
 const cpu = new Cpu()
 const symbolTable = new SymbolTable()
 const wires = new Wires()
+const messageFeedState = new MessageFeed()
 
 ramStore.set(ram)
 cpuStore.set(cpu)
 symbolTableStore.set(symbolTable)
 wiresStore.set(wires)
+messageFeedStore.set(messageFeedState)
 
 // when a label is edited in the symbol table, all its occurences in the ram are synched
 symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, event.newLabel))
@@ -49,7 +54,7 @@ ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram,
 symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 
 initSettings()
-initText()
+initText().then(fetchMessages)
 
 const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
 const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
@@ -70,7 +75,7 @@ const app = new App({
 
 export default app
 
-function initExecution() {
+function initExecution(): void {
 	const cpuComponent = cpuComponentStore.get()
 	const ramComponent = ramComponentStore.get()
 	const wiresComponent = wiresComponentStore.get()
@@ -87,4 +92,22 @@ function initExecution() {
 	programExecution.executionContext.stepTextComponent = stepTextComponent
 
 	programExecutionLoop.start()
+}
+
+function fetchMessages(): void {
+	const url = `/resources/messages/${language.get()}.json`
+	fetch(url)
+		.then(res => res.json())
+		.then(messages => {
+			messages.forEach(message => {
+				messageFeedStore.get().addMessage({
+					message: message.message as string,
+					type: message.type as MessageType,
+					expiresInSec: message.expiresInSec as number
+				})
+			})
+		})
+		.catch(error => {
+			messageFeedStore.get().error(interpolate(text.get().errors.generic.fetch_error, url))
+		})
 }

@@ -2,7 +2,7 @@ import { derived, Readable, Writable, writable } from "../util/customStores"
 import Action from "./actions/Action"
 import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ram"
-import { messageFeed as messageFeedComponent } from "../store/components"
+import { messageFeedStore } from "../store/state"
 import { FETCH, INCREMENT_PC } from "./actions/presets"
 import Logger from "../util/logger"
 import { Cyclable } from "./NonBlockingLoop"
@@ -143,7 +143,7 @@ export default class ProgramExecution implements Cyclable {
 			}
 		} catch (error) {
 			this.executionContext.cpu.model.isHalting.set(true)
-			messageFeedComponent.get().error(error.message)
+			messageFeedStore.get().error(error.message)
 			Logger.error(error, "EXECUTION", error.isChecked)
 		} finally {
 			if (this.executionContext.cpu.model.isHalting.get()) {

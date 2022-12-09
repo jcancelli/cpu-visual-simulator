@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { messageFeed } from "../../store/components"
+	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import { ramStore, symbolTableStore } from "../../store/state"
 	import { showSettings } from "../../store/settings"
@@ -42,7 +42,7 @@
 			ramStore.get().import(program.ram)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
-			$messageFeed.error(error.message)
+			$messageFeedStore.error(error.message)
 		}
 		Logger.info("Program loaded from file", "USER_INPUT")
 	}
@@ -55,7 +55,7 @@
 			ramStore.get().import(program.ram)
 		} catch (error) {
 			Logger.error(error, "USER_INPUT", error.isChecked)
-			$messageFeed.error(error.message)
+			$messageFeedStore.error(error.message)
 		}
 		Logger.info(`Example ${exampleUrl} loaded`, "USER_INPUT")
 	}
