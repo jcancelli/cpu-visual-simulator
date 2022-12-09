@@ -64,6 +64,7 @@ sections:
               - "INSTRUCTION: This field represents the content of an address. The syntax is identical to the one used to input instructions directly into the RAM and everything that can be written into a RAM cell can be written here (except binary input)."
               - "Leading and trailing whitespaces and tab characters are ignored."
               - "If the file you are trying to load into CPUVS contains an error, an error message with the details of the error will be displayed on the top edge of the simulator."
+              - "A comment is defined as everything that follows the symbol \";\" until a new line."
     ui:     
         title: "User interface"
     examples:
