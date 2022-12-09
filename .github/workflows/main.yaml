@@ -26,6 +26,7 @@ jobs:
         with:
           branch: page
           folder: public
+        # docs @ https://github.com/cpina/github-action-push-to-another-repository
       - name: Push to cpuvisualsimulator/cpuvisualsimulator.github.io/main
         uses: cpina/github-action-push-to-another-repository@main
         env:
