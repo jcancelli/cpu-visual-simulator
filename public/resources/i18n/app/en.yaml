@@ -263,3 +263,5 @@ errors:
     execution:
         invalid_instruction: "Invalid instruction found in the Instruction Register"
         division_by_zero: "Division by zero"
+    generic:
+        fetch_error: "An error was thrown while trying to fetch the resource \"{0}\""

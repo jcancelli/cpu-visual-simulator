@@ -264,3 +264,5 @@ errors:
     execution:
         invalid_instruction: "Istruzione invalida trovata nell'Instrucion Register"
         division_by_zero: "Divisione per zero"
+    generic:
+        fetch_error: "Un errore è stato lanciato durante l'accesso alla risorsa \"{0}\""

@@ -359,21 +359,24 @@ const _default = {
 		execution: {
 			invalid_instruction: "",
 			division_by_zero: ""
+		},
+		generic: {
+			fetch_error: ""
 		}
 	}
 }
 
 export const text = writable<Lang>(_default)
 
-export function fetchText(_lang: Language) {
-	fetch(`resources/i18n/app/${_lang}.yaml`)
+export async function fetchText(_lang: Language) {
+	await fetch(`resources/i18n/app/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
 		.then(data => text.set(data as Lang))
 }
 
-export function init() {
-	fetchText(get(language))
+export async function init() {
+	await fetchText(get(language))
 	language.subscribe(fetchText)
 }
 
