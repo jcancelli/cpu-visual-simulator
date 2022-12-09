@@ -118,7 +118,7 @@ menu:
                         - "This simulator can be used exclusively for non-commercial, educational activities"
                     disclaimer: |
                         Disclaimer: To our best knowledge, this brand-new application does not infringe any IP rights (our own new design,
-                        no reuse of pre-existing code), but if anyone thinks otherwise, please contact us on
+                        no reuse of pre-existing code), but if anyone thinks otherwise, please contact us at cpuvisualsimulator@gmail.com or on
                 credits:
                     title: "Credits"
                     paragraphs:
@@ -263,3 +263,5 @@ errors:
     execution:
         invalid_instruction: "Invalid instruction found in the Instruction Register"
         division_by_zero: "Division by zero"
+    generic:
+        fetch_error: "An error was thrown while trying to fetch the resource \"{0}\""

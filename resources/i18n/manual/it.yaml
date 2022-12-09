@@ -66,6 +66,7 @@ sections:
               - "ISTRUZIONE: Questo campo rappresenta il contenuto di un indirizzo- La sintassi è identica a quella usata per inserire un'istruzione direttamente in RAM e tutto quello che è permesso scrivere in una cella della ram può essere scritto qui (eccetto input di valori binary)."
               - "Spazi e caratteri di tab all'inizio e alla fine di ogni riga sono ignorati."
               - "Se il file che stai provando a caricare in CPUVS contiene un errore, un messaggio di errore con i dettagli dell'errore sarà mostrato nel bordo superiore del simulatore."
+              - "Un commento è definito come tutto quello che segue il simbolo \";\" fino ad una nuova riga."
     ui: 
         title: "Interfaccia grafica"
     examples:
