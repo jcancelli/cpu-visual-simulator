@@ -3,46 +3,46 @@ displayName: "Italiano"
 steps:
     pc_to_ram:
         text: "Il contenuto del Program Counter viene messo sull'Address Bus"
-        tts: "Il contenuto del Program Counter viene messo sull'Address Bus"
+        tts: "Il contenuto del Program Counter viene messo sull'Address Bas"
     ram_to_ir:
         text: "L'istruzione viene caricata nell'Instruction Register"
-        tts: "L'istruzione viene caricata nell'Instruction Register"
+        tts: "L'istruzione viene caricata nell'Instrakcion Register"
     ir_to_cu:
         text: "Il codice operativo viene decodificato"
         tts: "Il codice operativo viene decodificato"
     cu_to_mux:
         text: "La Control Unit indica al Multiplexer se l'operando è diretto o immediato"
-        tts: "La Control Unit indica al Multiplexer se l'operando è diretto o immediato"
+        tts: "La Control iunit indica al Multi-plexer se l'operando è diretto o immediato"
     cu_to_alu:
         text: "La Control Unit imposta l'operazione dell'Arithmetic Logic Unit"
-        tts: "La Control Unit imposta l'operazione dell'Arithmetic Logic Unit"
+        tts: "La Control iunit imposta l'operazione dell'Arithmetic Logic iunit"
     acc_to_alu1:
         text: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic Unit"
-        tts: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic Unit"
+        tts: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic iunit"
     pc_increment:
         text: "Il Program Counter viene incrementato"
-        tts: "Il Program Counter viene incrementato"
+        tts: "Il Program Caunter viene incrementato"
     ir_to_alu2:
         text: "Il secondo operando viene caricato dall'Instruction Register"
-        tts: "Il secondo operando viene caricato dall'Instruction Register"
+        tts: "Il secondo operando viene caricato dall'Instrakcion Register"
     ir_to_ram:
         text: "L'indirizzo dell'operando viene posto sull'Address Bus"
-        tts: "L'indirizzo dell'operando viene posto sull'Address Bus"
+        tts: "L'indirizzo dell'operando viene posto sull'Address Bas"
     memory_read:
         text: "Un operazione di Memory Read viene segnalata sul Control Bus"
-        tts: "Un operazione di Memory Read viene segnalata sul Control Bus"
+        tts: "Un operazione di Memory Read viene segnalata sul Control Bas"
     memory_fetch:
         text: "Una operazione di Fetch viene segnalata sul Control Bus"
-        tts: "Una operazione di Fetch viene segnalata sul Control Bus"
+        tts: "Una operazione di Fetch viene segnalata sul Control Bas"
     memory_write:
         text: "Un operazione di Memory Write viene segnalata sul Control Bus"
-        tts: "Un operazione di Memory Write viene segnalata sul Control Bus"
+        tts: "Un operazione di Memory Write viene segnalata sul Control Bas"
     ram_to_alu2:
         text: "L'operando viene caricato dalla RAM"
         tts: "L'operando viene caricato dalla RAM"
     ir_to_pc:
         text: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
-        tts: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
+        tts: "Il Program Caunter è settato al valore dell'operando nell'Instrakcion Register"
     execute:
         text: "L'operazione viene eseguita"
         tts: "L'operazione viene eseguita"
@@ -51,7 +51,7 @@ steps:
         tts: "La Status Word viene aggiornata"
     acc_to_ram:
         text: "Il valore dell'Accumulatore viene messo sul Data Bus"
-        tts: "Il valore dell'Accumulatore viene messo sul Data Bus"
+        tts: "Il valore dell'Accumulatore viene messo sul Deta Bas"
     acc_stored_to_ram:
         text: "Il valore dell'Accumulatore viene scritto in RAM"
         tts: "Il valore dell'Accumulatore viene scritto in RAM"
