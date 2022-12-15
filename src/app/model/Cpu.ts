@@ -83,6 +83,12 @@ export default class Cpu {
 			case CpuComponent.SW_N:
 				this.negativeFlag.set(value as boolean)
 				break
+			case CpuComponent.HALTING:
+				this.isHalting.set(value as boolean)
+				break
+			case CpuComponent.JUMPING:
+				this.isJumping.set(value as boolean)
+				break
 		}
 	}
 }
@@ -97,5 +103,7 @@ export enum CpuComponent {
 	ALU_RESULT = "ALU_RESULT",
 	ACC = "ACC",
 	SW_Z = "SW_Z",
-	SW_N = "SW_N"
+	SW_N = "SW_N",
+	HALTING = "HALTING",
+	JUMPING = "JUMPING"
 }
