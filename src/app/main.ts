@@ -95,7 +95,7 @@ function initExecution(): void {
 }
 
 function fetchMessages(): void {
-	const url = `/resources/messages/${language.get()}.json`
+	const url = `resources/messages/${language.get()}.json`
 	fetch(url)
 		.then(res => res.json())
 		.then(messages => {
