@@ -9,6 +9,7 @@ import {
 	programExecutionLoopStore,
 	programExecutionStore,
 	ramStore,
+	stateTrackerStore,
 	symbolTableStore,
 	wiresStore
 } from "./store/state"
@@ -26,18 +27,21 @@ import { storage } from "./util/localStorage"
 import { exportProgram, parseProgram } from "./util/programParser"
 import MessageFeed, { MessageType } from "./model/MessageFeed"
 import { interpolate } from "../shared/util/template"
+import StateChangesTracker from "./model/StateChangesTracker"
 
 const ram = new Ram()
 const cpu = new Cpu()
 const symbolTable = new SymbolTable()
 const wires = new Wires()
 const messageFeedState = new MessageFeed()
+const stateTracker = new StateChangesTracker()
 
 ramStore.set(ram)
 cpuStore.set(cpu)
 symbolTableStore.set(symbolTable)
 wiresStore.set(wires)
 messageFeedStore.set(messageFeedState)
+stateTrackerStore.set(stateTracker)
 
 // when a label is edited in the symbol table, all its occurences in the ram are synched
 symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, event.newLabel))

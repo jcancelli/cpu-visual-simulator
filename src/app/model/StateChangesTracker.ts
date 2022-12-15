@@ -1,6 +1,6 @@
 import { StateChangeEvent } from "./StateChangeEvent"
 
-export class StateChangesTracker {
+export default class StateChangesTracker {
 	private events: StateChangeEvent<any, any>[]
 
 	constructor() {
