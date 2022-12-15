@@ -6,6 +6,7 @@ import CpuComponent from "../components/cpu/Cpu.svelte"
 import RamComponent from "../components/ram/Ram.svelte"
 import WiresComponent from "../wires/Wires.svelte"
 import StepText from "../components/controls/StepText.svelte"
+import StateChangesTracker from "../model/StateChangesTracker"
 
 export type ExecutionContext = {
 	cpu: {
@@ -22,4 +23,5 @@ export type ExecutionContext = {
 	}
 	symbolTable: SymbolTable
 	stepTextComponent: StepText
+	stateTracker: StateChangesTracker
 }

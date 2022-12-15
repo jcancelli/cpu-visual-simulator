@@ -60,7 +60,7 @@ symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ra
 initSettings()
 initText().then(fetchMessages)
 
-const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
+const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires, stateTracker)
 const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
 
 programExecutionStore.set(programExecution)
