@@ -24,57 +24,58 @@ export abstract class StateChangeEvent<T1, T2> {
 	public abstract restore(): void
 }
 
-export type CpuStateChangeEventValue = {
-	component: CpuComponent
-	value: Instruction | BinaryValue | Operators | boolean
-}
+export type CpuStateChangeEventValue = Instruction | BinaryValue | Operators | boolean
 
 export class CpuStateChangeEvent extends StateChangeEvent<Cpu, CpuStateChangeEventValue> {
+	protected component: CpuComponent
+
 	constructor(
 		stateComponent: Cpu,
+		component: CpuComponent,
 		oldValue: CpuStateChangeEventValue,
 		newValue: CpuStateChangeEventValue,
 		endsStep = false,
 		endsInstruction = false
 	) {
 		super(stateComponent, oldValue, newValue, endsStep, endsInstruction)
+		this.component = component
 	}
 
 	public restore(): void {
-		this.stateComponent.set(this.oldValue.component, this.oldValue.value)
+		this.stateComponent.set(this.component, this.oldValue)
 	}
 }
 
-export type RamStateChangeEventValue = {
-	address: number
-	value: Instruction
-}
+export type RamStateChangeEventValue = Instruction
 
 export class RamStateChangeEvent extends StateChangeEvent<Ram, RamStateChangeEventValue> {
+	protected address: number
+
 	constructor(
 		stateComponent: Ram,
+		address: number,
 		oldValue: RamStateChangeEventValue,
 		newValue: RamStateChangeEventValue,
 		endsStep = false,
 		endsInstruction = false
 	) {
 		super(stateComponent, oldValue, newValue, endsStep, endsInstruction)
+		this.address = address
 	}
 
 	public restore(): void {
-		this.stateComponent.write(this.oldValue.address, this.oldValue.value)
+		this.stateComponent.write(this.address, this.oldValue)
 	}
 }
 
-export type SymbolTableStateChangeEventValue = {
-	address: number
-	value: string
-}
+export type SymbolTableStateChangeEventValue = string
 
 export class SymbolTableStateChangeEvent extends StateChangeEvent<
 	SymbolTable,
 	SymbolTableStateChangeEventValue
 > {
+	protected address: number
+
 	constructor(
 		stateComponent: SymbolTable,
 		oldValue: SymbolTableStateChangeEventValue,
@@ -86,18 +87,18 @@ export class SymbolTableStateChangeEvent extends StateChangeEvent<
 	}
 
 	public restore(): void {
-		this.stateComponent.setLabel(this.oldValue.address, this.oldValue.value)
+		this.stateComponent.setLabel(this.address, this.oldValue)
 	}
 }
 
-export type WiresStateChangeEventValue = {
-	bus: Bus
-	value: BinaryValue
-}
+export type WiresStateChangeEventValue = BinaryValue
 
 export class WiresStateChangeEvent extends StateChangeEvent<Wires, WiresStateChangeEventValue> {
+	protected bus: Bus
+
 	constructor(
 		stateComponent: Wires,
+		bus: Bus,
 		oldValue: WiresStateChangeEventValue,
 		newValue: WiresStateChangeEventValue,
 		endsStep = false,
@@ -107,6 +108,6 @@ export class WiresStateChangeEvent extends StateChangeEvent<Wires, WiresStateCha
 	}
 
 	public restore(): void {
-		this.stateComponent.set(this.oldValue.bus, this.oldValue.value)
+		this.stateComponent.set(this.bus, this.oldValue)
 	}
 }
