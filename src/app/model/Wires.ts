@@ -31,4 +31,8 @@ export default class Wires {
 		this.addr_main = writable(new BinaryValue(16, 0))
 		this.addr_inc_pc = writable(new BinaryValue(16, 0))
 	}
+
+	public set(bus: Bus, value: BinaryValue): void {
+		this[bus].set(value)
+	}
 }

@@ -36,7 +36,7 @@ export default class Cpu {
 	}
 
 	/** Resets all cpu values to their default values */
-	reset(): void {
+	public reset(): void {
 		this.instructionRegister.set(Instruction.NOP)
 		this.programCounter.set(new BinaryValue(8, FIRST_ADDRESS))
 		this.increment.set(new BinaryValue(8, WORD_SIZE))
@@ -50,4 +50,52 @@ export default class Cpu {
 		this.isJumping.set(false)
 		this.isHalting.set(false)
 	}
+
+	public set(component: CpuComponent, value: Instruction | BinaryValue | Operators | boolean): void {
+		switch (component) {
+			case CpuComponent.IR:
+				this.instructionRegister.set(value as Instruction)
+				break
+			case CpuComponent.PC:
+				this.programCounter.set(value as BinaryValue)
+				break
+			case CpuComponent.INC:
+				this.increment.set(value as BinaryValue)
+				break
+			case CpuComponent.ALU1:
+				this.alu1.set(value as BinaryValue)
+				break
+			case CpuComponent.ALU2:
+				this.alu2.set(value as BinaryValue)
+				break
+			case CpuComponent.ALU_OP:
+				this.aluOperation.set(value as Operators)
+				break
+			case CpuComponent.ALU_RESULT:
+				this.aluResult.set(value as BinaryValue)
+				break
+			case CpuComponent.ACC:
+				this.accumulator.set(value as BinaryValue)
+				break
+			case CpuComponent.SW_Z:
+				this.zeroFlag.set(value as boolean)
+				break
+			case CpuComponent.SW_N:
+				this.negativeFlag.set(value as boolean)
+				break
+		}
+	}
+}
+
+export enum CpuComponent {
+	IR = "IR",
+	PC = "PC",
+	INC = "INC",
+	ALU1 = "ALU1",
+	ALU2 = "ALU2",
+	ALU_OP = "ALU_OP",
+	ALU_RESULT = "ALU_RESULT",
+	ACC = "ACC",
+	SW_Z = "SW_Z",
+	SW_N = "SW_N"
 }
