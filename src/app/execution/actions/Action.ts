@@ -9,6 +9,8 @@ export default abstract class Action {
 	protected _name: string
 	/** True if this action is the last action of a microstep */
 	protected _endsStep: boolean
+	/** True if this action is the last action of an instruction */
+	protected _endsInstruction: boolean
 	/** A list of actions that will be executed at the same time as this action.
 	 * If this action's condition evaluates to false neither this action nor its sideffects will be executed */
 	protected _sideffects: Action[]
@@ -23,6 +25,7 @@ export default abstract class Action {
 	constructor() {
 		this._name = "Action"
 		this._endsStep = false
+		this._endsInstruction = false
 		this._sideffects = []
 		this._conditions = []
 		this._waits_before = []
@@ -47,6 +50,15 @@ export default abstract class Action {
 	 */
 	endstep(): Action {
 		this._endsStep = true
+		return this
+	}
+
+	/**
+	 * Marks this action as the last action of an instruction
+	 * @returns The same action this method was called on. Allows method concatenation
+	 */
+	endinstruction(): Action {
+		this._endsInstruction = true
 		return this
 	}
 
@@ -113,6 +125,14 @@ export default abstract class Action {
 	 */
 	doesEndStep() {
 		return this._endsStep
+	}
+
+	/**
+	 * Returns true if this action is marked as the last action of an instruction
+	 * @returns
+	 */
+	doesEndInstruction() {
+		return this._endsInstruction
 	}
 
 	toString(): string {
