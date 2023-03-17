@@ -11,7 +11,6 @@ import { ExecutionContext } from "./ExecutionContext"
 import Ram from "../model/Ram"
 import SymbolTable from "../model/SymbolTable"
 import Wires from "../model/Wires"
-import StateChangesTracker from "../model/StateChangesTracker"
 
 // Note: it could be possible that the execution of the actions could be implemented without an infinite non-blocking loop. An analysis should be made. Could improve performance / be more elegant
 
@@ -54,7 +53,7 @@ export default class ProgramExecution implements Cyclable {
 	 * @param symbolTable - Reference to the symbol table used to perform the actions
 	 * @param wires - Reference to the wires used to perform the actions
 	 */
-	constructor(cpu: Cpu, ram: Ram, symbolTable: SymbolTable, wires: Wires, stateTracker: StateChangesTracker) {
+	constructor(cpu: Cpu, ram: Ram, symbolTable: SymbolTable, wires: Wires) {
 		if (!cpu) throw new Error("Null or undefined cpu")
 		if (!ram) throw new Error("Null or undefined ram")
 		if (!symbolTable) throw new Error("Null or undefined symbolTable")
@@ -80,8 +79,7 @@ export default class ProgramExecution implements Cyclable {
 				component: null // will be set when application mounts
 			},
 			symbolTable,
-			stepTextComponent: null, // will be set when application mounts
-			stateTracker
+			stepTextComponent: null // will be set when application mounts
 		}
 		this.executionEndedCallbacks = []
 	}
