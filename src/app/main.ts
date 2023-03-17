@@ -26,6 +26,7 @@ import { storage } from "./util/localStorage"
 import { exportProgram, parseProgram } from "./util/programParser"
 import MessageFeed, { MessageType } from "./model/MessageFeed"
 import { interpolate } from "../shared/util/template"
+import Logger from "./util/logger"
 
 const ram = new Ram()
 const cpu = new Cpu()
@@ -44,10 +45,26 @@ symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, even
 // when a label is deleted from the symbol table, all its occurences in the ram are replaced by the address that label was mapped to
 symbolTable.addLabelRemovedListener(event => ram.removeLabel(event.removedLabel))
 
-// loads the program stored in local storage into the ram (restores previous session)
-const program = parseProgram(storage.getOrElse("program", "NOP"))
-ram.import(program.ram)
-symbolTable.import(program.symbolTable)
+// check url params for base64 encoded program
+const urlParams = new URLSearchParams(window.location.search)
+if (urlParams.has("program")) {
+	// loads program from base64 encoded query param "program"
+	try {
+		const base64EncodedProgram = urlParams.get("program")
+		Logger.info(`Loading program from url: ${base64EncodedProgram}`, "USER_INPUT")
+		const program = parseProgram(window.atob(base64EncodedProgram))
+		ram.import(program.ram)
+		symbolTable.import(program.symbolTable)
+	} catch (error) {
+		messageFeedState.error(error.message)
+		Logger.error(error, "USER_INPUT", error.isChecked)
+	}
+} else {
+	// loads the program stored in local storage into the ram (restores previous session)
+	const program = parseProgram(storage.getOrElse("program", "NOP"))
+	ram.import(program.ram)
+	symbolTable.import(program.symbolTable)
+}
 
 // when the state of the ram or of the symbol table is altered, the program stored in them is saved to local storage
 ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
