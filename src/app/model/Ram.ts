@@ -2,6 +2,7 @@ import { derived, Readable, writable, Writable } from "../util/customStores"
 import Instruction from "../model/Instruction"
 import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ram"
 import { WORD_SIZE } from "../util/cpu"
+import BinaryValue from "./BinaryValue"
 
 /** Class that represents the RAM state */
 export default class Ram {
@@ -54,7 +55,8 @@ export default class Ram {
 	}
 
 	/**
-	 * Replaces all instructions that have the oldLabel as symbolic operand with a new instruction that has newLabel as symbolic operand.
+	 * Replaces all instructions that have the oldLabel as symbolic operand with a new instruction
+	 * that has newLabel as symbolic operand.
 	 * It does NOT alter the actual value of the operand, just its symbolic value
 	 * @param {string} oldLabel - The label that should be replaced
 	 * @param {string} newLabel - The oldLabel replacement
@@ -75,7 +77,32 @@ export default class Ram {
 	}
 
 	/**
-	 * Replaces all instructions that have the specified label as symbolic operand with a new instruction that has the numeric value of the operand as symbolic value.
+	 * Replaces all instructions that have the label as symbolic operand with a new instruction that
+	 * has the new address as numeric operand.
+	 * @param {string} label - The label that should be updated
+	 * @param {number} newAddress - The new value of the label
+	 */
+	updateLabelAddress(label: string, newAddress: number): void {
+		this._instructions.update(oldState => {
+			const newState = [...oldState]
+			for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
+				const oldInstruction = newState[address]
+				if (oldInstruction.symbolicOperand === label || oldInstruction.symbolicOperand === `#${label}`) {
+					newState[address] = new Instruction(
+						oldInstruction.symbolicOpcode,
+						oldInstruction.symbolicOperand,
+						BinaryValue.fromBytes([oldInstruction.numericOpcode(), newAddress]),
+						oldInstruction.opcode === undefined
+					)
+				}
+			}
+			return newState
+		})
+	}
+
+	/**
+	 * Replaces all instructions that have the specified label as symbolic operand with a new
+	 * instruction that has the numeric value of the operand as symbolic value.
 	 * @param {string} label - The label that should be removed
 	 */
 	removeLabel(label: string): void {
@@ -116,7 +143,14 @@ export default class Ram {
 	 * @param {number} address
 	 */
 	moveFirstHalfUpFromAddress(address: number): void {
-		// TODO
+		const oldState = this._instructions.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS + WORD_SIZE, address + WORD_SIZE),
+			Instruction.NOP,
+			undefined,
+			...oldState.slice(address + WORD_SIZE)
+		]
+		this._instructions.set(newState)
 	}
 
 	/**
@@ -125,16 +159,30 @@ export default class Ram {
 	 * @param {number} address
 	 */
 	moveFirstHalfDownFromAddress(address: number): void {
-		// TODO
+		const oldState = this._instructions.get()
+		const newState = [
+			Instruction.NOP,
+			undefined,
+			...oldState.slice(FIRST_ADDRESS, address),
+			...oldState.slice(address + WORD_SIZE)
+		]
+		this._instructions.set(newState)
 	}
 
 	/**
 	 * Shifts all the instructions of address > of the specified address by -2 addresses (-1 position).
-	 * The instruction inside the specified address is overwritten and the instruction that was at the last address is replaced by a NOP
+	 * The instruction inside the specified address is overwritten and a NOP instruction is appended as at the last address
 	 * @param {number} address
 	 */
 	moveSecondHalfUpFromAddress(address: number): void {
-		// TODO
+		const oldState = this._instructions.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS, address),
+			...oldState.slice(address + WORD_SIZE),
+			undefined,
+			Instruction.NOP
+		]
+		this._instructions.set(newState)
 	}
 
 	/**
@@ -143,7 +191,14 @@ export default class Ram {
 	 * @param {number} address
 	 */
 	moveSecondHalfDownFromAddress(address: number): void {
-		// TODO
+		const oldState = this._instructions.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS, address),
+			Instruction.NOP,
+			undefined,
+			...oldState.slice(address, LAST_ADDRESS)
+		]
+		this._instructions.set(newState)
 	}
 
 	*[Symbol.iterator]() {

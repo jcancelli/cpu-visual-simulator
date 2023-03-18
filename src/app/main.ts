@@ -28,26 +28,48 @@ import MessageFeed, { MessageType } from "./model/MessageFeed"
 import { interpolate } from "../shared/util/template"
 import Logger from "./util/logger"
 
+Logger.info("Instantiating models", "DEBUG")
 const ram = new Ram()
 const cpu = new Cpu()
 const symbolTable = new SymbolTable()
 const wires = new Wires()
 const messageFeedState = new MessageFeed()
+Logger.info("Models instantiated", "DEBUG")
 
+Logger.info("Setting model's stores", "DEBUG")
 ramStore.set(ram)
 cpuStore.set(cpu)
 symbolTableStore.set(symbolTable)
 wiresStore.set(wires)
 messageFeedStore.set(messageFeedState)
+Logger.info("Model's stores setted", "DEBUG")
 
+Logger.info("Subscribing symbol table change synchers", "DEBUG")
 // when a label is edited in the symbol table, all its occurences in the ram are synched
 symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, event.newLabel))
+symbolTable.addLabelEditedListener(event => {
+	Logger.info(`Label edited - oldValue: "${event.oldLabel}" newValue: "${event.newLabel}"`, "DEBUG")
+})
+// when a label is moved in the symbol table, all its occurences in the ram are synched
+symbolTable.addLabelMovedListener(event => ram.updateLabelAddress(event.label, event.newAddress))
+symbolTable.addLabelMovedListener(event => {
+	Logger.info(
+		`Label moved - label: "${event.label}" oldAddress: "${event.oldAddress}" newAddress: "${event.newAddress}"`,
+		"DEBUG"
+	)
+})
 // when a label is deleted from the symbol table, all its occurences in the ram are replaced by the address that label was mapped to
 symbolTable.addLabelRemovedListener(event => ram.removeLabel(event.removedLabel))
+symbolTable.addLabelRemovedListener(event => {
+	Logger.info(`Label removed - label: "${event.removedLabel}" address: "${event.address}"`, "DEBUG")
+})
+Logger.info("Symbol table change synchers subscribed", "DEBUG")
 
+Logger.info("Checking url params for base64 encoded program", "DEBUG")
 // check url params for base64 encoded program
 const urlParams = new URLSearchParams(window.location.search)
 if (urlParams.has("program")) {
+	Logger.info("Base64 encoded program found in page url", "DEBUG")
 	// loads program from base64 encoded query param "program"
 	try {
 		const base64EncodedProgram = urlParams.get("program")
@@ -59,16 +81,22 @@ if (urlParams.has("program")) {
 		messageFeedState.error(error.message)
 		Logger.error(error, "USER_INPUT", error.isChecked)
 	}
+	Logger.info("Base64 encoded program loaded", "DEBUG")
 } else {
+	Logger.info("No base64 encoded program found in the page url", "DEBUG")
+	Logger.info("Loading program from local storage", "DEBUG")
 	// loads the program stored in local storage into the ram (restores previous session)
 	const program = parseProgram(storage.getOrElse("program", "NOP"))
 	ram.import(program.ram)
 	symbolTable.import(program.symbolTable)
+	Logger.info("Program from local storage loaded", "DEBUG")
 }
 
+Logger.info("Subscribing local storage program synchers", "DEBUG")
 // when the state of the ram or of the symbol table is altered, the program stored in them is saved to local storage
 ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
+Logger.info("Local storage program synchers subscribed", "DEBUG")
 
 initSettings()
 initText().then(fetchMessages)

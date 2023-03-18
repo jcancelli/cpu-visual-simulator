@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS } from "../../util/ram"
+	import { isValidAddress, FIRST_ADDRESS, LAST_ADDRESS, addressToIndex } from "../../util/ram"
 	import { WORD_SIZE } from "../../util/cpu"
 	import Label from "./Label.svelte"
 	import Address from "./Address.svelte"
@@ -11,6 +11,7 @@
 	import text from "../../store/text"
 	import Ram from "../../model/Ram"
 	import SymbolTable from "../../model/SymbolTable"
+	import { exportProgram, parseProgram } from "../../util/programParser"
 
 	export let ram: Ram
 	export let symbolTable: SymbolTable
@@ -123,8 +124,13 @@
 		}
 		if (e.ctrlKey) {
 			ram.moveSecondHalfUpFromAddress($ramSelection.address)
-		} else if (e.shiftKey) {
+			symbolTable.moveSecondHalfUpFromAddress($ramSelection.address)
+			return
+		}
+		if (e.shiftKey) {
 			ram.moveFirstHalfUpFromAddress($ramSelection.address)
+			symbolTable.moveFirstHalfUpFromAddress($ramSelection.address)
+			return
 		}
 		if ($ramSelection.address === firstVisibleAddress) {
 			scroll(-1, false)
@@ -138,8 +144,13 @@
 		}
 		if (e.ctrlKey) {
 			ram.moveSecondHalfDownFromAddress($ramSelection.address)
-		} else if (e.shiftKey) {
+			symbolTable.moveSecondHalfDownFromAddress($ramSelection.address)
+			return
+		}
+		if (e.shiftKey) {
 			ram.moveFirstHalfDownFromAddress($ramSelection.address)
+			symbolTable.moveFirstHalfDownFromAddress($ramSelection.address)
+			return
 		}
 		if ($ramSelection.address === lastVisibleAddress) {
 			scroll(1, false)

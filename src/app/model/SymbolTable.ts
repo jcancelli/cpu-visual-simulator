@@ -11,6 +11,12 @@ export type LabelEditedEvent = {
 	oldLabel: string
 	newLabel: string
 }
+/** Event fired when a label is moved from one address to another */
+export type LabelMovedEvent = {
+	label: string
+	oldAddress: number
+	newAddress: number
+}
 /** Event fired when a label is removed */
 export type LabelRemovedEvent = {
 	address: number
@@ -18,6 +24,8 @@ export type LabelRemovedEvent = {
 }
 /** Callback function called when a label is edited (not fired when a label is removed) */
 export type LabelEditedListener = (event: LabelEditedEvent) => void
+/** Callback function called when a label is moved from one address to another */
+export type LabelMovedListener = (event: LabelMovedEvent) => void
 /** Callback function called when a label is removed */
 export type LabelRemovedListener = (event: LabelRemovedEvent) => void
 /** Function used to unsubscribe an event listener */
@@ -32,12 +40,14 @@ export default class SymbolTable {
 	/** The value of an empty label */
 	public static readonly NO_LABEL: null = null
 	protected labelEditedListeners: LabelEditedListener[]
+	protected labelMovedListeners: LabelMovedListener[]
 	protected labelRemovedListeners: LabelRemovedListener[]
 
 	constructor() {
 		this._labels = writable([])
 		this.labels = derived(this._labels, $labels => $labels)
 		this.labelEditedListeners = []
+		this.labelMovedListeners = []
 		this.labelRemovedListeners = []
 		this.clear()
 	}
@@ -68,13 +78,7 @@ export default class SymbolTable {
 			return newState
 		})
 		if (oldLabel !== SymbolTable.NO_LABEL) {
-			this.labelEditedListeners.forEach(listener =>
-				listener({
-					address,
-					oldLabel,
-					newLabel: label
-				})
-			)
+			this.notifyLabelEditedListeners(address, oldLabel, label)
 		}
 	}
 
@@ -92,12 +96,7 @@ export default class SymbolTable {
 			newState[address] = SymbolTable.NO_LABEL
 			return newState
 		})
-		this.labelRemovedListeners.forEach(listener =>
-			listener({
-				address,
-				removedLabel: oldLabel
-			})
-		)
+		this.notifyLabelRemovedListeners(address, oldLabel)
 	}
 
 	/**
@@ -166,37 +165,97 @@ export default class SymbolTable {
 	/**
 	 * Shifts all the labels of address <= of the specified address by -2 addresses (-1 position).
 	 * The label of the first address is lost
-	 * @param {number} address
+	 * @param {number} shiftAddress
 	 */
-	moveFirstHalfUpFromAddress(address: number): void {
-		// TODO
+	moveFirstHalfUpFromAddress(shiftAddress: number): void {
+		const oldState = this._labels.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS + WORD_SIZE, shiftAddress + WORD_SIZE),
+			SymbolTable.NO_LABEL,
+			undefined,
+			...oldState.slice(shiftAddress + WORD_SIZE)
+		]
+		this._labels.set(newState)
+		if (oldState[FIRST_ADDRESS] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelRemovedListeners(FIRST_ADDRESS, oldState[FIRST_ADDRESS])
+		}
+		for (const { label, address } of this) {
+			if (address < shiftAddress) {
+				this.notifyLabelMovedListeners(label, address + WORD_SIZE, address)
+			}
+		}
 	}
 
 	/**
 	 * Shifts all the labels of address < of the specified address by +2 addresses (+1 position).
-	 * The label of the specified address is overwritten by the one before it
-	 * @param {number} address
+	 * The label of the specified address is deleted/overwritten by the one before it
+	 * @param {number} shiftAddress
 	 */
-	moveFirstHalfDownFromAddress(address: number): void {
-		// TODO
+	moveFirstHalfDownFromAddress(shiftAddress: number): void {
+		const oldState = this._labels.get()
+		const newState = [
+			SymbolTable.NO_LABEL,
+			undefined,
+			...oldState.slice(FIRST_ADDRESS, shiftAddress),
+			...oldState.slice(shiftAddress + WORD_SIZE)
+		]
+		this._labels.set(newState)
+		if (oldState[shiftAddress] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelRemovedListeners(shiftAddress, oldState[shiftAddress])
+		}
+		for (const { label, address } of this) {
+			if (address <= shiftAddress) {
+				this.notifyLabelMovedListeners(label, address - WORD_SIZE, address)
+			}
+		}
 	}
 
 	/**
 	 * Shifts all the labels of address > of the specified address by -2 addresses (-1 position).
 	 * The label of the specified address is overwritten by the one after it
-	 * @param {number} address
+	 * @param {number} shiftAddress
 	 */
-	moveSecondHalfUpFromAddress(address: number): void {
-		// TODO
+	moveSecondHalfUpFromAddress(shiftAddress: number): void {
+		const oldState = this._labels.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS, shiftAddress),
+			...oldState.slice(shiftAddress + WORD_SIZE),
+			undefined,
+			SymbolTable.NO_LABEL
+		]
+		this._labels.set(newState)
+		if (oldState[shiftAddress] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelRemovedListeners(shiftAddress, oldState[shiftAddress])
+		}
+		for (const { label, address } of this) {
+			if (address >= shiftAddress) {
+				this.notifyLabelMovedListeners(label, address + WORD_SIZE, address)
+			}
+		}
 	}
 
 	/**
 	 * Shifts all the labels of address >= of the specified address by +2 addresses (+1 position).
 	 * The label of the last address is lost
-	 * @param {number} address
+	 * @param {number} shiftAddress
 	 */
-	moveSecondHalfDownFromAddress(address: number): void {
-		// TODO
+	moveSecondHalfDownFromAddress(shiftAddress: number): void {
+		const oldState = this._labels.get()
+		const newState = [
+			...oldState.slice(FIRST_ADDRESS, shiftAddress),
+			SymbolTable.NO_LABEL,
+			undefined,
+			...oldState.slice(shiftAddress, LAST_ADDRESS)
+		]
+		this._labels.set(newState)
+		if (oldState[LAST_ADDRESS] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelRemovedListeners(LAST_ADDRESS, oldState[LAST_ADDRESS])
+		}
+		for (const { label, address } of this) {
+			if (address > shiftAddress) {
+				this.notifyLabelMovedListeners(label, address - WORD_SIZE, address)
+			}
+		}
 	}
 
 	/**
@@ -206,7 +265,17 @@ export default class SymbolTable {
 	 */
 	addLabelEditedListener(listener: LabelEditedListener): Unsubscriber {
 		this.labelEditedListeners.push(listener)
-		return () => (this.labelEditedListeners = this.labelEditedListeners.filter(list => list !== listener))
+		return () => (this.labelEditedListeners = this.labelEditedListeners.filter(e => e !== listener))
+	}
+
+	/**
+	 * Subscribes a listener that will be notified when a label is moved from one address to another
+	 * @param {LabelMovedListener} listener - A callback function that will be called everytime a label is moved from one address to another
+	 * @returns {Unsubscriber} The function used to unsubscribe the listener just subscribed
+	 */
+	addLabelMovedListener(listener: LabelMovedListener): Unsubscriber {
+		this.labelMovedListeners.push(listener)
+		return () => (this.labelMovedListeners = this.labelMovedListeners.filter(e => e !== listener))
 	}
 
 	/**
@@ -216,7 +285,53 @@ export default class SymbolTable {
 	 */
 	addLabelRemovedListener(listener: LabelRemovedListener): Unsubscriber {
 		this.labelRemovedListeners.push(listener)
-		return () => (this.labelRemovedListeners = this.labelRemovedListeners.filter(list => list !== listener))
+		return () => (this.labelRemovedListeners = this.labelRemovedListeners.filter(e => e !== listener))
+	}
+
+	/**
+	 * Fires all the listeners subscribed with the addLabelEditedListener method
+	 * @param {number} address - The address of the edited label
+	 * @param {string} oldLabel - The old value of the label
+	 * @param {string} newLabel - The new value of the label
+	 */
+	private notifyLabelEditedListeners(address: number, oldLabel: string, newLabel: string): void {
+		this.labelEditedListeners.forEach(listener =>
+			listener({
+				address,
+				oldLabel,
+				newLabel
+			})
+		)
+	}
+
+	/**
+	 * Fires all the listeners subscribed with the addLabelMovedListener method
+	 * @param {string} label - The label that was moved
+	 * @param {string} oldAddress - The old address of the label
+	 * @param {string} newAddress - The new address of the label
+	 */
+	private notifyLabelMovedListeners(label: string, oldAddress: number, newAddress: number): void {
+		this.labelMovedListeners.forEach(listener =>
+			listener({
+				label,
+				oldAddress,
+				newAddress
+			})
+		)
+	}
+
+	/**
+	 * Fires all the listeners subscribed with the addLabelRemovedListener method
+	 * @param {number} address - The address of the removed label
+	 * @param {string} removedLabel - The value of the removed label
+	 */
+	private notifyLabelRemovedListeners(address: number, removedLabel: string): void {
+		this.labelRemovedListeners.forEach(listener =>
+			listener({
+				address,
+				removedLabel
+			})
+		)
 	}
 
 	*[Symbol.iterator]() {
