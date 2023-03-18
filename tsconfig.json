@@ -1,8 +1,18 @@
 {
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
-  "compilerOptions": {
-    "moduleResolution": "node",
-    "lib": ["ES2018", "DOM"]
-  }
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules/*",
+		"__sapper__/*",
+		"public/*"
+	],
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"lib": [
+			"ES2018",
+			"DOM"
+		],
+		"target": "ES2015"
+	}
 }
