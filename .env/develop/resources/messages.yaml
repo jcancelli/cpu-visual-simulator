@@ -1,0 +1,6 @@
+messages:
+  - type: SUCCESS
+    expiresInSec: -1
+    message:
+      en: "Test"
+      it: "Test"

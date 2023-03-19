@@ -27,6 +27,8 @@ import { exportProgram, parseProgram } from "./util/programParser"
 import MessageFeed, { MessageType } from "./model/MessageFeed"
 import { interpolate } from "../shared/util/template"
 import Logger from "./util/logger"
+import { Language } from "../shared/util/i18n"
+import { parse as parseYaml } from "yaml"
 
 Logger.info("Instantiating models", "DEBUG")
 const ram = new Ram()
@@ -99,27 +101,7 @@ symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ra
 Logger.info("Local storage program synchers subscribed", "DEBUG")
 
 initSettings()
-initText()
-
-Logger.info("Fetching messages", "DEBUG")
-const messagesUrl = `resources/messages/${language.get()}.json`
-fetch(messagesUrl)
-	.then(res => res.json())
-	.then(messages => {
-		Logger.info(`Messages fetched - ${messages.length} messages found`, "DEBUG")
-		messages.forEach(message => {
-			messageFeedStore.get().addMessage({
-				message: message.message as string,
-				type: message.type as MessageType,
-				expiresInSec: message.expiresInSec as number
-			})
-		})
-	})
-	.catch(error => {
-		Logger.info("Error while fetching messages", "DEBUG")
-		Logger.error(error, "DEBUG")
-		messageFeedStore.get().error(interpolate(text.get().errors.generic.fetch_error, messagesUrl))
-	})
+initText().then(fetchMessages)
 
 Logger.info("Instantiating program execution and program execution loop", "DEBUG")
 const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
@@ -169,4 +151,34 @@ function initExecutionContext(): void {
 	Logger.info("Execution loop started", "DEBUG")
 
 	Logger.info("Execution context initialized", "DEBUG")
+}
+
+function fetchMessages() {
+	Logger.info("Fetching messages", "DEBUG")
+	interface Message {
+		message: {
+			[key in Language]: string
+		}
+		type: MessageType
+		expiresInSec: number
+	}
+	const messagesUrl = `resources/messages.yaml`
+	fetch(messagesUrl)
+		.then(res => res.text())
+		.then(text => parseYaml(text))
+		.then((data: { messages: Message[] }) => {
+			Logger.info(`Messages fetched - ${data.messages.length} messages found`, "DEBUG")
+			data.messages.forEach((message: Message) => {
+				messageFeedStore.get().addMessage({
+					message: message.message[language.get()],
+					type: message.type,
+					expiresInSec: message.expiresInSec
+				})
+			})
+		})
+		.catch(error => {
+			Logger.info("Error while fetching messages", "DEBUG")
+			Logger.error(error, "DEBUG")
+			messageFeedStore.get().error(interpolate(text.get().errors.generic.fetch_error, messagesUrl))
+		})
 }
