@@ -108,20 +108,23 @@ async function main(): Promise<void> {
 			onMountCallback: () => {
 				Logger.info("Initializing execution context", "DEBUG")
 
+				Logger.info("Fetching ui components from stores", "DEBUG")
 				const cpuComponent = cpuComponentStore.get()
 				const ramComponent = ramComponentStore.get()
 				const wiresComponent = wiresComponentStore.get()
 				const stepTextComponent = stepTextComponentStore.get()
-
 				if (!cpuComponent) throw new Error("cpu component not yet initialized")
 				if (!ramComponent) throw new Error("ram component not yet initialized")
 				if (!wiresComponent) throw new Error("wires component not yet initialized")
 				if (!stepTextComponent) throw new Error("step text component not yet initialized")
+				Logger.info("Ui components fetched", "DEBUG")
 
+				Logger.info("Passing ui components to executionContext", "DEBUG")
 				programExecution.executionContext.cpu.component = cpuComponent
 				programExecution.executionContext.ram.component = ramComponent
 				programExecution.executionContext.wires.component = wiresComponent
 				programExecution.executionContext.stepTextComponent = stepTextComponent
+				Logger.info("Ui components passed to executionContext", "DEBUG")
 
 				Logger.info("Starting execution loop", "DEBUG")
 				programExecutionLoop.start()
