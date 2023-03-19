@@ -25,6 +25,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
+          branch: main
           ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
           git-config-name: cpuvisualsimulator
           repository-name: cpuvisualsimulator/cpuvisualsimulator.github.io
