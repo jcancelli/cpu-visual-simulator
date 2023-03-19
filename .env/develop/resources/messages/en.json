@@ -1,1 +1,7 @@
-[]
+[
+	{
+		"type": "WARNING",
+		"message": "Test",
+		"expiresInSec": 2
+	}
+]
