@@ -22,7 +22,7 @@ jobs:
       - name: Copy environment specific files
         run: cp -r .env/main/* public
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
           ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
