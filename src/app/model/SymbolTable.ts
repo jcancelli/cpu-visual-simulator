@@ -245,7 +245,7 @@ export default class SymbolTable {
 			...oldState.slice(FIRST_ADDRESS, shiftAddress),
 			SymbolTable.NO_LABEL,
 			undefined,
-			...oldState.slice(shiftAddress, LAST_ADDRESS)
+			...oldState.slice(shiftAddress, LAST_ADDRESS - 1)
 		]
 		this._labels.set(newState)
 		if (oldState[LAST_ADDRESS] !== SymbolTable.NO_LABEL) {

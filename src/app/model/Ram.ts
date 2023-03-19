@@ -196,7 +196,7 @@ export default class Ram {
 			...oldState.slice(FIRST_ADDRESS, address),
 			Instruction.NOP,
 			undefined,
-			...oldState.slice(address, LAST_ADDRESS)
+			...oldState.slice(address, LAST_ADDRESS - 1)
 		]
 		this._instructions.set(newState)
 	}
