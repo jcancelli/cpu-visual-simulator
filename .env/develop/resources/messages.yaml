@@ -1,6 +1,18 @@
 messages:
-  - type: SUCCESS
+  - type: WARNING
     expiresInSec: -1
     message:
-      en: "Test"
-      it: "Test"
+      en: >
+        Attention: CPU Visual Simulator has now been moved under the official
+        https://cpuvisualsimulator.github.io url.
+        The current url https://jcancelli.github.io/cpu-visual-simulator/ will now host an
+        (unstable) development version of the simulator.
+        To avoid unexpected behaviors we strongly recommend to access CPUVS
+        through the previously mentioned official url.
+      it: >
+        Attenzione: CPU Visual Simulator è stato ora spostato sotto l'url ufficiale
+        https://cpuvisualsimulator.github.io .
+        L'attuale url https://jcancelli.github.io/cpu-visual-simulator/ hosterà ora
+        una versione (instabile) di sviluppo del simulatore.
+        Per evitare comportamenti inaspettati raccomandiamo caldamente 
+        l'accesso a CPUVS tramite l'url ufficiale precedentemente menzionato.
