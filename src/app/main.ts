@@ -65,12 +65,12 @@ symbolTable.addLabelRemovedListener(event => {
 })
 Logger.info("Symbol table change synchers subscribed", "DEBUG")
 
-Logger.info("Checking url params for base64 encoded program", "DEBUG")
 // check url params for base64 encoded program
+Logger.info("Checking url params for base64 encoded program", "DEBUG")
 const urlParams = new URLSearchParams(window.location.search)
 if (urlParams.has("program")) {
-	Logger.info("Base64 encoded program found in page url", "DEBUG")
 	// loads program from base64 encoded query param "program"
+	Logger.info("Base64 encoded program found in page url", "DEBUG")
 	try {
 		const base64EncodedProgram = urlParams.get("program")
 		Logger.info(`Loading program from url: ${base64EncodedProgram}`, "USER_INPUT")
@@ -83,30 +83,55 @@ if (urlParams.has("program")) {
 	}
 	Logger.info("Base64 encoded program loaded", "DEBUG")
 } else {
+	// loads the program stored in local storage into the ram (restores previous session)
 	Logger.info("No base64 encoded program found in the page url", "DEBUG")
 	Logger.info("Loading program from local storage", "DEBUG")
-	// loads the program stored in local storage into the ram (restores previous session)
 	const program = parseProgram(storage.getOrElse("program", "NOP"))
 	ram.import(program.ram)
 	symbolTable.import(program.symbolTable)
 	Logger.info("Program from local storage loaded", "DEBUG")
 }
 
-Logger.info("Subscribing local storage program synchers", "DEBUG")
 // when the state of the ram or of the symbol table is altered, the program stored in them is saved to local storage
+Logger.info("Subscribing local storage program synchers", "DEBUG")
 ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 Logger.info("Local storage program synchers subscribed", "DEBUG")
 
 initSettings()
-initText().then(fetchMessages)
+initText()
 
+Logger.info("Fetching messages", "DEBUG")
+const messagesUrl = `resources/messages/${language.get()}.json`
+fetch(messagesUrl)
+	.then(res => res.json())
+	.then(messages => {
+		Logger.info(`Messages fetched - ${messages.length} messages found`, "DEBUG")
+		messages.forEach(message => {
+			messageFeedStore.get().addMessage({
+				message: message.message as string,
+				type: message.type as MessageType,
+				expiresInSec: message.expiresInSec as number
+			})
+		})
+	})
+	.catch(error => {
+		Logger.info("Error while fetching messages", "DEBUG")
+		Logger.error(error, "DEBUG")
+		messageFeedStore.get().error(interpolate(text.get().errors.generic.fetch_error, messagesUrl))
+	})
+
+Logger.info("Instantiating program execution and program execution loop", "DEBUG")
 const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
 const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
+Logger.info("Program execution and program execution loop instantiated", "DEBUG")
 
+Logger.info("Setting program execution and program execution loop stores", "DEBUG")
 programExecutionStore.set(programExecution)
 programExecutionLoopStore.set(programExecutionLoop)
+Logger.info("Program execution and program execution loop stores setted", "DEBUG")
 
+Logger.info("Instantiating App", "DEBUG")
 const app = new App({
 	target: document.body,
 	props: {
@@ -114,13 +139,16 @@ const app = new App({
 		ram,
 		symbolTable,
 		programExecution,
-		initExecution
+		onMountCallback: initExecutionContext
 	}
 })
+Logger.info("App instantiated", "DEBUG")
 
 export default app
 
-function initExecution(): void {
+function initExecutionContext(): void {
+	Logger.info("Initializing execution context", "DEBUG")
+
 	const cpuComponent = cpuComponentStore.get()
 	const ramComponent = ramComponentStore.get()
 	const wiresComponent = wiresComponentStore.get()
@@ -136,23 +164,9 @@ function initExecution(): void {
 	programExecution.executionContext.wires.component = wiresComponent
 	programExecution.executionContext.stepTextComponent = stepTextComponent
 
+	Logger.info("Starting execution loop", "DEBUG")
 	programExecutionLoop.start()
-}
+	Logger.info("Execution loop started", "DEBUG")
 
-function fetchMessages(): void {
-	const url = `resources/messages/${language.get()}.json`
-	fetch(url)
-		.then(res => res.json())
-		.then(messages => {
-			messages.forEach(message => {
-				messageFeedStore.get().addMessage({
-					message: message.message as string,
-					type: message.type as MessageType,
-					expiresInSec: message.expiresInSec as number
-				})
-			})
-		})
-		.catch(error => {
-			messageFeedStore.get().error(interpolate(text.get().errors.generic.fetch_error, url))
-		})
+	Logger.info("Execution context initialized", "DEBUG")
 }

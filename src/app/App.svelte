@@ -19,7 +19,7 @@
 	export let ram: Ram
 	export let symbolTable: SymbolTable
 	export let programExecution: ProgramExecution
-	export let initExecution: () => void
+	export let onMountCallback: () => void
 
 	let app: HTMLDivElement
 
@@ -39,7 +39,7 @@
 
 	onMount(() => {
 		scale()
-		initExecution()
+		onMountCallback()
 	})
 </script>
 

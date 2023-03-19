@@ -3,6 +3,7 @@ import { writable } from "../util/customStores"
 import { language } from "./settings"
 import { parse as parseYaml } from "yaml"
 import { Language } from "../../shared/util/i18n"
+import Logger from "../util/logger"
 
 export type Step = keyof Lang["steps"]
 export type Lang = typeof _default
@@ -369,15 +370,24 @@ const _default = {
 export const text = writable<Lang>(_default)
 
 export async function fetchText(_lang: Language) {
+	Logger.info(`Fetching text - Lang: ${_lang}`, "DEBUG")
 	await fetch(`resources/i18n/app/${_lang}.yaml`)
 		.then(res => res.text())
 		.then(text => parseYaml(text))
 		.then(data => text.set(data as Lang))
+		.catch(error => Logger.error(error, "DEBUG"))
+	Logger.info("Text fetched", "DEBUG")
 }
 
 export async function init() {
+	Logger.info("Initializing text", "DEBUG")
 	await fetchText(get(language))
+	// note: svelte stores subscribe method triggers the callback.
+	// This means that the callback is executed even if the store value didn't change.
+	// So in this case fetchText is called (unnecessarily) 2 times.
+	// Unfortunatelly the fetchText that is awaited is necessary, since
 	language.subscribe(fetchText)
+	Logger.info("Text initialized", "DEBUG")
 }
 
 export default text

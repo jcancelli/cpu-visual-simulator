@@ -2,6 +2,7 @@ import { writable } from "../util/customStores"
 import { getDefaultLanguage, Language } from "../../shared/util/i18n"
 import { storage } from "../util/localStorage"
 import speechSynthesis from "../util/speechSynthesis"
+import Logger from "../util/logger"
 
 export const showSettings = writable<boolean>()
 export const displayAsBinary = writable<boolean>()
@@ -56,6 +57,9 @@ export const defaults = {
 
 // prettier-ignore
 export function init() {
+	Logger.info("Initializing settings", "DEBUG")
+
+	Logger.info("Initializing settings values", "DEBUG")
 	showSettings.set(defaults.showSettings)
 	displayAsBinary.set(defaults.displayAsBinary)
 	displayComponentsLabels.set(storage.getOrElse("displayComponentsLabels", defaults.displayComponentsLabels) === "true")
@@ -79,32 +83,49 @@ export function init() {
 	intControlBusColor.set(storage.getOrElse("intControlBusColor", defaults.intControlBusColor))
 	extControlBusAnimationColor.set(storage.getOrElse("extControlBusAnimationColor", defaults.extControlBusAnimationColor))
 	intControlBusAnimationColor.set(storage.getOrElse("intControlBusAnimationColor", defaults.intControlBusAnimationColor))
+	Logger.info("Settings values initialized", "DEBUG")
 
-	window.addEventListener("load", () => {
-		window.speechSynthesis.addEventListener("voiceschanged", () => {
-			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
-		})
-		displayComponentsLabels.subscribe(newValue => storage.set("displayComponentsLabels", newValue))
-		displayBussesLabels.subscribe(newValue => storage.set("displayBussesLabels", newValue))
-		displayStepText.subscribe(newValue => storage.set("displayStepText", newValue))
-		animationSpeed.subscribe(newValue => storage.set("animationSpeed", newValue))
-		language.subscribe(newValue => storage.set("language", newValue))
-		ttsEnabled.subscribe(newValue => storage.set("ttsEnabled", newValue))
-		ttsSpeed.subscribe(newValue => storage.set("ttsSpeed", newValue))
+	const initTtsVoice = () => {
+		Logger.info("Initializing ttsVoice setting (onvoicechanged event)", "DEBUG")
+		ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
+		// note: svelte stores subscribe method triggers the callback. 
+		// This means that the callback is executed even if the store value didn't change
+		// That's why here I save the ttsVoice value into a variable to re-set ttsVoice after calling
+		// the language.subscribe method
+		const ttsVoiceValue = ttsVoice.get()
+		language.subscribe(newValue => ttsVoice.set(speechSynthesis.getAvailableVoices(newValue)[0].name))
 		ttsVoice.subscribe(newValue => storage.set("ttsVoice", newValue))
-		extDataBusColor.subscribe(newValue => storage.set("extDataBusColor", newValue))
-		intDataBusColor.subscribe(newValue => storage.set("intDataBusColor", newValue))
-		extDataBusAnimationColor.subscribe(newValue => storage.set("extDataBusAnimationColor", newValue))
-		intDataBusAnimationColor.subscribe(newValue => storage.set("intDataBusAnimationColor", newValue))
-		extAddressBusColor.subscribe(newValue => storage.set("extAddressBusColor", newValue))
-		intAddressBusColor.subscribe(newValue => storage.set("intAddressBusColor", newValue))
-		extAddressBusAnimationColor.subscribe(newValue => storage.set("extAddressBusAnimationColor", newValue))
-		intAddressBusAnimationColor.subscribe(newValue => storage.set("intAddressBusAnimationColor", newValue))
-		extControlBusColor.subscribe(newValue => storage.set("extControlBusColor", newValue))
-		intControlBusColor.subscribe(newValue => storage.set("intControlBusColor", newValue))
-		extControlBusAnimationColor.subscribe(newValue => storage.set("extControlBusAnimationColor", newValue))
-		intControlBusAnimationColor.subscribe(newValue => storage.set("intControlBusAnimationColor", newValue))
-	})
+		ttsVoice.set(ttsVoiceValue)
+		window.speechSynthesis.removeEventListener("voiceschanged", initTtsVoice)
+		Logger.info("ttsVoice setting initialized", "DEBUG")
+	}
+	window.speechSynthesis.addEventListener("voiceschanged", initTtsVoice)
+
+	Logger.info("Subscribing local storage settings synchers", "DEBUG")
+	// note: svelte stores subscribe method triggers the callback. 
+	// This means that the callback is executed even if the store value didn't change
+	displayComponentsLabels.subscribe(newValue => storage.set("displayComponentsLabels", newValue))
+	displayBussesLabels.subscribe(newValue => storage.set("displayBussesLabels", newValue))
+	displayStepText.subscribe(newValue => storage.set("displayStepText", newValue))
+	animationSpeed.subscribe(newValue => storage.set("animationSpeed", newValue))
+	language.subscribe(newValue => storage.set("language", newValue))
+	ttsEnabled.subscribe(newValue => storage.set("ttsEnabled", newValue))
+	ttsSpeed.subscribe(newValue => storage.set("ttsSpeed", newValue))
+	extDataBusColor.subscribe(newValue => storage.set("extDataBusColor", newValue))
+	intDataBusColor.subscribe(newValue => storage.set("intDataBusColor", newValue))
+	extDataBusAnimationColor.subscribe(newValue => storage.set("extDataBusAnimationColor", newValue))
+	intDataBusAnimationColor.subscribe(newValue => storage.set("intDataBusAnimationColor", newValue))
+	extAddressBusColor.subscribe(newValue => storage.set("extAddressBusColor", newValue))
+	intAddressBusColor.subscribe(newValue => storage.set("intAddressBusColor", newValue))
+	extAddressBusAnimationColor.subscribe(newValue => storage.set("extAddressBusAnimationColor", newValue))
+	intAddressBusAnimationColor.subscribe(newValue => storage.set("intAddressBusAnimationColor", newValue))
+	extControlBusColor.subscribe(newValue => storage.set("extControlBusColor", newValue))
+	intControlBusColor.subscribe(newValue => storage.set("intControlBusColor", newValue))
+	extControlBusAnimationColor.subscribe(newValue => storage.set("extControlBusAnimationColor", newValue))
+	intControlBusAnimationColor.subscribe(newValue => storage.set("intControlBusAnimationColor", newValue))
+	Logger.info("Local storage settings synchers subscribed", "DEBUG")
+
+	Logger.info("Settings initialized", "DEBUG")
 }
 
 export function reset() {
