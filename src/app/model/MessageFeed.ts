@@ -1,4 +1,10 @@
 import { derived, Readable, writable, Writable } from "../util/customStores"
+import { interpolate } from "../../shared/util/template"
+import Logger from "../util/logger"
+import { Language } from "../../shared/util/i18n"
+import { parse as parseYaml } from "yaml"
+import { language } from "../store/settings"
+import text from "../store/text"
 
 export enum MessageType {
 	ERROR = "ERROR",
@@ -16,6 +22,14 @@ export type MessageInfo = {
 	type: MessageType
 	message: string
 	expiresInSec: number // -1 to disable timer
+}
+
+type FetchedMessage = {
+	message: {
+		[key in Language]: string
+	}
+	type: MessageType
+	expiresInSec: number
 }
 
 export default class MessageFeed {
@@ -84,5 +98,27 @@ export default class MessageFeed {
 		this._messages.update(messages => {
 			return messages.filter(m => m.id !== messageId)
 		})
+	}
+
+	public async fetchMessages(messagesUrl: string): Promise<void> {
+		Logger.info("Fetching messages", "DEBUG")
+		await fetch(messagesUrl)
+			.then(res => res.text())
+			.then(text => parseYaml(text))
+			.then((data: { messages: FetchedMessage[] }) => {
+				Logger.info(`Messages fetched - ${data.messages.length} messages found`, "DEBUG")
+				data.messages.forEach((message: FetchedMessage) => {
+					this.addMessage({
+						message: message.message[language.get()],
+						type: message.type,
+						expiresInSec: message.expiresInSec
+					})
+				})
+			})
+			.catch(error => {
+				Logger.info("Error while fetching messages", "DEBUG")
+				Logger.error(error, "DEBUG")
+				this.error(interpolate(text.get().errors.generic.fetch_error, messagesUrl))
+			})
 	}
 }

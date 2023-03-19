@@ -56,7 +56,7 @@ export const defaults = {
 } as const
 
 // prettier-ignore
-export function init() {
+export async function init() {
 	Logger.info("Initializing settings", "DEBUG")
 
 	Logger.info("Initializing settings values", "DEBUG")
@@ -85,21 +85,24 @@ export function init() {
 	intControlBusAnimationColor.set(storage.getOrElse("intControlBusAnimationColor", defaults.intControlBusAnimationColor))
 	Logger.info("Settings values initialized", "DEBUG")
 
-	const initTtsVoice = () => {
-		Logger.info("Initializing ttsVoice setting (onvoicechanged event)", "DEBUG")
-		ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
-		// note: svelte stores subscribe method triggers the callback. 
-		// This means that the callback is executed even if the store value didn't change
-		// That's why here I save the ttsVoice value into a variable to re-set ttsVoice after calling
-		// the language.subscribe method
-		const ttsVoiceValue = ttsVoice.get()
-		language.subscribe(newValue => ttsVoice.set(speechSynthesis.getAvailableVoices(newValue)[0].name))
-		ttsVoice.subscribe(newValue => storage.set("ttsVoice", newValue))
-		ttsVoice.set(ttsVoiceValue)
-		window.speechSynthesis.removeEventListener("voiceschanged", initTtsVoice)
-		Logger.info("ttsVoice setting initialized", "DEBUG")
-	}
-	window.speechSynthesis.addEventListener("voiceschanged", initTtsVoice)
+	await new Promise<void>(resolve => {
+		const initTtsVoice = () => {
+			Logger.info("Initializing ttsVoice setting (onvoicechanged event)", "DEBUG")
+			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
+			// note: svelte stores subscribe method triggers the callback. 
+			// This means that the callback is executed even if the store value didn't change
+			// That's why here I save the ttsVoice value into a variable to re-set ttsVoice after calling
+			// the language.subscribe method
+			const ttsVoiceValue = ttsVoice.get()
+			language.subscribe(newValue => ttsVoice.set(speechSynthesis.getAvailableVoices(newValue)[0].name))
+			ttsVoice.subscribe(newValue => storage.set("ttsVoice", newValue))
+			ttsVoice.set(ttsVoiceValue)
+			window.speechSynthesis.removeEventListener("voiceschanged", initTtsVoice)
+			Logger.info("ttsVoice setting initialized", "DEBUG")
+			resolve()
+		}
+		window.speechSynthesis.addEventListener("voiceschanged", initTtsVoice)
+	})
 
 	Logger.info("Subscribing local storage settings synchers", "DEBUG")
 	// note: svelte stores subscribe method triggers the callback. 
