@@ -2,10 +2,10 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - develop
   pull_request:
     branches:
-      - main
+      - develop
 permissions:
   contents: write
 jobs:
@@ -20,11 +20,9 @@ jobs:
       - name: Build
         run: npm run build
       - name: Copy environment specific files
-        run: cp -r .env/main/* public
+        run: cp -r .env/develop/* public
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           folder: public
-          ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
-          git-config-name: cpuvisualsimulator
-          repository-name: cpuvisualsimulator/cpuvisualsimulator.github.io
+          branch: page
