@@ -101,7 +101,17 @@ export async function init() {
 			Logger.info("ttsVoice setting initialized", "DEBUG")
 			resolve()
 		}
-		window.speechSynthesis.addEventListener("voiceschanged", initTtsVoice)
+		// This if is needed because Firefox doesn't fire the onvoiceschanged event.
+		// Because of this, this promise would never resolve and the simulator wouldn't complete
+		// its initialization.
+		// see https://contest-server.cs.uchicago.edu/ref/JavaScript/developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/onvoiceschanged.html
+		if (window.speechSynthesis.getVoices().length === 0) {
+			// for every browser except firefox
+			window.speechSynthesis.onvoiceschanged = initTtsVoice
+		} else {
+			// for firefox
+			initTtsVoice()
+		}
 	})
 
 	Logger.info("Subscribing local storage settings synchers", "DEBUG")
