@@ -6,7 +6,7 @@
 
 CPU Visual Simulator is a web based educational resource that allows students to input assembly language code directly into the RAM and visualize its execution.
 
-Try it out at [https://jcancelli.github.io/cpu-visual-simulator/](https://jcancelli.github.io/cpu-visual-simulator/)
+Try it out at [https://cpuvisualsimulator.github.io](https://cpuvisualsimulator.github.io)
 
 <img src="assets/cpuvs-demo.gif" alt="CPU Visual Simulator Screenshot" width="800" style="border-radius: 15px;" />
 
