@@ -1,7 +1,7 @@
 <script lang="ts">
 	import text from "../../store/text"
 	import { showSettings } from "../../store/settings"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import CloseButton from "../../../shared/components/buttons/CloseButton.svelte"
 	import { fade } from "svelte/transition"
 	import TabGroup from "../../../shared/components/tabs/TabGroup.svelte"
@@ -15,7 +15,7 @@
 
 	function closeSettings() {
 		$showSettings = false
-		Logger.info("Settings closed", "USER_INPUT")
+		logger.debug("Settings closed", LogCategory.USER_INPUT)
 	}
 </script>
 

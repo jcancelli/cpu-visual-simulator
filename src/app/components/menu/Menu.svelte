@@ -4,7 +4,7 @@
 	import { ramStore, symbolTableStore } from "../../store/state"
 	import { showSettings } from "../../store/settings"
 	import { upload } from "../../../shared/util/file"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import { parseProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
 	import MenuItemIcon from "./MenuItem.svelte"
@@ -31,7 +31,7 @@
 
 	function openSettings(): void {
 		$showSettings = true
-		Logger.info("Settings opened", "USER_INPUT")
+		logger.debug("Settings opened", LogCategory.USER_INPUT)
 	}
 
 	async function loadProgram(): Promise<void> {
@@ -40,11 +40,11 @@
 			const program = parseProgram(await file.text())
 			symbolTableStore.get().import(program.symbolTable)
 			ramStore.get().import(program.ram)
+			logger.debug("Program loaded from file", LogCategory.USER_INPUT)
 		} catch (error) {
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error, LogCategory.USER_INPUT)
 			$messageFeedStore.error(error.message)
 		}
-		Logger.info("Program loaded from file", "USER_INPUT")
 	}
 
 	async function loadExample(exampleUrl: string): Promise<void> {
@@ -53,25 +53,26 @@
 			const program = parseProgram(example)
 			symbolTableStore.get().import(program.symbolTable)
 			ramStore.get().import(program.ram)
+			logger.debug(`Example ${exampleUrl} loaded`, LogCategory.USER_INPUT)
 		} catch (error) {
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error.message, LogCategory.USER_INPUT)
 			$messageFeedStore.error(error.message)
 		}
-		Logger.info(`Example ${exampleUrl} loaded`, "USER_INPUT")
 	}
 
 	function saveProgram(): void {
 		showSaveFileDialog = true
-		Logger.info("Program saved to file", "USER_INPUT")
+		logger.debug("Program saved to file", LogCategory.USER_INPUT)
 	}
 
 	function openDocsPage(): void {
 		window.open("manual", "_blank").focus()
+		logger.debug("Manual opened", LogCategory.USER_INPUT)
 	}
 
 	function openCopyrightNotice(): void {
 		showCopyrightDialog = true
-		Logger.info("Program saved to file", "USER_INPUT")
+		logger.debug("Copyright notice opened", LogCategory.USER_INPUT)
 	}
 </script>
 

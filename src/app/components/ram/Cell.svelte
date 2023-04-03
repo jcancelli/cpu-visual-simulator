@@ -5,7 +5,7 @@
 	import { animationsEnabled, displayAsBinary } from "../../store/settings"
 	import { parseBinary, parseSymbolic } from "../../util/instructionParser"
 	import { flash as flashComponent } from "../../util/animation"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import Instruction from "../../model/Instruction"
 	import SymbolTable from "../../model/SymbolTable"
 
@@ -37,7 +37,7 @@
 	function commitEdit(): void {
 		try {
 			if (inputValue !== "") {
-				Logger.info(`RamCell input: "${inputValue}"`, "USER_INPUT")
+				logger.debug(`RamCell input: "${inputValue}"`, LogCategory.USER_INPUT)
 				if ($displayAsBinary) {
 					$ramStore.write(address, parseBinary(inputValue.trim()))
 				} else {
@@ -46,18 +46,20 @@
 			}
 		} catch (error) {
 			$messageFeedStore?.error(error.message)
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error.message, LogCategory.USER_INPUT)
 		} finally {
 			deselect()
 		}
 	}
 
 	function select(): void {
+		logger.debug(`Cell selected - Address: "${address}"`, LogCategory.USER_INPUT)
 		ramSelection.select(address, "CELL")
 	}
 
 	function deselect(): void {
 		if (ramSelection.isSelected(address, "CELL")) {
+			logger.debug(`Cell deselected - Address: "${address}"`, LogCategory.USER_INPUT)
 			ramSelection.deselect()
 		}
 	}

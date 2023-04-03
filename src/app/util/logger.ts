@@ -1,42 +1,76 @@
-import { logsStore } from "../store/logs"
+import { derived, Readable, writable, Writable } from "./customStores"
 
 const FIRST_TIMESTAMP = Date.now()
 
-export const LogGroups = ["EXECUTION", "USER_INPUT", "DEBUG", "UNCAUGHT"] as const
-export const LogTypes = ["UNCHECKED_ERROR", "CHECKED_ERROR", "INFO"] as const
-export type LogGroup = typeof LogGroups[number]
-export type LogType = typeof LogTypes[number]
+export enum LogLevel {
+	DEBUG = "DEBUG",
+	WARNING = "WARNING",
+	HANDLED_ERROR = "HANDLED_ERROR",
+	UNEXPECTED_ERROR = "UNEXPECTED_ERROR"
+}
+
+export enum LogCategory {
+	USER_INPUT = "USER_INPUT",
+	EXECUTION = "EXECUTION",
+	INIT = "INIT",
+	UNCAUGHT = "UNCAUGHT"
+}
+
 export type Log = {
-	logType: LogType
-	logGroup: LogGroup
-	timestamp: number
 	message: string
+	timestamp: number
+	level: LogLevel
+	categories: LogCategory[]
 }
 
-function error(err: Error, logGroup: LogGroup, checked: boolean = false) {
-	logsStore.push({
-		logType: checked ? "CHECKED_ERROR" : "UNCHECKED_ERROR",
-		logGroup,
-		timestamp: elapsed(),
-		message: checked ? err.message : err.stack
-	})
+export class Logger {
+	private readonly _logs: Writable<Log[]> // private writable store
+	public readonly logs: Readable<Log[]> // public read-only store
+
+	private static readonly instance = new Logger()
+
+	private constructor() {
+		this._logs = writable([])
+		this.logs = derived(this._logs, value => value)
+	}
+
+	public static getInstance(): Logger {
+		return Logger.instance
+	}
+
+	private log(message: string, level: LogLevel, ...categories: LogCategory[]): void {
+		this._logs.update(logs => [
+			...logs,
+			{
+				message,
+				timestamp: elapsed(),
+				level,
+				categories: [...categories]
+			}
+		])
+	}
+
+	public debug(message: string, ...categories: LogCategory[]): void {
+		this.log(message, LogLevel.DEBUG, ...categories)
+	}
+
+	public warning(message: string, ...categories: LogCategory[]): void {
+		this.log(message, LogLevel.WARNING, ...categories)
+	}
+
+	public handled_error(message: string, ...categories: LogCategory[]): void {
+		this.log(message, LogLevel.HANDLED_ERROR, ...categories)
+	}
+	public unexpected_error(message: string, ...categories: LogCategory[]): void {
+		this.log(message, LogLevel.UNEXPECTED_ERROR, ...categories)
+	}
 }
 
-function info(message: string, logGroup: LogGroup) {
-	logsStore.push({
-		logType: "INFO",
-		logGroup,
-		timestamp: elapsed(),
-		message
-	})
-}
+const logger = Logger.getInstance()
 
 // milliseconds from when FIRST_TIMESTAMP was set
 function elapsed(): number {
 	return Date.now() - FIRST_TIMESTAMP
 }
 
-export default {
-	error,
-	info
-}
+export default logger

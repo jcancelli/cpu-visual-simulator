@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash } from "../../util/animation"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import Cpu from "../../model/Cpu"
 
 	export let cpu: Cpu
@@ -24,13 +24,13 @@
 	}
 
 	function toggleZeroFlag() {
-		Logger.info(`Toggled zero flag: "${!$zeroFlag}"`, "USER_INPUT")
+		logger.debug(`Toggled zero flag: "${!$zeroFlag}"`, LogCategory.USER_INPUT)
 		$zeroFlag = !$zeroFlag
 		flashZeroFlag()
 	}
 
 	function toggleNegativeFlag() {
-		Logger.info(`Toggled negative flag: "${!$negativeFlag}"`, "USER_INPUT")
+		logger.debug(`Toggled negative flag: "${!$negativeFlag}"`, LogCategory.USER_INPUT)
 		$negativeFlag = !$negativeFlag
 		flashNegativeFlag()
 	}

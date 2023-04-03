@@ -1,13 +1,7 @@
 <script lang="ts">
-	import { Dialog, DialogOverlay, DialogTitle } from "@rgossiaux/svelte-headlessui"
+	import { Dialog, DialogOverlay } from "@rgossiaux/svelte-headlessui"
 	import { createEventDispatcher } from "svelte"
-	import BlueButton from "../../../shared/components/buttons/Blue.svelte"
-	import GrayButton from "../../../shared/components/buttons/Gray.svelte"
-	import { download } from "../../../shared/util/file"
-	import { ramStore, symbolTableStore } from "../../store/state"
 	import text from "../../store/text"
-	import { exportProgram } from "../../util/programParser"
-	import Logger from "../../util/logger"
 	import CloseButton from "../../../shared/components/buttons/CloseButton.svelte"
 
 	const dispatch = createEventDispatcher()

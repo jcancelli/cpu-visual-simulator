@@ -4,7 +4,7 @@ import { instructionToActions } from "./actions/instructionToActionConverter"
 import { LAST_ADDRESS } from "../util/ram"
 import { messageFeedStore } from "../store/state"
 import { FETCH, INCREMENT_PC } from "./actions/presets"
-import Logger from "../util/logger"
+import logger, { LogCategory } from "../util/logger"
 import { Cyclable } from "./NonBlockingLoop"
 import Cpu from "../model/Cpu"
 import { ExecutionContext } from "./ExecutionContext"
@@ -103,7 +103,7 @@ export default class ProgramExecution implements Cyclable {
 				case "ENQUEUING_INSTRUCTION":
 					const ir = this.executionContext.cpu.model.instructionRegister.get()
 					this.queue.push(...instructionToActions(ir))
-					Logger.info(`Executing instruction "${ir.symbolic()}"`, "EXECUTION")
+					logger.debug(`Executing instruction "${ir.symbolic()}"`, LogCategory.EXECUTION)
 					this.cyclePhase = "EXECUTING_INSTRUCTION"
 					break
 				case "EXECUTING_INSTRUCTION":
@@ -144,7 +144,7 @@ export default class ProgramExecution implements Cyclable {
 		} catch (error) {
 			this.executionContext.cpu.model.isHalting.set(true)
 			messageFeedStore.get().error(error.message)
-			Logger.error(error, "EXECUTION", error.isChecked)
+			logger.handled_error(error.message, LogCategory.EXECUTION)
 		} finally {
 			if (this.executionContext.cpu.model.isHalting.get()) {
 				this.reset()
@@ -169,7 +169,7 @@ export default class ProgramExecution implements Cyclable {
 		this.setIsPlayingProgram(true)
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(false)
-		Logger.info("Execution - START", "EXECUTION")
+		logger.debug("Execution - START", LogCategory.EXECUTION)
 	}
 
 	/** Pauses the execution of the program */
@@ -178,7 +178,7 @@ export default class ProgramExecution implements Cyclable {
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(false)
 		this.executeExecutionEndedCallbacks()
-		Logger.info("Execution - PAUSE", "EXECUTION")
+		logger.debug("Execution - PAUSE", LogCategory.EXECUTION)
 	}
 
 	/** Toggles the state of the execution between executing and paused */
@@ -196,7 +196,7 @@ export default class ProgramExecution implements Cyclable {
 		this.setIsPlayingProgram(false)
 		this.setIsPlayingMicrostep(true)
 		this.setIsPlayingInstruction(false)
-		Logger.info("Execution - STEP", "EXECUTION")
+		logger.debug("Execution - STEP", LogCategory.EXECUTION)
 	}
 
 	/** Executes a single instruction */
@@ -205,7 +205,7 @@ export default class ProgramExecution implements Cyclable {
 		this.setIsPlayingProgram(false)
 		this.setIsPlayingMicrostep(false)
 		this.setIsPlayingInstruction(true)
-		Logger.info("Execution - INSTRUCTION", "EXECUTION")
+		logger.debug("Execution - INSTRUCTION", LogCategory.EXECUTION)
 	}
 
 	/** Pauses and reset the execution. All actions ready to be executed won't be executed */
@@ -215,7 +215,7 @@ export default class ProgramExecution implements Cyclable {
 		this.executionContext.cpu.model.isJumping.set(false)
 		this.cyclePhase = "ENQUEUING_FETCH"
 		this.emptyExecutionQueue()
-		Logger.info("Execution - RESET", "EXECUTION")
+		logger.debug("Execution - RESET", LogCategory.EXECUTION)
 	}
 
 	/** Returns true if the execution should execute actions */

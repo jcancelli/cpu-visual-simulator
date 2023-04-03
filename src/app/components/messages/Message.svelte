@@ -2,11 +2,11 @@
 	import { createEventDispatcher, onMount } from "svelte"
 	import { slide } from "svelte/transition"
 	import text from "../../store/text"
-	import { logsStore } from "../../store/logs"
 	import { download } from "../../../shared/util/file"
 	import WhiteButton from "../../../shared/components/buttons/White.svelte"
 	import Progress from "./ProgressBar.svelte"
 	import { Message, MessageType } from "../../model/MessageFeed"
+	import logger from "../../util/logger"
 
 	const dispach = createEventDispatcher()
 
@@ -45,7 +45,7 @@
 	}
 
 	function exportLogs() {
-		download(JSON.stringify($logsStore), `cpu-visual-simultor-logs-${new Date().toDateString()}.json`)
+		download(JSON.stringify(logger.logs.get()), `cpu-visual-simultor-logs-${new Date().toDateString()}.json`)
 	}
 </script>
 

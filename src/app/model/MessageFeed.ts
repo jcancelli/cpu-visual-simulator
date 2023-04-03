@@ -1,6 +1,6 @@
 import { derived, Readable, writable, Writable } from "../util/customStores"
 import { interpolate } from "../../shared/util/template"
-import Logger from "../util/logger"
+import logger, { LogCategory } from "../util/logger"
 import { Language } from "../../shared/util/i18n"
 import { parse as parseYaml } from "yaml"
 import { language } from "../store/settings"
@@ -101,12 +101,12 @@ export default class MessageFeed {
 	}
 
 	public async fetchMessages(messagesUrl: string): Promise<void> {
-		Logger.info("Fetching messages", "DEBUG")
+		logger.debug("Fetching messages", LogCategory.INIT)
 		await fetch(messagesUrl)
 			.then(res => res.text())
 			.then(text => parseYaml(text))
 			.then((data: { messages: FetchedMessage[] }) => {
-				Logger.info(`Messages fetched - ${data.messages.length} messages found`, "DEBUG")
+				logger.debug(`Messages fetched - ${data.messages.length} messages found`, LogCategory.INIT)
 				data.messages.forEach((message: FetchedMessage) => {
 					this.addMessage({
 						message: message.message[language.get()],
@@ -116,8 +116,7 @@ export default class MessageFeed {
 				})
 			})
 			.catch(error => {
-				Logger.info("Error while fetching messages", "DEBUG")
-				Logger.error(error, "DEBUG")
+				logger.unexpected_error(error.message, LogCategory.INIT)
 				this.error(interpolate(text.get().errors.generic.fetch_error, messagesUrl))
 			})
 	}

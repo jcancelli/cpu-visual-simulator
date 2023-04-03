@@ -4,11 +4,10 @@
 	import { controls, messageFeed, logger, menu, settings } from "./store/components"
 	import { onMount } from "svelte"
 	import LoggerComponent from "./components/debug/Logger.svelte"
-	import Logger from "./util/logger"
+	import Logger, { LogCategory } from "./util/logger"
 	import Controls from "./components/controls/Controls.svelte"
 	import Menu from "./components/menu/Menu.svelte"
 	import Settings from "./components/settings/Settings.svelte"
-	import text from "./store/text"
 	import Cpu from "./model/Cpu"
 	import Ram from "./model/Ram"
 	import SymbolTable from "./model/SymbolTable"
@@ -32,9 +31,9 @@
 		app.style.transform = `scale(${scale})`
 	}
 
-	function logError(e: Event) {
-		e.preventDefault()
-		Logger.error(new Error($text.errors.unchecked), "UNCAUGHT")
+	function logError(event: Event) {
+		event.preventDefault()
+		Logger.unexpected_error((event as ErrorEvent).message, LogCategory.UNCAUGHT)
 	}
 
 	onMount(() => {

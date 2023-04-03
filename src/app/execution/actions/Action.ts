@@ -1,4 +1,4 @@
-import Logger from "../../util/logger"
+import logger, { LogCategory } from "../../util/logger"
 import { ExecutionContext } from "../ExecutionContext"
 import { Condition } from "./Conditions"
 import { Wait } from "./Waits"
@@ -104,10 +104,10 @@ export default abstract class Action {
 	 */
 	async execute(ctx: ExecutionContext): Promise<any> {
 		if (!this._conditions.reduceRight((finalVal, condition) => finalVal && condition(ctx), true)) {
-			Logger.info(`Skipping: ${this.toString()}`, "EXECUTION")
+			logger.debug(`Skipping: ${this.toString()}`, LogCategory.EXECUTION)
 			return
 		}
-		Logger.info(`Executing: ${this.toString()}`, "EXECUTION")
+		logger.debug(`Executing: ${this.toString()}`, LogCategory.EXECUTION)
 		await Promise.all(this._waits_before.map(wait => wait(ctx)))
 		await Promise.all([...this._sideffects.map(sideffect => sideffect.execute(ctx)), this.action(ctx)])
 		return Promise.all(this._waits_after.map(wait => wait(ctx)))

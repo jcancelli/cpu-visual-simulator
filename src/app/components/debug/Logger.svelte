@@ -1,14 +1,18 @@
 <script lang="ts">
 	import { onMount } from "svelte"
-	import { logsStore, loggerStore } from "../../store/logs"
 	import { download } from "../../../shared/util/file"
-	import { Log, LogGroup, LogGroups, LogType, LogTypes } from "../../util/logger"
+	import { showLogsExplorer } from "../../store/settings"
+	import { Readable } from "../../util/customStores"
+	import logger, { Log, LogCategory, LogLevel } from "../../util/logger"
 
+	const logsStore: Readable<Log[]> = logger.logs
 	let logsDiv: HTMLDivElement
 	let logs: Log[] = []
-	let type: LogType | "ALL" = "ALL"
-	let group: LogGroup | "ALL" = "ALL"
+	let logLevels: LogLevel[] = [...(Object.keys(LogLevel) as LogLevel[])]
+	let logCategories: LogCategory[] = [...(Object.keys(LogCategory) as LogCategory[])]
 	let keyword = ""
+	let showLogLevel = false
+	let showLogCategories = false
 	let showTimestamp = false
 	let lockScrollToBottom = true
 
@@ -26,8 +30,8 @@
 		if (logsDiv) {
 			logs = $logsStore.filter(
 				log =>
-					(type === "ALL" || log.logType === type) &&
-					(group === "ALL" || log.logGroup === group) &&
+					logLevels.includes(log.level) &&
+					log.categories.every(c => logCategories.includes(c)) &&
 					log.message.toLowerCase().includes(keyword)
 			)
 			if (lockScrollToBottom) {
@@ -37,7 +41,7 @@
 	}
 
 	function toggle() {
-		loggerStore.updateShowLogger(oldValue => !oldValue)
+		showLogsExplorer.update(oldValue => !oldValue)
 	}
 
 	function exportLogs() {
@@ -45,7 +49,7 @@
 	}
 </script>
 
-{#if $loggerStore.showLogger}
+{#if $showLogsExplorer}
 	<div class="fixed top-0 left-0 w-screen h-screen z-[1000] bg-black/70 text-white">
 		<div class="flex flex-wrap items-center justify-around gap-4 p-4">
 			<h2 class="text-2xl">Logs</h2>
@@ -54,21 +58,19 @@
 					Keyword:
 					<input type="text" bind:value={keyword} class="text-black px-1 py-0.5" />
 				</label>
-				<label for="type">
-					Type:
-					<select id="type" bind:value={type} class="text-black px-1 py-0.5">
-						<option value="ALL">ALL</option>
-						{#each LogTypes as LogType}
-							<option value={LogType}>{LogType}</option>
+				<label for="level">
+					Level:
+					<select id="level" bind:value={logLevels} class="text-black px-1 py-0.5" multiple>
+						{#each Object.keys(LogLevel) as level}
+							<option value={level}>{level}</option>
 						{/each}
 					</select>
 				</label>
-				<label for="group">
-					Group:
-					<select id="group" bind:value={group} class="text-black px-1 py-0.5">
-						<option value="ALL">ALL</option>
-						{#each LogGroups as LogGroup}
-							<option value={LogGroup}>{LogGroup}</option>
+				<label for="categories">
+					Categories:
+					<select id="categories" bind:value={logCategories} class="text-black px-1 py-0.5" multiple>
+						{#each Object.keys(LogCategory) as category}
+							<option value={category}>{category}</option>
 						{/each}
 					</select>
 				</label>
@@ -81,6 +83,14 @@
 				<label for="show-timestamp">
 					Show timestamp
 					<input type="checkbox" id="show-timestamp" bind:checked={showTimestamp} />
+				</label>
+				<label for="show-level">
+					Show log level
+					<input type="checkbox" id="show-level" bind:checked={showLogLevel} />
+				</label>
+				<label for="show-categories">
+					Show log categories
+					<input type="checkbox" id="show-categories" bind:checked={showLogCategories} />
 				</label>
 			</div>
 			<div class="flex items-center flex-wrap gap-4 p-2">
@@ -98,8 +108,9 @@
 		</div>
 		<div class="w-full h-[90%] overflow-y-auto" bind:this={logsDiv}>
 			{#each logs as log}
-				<p class="m-2 whitespace-pre-line {log.logType}">
-					{#if showTimestamp}{log.timestamp} - {/if}{log.message}
+				<p class="m-2 whitespace-pre-line {log.level}">
+					{#if showTimestamp}{log.timestamp} - {/if}
+					{log.message}
 				</p>
 			{/each}
 		</div>
@@ -107,17 +118,17 @@
 {/if}
 
 <style lang="scss">
-	.UNCHECKED_ERROR {
+	.UNEXPECTED_ERROR {
 		color: red;
 		background-color: rgba(0, 0, 0, 0.4);
 	}
 
-	.CHECKED_ERROR {
+	.HANDLED_ERROR {
 		color: gold;
 		background-color: rgba(0, 0, 0, 0.4);
 	}
 
 	.DEBUG {
-		color: cyan;
+		color: white;
 	}
 </style>

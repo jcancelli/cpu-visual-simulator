@@ -7,7 +7,6 @@
 	import { ramStore, symbolTableStore } from "../../store/state"
 	import text from "../../store/text"
 	import { exportProgram } from "../../util/programParser"
-	import Logger from "../../util/logger"
 
 	const dispatch = createEventDispatcher()
 

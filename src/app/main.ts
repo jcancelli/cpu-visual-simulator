@@ -25,7 +25,7 @@ import NonBlockingLoop from "./execution/NonBlockingLoop"
 import { storage } from "./util/localStorage"
 import { exportProgram, parseProgram } from "./util/programParser"
 import MessageFeed from "./model/MessageFeed"
-import Logger from "./util/logger"
+import logger, { LogCategory } from "./util/logger"
 
 let app: App
 
@@ -34,64 +34,70 @@ main()
 export default app
 
 async function main(): Promise<void> {
-	Logger.info("Instantiating models", "DEBUG")
+	logger.debug("Instantiating models", LogCategory.INIT)
 	const ram = new Ram()
 	const cpu = new Cpu()
 	const symbolTable = new SymbolTable()
 	const wires = new Wires()
 	const messageFeedState = new MessageFeed()
-	Logger.info("Models instantiated", "DEBUG")
+	logger.debug("Models instantiated", LogCategory.INIT)
 
-	Logger.info("Setting model's stores", "DEBUG")
+	logger.debug("Setting model's stores", LogCategory.INIT)
 	ramStore.set(ram)
 	cpuStore.set(cpu)
 	symbolTableStore.set(symbolTable)
 	wiresStore.set(wires)
 	messageFeedStore.set(messageFeedState)
-	Logger.info("Model's stores setted", "DEBUG")
+	logger.debug("Model's stores setted", LogCategory.INIT)
 
-	Logger.info("Subscribing symbol table change synchers", "DEBUG")
+	logger.debug("Subscribing symbol table change synchers", LogCategory.INIT)
 	// when a label is edited in the symbol table, all its occurences in the ram are synched
 	symbolTable.addLabelEditedListener(event => ram.updateLabel(event.oldLabel, event.newLabel))
 	symbolTable.addLabelEditedListener(event => {
-		Logger.info(`Label edited - oldValue: "${event.oldLabel}" newValue: "${event.newLabel}"`, "DEBUG")
+		logger.debug(
+			`Label edited - oldValue: "${event.oldLabel}" newValue: "${event.newLabel}"`,
+			LogCategory.INIT
+		)
 	})
 	// when a label is moved in the symbol table, all its occurences in the ram are synched
 	symbolTable.addLabelMovedListener(event => ram.updateLabelAddress(event.label, event.newAddress))
 	symbolTable.addLabelMovedListener(event => {
-		Logger.info(
+		logger.debug(
 			`Label moved - label: "${event.label}" oldAddress: "${event.oldAddress}" newAddress: "${event.newAddress}"`,
-			"DEBUG"
+			LogCategory.INIT
 		)
 	})
 	// when a label is deleted from the symbol table, all its occurences in the ram are replaced by the address that label was mapped to
 	symbolTable.addLabelRemovedListener(event => ram.removeLabel(event.removedLabel))
 	symbolTable.addLabelRemovedListener(event => {
-		Logger.info(`Label removed - label: "${event.removedLabel}" address: "${event.address}"`, "DEBUG")
+		logger.debug(
+			`Label removed - label: "${event.removedLabel}" address: "${event.address}"`,
+			LogCategory.INIT
+		)
 	})
-	Logger.info("Symbol table change synchers subscribed", "DEBUG")
+	logger.debug("Symbol table change synchers subscribed", LogCategory.INIT)
 
 	// when the state of the ram or of the symbol table is altered, the program stored in them is saved to local storage
-	Logger.info("Subscribing local storage program synchers", "DEBUG")
+	logger.debug("Subscribing local storage program synchers", LogCategory.INIT)
 	ram.instructions.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
 	symbolTable.labels.subscribe(newState => storage.set("program", exportProgram(ram, symbolTable)))
-	Logger.info("Local storage program synchers subscribed", "DEBUG")
+	logger.debug("Local storage program synchers subscribed", LogCategory.INIT)
 
 	await initSettings()
 	await initText()
 	await messageFeedState.fetchMessages("resources/messages.yaml")
 
-	Logger.info("Instantiating program execution and program execution loop", "DEBUG")
+	logger.debug("Instantiating program execution and program execution loop", LogCategory.INIT)
 	const programExecution = new ProgramExecution(cpu, ram, symbolTable, wires)
 	const programExecutionLoop = new NonBlockingLoop(programExecution, 20)
-	Logger.info("Program execution and program execution loop instantiated", "DEBUG")
+	logger.debug("Program execution and program execution loop instantiated", LogCategory.INIT)
 
-	Logger.info("Setting program execution and program execution loop stores", "DEBUG")
+	logger.debug("Setting program execution and program execution loop stores", LogCategory.INIT)
 	programExecutionStore.set(programExecution)
 	programExecutionLoopStore.set(programExecutionLoop)
-	Logger.info("Program execution and program execution loop stores setted", "DEBUG")
+	logger.debug("Program execution and program execution loop stores setted", LogCategory.INIT)
 
-	Logger.info("Instantiating App", "DEBUG")
+	logger.debug("Instantiating App", LogCategory.INIT)
 
 	app = new App({
 		target: document.body,
@@ -106,9 +112,9 @@ async function main(): Promise<void> {
 			// components have already been created) so that it can pass the ui components references
 			// to the programExecution.
 			onMountCallback: () => {
-				Logger.info("Initializing execution context", "DEBUG")
+				logger.debug("Initializing execution context", LogCategory.INIT)
 
-				Logger.info("Fetching ui components from stores", "DEBUG")
+				logger.debug("Fetching ui components from stores", LogCategory.INIT)
 				const cpuComponent = cpuComponentStore.get()
 				const ramComponent = ramComponentStore.get()
 				const wiresComponent = wiresComponentStore.get()
@@ -117,49 +123,53 @@ async function main(): Promise<void> {
 				if (!ramComponent) throw new Error("ram component not yet initialized")
 				if (!wiresComponent) throw new Error("wires component not yet initialized")
 				if (!stepTextComponent) throw new Error("step text component not yet initialized")
-				Logger.info("Ui components fetched", "DEBUG")
+				logger.debug("Ui components fetched", LogCategory.INIT)
 
-				Logger.info("Passing ui components to executionContext", "DEBUG")
+				logger.debug("Passing ui components to executionContext", LogCategory.INIT)
 				programExecution.executionContext.cpu.component = cpuComponent
 				programExecution.executionContext.ram.component = ramComponent
 				programExecution.executionContext.wires.component = wiresComponent
 				programExecution.executionContext.stepTextComponent = stepTextComponent
-				Logger.info("Ui components passed to executionContext", "DEBUG")
+				logger.debug("Ui components passed to executionContext", LogCategory.INIT)
 
-				Logger.info("Starting execution loop", "DEBUG")
+				logger.debug("Starting execution loop", LogCategory.INIT)
 				programExecutionLoop.start()
-				Logger.info("Execution loop started", "DEBUG")
+				logger.debug("Execution loop started", LogCategory.INIT)
 
-				Logger.info("Execution context initialized", "DEBUG")
+				logger.debug("Execution context initialized", LogCategory.INIT)
 			}
 		}
 	})
-	Logger.info("App instantiated", "DEBUG")
+	logger.debug("App instantiated", LogCategory.INIT)
 
 	// check url params for base64 encoded program
-	Logger.info("Checking url params for base64 encoded program", "DEBUG")
+	logger.debug("Checking url params for base64 encoded program", LogCategory.INIT, LogCategory.USER_INPUT)
 	const urlParams = new URLSearchParams(window.location.search)
 	if (urlParams.has("program")) {
 		// loads program from base64 encoded query param "program"
-		Logger.info("Base64 encoded program found in page url", "DEBUG")
+		logger.debug("Base64 encoded program found in page url", LogCategory.INIT, LogCategory.USER_INPUT)
 		try {
 			const base64EncodedProgram = urlParams.get("program")
-			Logger.info(`Loading program from url: ${base64EncodedProgram}`, "USER_INPUT")
+			logger.debug(
+				`Loading program from url: ${base64EncodedProgram}`,
+				LogCategory.INIT,
+				LogCategory.USER_INPUT
+			)
 			const program = parseProgram(window.atob(base64EncodedProgram))
 			ram.import(program.ram)
 			symbolTable.import(program.symbolTable)
 		} catch (error) {
 			messageFeedState.error(error.message)
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error.message, LogCategory.INIT, LogCategory.USER_INPUT)
 		}
-		Logger.info("Base64 encoded program loaded", "DEBUG")
+		logger.debug("Base64 encoded program loaded", LogCategory.INIT, LogCategory.USER_INPUT)
 	} else {
 		// loads the program stored in local storage into the ram (restores previous session)
-		Logger.info("No base64 encoded program found in the page url", "DEBUG")
-		Logger.info("Loading program from local storage", "DEBUG")
+		logger.debug("No base64 encoded program found in the page url", LogCategory.INIT)
+		logger.debug("Loading program from local storage", LogCategory.INIT)
 		const program = parseProgram(storage.getOrElse("program", "NOP"))
 		ram.import(program.ram)
 		symbolTable.import(program.symbolTable)
-		Logger.info("Program from local storage loaded", "DEBUG")
+		logger.debug("Program from local storage loaded", LogCategory.INIT)
 	}
 }

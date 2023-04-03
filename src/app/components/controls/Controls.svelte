@@ -8,7 +8,7 @@
 	import Slider from "../../../shared/components/slider/Control.svelte"
 	import Group from "./Group.svelte"
 	import StepText from "./StepText.svelte"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import ProgramExecution, { ExecutionCallback } from "../../execution/ProgramExecution"
 	import ThreeStatesCheckbox, { State as AnimationsState } from "./ThreeStatesCheckbox.svelte"
 	import Cpu from "../../model/Cpu"
@@ -19,18 +19,18 @@
 	const isProgramExecuting = programExecution.isExecuting
 
 	function resetExecution() {
-		Logger.info(`Reset pressed`, "USER_INPUT")
+		logger.debug(`Reset pressed`, LogCategory.USER_INPUT)
 		programExecution.reset()
 		cpu.reset()
 	}
 
 	function toggleExecution() {
-		Logger.info(`Toggle execution pressed`, "USER_INPUT")
+		logger.debug(`Toggle execution pressed`, LogCategory.USER_INPUT)
 		programExecution.toggle()
 	}
 
 	function fastProgram() {
-		Logger.info(`Skip execution pressed`, "USER_INPUT")
+		logger.debug(`Skip execution pressed`, LogCategory.USER_INPUT)
 		let currentAnimationsState: AnimationsState
 		if ($minimalAnimations && $animationsEnabled) {
 			currentAnimationsState = AnimationsState.HALF
@@ -48,12 +48,12 @@
 	}
 
 	function playStep() {
-		Logger.info(`Play step pressed`, "USER_INPUT")
+		logger.debug(`Play step pressed`, LogCategory.USER_INPUT)
 		programExecution.step()
 	}
 
 	function fastStep() {
-		Logger.info(`Skip step pressed`, "USER_INPUT")
+		logger.debug(`Skip step pressed`, LogCategory.USER_INPUT)
 		let currentAnimationsState: AnimationsState
 		if ($minimalAnimations && $animationsEnabled) {
 			currentAnimationsState = AnimationsState.HALF
@@ -71,12 +71,12 @@
 	}
 
 	function playInstruction() {
-		Logger.info(`Play instruction pressed`, "USER_INPUT")
+		logger.debug(`Play instruction pressed`, LogCategory.USER_INPUT)
 		programExecution.instruction()
 	}
 
 	function fastInstruction() {
-		Logger.info(`Skip instruction pressed`, "USER_INPUT")
+		logger.debug(`Skip instruction pressed`, LogCategory.USER_INPUT)
 		let currentAnimationsState: AnimationsState
 		if ($minimalAnimations && $animationsEnabled) {
 			currentAnimationsState = AnimationsState.HALF
@@ -94,16 +94,16 @@
 	}
 
 	function speedChanged() {
-		Logger.info(`Speed slider moved - ${$animationSpeed}`, "USER_INPUT")
+		logger.debug(`Speed slider moved - ${$animationSpeed}`, LogCategory.USER_INPUT)
 	}
 
 	function binaryToggled() {
-		Logger.info(`Binary toggle pressed - ${$displayAsBinary}`, "USER_INPUT")
+		logger.debug(`Binary toggle pressed - ${$displayAsBinary}`, LogCategory.USER_INPUT)
 	}
 
 	function onAnimationsToggled(event: CustomEvent) {
 		toggleAnimations(event.detail.value)
-		Logger.info(`Animations toggle pressed - ${event.detail.value}`, "USER_INPUT")
+		logger.debug(`Animations toggle pressed - ${event.detail.value}`, LogCategory.USER_INPUT)
 	}
 
 	function toggleAnimations(state: AnimationsState): void {

@@ -3,7 +3,7 @@
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import BinaryValue from "../../model/BinaryValue"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import { isValidAddress } from "../../util/ram"
 	import CheckedError from "../../errors/CheckedError"
 	import { messageFeedStore } from "../../store/state"
@@ -31,7 +31,7 @@
 
 	function commitEdit(): void {
 		try {
-			Logger.info(`ProgramCounter input: "${inputValue}"`, "USER_INPUT")
+			logger.debug(`ProgramCounter input: "${inputValue}"`, LogCategory.USER_INPUT)
 			if (inputValue === "") {
 				syncInputValue()
 				isEditing = false
@@ -53,7 +53,7 @@
 			programCounter.set(newValue)
 		} catch (error) {
 			$messageFeedStore?.error(error.message)
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error.message, LogCategory.USER_INPUT)
 			syncInputValue()
 		} finally {
 			isEditing = false

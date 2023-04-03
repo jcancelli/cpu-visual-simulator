@@ -3,7 +3,7 @@
 	import { fade as svelteFade } from "svelte/transition"
 	import { messageFeedStore } from "../../store/state"
 	import ramSelection from "../../store/ramSelection"
-	import Logger from "../../util/logger"
+	import logger, { LogCategory } from "../../util/logger"
 	import { onMount } from "svelte"
 	import SymbolTable from "../../model/SymbolTable"
 	import { MAX_LABEL_LENGTH, NOT_ALLOWED_CHARS } from "../../util/label"
@@ -29,11 +29,11 @@
 
 	function commitEdit(): void {
 		try {
-			Logger.info(`RamLabel input: "${inputValue}"`, "USER_INPUT")
+			logger.debug(`RamLabel input: "${inputValue}"`, LogCategory.USER_INPUT)
 			symbolTable.setLabel(address, inputValue)
 		} catch (error) {
 			$messageFeedStore?.error(error.message)
-			Logger.error(error, "USER_INPUT", error.isChecked)
+			logger.handled_error(error.message, LogCategory.USER_INPUT)
 			inputValue = label === SymbolTable.NO_LABEL ? "" : label
 		} finally {
 			deselect()
@@ -41,11 +41,13 @@
 	}
 
 	function select(): void {
+		logger.debug(`Label selected - Address: "${address}"`, LogCategory.USER_INPUT)
 		ramSelection.select(address, "LABEL")
 	}
 
 	function deselect(): void {
 		if (ramSelection.isSelected(address, "LABEL")) {
+			logger.debug(`Label deselected - Address: "${address}"`, LogCategory.USER_INPUT)
 			ramSelection.deselect()
 		}
 	}

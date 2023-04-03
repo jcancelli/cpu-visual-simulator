@@ -2,9 +2,10 @@ import { writable } from "../util/customStores"
 import { getDefaultLanguage, Language } from "../../shared/util/i18n"
 import { storage } from "../util/localStorage"
 import speechSynthesis from "../util/speechSynthesis"
-import Logger from "../util/logger"
+import logger, { LogCategory } from "../util/logger"
 
 export const showSettings = writable<boolean>()
+export const showLogsExplorer = writable<boolean>()
 export const displayAsBinary = writable<boolean>()
 export const displayComponentsLabels = writable<boolean>()
 export const displayBussesLabels = writable<boolean>()
@@ -31,6 +32,7 @@ export const intControlBusAnimationColor = writable<string>()
 
 export const defaults = {
 	showSettings: false,
+	showLogsExplorer: false,
 	displayAsBinary: false,
 	displayComponentsLabels: true,
 	displayBussesLabels: true,
@@ -57,10 +59,11 @@ export const defaults = {
 
 // prettier-ignore
 export async function init() {
-	Logger.info("Initializing settings", "DEBUG")
+	logger.debug("Initializing settings", LogCategory.INIT)
 
-	Logger.info("Initializing settings values", "DEBUG")
+	logger.debug("Initializing settings values", LogCategory.INIT)
 	showSettings.set(defaults.showSettings)
+	showLogsExplorer.set(defaults.showLogsExplorer)
 	displayAsBinary.set(defaults.displayAsBinary)
 	displayComponentsLabels.set(storage.getOrElse("displayComponentsLabels", defaults.displayComponentsLabels) === "true")
 	displayBussesLabels.set(storage.getOrElse("displayBussesLabels", defaults.displayBussesLabels) === "true")
@@ -83,11 +86,11 @@ export async function init() {
 	intControlBusColor.set(storage.getOrElse("intControlBusColor", defaults.intControlBusColor))
 	extControlBusAnimationColor.set(storage.getOrElse("extControlBusAnimationColor", defaults.extControlBusAnimationColor))
 	intControlBusAnimationColor.set(storage.getOrElse("intControlBusAnimationColor", defaults.intControlBusAnimationColor))
-	Logger.info("Settings values initialized", "DEBUG")
+	logger.debug("Settings values initialized", LogCategory.INIT)
 
 	await new Promise<void>(resolve => {
 		const initTtsVoice = () => {
-			Logger.info("Initializing ttsVoice setting (onvoicechanged event)", "DEBUG")
+			logger.debug("Initializing ttsVoice setting (onvoicechanged event)", LogCategory.INIT)
 			ttsVoice.set(storage.getOrElse("ttsVoice", speechSynthesis.getAvailableVoices(language.get())[0].name))
 			// note: svelte stores subscribe method triggers the callback. 
 			// This means that the callback is executed even if the store value didn't change
@@ -98,7 +101,7 @@ export async function init() {
 			ttsVoice.subscribe(newValue => storage.set("ttsVoice", newValue))
 			ttsVoice.set(ttsVoiceValue)
 			window.speechSynthesis.removeEventListener("voiceschanged", initTtsVoice)
-			Logger.info("ttsVoice setting initialized", "DEBUG")
+			logger.debug("ttsVoice setting initialized", LogCategory.INIT)
 			resolve()
 		}
 		// This if is needed because Firefox doesn't fire the onvoiceschanged event.
@@ -114,7 +117,7 @@ export async function init() {
 		}
 	})
 
-	Logger.info("Subscribing local storage settings synchers", "DEBUG")
+	logger.debug("Subscribing local storage settings synchers", LogCategory.INIT)
 	// note: svelte stores subscribe method triggers the callback. 
 	// This means that the callback is executed even if the store value didn't change
 	displayComponentsLabels.subscribe(newValue => storage.set("displayComponentsLabels", newValue))
@@ -136,9 +139,9 @@ export async function init() {
 	intControlBusColor.subscribe(newValue => storage.set("intControlBusColor", newValue))
 	extControlBusAnimationColor.subscribe(newValue => storage.set("extControlBusAnimationColor", newValue))
 	intControlBusAnimationColor.subscribe(newValue => storage.set("intControlBusAnimationColor", newValue))
-	Logger.info("Local storage settings synchers subscribed", "DEBUG")
+	logger.debug("Local storage settings synchers subscribed", LogCategory.INIT)
 
-	Logger.info("Settings initialized", "DEBUG")
+	logger.debug("Settings initialized", LogCategory.INIT)
 }
 
 export function reset() {
