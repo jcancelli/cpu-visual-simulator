@@ -16,3 +16,10 @@ messages:
         una versione (instabile) di sviluppo del simulatore.
         Per evitare comportamenti inaspettati raccomandiamo caldamente 
         l'accesso a CPUVS tramite l'url ufficiale precedentemente menzionato.
+      es: >
+        Advertencia: CPU Visual Simulator ahora se ha movido bajo la URL oficial
+        https://cpuvisualsimulator.github.io.
+        La URL actual https://jcancelli.github.io/cpu-visual-simulator/ ahora albergará
+        una versión de desarrollo (inestable) del simulador.
+        Para evitar comportamientos inesperados, le recomendamos encarecidamente
+        acceso a CPUVS a través de la url oficial mencionada anteriormente.
