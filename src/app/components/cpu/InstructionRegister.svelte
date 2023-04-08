@@ -39,13 +39,13 @@
 	export async function flashOpcode() {
 		if (!animationsEnabled) return
 		if (!opcodeDiv) return
-		return flash(opcodeDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flash(opcodeDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 
 	export async function flashOperand() {
 		if (!animationsEnabled) return
 		if (!operandDiv) return
-		return flash(operandDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flash(operandDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 </script>
 
@@ -69,14 +69,14 @@
 >
 	<ComponentLabel text="IR" top="-25px" left="10px" />
 	{#if !$instructionRegister.opcode && !$displayAsBinary}
-		<div class="w-[200px] h-[30px] leading-[30px] col-span-2 text-center rounded-md">
+		<div class="w-[200px] h-[30px] leading-[30px] col-span-2 text-center rounded-md bg-gray-100">
 			{$text.cpu.ir.invalid_instruction}
 		</div>
 	{:else}
-		<div class="w-full h-[28px] leading-[30px] text-center rounded-l-md" bind:this={opcodeDiv}>
+		<div class="w-full h-[28px] leading-[30px] text-center rounded-l-md bg-gray-100" bind:this={opcodeDiv}>
 			{opcode}
 		</div>
-		<div class="w-full h-[28px] leading-[30px] text-center rounded-r-md" bind:this={operandDiv}>
+		<div class="w-full h-[28px] leading-[30px] text-center rounded-r-md bg-gray-100" bind:this={operandDiv}>
 			{operand}
 		</div>
 	{/if}

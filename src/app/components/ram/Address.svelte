@@ -15,7 +15,7 @@
 
 	export async function flash() {
 		if (!$animationsEnabled) return
-		return flashComponent(addressDiv, "background-color", { r: 255, g: 140, b: 0 }, { r: 0, g: 255, b: 0 })
+		return flashComponent(addressDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 </script>
 

@@ -26,7 +26,7 @@
 
 	export async function flash(): Promise<void> {
 		if (!animationsEnabled) return
-		return flashElement(element, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flashElement(element, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 
 	function commitEdit(): void {

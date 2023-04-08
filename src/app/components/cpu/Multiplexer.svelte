@@ -8,7 +8,7 @@
 
 	export async function flash() {
 		if (!animationsEnabled) return
-		return flashComponent(muxElement, "fill", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flashComponent(muxElement, "fill", { r: 0, g: 255, b: 0, a: 1 })
 	}
 </script>
 

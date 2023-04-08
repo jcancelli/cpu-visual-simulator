@@ -17,17 +17,17 @@
 
 	export async function flashFirstOperand() {
 		if (!animationsEnabled) return
-		return flash(operand1Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flash(operand1Div, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 
 	export async function flashSecondOperand() {
 		if (!animationsEnabled) return
-		return flash(operand2Div, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flash(operand2Div, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 
 	export async function flashOperator() {
 		if (!animationsEnabled) return
-		return flash(operatorDiv, "background-color", { r: 224, g: 224, b: 224 }, { r: 0, g: 255, b: 0 })
+		return flash(operatorDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
 	}
 
 	function splitBinString(bin: string): string {
@@ -58,6 +58,7 @@
 			leading-tight
 			rounded-lg
 			font-mono
+			bg-gray-100
 		"
 		bind:this={operand1Div}
 	>
@@ -78,6 +79,7 @@
 			font-bold
 			text-2xl
 			leading-[30px]
+			bg-gray-100
 		"
 		bind:this={operatorDiv}
 	>
@@ -97,6 +99,7 @@
 			leading-tight
 			rounded-lg
 			font-mono
+			bg-gray-100
 		"
 		bind:this={operand2Div}
 	>
