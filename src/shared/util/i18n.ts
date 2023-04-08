@@ -14,6 +14,7 @@
 		translations for the simulator (see other files in this directory for reference)
 	5) Add a file named "<ISO 639-1 code>.yaml" to public/resources/i18n/manual/ containing all the
 		translations for the simulator's manual (see other files in this directory for reference)
+	6) Translate eventual messages inside .env/develop/resources/messages.yaml and .env/main/resources/messages.yaml
 */
 
 export const SUPPORTED_LANGUAGES = ["en", "it", "es"] as const
