@@ -1,0 +1,268 @@
+displayName: "Español"
+steps:
+  pc_to_ram:
+    text: "El contenido del Contador de Programa se coloca en el Bus de Direcciones"
+    tts: "El contenido del Contador de Programa se coloca en el Bus de Direcciones"
+  ram_to_ir:
+    text: "La instrucción se carga en el Registro de Instrucción"
+    tts: "La instrucción se carga en el Registro de Instrucción"
+  ir_to_cu:
+    text: "El código de operación es decodificado"
+    tts: "El código di operación es decodificado"
+  cu_to_mux:
+    text: "La Unidad de Control indica al Multiplexor si el operando es directo o inmediato"
+    tts: "La Unidad de Control indica al Multiplexor si el operando es directo o inmediato"
+  cu_to_alu:
+    text: "La Unidad de Control configura la operación de la Unidad Aritmética Lógica"
+    tts: "La Unidad de Control configura la operación de la Unidad Aritmética Lógica"
+  acc_to_alu1:
+    text: "El contenido del Acumulador se carga en la Unidad Aritmética Lógica"
+    tts: "El contenido del Acumulador se carga en la Unidad Aritmética Lógica"
+  pc_increment:
+    text: "El Contador de Programa se incrementa"
+    tts: "El Contador de Programa se incrementa"
+  ir_to_alu2:
+    text: "El segundo operando se carga desde el Registro de Instrucción"
+    tts: "El segundo operando se carga desde el Registro de Instrucción"
+  ir_to_ram:
+    text: "La dirección del operando se coloca en el Bus de Direcciones"
+    tts: "La dirección del operando se coloca en el Bus de Direcciones"
+  memory_read:
+    text: "Se señala una operación de Lectura de Memoria en el Bus de Control"
+    tts: "Se señala una operación de Lectura de Memoria en el Bus de Control"
+  memory_fetch:
+    text: "Se señala una operación de Captación en el Bus de Control"
+    tts: "Se señala una operación de Captación en el Bus de Control"
+  memory_write:
+    text: "Se señala una operación de Escritura en Memoria en el Bus de Control"
+    tts: "Se señala una operación de Escritura en Memoria en el Bus de Control"
+  ram_to_alu2:
+    text: "El operando se carga de la RAM"
+    tts: "El operando se carga de la RAM"
+  ir_to_pc:
+    text: "El Contador de Programa se modifica con el valor del operando en el Registro de Instrucción"
+    tts: "El Contador de Programa se modifica con el valor del operando en el Registro de Instrucción"
+  execute:
+    text: "La operación se ejecuta"
+    tts: "La operación se ejecuta"
+  alu_to_sw:
+    text: "El Registro de Estado se actualiza"
+    tts: "El Registro de Estado se actualiza"
+  acc_to_ram:
+    text: "El contenido del Acumulador se coloca en el Bus de Datos"
+    tts: "El contenido del Acumulador se coloca en el Bus de Datos"
+  acc_stored_to_ram:
+    text: "El contenido del Acumulador se escribe en la RAM"
+    tts: "EL contenido del Acumulador se escribe en la RAM"
+cpu:
+  ir:
+    invalid_instruction: "INSTRUCCIÓN NO VÁLIDA"
+ram:
+  buttons:
+    clear:
+      text: "VACIAR"
+      title: "Vaciar"
+    undo:
+      title: "Deshacer"
+    redo:
+      title: "Rehacer"
+menu:
+  buttons:
+    settings:
+      text: "Configuraciones"
+      title: "Abrir configuraciones"
+    save:
+      text: "Guardar"
+      title: "Guardar programa"
+    load:
+      text: "Cargar"
+      title: "Cargar programa"
+    examples:
+      text: "Ejemplos"
+      title: "Ver ejemplo"
+      examples:
+        if_then_else:
+          text: "If then else"
+          title: "If then else"
+        while_do:
+          text: "While do"
+          title: "While do"
+        array_sum:
+          text: "Suma array"
+          title: "Suma array"
+    manual:
+      text: "Manual"
+      title: "Abrir manual"
+    copyright:
+      text: "Copyright"
+      title: "Aviso de Copyright"
+  overlays:
+    save_to_file:
+      title: "Guardar programa"
+      buttons:
+        save:
+          text: "Guardar"
+          title: "Guardar"
+        cancel:
+          text: "Cancelar"
+          title: "Cancelar"
+      inputs:
+        filename:
+          placeholder: "Nombre del archivo"
+    copyright:
+      subsections:
+        copyright_notice:
+          title: "Aviso de Copyright"
+          paragraphs:
+            - "Copyright 2022 Jonathan Cancelli"
+            - "Este simulador se puede utilizar exclusivamente para actividades educativas no comerciales"
+          disclaimer: |
+            Disclaimer: Hasta donde sabemos, esta nueva aplicación no infringe ningún derecho de propiedad intelectual (nuestro propio diseño nuevo, 
+            sin reutilización de código preexistente), si alguien piensa lo contrario, por favor contáctenos en
+        credits:
+          title: "Créditos"
+          paragraphs:
+            - |
+              El diseño de este simulador (CPUVSIM) se basó en la evaluación [1] de un Simulador Visual de CPU preexistente,
+              desarrollado por Jonathan Cancelli, Alessandro Belotti, Davide Riva y Nicola Preda, como un proyecto de pedagogía OER-enabled 
+              coordinado por Renato Cortinovis [2]. CPU Visual Simulator se derivó (sustancialmente rediseñado y ampliado) 
+              en 2021 de un Applet llamado PIPPIN (© 1998 PWS Publishing Company), con permiso de Cengage Learning Inc.
+            - "Este simulador CPUVSIM es una aplicación completamente nueva desarrollada por Jonathan Cancelli, en colaboración con Renato Cortinovis, sin reutilizar ningún código preexistente."
+controls:
+  labels:
+    execution: "Programa"
+    step: "Micro paso"
+    instruction: "Instrucción"
+    speed: "Velocidad"
+  buttons:
+    reset:
+      title: "Reset"
+    play_program:
+      title: "Ejecuta"
+    pause_program:
+      title: "Pausa"
+    fast_program:
+      title: "Ejecución rápida"
+    play_step:
+      title: "Ejecuta Micro paso"
+    fast_step:
+      title: "Ejecución rápida"
+    play_instruction:
+      title: "Ejecuta instrucción"
+    fast_instruction:
+      title: "Ejecución rápida"
+  sliders:
+    speed:
+      title: "Velocidad"
+  checkboxes:
+    binary:
+      text: "Binario"
+    animations:
+      text: "Animaciones"
+message_feed:
+  buttons:
+    export_logs:
+      text: "Exportar registros de errores"
+    close_message:
+      title: "Cerrar mensaje"
+settings:
+  title: "Configuraciones"
+  sections_titles:
+    general: "General"
+    tts: "Lector de Texto"
+    busses: "Buses"
+  language:
+    title: "Idioma"
+    description: "El idioma usado por la aplicación"
+  dispaly_components_labels:
+    title: "Mostrar etiquetas de los componentes"
+    description: "Activa/desactiva etiquetas como 'RAM' 'IR' 'ALU' etc."
+  dispaly_busses_labels:
+    title: "Mostrar etiquetas de los buses"
+    description: "Activa/desactiva las etiquetas de data bus, address bus y control bus"
+  display_step_text:
+    title: "Mostrar texto del micro paso"
+    description: "Activa/desactiva el cuadro donde se muestra una descripción de texto del micro paso en ejecución"
+  reset_all:
+    title: "Resetear todas las configuraciones"
+    description: "Resetear todas las configuraciones a sus valores predeterminados"
+    button:
+      text: "Reset"
+  tts_enabled:
+    title: "Lector de Texto"
+    description: "Activa/desactiva una voz generada sintéticamente que lee la explicación del paso que se está ejecutando actualmente"
+  tts_speed:
+    title: "Velocidad Lector de Texto"
+    description: "Velocidad de lectura del Lector de Texto"
+  tts_voice:
+    title: "Voz del Lector de Texto"
+    description: "Voz utilizada por el Lector de Texto"
+  databus_ext_color:
+    title: "Color data bus externo"
+    description: "Color del bus de datos externo"
+  databus_int_color:
+    title: "Color data bus interno"
+    description: "Color del bus de datos interno"
+  databus_ext_anim_color:
+    title: "Color animación del data bus externo"
+    description: "Color de la animación del bus de datos externo"
+  databus_int_anim_color:
+    title: "Color animación del data bus interno"
+    description: "Color de la animación del bus de datos interno"
+  addressbus_ext_color:
+    title: "Color addresss bus externo"
+    description: "Color del bus de direcciones externo"
+  addressbus_int_color:
+    title: "Color addresss bus interno"
+    description: "Color del bus de direcciones interno"
+  addressbus_ext_anim_color:
+    title: "Color animación del addresss bus externo"
+    description: "Color de la animación del bus de direcciones externo"
+  addressbus_int_anim_color:
+    title: "Color animación del addresss bus interno"
+    description: "Color de la animación del bus de direcciones interno"
+  controlbus_ext_color:
+    title: "Color control bus externo"
+    description: "Color del bus de control externo"
+  controlbus_int_color:
+    title: "Color control bus interno"
+    description: "Color del bus de control interno"
+  controlbus_ext_anim_color:
+    title: "Color animación del control bus externo"
+    description: "Color de la animación del bus de control externo"
+  controlbus_int_anim_color:
+    title: "Color animación del control bus interno"
+    description: "Color de la animación del bus de control interno"
+errors:
+  unchecked: "Error inesperado"
+  program_parsing:
+    invalid_instruction: "Línea {0} - Instrucción no válida - {1}"
+    invalid_label: "Línea {0} - Label no válida - {1}"
+    duplicated_label: "Línea {0} - Label duplicada - '{1}'"
+  instruction_parsing:
+    invalid_binary_input: "Entrada binaria no válida"
+    invalid_opcode: "'{0}' no es un código de operación válido"
+    invalid_operand: "placeholder text" # TO-DO
+    operand_not_allowed: "El código de operación '{0}' no acepta operandos"
+    operand_required: "El código de operación '{0}' requiere un operando"
+    unknown_label: "La label '{0}' no está definida"
+    immediate_operand_not_allowed: "El código de operación '{0}' no permite un operando inmediato"
+    invalid_immediate_operand: "El operando '{0}' no es un entero válido de 8 bits con signo"
+    invalid_direct_operand: "El operando '{0}' no es una dirección válida"
+    invalid_data: "El valor '{0}' no es un entero válido de 16 bits con signo"
+  label_parsing:
+    invalid_character: "El carácter '{0}' no está permitido"
+    label_too_short: "Longitud mínima: {0}"
+    label_too_long: "Longitud máxima: {0}"
+  symbol_table:
+    label_already_exists: "Label ya existente"
+    invalid_label: "Label no válida"
+  user_input:
+    invalid_file_name: "Nombre de archivo no válido"
+    invalid_pc_value: "Dirección no válida"
+    invalid_acc_value: "Valor no válido"
+  execution:
+    invalid_instruction: "Instrucción no válida encontrada en el Registro de Instrucción"
+    division_by_zero: "División entre cero"
+  generic:
+    fetch_error: "placeholder text" # TO-DO
