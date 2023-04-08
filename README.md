@@ -24,4 +24,4 @@ Try it out at [https://cpuvisualsimulator.github.io](https://cpuvisualsimulator.
 - 🟢 Easy to follow and toggleable animations
 - 🔟 Toggleable binary representation of data
 - 🎨 Customizable busses and busses animations colors
-- 🌐 2 supported languages (english and italian) and more to come
+- 🌐 3 supported languages (english, spanish and italian) and more to come
