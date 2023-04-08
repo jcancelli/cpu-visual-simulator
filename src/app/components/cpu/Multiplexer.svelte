@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ComponentLabel from "../labels/Component.svelte"
 	import { flash as flashComponent } from "../../util/animation"
+	import { Color } from "../../util/colors"
 
 	export let animationsEnabled: boolean
 
@@ -8,7 +9,7 @@
 
 	export async function flash() {
 		if (!animationsEnabled) return
-		return flashComponent(muxElement, "fill", { r: 0, g: 255, b: 0, a: 1 })
+		return flashComponent(muxElement, "fill", Color.GREEN)
 	}
 </script>
 

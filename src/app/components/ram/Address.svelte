@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { animationsEnabled, extAddressBusColor } from "../../store/settings"
+	import { animationsEnabled, extAddressBusAnimationColor, extAddressBusColor } from "../../store/settings"
 
 	import { displayAsBinary } from "../../store/settings"
 	import { flash as flashComponent } from "../../util/animation"
 	import BinaryValue from "../../model/BinaryValue"
+	import { Color } from "../../util/colors"
 
 	export let address: number
 
@@ -15,7 +16,7 @@
 
 	export async function flash() {
 		if (!$animationsEnabled) return
-		return flashComponent(addressDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flashComponent(addressDiv, "background-color", Color.fromString($extAddressBusAnimationColor))
 	}
 </script>
 

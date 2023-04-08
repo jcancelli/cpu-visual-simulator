@@ -3,6 +3,7 @@
 	import { flash } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import Cpu from "../../model/Cpu"
+	import { Color } from "../../util/colors"
 
 	export let cpu: Cpu
 	export let animationsEnabled: boolean
@@ -17,17 +18,17 @@
 
 	export async function flashFirstOperand() {
 		if (!animationsEnabled) return
-		return flash(operand1Div, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(operand1Div, "background-color", Color.GREEN)
 	}
 
 	export async function flashSecondOperand() {
 		if (!animationsEnabled) return
-		return flash(operand2Div, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(operand2Div, "background-color", Color.GREEN)
 	}
 
 	export async function flashOperator() {
 		if (!animationsEnabled) return
-		return flash(operatorDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(operatorDiv, "background-color", Color.GREEN)
 	}
 
 	function splitBinString(bin: string): string {

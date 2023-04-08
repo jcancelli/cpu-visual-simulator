@@ -8,6 +8,7 @@
 	import logger, { LogCategory } from "../../util/logger"
 	import Instruction from "../../model/Instruction"
 	import SymbolTable from "../../model/SymbolTable"
+	import { Color } from "../../util/colors"
 
 	export let symbolTable: SymbolTable
 	export let address: number
@@ -27,7 +28,7 @@
 
 	export async function flash(): Promise<void> {
 		if (!$animationsEnabled) return
-		return flashComponent(cell, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flashComponent(cell, "background-color", Color.GREEN)
 	}
 
 	export function getAddress(): number {

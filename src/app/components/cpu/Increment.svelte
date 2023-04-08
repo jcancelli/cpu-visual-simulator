@@ -2,6 +2,7 @@
 	import { flash as flashElement } from "../../util/animation"
 	import { displayAsBinary } from "../../store/settings"
 	import Cpu from "../../model/Cpu"
+	import { Color } from "../../util/colors"
 
 	export let cpu: Cpu
 	export let animationsEnabled: boolean
@@ -12,7 +13,7 @@
 
 	export async function flash() {
 		if (!animationsEnabled) return
-		return flashElement(element, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flashElement(element, "background-color", Color.GREEN)
 	}
 </script>
 

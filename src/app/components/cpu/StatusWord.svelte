@@ -3,6 +3,8 @@
 	import { flash } from "../../util/animation"
 	import logger, { LogCategory } from "../../util/logger"
 	import Cpu from "../../model/Cpu"
+	import { intDataBusAnimationColor } from "../../store/settings"
+	import { Color } from "../../util/colors"
 
 	export let cpu: Cpu
 	export let animationsEnabled: boolean
@@ -15,12 +17,12 @@
 
 	export async function flashZeroFlag() {
 		if (!animationsEnabled) return
-		return flash(swzDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(swzDiv, "background-color", Color.GREEN)
 	}
 
 	export async function flashNegativeFlag() {
 		if (!animationsEnabled) return
-		return flash(swnDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(swnDiv, "background-color", Color.GREEN)
 	}
 
 	function toggleZeroFlag() {

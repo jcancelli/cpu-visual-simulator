@@ -4,6 +4,7 @@
 	import { displayAsBinary } from "../../store/settings"
 	import text from "../../store/text"
 	import Cpu from "../../model/Cpu"
+	import { Color } from "../../util/colors"
 
 	export let cpu: Cpu
 	export let animationsEnabled: boolean
@@ -39,13 +40,13 @@
 	export async function flashOpcode() {
 		if (!animationsEnabled) return
 		if (!opcodeDiv) return
-		return flash(opcodeDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(opcodeDiv, "background-color", Color.GREEN)
 	}
 
 	export async function flashOperand() {
 		if (!animationsEnabled) return
 		if (!operandDiv) return
-		return flash(operandDiv, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flash(operandDiv, "background-color", Color.GREEN)
 	}
 </script>
 

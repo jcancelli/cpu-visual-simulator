@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { animationSpeed } from "../store/settings"
-import { Color, cssStringColorToColor, hexStringToColor } from "./colors"
+import { Color } from "./colors"
 
 //https://stackoverflow.com/a/11293378
 export function lerp(a, b, u) {
@@ -36,8 +36,7 @@ export async function fade(element: HTMLElement | SVGSVGElement, property: strin
 }
 
 export async function flash(element: HTMLElement | SVGSVGElement, property: string, flashColor: Color) {
-	const startColorString = window.getComputedStyle(element, null).getPropertyValue(property)
-	const startColor = cssStringColorToColor(startColorString)
+	const startColor = Color.fromString(window.getComputedStyle(element, null).getPropertyValue(property))
 	return fade(element, property, startColor, flashColor).then(() =>
 		fade(element, property, flashColor, startColor)
 	)

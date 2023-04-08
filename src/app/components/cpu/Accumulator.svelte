@@ -8,6 +8,7 @@
 	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import Cpu from "../../model/Cpu"
+	import { Color } from "../../util/colors"
 
 	export let cpu: Cpu
 	export let animationsEnabled: boolean
@@ -25,7 +26,7 @@
 
 	export async function flash(): Promise<void> {
 		if (!animationsEnabled) return
-		return flashElement(element, "background-color", { r: 0, g: 255, b: 0, a: 1 })
+		return flashElement(element, "background-color", Color.GREEN)
 	}
 
 	function commitEdit(): void {
