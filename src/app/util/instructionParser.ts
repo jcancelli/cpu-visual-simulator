@@ -1,6 +1,6 @@
 import { isImmediateFlagSet, removeFlags, setImmediateFlag } from "./instruction"
 import InstructionParsingError from "../errors/InstructionParsingError"
-import { Opcode, opcode as parseOpcode } from "../model/InstructionSet"
+import { Opcode, opcode as parseOpcode, opcodes } from "../model/InstructionSet"
 import BinaryValue from "../model/BinaryValue"
 import Instruction from "../model/Instruction"
 import SymbolTable from "../model/SymbolTable"
@@ -16,15 +16,20 @@ export const BINARY = /^[01]{0,8}\s?[01]{1,8}?$/
 /** Valid numeric input pattern */
 export const DATA = /^-?[0-9]+$/
 /** Valid symbolic opcode pattern */
-export const OPCODE = /[A-Z]{2,3}/
+export const OPCODE = new RegExp(`(${opcodes.map(o => o.symbolic).join("|")})`)
+export const JUST_OPCODE = new RegExp(`^${OPCODE.source}$`)
 /** Valid immediate operand pattern */
 export const IMMEDIATE_NUM = /#-?[0-9]{1,3}/
+export const JUST_IMMEDIATE_NUM = new RegExp(`^${IMMEDIATE_NUM.source}$`)
 /** Valid direct operand pattern */
 export const DIRECT_PARAM = /[0-9]{1,3}/
+export const JUST_DIRECT_PARAM = new RegExp(`^${DIRECT_PARAM.source}$`)
 /** Valid label operand pattern */
 export const LABEL_PARAM = /[A-Z_]{1,10}/
+export const JUST_LABEL_PARAM = new RegExp(`^${LABEL_PARAM.source}$`)
 /** Valid immediate label operand pattern */
 export const IMMEDIATE_LABEL = /#[A-Z_]{1,10}/
+export const JUST_IMMEDIATE_LABEL = new RegExp(`^${IMMEDIATE_LABEL.source}$`)
 // prettier-ignore
 /** Valid symbolic instruction pattern */
 export const SYMBOLIC_INSTRUCTION = new RegExp(
@@ -78,14 +83,14 @@ export function parseBinary(input: string): Instruction {
  */
 function _parseSymbolic(input: string, symbolTable: SymbolTable): Instruction {
 	const [symbolicOpcode, symbolicOperand] = input.split(" ")
-	const hasOperand = !!symbolicOperand
-	const opcode = parseOpcode(symbolicOpcode)
-	if (!opcode) {
+	if (!JUST_OPCODE.test(symbolicOpcode)) {
 		throw new InstructionParsingError(
 			interpolate(text.get().errors.instruction_parsing.invalid_opcode, shorten(symbolicOpcode, 10)),
 			input
 		)
 	}
+	const hasOperand = !!symbolicOperand
+	const opcode = parseOpcode(symbolicOpcode)
 	if (hasOperand) {
 		if (!opcode.takesOperand) {
 			throw new InstructionParsingError(
@@ -93,14 +98,19 @@ function _parseSymbolic(input: string, symbolTable: SymbolTable): Instruction {
 				input
 			)
 		}
-		if (IMMEDIATE_LABEL.test(symbolicOperand)) {
+		if (JUST_IMMEDIATE_LABEL.test(symbolicOperand)) {
 			return _parseImmediateLabelOperand(input, opcode, symbolTable)
-		} else if (LABEL_PARAM.test(symbolicOperand)) {
+		} else if (JUST_LABEL_PARAM.test(symbolicOperand)) {
 			return _parseDirectLabelOperand(input, opcode, symbolTable)
-		} else if (IMMEDIATE_NUM.test(symbolicOperand)) {
+		} else if (JUST_IMMEDIATE_NUM.test(symbolicOperand)) {
 			return _parseImmediateNumberOperand(input, opcode)
-		} else {
+		} else if (JUST_DIRECT_PARAM.test(symbolicOperand)) {
 			return _parseDirectOperand(input, opcode)
+		} else {
+			throw new InstructionParsingError(
+				interpolate(text.get().errors.instruction_parsing.invalid_operand, shorten(symbolicOperand, 10)),
+				input
+			)
 		}
 	} else {
 		if (opcode.takesOperand) {

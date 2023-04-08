@@ -335,6 +335,7 @@ const _default = {
 		instruction_parsing: {
 			invalid_binary_input: "",
 			invalid_opcode: "",
+			invalid_operand: "",
 			operand_not_allowed: "",
 			operand_required: "",
 			unknown_label: "",
