@@ -1,267 +1,268 @@
 displayName: "English"
-steps: 
-    pc_to_ram:
-        text: "The content of the Program Counter is placed on the address bus"
-        tts: "The content of the Program Counter is placed on the address bus"
-    ram_to_ir:
-        text: "The instruction is loaded into the Instruction Register"
-        tts: "The instruction is loaded into the Instruction Register"
-    ir_to_cu:
-        text: "The opcode is decoded"
-        tts: "The opcode is decoded"
-    cu_to_mux:
-        text: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
-        tts: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
-    cu_to_alu:
-        text: "The Control Unit sets the Arithmetic Logic Unit operation"
-        tts: "The Control Unit sets the Arithmetic Logic Unit operation"
-    acc_to_alu1:
-        text: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
-        tts: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
-    pc_increment:
-        text: "The Program Counter is incremented"
-        tts: "The Program Counter is incremented"
-    ir_to_alu2:
-        text: "The operand is loaded from the Instruction Register"
-        tts: "The operand is loaded from the Instruction Register"
-    ir_to_ram:
-        text: "The operand address is placed on the Address Bus"
-        tts: "The operand address is placed on the Address Bus"
-    memory_read:
-        text: "A Memory Read operation is signalled on the Control Bus"
-        tts: "A Memory Read operation is signalled on the Control Bus"
-    memory_fetch:
-        text: "A Fetch operation is signalled on the Control Bus"
-        tts: "A Fetch operation is signalled on the Control Bus"
-    memory_write:
-        text: "A Memory Write operation is signalled on the Control Bus"
-        tts: "A Memory Write operation is signalled on the Control Bus"
-    ram_to_alu2:
-        text: "The operand is loaded from the RAM"
-        tts: "The operand is loaded from the RAM"
-    ir_to_pc:
-        text: "The Program Counter is set to the operand value in the Instruction Register"
-        tts: "The Program Counter is set to the operand value in the Instruction Register"
-    execute:
-        text: "The operation is executed"
-        tts: "The operation is executed"
-    alu_to_sw:
-        text: "The Status Word is updated"
-        tts: "The Status Word is updated"
-    acc_to_ram:
-        text: "The content of the Accumulator is placed on the Data Bus"
-        tts: "The content of the Accumulator is placed on the Data Bus"
-    acc_stored_to_ram:
-        text: "The content of the Accumulator is written into the RAM"
-        tts: "The content of the Accumulator is written into the RAM"
+steps:
+  pc_to_ram:
+    text: "The content of the Program Counter is placed on the address bus"
+    tts: "The content of the Program Counter is placed on the address bus"
+  ram_to_ir:
+    text: "The instruction is loaded into the Instruction Register"
+    tts: "The instruction is loaded into the Instruction Register"
+  ir_to_cu:
+    text: "The opcode is decoded"
+    tts: "The opcode is decoded"
+  cu_to_mux:
+    text: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
+    tts: "The Control Unit sets the Multiplexer according to the operand direct or immediate addressing mode"
+  cu_to_alu:
+    text: "The Control Unit sets the Arithmetic Logic Unit operation"
+    tts: "The Control Unit sets the Arithmetic Logic Unit operation"
+  acc_to_alu1:
+    text: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
+    tts: "The content of the Accumulator is loaded in the Arithmetic Logic Unit"
+  pc_increment:
+    text: "The Program Counter is incremented"
+    tts: "The Program Counter is incremented"
+  ir_to_alu2:
+    text: "The operand is loaded from the Instruction Register"
+    tts: "The operand is loaded from the Instruction Register"
+  ir_to_ram:
+    text: "The operand address is placed on the Address Bus"
+    tts: "The operand address is placed on the Address Bus"
+  memory_read:
+    text: "A Memory Read operation is signalled on the Control Bus"
+    tts: "A Memory Read operation is signalled on the Control Bus"
+  memory_fetch:
+    text: "A Fetch operation is signalled on the Control Bus"
+    tts: "A Fetch operation is signalled on the Control Bus"
+  memory_write:
+    text: "A Memory Write operation is signalled on the Control Bus"
+    tts: "A Memory Write operation is signalled on the Control Bus"
+  ram_to_alu2:
+    text: "The operand is loaded from the RAM"
+    tts: "The operand is loaded from the RAM"
+  ir_to_pc:
+    text: "The Program Counter is set to the operand value in the Instruction Register"
+    tts: "The Program Counter is set to the operand value in the Instruction Register"
+  execute:
+    text: "The operation is executed"
+    tts: "The operation is executed"
+  alu_to_sw:
+    text: "The Status Word is updated"
+    tts: "The Status Word is updated"
+  acc_to_ram:
+    text: "The content of the Accumulator is placed on the Data Bus"
+    tts: "The content of the Accumulator is placed on the Data Bus"
+  acc_stored_to_ram:
+    text: "The content of the Accumulator is written into the RAM"
+    tts: "The content of the Accumulator is written into the RAM"
 cpu:
-    ir:
-        invalid_instruction: "INVALID INSTRUCTION"
+  ir:
+    invalid_instruction: "INVALID INSTRUCTION"
 ram:
-    buttons:
-        clear:
-            text: "CLEAR"
-            title: "Clear"
-        undo:
-            title: "Undo"
-        redo:
-            title: "Redo"
+  buttons:
+    clear:
+      text: "CLEAR"
+      title: "Clear"
+    undo:
+      title: "Undo"
+    redo:
+      title: "Redo"
 menu:
-    buttons:
-        settings:
-            text: "Settings"
-            title: "Open settings" 
+  buttons:
+    settings:
+      text: "Settings"
+      title: "Open settings"
+    save:
+      text: "Save"
+      title: "Save program"
+    load:
+      text: "Load"
+      title: "Load program"
+    examples:
+      text: "Examples"
+      title: "Load example"
+      examples:
+        if_then_else:
+          text: "If then else"
+          title: "If then else"
+        while_do:
+          text: "While do"
+          title: "While do"
+        array_sum:
+          text: "Array sum"
+          title: "Array sum"
+    manual:
+      text: "Manual"
+      title: "Open manual"
+    copyright:
+      text: "Copyright"
+      title: "Copyright notice"
+  overlays:
+    save_to_file:
+      title: "Save program"
+      buttons:
         save:
-            text: "Save"
-            title: "Save program"
-        load:
-            text: "Load"
-            title: "Load program"
-        examples:
-            text: "Examples"
-            title: "Load example"
-            examples:
-              if_then_else:
-                  text: "If then else"
-                  title: "If then else"
-              while_do:
-                  text: "While do"
-                  title: "While do"
-              array_sum:
-                  text: "Array sum"
-                  title: "Array sum"
-        manual:
-            text: "Manual"
-            title: "Open manual"
-        copyright:
-            text: "Copyright"
-            title: "Copyright notice"
-    overlays:
-        save_to_file:
-            title: "Save program"
-            buttons:
-                save:
-                    text: "Save"
-                    title: "Save"
-                cancel:
-                    text: "Cancel"
-                    title: "Cancel"
-            inputs:
-                filename:
-                    placeholder: "File name"
-        copyright:
-            subsections:
-                copyright_notice:
-                    title: "Copyright notice"
-                    paragraphs:
-                        - "Copyright 2022 Jonathan Cancelli"
-                        - "This simulator can be used exclusively for non-commercial, educational activities"
-                    disclaimer: |
-                        Disclaimer: To our best knowledge, this brand-new application does not infringe any IP rights (our own new design,
-                        no reuse of pre-existing code), but if anyone thinks otherwise, please contact us at cpuvisualsimulator@gmail.com or on
-                credits:
-                    title: "Credits"
-                    paragraphs:
-                        - |
-                          The design of this simulator (CPUVSIM) was based on the evaluation [1] of a pre-existing CPU Visual Simulator,
-                          developed by Jonathan Cancelli, Alessandro Belotti, Davide Riva, and Nicola Preda, as an OER-enabled pedagogy
-                          project coordinated by Renato Cortinovis [2]. That CPU Visual Simulator was derived (substantially redesigned and extended)
-                          in 2021 from an Applet called PIPPIN (© 1998 PWS Publishing Company), with permission from Cengage Learning Inc.
-                        - "This CPUVSIM simulator is a brand-new application developed by Jonathan Cancelli, in collaboration with Renato Cortinovis, without reusing any pre-existing code."
+          text: "Save"
+          title: "Save"
+        cancel:
+          text: "Cancel"
+          title: "Cancel"
+      inputs:
+        filename:
+          placeholder: "File name"
+    copyright:
+      subsections:
+        copyright_notice:
+          title: "Copyright notice"
+          paragraphs:
+            - "Copyright 2022 Jonathan Cancelli"
+            - "This simulator can be used exclusively for non-commercial, educational activities"
+          disclaimer: |
+            Disclaimer: To our best knowledge, this brand-new application does not infringe any IP rights (our own new design,
+            no reuse of pre-existing code), but if anyone thinks otherwise, please contact us at cpuvisualsimulator@gmail.com or on
+        credits:
+          title: "Credits"
+          paragraphs:
+            - |
+              The design of this simulator (CPUVSIM) was based on the evaluation [1] of a pre-existing CPU Visual Simulator,
+              developed by Jonathan Cancelli, Alessandro Belotti, Davide Riva, and Nicola Preda, as an OER-enabled pedagogy
+              project coordinated by Renato Cortinovis [2]. That CPU Visual Simulator was derived (substantially redesigned and extended)
+              in 2021 from an Applet called PIPPIN (© 1998 PWS Publishing Company), with permission from Cengage Learning Inc.
+            - "This CPUVSIM simulator is a brand-new application developed by Jonathan Cancelli, in collaboration with Renato Cortinovis, without reusing any pre-existing code."
 controls:
-    labels:
-        execution: "Program"
-        step: "Micro step"
-        instruction: "Instruction"
-        speed: "Speed"
-    buttons:
-        reset:
-            title: "Reset"
-        play_program:
-            title: "Play"
-        pause_program:
-            title: "Pause"
-        fast_program:
-            title: "Fast execution"
-        play_step:
-            title: "Play micro step"
-        fast_step:
-            title: "Fast execution"
-        play_instruction:
-            title: "Play instruction"
-        fast_instruction:
-            title: "Fast execution"
-    sliders:
-        speed:
-            title: "Speed"
-    checkboxes:
-        binary:
-            text: "Binary"
-        animations:
-            text: "Animations"
+  labels:
+    execution: "Program"
+    step: "Micro step"
+    instruction: "Instruction"
+    speed: "Speed"
+  buttons:
+    reset:
+      title: "Reset"
+    play_program:
+      title: "Play"
+    pause_program:
+      title: "Pause"
+    fast_program:
+      title: "Fast execution"
+    play_step:
+      title: "Play micro step"
+    fast_step:
+      title: "Fast execution"
+    play_instruction:
+      title: "Play instruction"
+    fast_instruction:
+      title: "Fast execution"
+  sliders:
+    speed:
+      title: "Speed"
+  checkboxes:
+    binary:
+      text: "Binary"
+    animations:
+      text: "Animations"
 message_feed:
-    buttons:
-        export_logs:
-            text: "Export error logs"
-        close_message:
-            title: "Close message"
+  buttons:
+    export_logs:
+      text: "Export error logs"
+    close_message:
+      title: "Close message"
 settings:
-    title: "Settings"
-    sections_titles:
-        general: "General"
-        tts: "Text To Speech"
-        busses: "Busses"
-    language:
-        title: "Language"
-        description: "The language used by the application"
-    dispaly_components_labels:
-        title: "Display components labels"
-        description: "Toggles labels such as 'RAM' 'IR' 'ALU' etc."
-    dispaly_busses_labels:
-        title: "Display busses labels"
-        description: "Toggles data bus, address bus and control bus labels"
-    display_step_text:
-        title: "Display micro step text"
-        description: "Toggles a box where a text description of the micro step in execution is displayed"
-    reset_all:
-        title: "Reset all settings"
-        description: "Reset all settings to their default values"
-        button:
-            text: "Reset"
-    tts_enabled:
-        title: "Text To Speech"
-        description: "Toggles a synthetically generated voice that reads the currently executing step explaination"
-    tts_speed:
-        title: "Text To Speech speed"
-        description: "Speed of the text to speech voice"
-    tts_voice:
-        title: "Text To Speech voice"
-        description: "Voice used by text to speech"
-    databus_ext_color:
-        title: "External data bus color"
-        description: "Color of the external data bus"
-    databus_int_color:
-        title: "Internal data bus color"
-        description: "Color of the internal data bus"
-    databus_ext_anim_color:
-        title: "External data bus animation color"
-        description: "Color of the external data bus animation"
-    databus_int_anim_color:
-        title: "Internal data bus animation color"
-        description: "Color of the internal data bus animation"
-    addressbus_ext_color:
-        title: "External address bus color"
-        description: "Color of the external address bus"
-    addressbus_int_color:
-        title: "Internal address bus color"
-        description: "Color of the internal address bus"
-    addressbus_ext_anim_color:
-        title: "External address bus animation color"
-        description: "Color of the external address bus animation"
-    addressbus_int_anim_color:
-        title: "Internal address bus animation color"
-        description: "Color of the internal address bus animation"
-    controlbus_ext_color:
-        title: "External control bus color"
-        description: "Color of the external control bus"
-    controlbus_int_color:
-        title: "Internal control bus color"
-        description: "Color of the internal control bus"
-    controlbus_ext_anim_color:
-        title: "External control bus animation color"
-        description: "Color of the external control bus animation"
-    controlbus_int_anim_color:
-        title: "Internal control bus animation color"
-        description: "Color of the internal control bus animation"
+  title: "Settings"
+  sections_titles:
+    general: "General"
+    tts: "Text To Speech"
+    busses: "Busses"
+  language:
+    title: "Language"
+    description: "The language used by the application"
+  dispaly_components_labels:
+    title: "Display components labels"
+    description: "Toggles labels such as 'RAM' 'IR' 'ALU' etc."
+  dispaly_busses_labels:
+    title: "Display busses labels"
+    description: "Toggles data bus, address bus and control bus labels"
+  display_step_text:
+    title: "Display micro step text"
+    description: "Toggles a box where a text description of the micro step in execution is displayed"
+  reset_all:
+    title: "Reset all settings"
+    description: "Reset all settings to their default values"
+    button:
+      text: "Reset"
+  tts_enabled:
+    title: "Text To Speech"
+    description: "Toggles a synthetically generated voice that reads the currently executing step explaination"
+  tts_speed:
+    title: "Text To Speech speed"
+    description: "Speed of the text to speech voice"
+  tts_voice:
+    title: "Text To Speech voice"
+    description: "Voice used by text to speech"
+  databus_ext_color:
+    title: "External data bus color"
+    description: "Color of the external data bus"
+  databus_int_color:
+    title: "Internal data bus color"
+    description: "Color of the internal data bus"
+  databus_ext_anim_color:
+    title: "External data bus animation color"
+    description: "Color of the external data bus animation"
+  databus_int_anim_color:
+    title: "Internal data bus animation color"
+    description: "Color of the internal data bus animation"
+  addressbus_ext_color:
+    title: "External address bus color"
+    description: "Color of the external address bus"
+  addressbus_int_color:
+    title: "Internal address bus color"
+    description: "Color of the internal address bus"
+  addressbus_ext_anim_color:
+    title: "External address bus animation color"
+    description: "Color of the external address bus animation"
+  addressbus_int_anim_color:
+    title: "Internal address bus animation color"
+    description: "Color of the internal address bus animation"
+  controlbus_ext_color:
+    title: "External control bus color"
+    description: "Color of the external control bus"
+  controlbus_int_color:
+    title: "Internal control bus color"
+    description: "Color of the internal control bus"
+  controlbus_ext_anim_color:
+    title: "External control bus animation color"
+    description: "Color of the external control bus animation"
+  controlbus_int_anim_color:
+    title: "Internal control bus animation color"
+    description: "Color of the internal control bus animation"
 errors:
-    unchecked: "Unexpected error"
-    program_parsing:
-        invalid_instruction: "Line {0} - Invalid instruction - {1}"
-        invalid_label: "Line {0} - Invalid label - {1}"
-        duplicated_label: "Line {0} - Duplicate label - '{1}'"
-    instruction_parsing:
-        invalid_binary_input: "Invalid binary input"
-        invalid_opcode: "'{0}' is not a valid opcode"
-        operand_not_allowed: "Opcode'{0}' does not take operands"
-        operand_required: "Opcode '{0}' requires an operand"
-        unknown_label: "Label '{0}' is not defined"
-        immediate_operand_not_allowed: "Opcode '{0}' doesn't allow an immediate operand"
-        invalid_immediate_operand: "Operand '{0}' is not a valid 8-bit signed integer"
-        invalid_direct_operand: "Operand '{0}' is not a valid address"
-        invalid_data: "The value '{0}' is not a valid 16-bit signed integer"
-    label_parsing:
-        invalid_character: "The character '{0}' is not allowed"
-        label_too_short: "Minimum length: {0}"
-        label_too_long: "Maximum length: {0}"
-    symbol_table:
-        label_already_exists: "Label already exists"      
-        invalid_label: "Invalid label"
-    user_input:
-        invalid_file_name: "Invalid file name"
-        invalid_pc_value: "Invalid address"
-        invalid_acc_value: "Invalid value"
-    execution:
-        invalid_instruction: "Invalid instruction found in the Instruction Register"
-        division_by_zero: "Division by zero"
-    generic:
-        fetch_error: "An error was thrown while trying to fetch the resource \"{0}\""
+  unchecked: "Unexpected error"
+  program_parsing:
+    invalid_instruction: "Line {0} - Invalid instruction - {1}"
+    invalid_label: "Line {0} - Invalid label - {1}"
+    duplicated_label: "Line {0} - Duplicate label - '{1}'"
+  instruction_parsing:
+    invalid_binary_input: "Invalid binary input"
+    invalid_opcode: "'{0}' is not a valid opcode"
+    invalid_operand: "'{0}' is not a valid operand"
+    operand_not_allowed: "Opcode'{0}' does not take operands"
+    operand_required: "Opcode '{0}' requires an operand"
+    unknown_label: "Label '{0}' is not defined"
+    immediate_operand_not_allowed: "Opcode '{0}' doesn't allow an immediate operand"
+    invalid_immediate_operand: "Operand '{0}' is not a valid 8-bit signed integer"
+    invalid_direct_operand: "Operand '{0}' is not a valid address"
+    invalid_data: "The value '{0}' is not a valid 16-bit signed integer"
+  label_parsing:
+    invalid_character: "The character '{0}' is not allowed"
+    label_too_short: "Minimum length: {0}"
+    label_too_long: "Maximum length: {0}"
+  symbol_table:
+    label_already_exists: "Label already exists"
+    invalid_label: "Invalid label"
+  user_input:
+    invalid_file_name: "Invalid file name"
+    invalid_pc_value: "Invalid address"
+    invalid_acc_value: "Invalid value"
+  execution:
+    invalid_instruction: "Invalid instruction found in the Instruction Register"
+    division_by_zero: "Division by zero"
+  generic:
+    fetch_error: 'An error was thrown while trying to fetch the resource "{0}"'

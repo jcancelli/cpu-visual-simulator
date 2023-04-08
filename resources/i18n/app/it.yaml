@@ -1,268 +1,268 @@
-
 displayName: "Italiano"
 steps:
-    pc_to_ram:
-        text: "Il contenuto del Program Counter viene messo sull'Address Bus"
-        tts: "Il contenuto del Program Counter viene messo sull'Address Bas"
-    ram_to_ir:
-        text: "L'istruzione viene caricata nell'Instruction Register"
-        tts: "L'istruzione viene caricata nell'Instrakcion Register"
-    ir_to_cu:
-        text: "Il codice operativo viene decodificato"
-        tts: "Il codice operativo viene decodificato"
-    cu_to_mux:
-        text: "La Control Unit indica al Multiplexer se l'operando è diretto o immediato"
-        tts: "La Control iunit indica al Multi-plexer se l'operando è diretto o immediato"
-    cu_to_alu:
-        text: "La Control Unit imposta l'operazione dell'Arithmetic Logic Unit"
-        tts: "La Control iunit imposta l'operazione dell'Arithmetic Logic iunit"
-    acc_to_alu1:
-        text: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic Unit"
-        tts: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic iunit"
-    pc_increment:
-        text: "Il Program Counter viene incrementato"
-        tts: "Il Program Caunter viene incrementato"
-    ir_to_alu2:
-        text: "Il secondo operando viene caricato dall'Instruction Register"
-        tts: "Il secondo operando viene caricato dall'Instrakcion Register"
-    ir_to_ram:
-        text: "L'indirizzo dell'operando viene posto sull'Address Bus"
-        tts: "L'indirizzo dell'operando viene posto sull'Address Bas"
-    memory_read:
-        text: "Un operazione di Memory Read viene segnalata sul Control Bus"
-        tts: "Un operazione di Memory Read viene segnalata sul Control Bas"
-    memory_fetch:
-        text: "Una operazione di Fetch viene segnalata sul Control Bus"
-        tts: "Una operazione di Fetch viene segnalata sul Control Bas"
-    memory_write:
-        text: "Un operazione di Memory Write viene segnalata sul Control Bus"
-        tts: "Un operazione di Memory Write viene segnalata sul Control Bas"
-    ram_to_alu2:
-        text: "L'operando viene caricato dalla RAM"
-        tts: "L'operando viene caricato dalla RAM"
-    ir_to_pc:
-        text: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
-        tts: "Il Program Caunter è settato al valore dell'operando nell'Instrakcion Register"
-    execute:
-        text: "L'operazione viene eseguita"
-        tts: "L'operazione viene eseguita"
-    alu_to_sw:
-        text: "La Status Word viene aggiornata"
-        tts: "La Status Word viene aggiornata"
-    acc_to_ram:
-        text: "Il valore dell'Accumulatore viene messo sul Data Bus"
-        tts: "Il valore dell'Accumulatore viene messo sul Deta Bas"
-    acc_stored_to_ram:
-        text: "Il valore dell'Accumulatore viene scritto in RAM"
-        tts: "Il valore dell'Accumulatore viene scritto in RAM"
+  pc_to_ram:
+    text: "Il contenuto del Program Counter viene messo sull'Address Bus"
+    tts: "Il contenuto del Program Counter viene messo sull'Address Bas"
+  ram_to_ir:
+    text: "L'istruzione viene caricata nell'Instruction Register"
+    tts: "L'istruzione viene caricata nell'Instrakcion Register"
+  ir_to_cu:
+    text: "Il codice operativo viene decodificato"
+    tts: "Il codice operativo viene decodificato"
+  cu_to_mux:
+    text: "La Control Unit indica al Multiplexer se l'operando è diretto o immediato"
+    tts: "La Control iunit indica al Multi-plexer se l'operando è diretto o immediato"
+  cu_to_alu:
+    text: "La Control Unit imposta l'operazione dell'Arithmetic Logic Unit"
+    tts: "La Control iunit imposta l'operazione dell'Arithmetic Logic iunit"
+  acc_to_alu1:
+    text: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic Unit"
+    tts: "Il contenuto dell'accumulatore viene caricato nella Arithmetic Logic iunit"
+  pc_increment:
+    text: "Il Program Counter viene incrementato"
+    tts: "Il Program Caunter viene incrementato"
+  ir_to_alu2:
+    text: "Il secondo operando viene caricato dall'Instruction Register"
+    tts: "Il secondo operando viene caricato dall'Instrakcion Register"
+  ir_to_ram:
+    text: "L'indirizzo dell'operando viene posto sull'Address Bus"
+    tts: "L'indirizzo dell'operando viene posto sull'Address Bas"
+  memory_read:
+    text: "Un operazione di Memory Read viene segnalata sul Control Bus"
+    tts: "Un operazione di Memory Read viene segnalata sul Control Bas"
+  memory_fetch:
+    text: "Una operazione di Fetch viene segnalata sul Control Bus"
+    tts: "Una operazione di Fetch viene segnalata sul Control Bas"
+  memory_write:
+    text: "Un operazione di Memory Write viene segnalata sul Control Bus"
+    tts: "Un operazione di Memory Write viene segnalata sul Control Bas"
+  ram_to_alu2:
+    text: "L'operando viene caricato dalla RAM"
+    tts: "L'operando viene caricato dalla RAM"
+  ir_to_pc:
+    text: "Il Program Counter è settato al valore dell'operando nell'Instruction Register"
+    tts: "Il Program Caunter è settato al valore dell'operando nell'Instrakcion Register"
+  execute:
+    text: "L'operazione viene eseguita"
+    tts: "L'operazione viene eseguita"
+  alu_to_sw:
+    text: "La Status Word viene aggiornata"
+    tts: "La Status Word viene aggiornata"
+  acc_to_ram:
+    text: "Il valore dell'Accumulatore viene messo sul Data Bus"
+    tts: "Il valore dell'Accumulatore viene messo sul Deta Bas"
+  acc_stored_to_ram:
+    text: "Il valore dell'Accumulatore viene scritto in RAM"
+    tts: "Il valore dell'Accumulatore viene scritto in RAM"
 cpu:
-    ir:
-        invalid_instruction: "ISTRUZIONE INVALIDA"
+  ir:
+    invalid_instruction: "ISTRUZIONE INVALIDA"
 ram:
-    buttons:
-        clear:
-            text: "SVUOTA"
-            title: "Svuota"
-        undo:
-            title: "Annulla"
-        redo:
-            title: "Rifai"
+  buttons:
+    clear:
+      text: "SVUOTA"
+      title: "Svuota"
+    undo:
+      title: "Annulla"
+    redo:
+      title: "Rifai"
 menu:
-    buttons:
-        settings:
-            text: "Impostazioni"
-            title: "Apri impostazioni" 
+  buttons:
+    settings:
+      text: "Impostazioni"
+      title: "Apri impostazioni"
+    save:
+      text: "Salva"
+      title: "Salva programma"
+    load:
+      text: "Carica"
+      title: "Carica programma"
+    examples:
+      text: "Esempi"
+      title: "Carica esempio"
+      examples:
+        if_then_else:
+          text: "If then else"
+          title: "If then else"
+        while_do:
+          text: "While do"
+          title: "While do"
+        array_sum:
+          text: "Somma array"
+          title: "Somma array"
+    manual:
+      text: "Manuale"
+      title: "Apri manuale"
+    copyright:
+      text: "Copyright"
+      title: "Avviso copyright"
+  overlays:
+    save_to_file:
+      title: "Salva programma"
+      buttons:
         save:
-            text: "Salva"
-            title: "Salva programma"
-        load:
-            text: "Carica"
-            title: "Carica programma"
-        examples:
-            text: "Esempi"
-            title: "Carica esempio"
-            examples:
-              if_then_else:
-                  text: "If then else"
-                  title: "If then else"
-              while_do:
-                  text: "While do"
-                  title: "While do"
-              array_sum:
-                  text: "Somma array"
-                  title: "Somma array"
-        manual:
-            text: "Manuale"
-            title: "Apri manuale"
-        copyright:
-            text: "Copyright"
-            title: "Avviso copyright"
-    overlays:
-        save_to_file:
-            title: "Salva programma"
-            buttons:
-                save:
-                    text: "Salva"
-                    title: "Salva"
-                cancel:
-                    text: "Annulla"
-                    title: "Annulla"
-            inputs:
-                filename:
-                    placeholder: "Nome file"
-        copyright:
-            subsections:
-                copyright_notice:
-                    title: "Avviso di copyright"
-                    paragraphs:
-                        - "Copyright 2022 Jonathan Cancelli"
-                        - "Questo simulatore può essere utilizzato esclusivamente per attività didattiche non commerciali"
-                    disclaimer: |
-                        Disclaimer: per quanto ne sappiamo, questa nuova applicazione non viola alcun diritto di proprietà intellettuale (un nostro nuovo design,
-                        nessun riutilizzo di codice preesistente), ma se qualcuno la pensa diversamente, vi preghiamo di contattarci a cpuvisualsimulator@gmail.com o su
-                credits:
-                    title: "Crediti"
-                    paragraphs:
-                        - |
-                          La progettazione di questo simulatore (CPUVSIM) è stata basata sulla valutazione [1] di un simulatore visivo di CPU preesistente,
-                          sviluppato da Jonathan Cancelli, Alessandro Belotti, Davide Riva e Nicola Preda, come un progetto pedagogico OER-enabled
-                          coordinato da Renato Cortinovis [2]. CPU Visual Simulator è stato derivato (sostanzialmente ridisegnato ed esteso)
-                          nel 2021 da un'applet chiamata PIPPIN (© 1998 PWS Publishing Company), con il permesso di Cengage Learning Inc.
-                        - "Il simulatore CPUVSIM è una nuova applicazione sviluppata da Jonathan Cancelli, in collaborazione con Renato Cortinovis, senza riutilizzare alcun codice preesistente."
+          text: "Salva"
+          title: "Salva"
+        cancel:
+          text: "Annulla"
+          title: "Annulla"
+      inputs:
+        filename:
+          placeholder: "Nome file"
+    copyright:
+      subsections:
+        copyright_notice:
+          title: "Avviso di copyright"
+          paragraphs:
+            - "Copyright 2022 Jonathan Cancelli"
+            - "Questo simulatore può essere utilizzato esclusivamente per attività didattiche non commerciali"
+          disclaimer: |
+            Disclaimer: per quanto ne sappiamo, questa nuova applicazione non viola alcun diritto di proprietà intellettuale (un nostro nuovo design,
+            nessun riutilizzo di codice preesistente), ma se qualcuno la pensa diversamente, vi preghiamo di contattarci a cpuvisualsimulator@gmail.com o su
+        credits:
+          title: "Crediti"
+          paragraphs:
+            - |
+              La progettazione di questo simulatore (CPUVSIM) è stata basata sulla valutazione [1] di un simulatore visivo di CPU preesistente,
+              sviluppato da Jonathan Cancelli, Alessandro Belotti, Davide Riva e Nicola Preda, come un progetto pedagogico OER-enabled
+              coordinato da Renato Cortinovis [2]. CPU Visual Simulator è stato derivato (sostanzialmente ridisegnato ed esteso)
+              nel 2021 da un'applet chiamata PIPPIN (© 1998 PWS Publishing Company), con il permesso di Cengage Learning Inc.
+            - "Il simulatore CPUVSIM è una nuova applicazione sviluppata da Jonathan Cancelli, in collaborazione con Renato Cortinovis, senza riutilizzare alcun codice preesistente."
 controls:
-    labels:
-        execution: "Programma"
-        step: "Micro step"
-        instruction: "Istruzione"
-        speed: "Velocità"
-    buttons:
-        reset:
-            title: "Reset"
-        play_program:
-            title: "Esegui"
-        pause_program:
-            title: "Pausa"
-        fast_program:
-            title: "Esecuzione veloce"
-        play_step:
-            title: "Esegui micro step"
-        fast_step:
-            title: "Esecuzione veloce"
-        play_instruction:
-            title: "Esegui istruzione"
-        fast_instruction:
-            title: "Esecuzione veloce"
-    sliders:
-        speed:
-            title: "Velocità"
-    checkboxes:
-        binary:
-            text: "Binario"
-        animations:
-            text: "Animazioni"
+  labels:
+    execution: "Programma"
+    step: "Micro step"
+    instruction: "Istruzione"
+    speed: "Velocità"
+  buttons:
+    reset:
+      title: "Reset"
+    play_program:
+      title: "Esegui"
+    pause_program:
+      title: "Pausa"
+    fast_program:
+      title: "Esecuzione veloce"
+    play_step:
+      title: "Esegui micro step"
+    fast_step:
+      title: "Esecuzione veloce"
+    play_instruction:
+      title: "Esegui istruzione"
+    fast_instruction:
+      title: "Esecuzione veloce"
+  sliders:
+    speed:
+      title: "Velocità"
+  checkboxes:
+    binary:
+      text: "Binario"
+    animations:
+      text: "Animazioni"
 message_feed:
-    buttons:
-        export_logs:
-            text: "Esporta logs errori"
-        close_message:
-            title: "Chiudi messaggio"
+  buttons:
+    export_logs:
+      text: "Esporta logs errori"
+    close_message:
+      title: "Chiudi messaggio"
 settings:
-    title: "Impostazioni"
-    sections_titles:
-        general: "Generale"
-        tts: "Text To Speech"
-        busses: "Bus"
-    language:
-        title: "Lingua"
-        description: "La lingua usata dall'applicazione"
-    dispaly_components_labels:
-        title: "Mostra etichette componenti"
-        description: "Attiva/disattiva etichette come 'RAM' 'IR' 'ALU' ecc."
-    dispaly_busses_labels:
-        title: "Mostra etichette bus"
-        description: "Mostra etichette di data bus, address bus e control bus"
-    display_step_text:
-        title: "Mostra testo micro step"
-        description: "Abilita/disabilita un riquadro in cui viene visualizzata una descrizione testuale del micro step in esecuzione"
-    reset_all:
-        title: "Resetta impostazioni"
-        description: "Resetta tutte le impostazioni ai loro valori di default"
-        button:
-            text: "Reset"
-    tts_enabled:
-        title: "Text To Speech"
-        description: "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione del micro step attualmente in esecuzione"
-    tts_speed:
-        title: "Velocità Text To Speech"
-        description: "Velocità di lettura di text to speech"
-    tts_voice:
-        title: "Voce Text To Speech"
-        description: "Voce usata da text to speech"
-    databus_ext_color:
-        title: "Colore data bus esterno"
-        description: "Colore del data bus esterno"
-    databus_int_color:
-        title: "Colore data bus interno"
-        description: "Colore del data bus interno"
-    databus_ext_anim_color:
-        title: "Colore animazioni data bus esterno"
-        description: "Colore delle animazioni del data bus esterno"
-    databus_int_anim_color:
-        title: "Colore animazioni data bus interno"
-        description: "Colore delle animazioni del data bus interno"
-    addressbus_ext_color:
-        title: "Colore address bus esterno"
-        description: "Colore del address bus esterno"
-    addressbus_int_color:
-        title: "Colore address bus interno"
-        description: "Colore del address bus interno"
-    addressbus_ext_anim_color:
-        title: "Colore animazioni address bus esterno"
-        description: "Colore delle animazioni del address bus esterno"
-    addressbus_int_anim_color:
-        title: "Colore animazioni address bus interno"
-        description: "Color of the internal address bus animation"
-    controlbus_ext_color:
-        title: "Colore control bus esterno"
-        description: "Colore del control bus esterno"
-    controlbus_int_color:
-        title: "Colore control bus interno"
-        description: "Colore del control bus interno"
-    controlbus_ext_anim_color:
-        title: "Colore animazioni control bus esterno"
-        description: "Colore delle animazioni del control bus esterno"
-    controlbus_int_anim_color:
-        title: "Colore animazioni control bus interno"
-        description: "Colore delle animazioni del control bus interno"
+  title: "Impostazioni"
+  sections_titles:
+    general: "Generale"
+    tts: "Text To Speech"
+    busses: "Bus"
+  language:
+    title: "Lingua"
+    description: "La lingua usata dall'applicazione"
+  dispaly_components_labels:
+    title: "Mostra etichette componenti"
+    description: "Attiva/disattiva etichette come 'RAM' 'IR' 'ALU' ecc."
+  dispaly_busses_labels:
+    title: "Mostra etichette bus"
+    description: "Mostra etichette di data bus, address bus e control bus"
+  display_step_text:
+    title: "Mostra testo micro step"
+    description: "Abilita/disabilita un riquadro in cui viene visualizzata una descrizione testuale del micro step in esecuzione"
+  reset_all:
+    title: "Resetta impostazioni"
+    description: "Resetta tutte le impostazioni ai loro valori di default"
+    button:
+      text: "Reset"
+  tts_enabled:
+    title: "Text To Speech"
+    description: "Attiva o disattiva una voce generata sinteticamente che legge la spiegazione del micro step attualmente in esecuzione"
+  tts_speed:
+    title: "Velocità Text To Speech"
+    description: "Velocità di lettura di text to speech"
+  tts_voice:
+    title: "Voce Text To Speech"
+    description: "Voce usata da text to speech"
+  databus_ext_color:
+    title: "Colore data bus esterno"
+    description: "Colore del data bus esterno"
+  databus_int_color:
+    title: "Colore data bus interno"
+    description: "Colore del data bus interno"
+  databus_ext_anim_color:
+    title: "Colore animazioni data bus esterno"
+    description: "Colore delle animazioni del data bus esterno"
+  databus_int_anim_color:
+    title: "Colore animazioni data bus interno"
+    description: "Colore delle animazioni del data bus interno"
+  addressbus_ext_color:
+    title: "Colore address bus esterno"
+    description: "Colore del address bus esterno"
+  addressbus_int_color:
+    title: "Colore address bus interno"
+    description: "Colore del address bus interno"
+  addressbus_ext_anim_color:
+    title: "Colore animazioni address bus esterno"
+    description: "Colore delle animazioni del address bus esterno"
+  addressbus_int_anim_color:
+    title: "Colore animazioni address bus interno"
+    description: "Color of the internal address bus animation"
+  controlbus_ext_color:
+    title: "Colore control bus esterno"
+    description: "Colore del control bus esterno"
+  controlbus_int_color:
+    title: "Colore control bus interno"
+    description: "Colore del control bus interno"
+  controlbus_ext_anim_color:
+    title: "Colore animazioni control bus esterno"
+    description: "Colore delle animazioni del control bus esterno"
+  controlbus_int_anim_color:
+    title: "Colore animazioni control bus interno"
+    description: "Colore delle animazioni del control bus interno"
 errors:
-    unchecked: "Errore inaspettato"
-    program_parsing:
-        invalid_instruction: "Riga {0} - Istruzione invalida - {1}"    
-        invalid_label: "Riga {0} - Label invalida - {1}"
-        duplicated_label: "Riga {0} - Label duplicata - '{1}'"
-    instruction_parsing:
-        invalid_binary_input: "Input binario invalido"
-        invalid_opcode: "'{0}' non è un codice operativo valido"
-        operand_not_allowed: "Il codice operativo '{0}' non accetta operandi"
-        operand_required: "Il codice operativo '{0}' richiede un operando"
-        unknown_label: "Label '{0}' non è definita"
-        immediate_operand_not_allowed: "Il codice operativo '{0}' non accetta operandi immediati"
-        invalid_immediate_operand: "L'operando '{0}' non è un intero con segno a 8-bit valido"
-        invalid_direct_operand: "L'operando '{0}' non è un indirizzo valido"
-        invalid_data: "Il valore '{0}' non è un intero con segno a 16-bit valido"
-    label_parsing:
-        invalid_character: "Il carattere '{0}' non è ammesso"
-        label_too_short: "Lunghezza minima: {0} caratteri"
-        label_too_long: "Lunghezza massima: {0} caratteri"
-    symbol_table:
-        label_already_exists: "Label esiste già"
-        invalid_label: "Label invalida"
-    user_input:
-        invalid_file_name: "Nome file invalido"
-        invalid_pc_value: "Indirizzo invalido"
-        invalid_acc_value: "Valore invalido"
-    execution:
-        invalid_instruction: "Istruzione invalida trovata nell'Instrucion Register"
-        division_by_zero: "Divisione per zero"
-    generic:
-        fetch_error: "Un errore è stato lanciato durante l'accesso alla risorsa \"{0}\""
+  unchecked: "Errore inaspettato"
+  program_parsing:
+    invalid_instruction: "Riga {0} - Istruzione invalida - {1}"
+    invalid_label: "Riga {0} - Label invalida - {1}"
+    duplicated_label: "Riga {0} - Label duplicata - '{1}'"
+  instruction_parsing:
+    invalid_binary_input: "Input binario invalido"
+    invalid_opcode: "'{0}' non è un codice operativo valido"
+    invalid_operand: "'{0}' non è un operando valido"
+    operand_not_allowed: "Il codice operativo '{0}' non accetta operandi"
+    operand_required: "Il codice operativo '{0}' richiede un operando"
+    unknown_label: "Label '{0}' non è definita"
+    immediate_operand_not_allowed: "Il codice operativo '{0}' non accetta operandi immediati"
+    invalid_immediate_operand: "L'operando '{0}' non è un intero con segno a 8-bit valido"
+    invalid_direct_operand: "L'operando '{0}' non è un indirizzo valido"
+    invalid_data: "Il valore '{0}' non è un intero con segno a 16-bit valido"
+  label_parsing:
+    invalid_character: "Il carattere '{0}' non è ammesso"
+    label_too_short: "Lunghezza minima: {0} caratteri"
+    label_too_long: "Lunghezza massima: {0} caratteri"
+  symbol_table:
+    label_already_exists: "Label esiste già"
+    invalid_label: "Label invalida"
+  user_input:
+    invalid_file_name: "Nome file invalido"
+    invalid_pc_value: "Indirizzo invalido"
+    invalid_acc_value: "Valore invalido"
+  execution:
+    invalid_instruction: "Istruzione invalida trovata nell'Instrucion Register"
+    division_by_zero: "Divisione per zero"
+  generic:
+    fetch_error: 'Un errore è stato lanciato durante l''accesso alla risorsa "{0}"'
