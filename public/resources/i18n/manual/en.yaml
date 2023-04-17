@@ -1,98 +1,98 @@
 title: "MANUAL"
 page_title: "Manual"
 sections:
-    introduction:
+  introduction:
+    title: "Introduction"
+    subsections:
+      introduction:
         title: "Introduction"
-        subsections:
-            introduction:
-                title: "Introduction"
-                text: | 
-                    CPU Visual Simulator allows you to enter and visualize the execution of assembly language code.
-                    Instructions and numeric data can be inserted or modified directly in RAM. It is possible to define
-                    "labels" (identifiers to be used in place of memory addresses): these labels can then be used as 
-                    parameters in jump instructions, or as variable identifiers. At any time, it is possible to switch 
-                    between symbolic and binary representations. It is also possible to directly modify the Program 
-                    Counter, the Accumulator or the Status Word's Negative and Zero flags. The program can be executed:
-                    normally (the CPU continues to execute instructions until execution is paused or the program ends),
-                    one statement at a time, or one step at a time. The text-to-speech function is also made available
-                    which, if enabled, activates a synthetic voice that explains what is being executed by the CPU.
-    instruction_set:
+        text: |
+          CPU Visual Simulator allows you to enter and visualize the execution of assembly language code.
+          Instructions and numeric data can be inserted or modified directly in RAM. It is possible to define
+          "labels" (identifiers to be used in place of memory addresses): these labels can then be used as 
+          parameters in jump instructions, or as variable identifiers. At any time, it is possible to switch 
+          between symbolic and binary representations. It is also possible to directly modify the Program 
+          Counter, the Accumulator or the Status Word's Negative and Zero flags. The program can be executed:
+          normally (the CPU continues to execute instructions until execution is paused or the program ends),
+          one statement at a time, or one step at a time. The text-to-speech function is also made available
+          which, if enabled, activates a synthetic voice that explains what is being executed by the CPU.
+  instruction_set:
+    title: "Instruction Set"
+    subsections:
+      instruction_set:
         title: "Instruction Set"
+      instruction_structure:
+        title: "Instruction structure"
+        opcode_desc: "Determines the operation to be executed"
+        immediate_flag_desc: "Determines wether the operand is immediate or direct"
+        operand_desc: "The value on which the instruction operates"
+      addressing_modes:
+        title: "Addressing modes"
         subsections:
-            instruction_set:
-                title: "Instruction Set"
-            instruction_structure:
-                title: "Instruction structure"
-                opcode_desc: "Determines the operation to be executed"
-                immediate_flag_desc: "Determines wether the operand is immediate or direct"
-                operand_desc: "The value on which the instruction operates"
-            addressing_modes: 
-              title: "Addressing modes"
-              subsections: 
-                immediate: 
-                  title: "Immediate"
-                  paragraphs:
-                    - "An immediate operand is an operand preceded by the \"#\" symbol."
-                    - "The value of an immediate operand must be in the 8-bit range (127 to -128)."
-                    - "If the operand is a label, the address at which that label is associated will be used as operand."
-                direct: 
-                  title: "Direct"
-                  paragraphs:
-                    - "An operand with no \"#\" symbol is a direct operand."
-                    - "A direct operand represent the address at which the operand value is stored."
-                    - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
-    code_files:
+          immediate:
+            title: "Immediate"
+            paragraphs:
+              - 'An immediate operand is an operand preceded by the "#" symbol.'
+              - "The value of an immediate operand must be in the 8-bit range (127 to -128)."
+              - "If the operand is a label, the address at which that label is associated will be used as operand."
+          direct:
+            title: "Direct"
+            paragraphs:
+              - 'An operand with no "#" symbol is a direct operand.'
+              - "A direct operand represent the address at which the operand value is stored."
+              - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
+  code_files:
+    title: "Code files"
+    subsections:
+      code_files:
         title: "Code files"
-        subsections:
-          code_files:
-            title: "Code files"
-            paragraphs:
-              - "CPUVS can load or store programs from/to simple plain text files that have the \".cpuvs\" extension."
-          new_lines:
-            title: "New lines"
-            paragraphs:
-              - "In a .cpuvs file, each line may contain a single instruction."
-              - "A line that doesn't contain a valid instruction may only contain a comment."
-              - "Empty lines are allowed and will be ignored."
-              - "The content of each line will be stored in a memory address starting from address 0."
-              - "Empty lines or lines that contains only a comment will be ignored."
-          syntax:
-            title: "Syntax"
-            paragraphs:
-              - "A valid line has the following format: 'LABEL: INSTRUCTION' (without single quotes)."
-              - "LABEL: This field is optional. If this field is omitted, the \":\" symbol should also be omitted."
-              - "INSTRUCTION: This field represents the content of an address. The syntax is identical to the one used to input instructions directly into the RAM and everything that can be written into a RAM cell can be written here (except binary input)."
-              - "Leading and trailing whitespaces and tab characters are ignored."
-              - "If the file you are trying to load into CPUVS contains an error, an error message with the details of the error will be displayed on the top edge of the simulator."
-              - "A comment is defined as everything that follows the symbol \";\" until a new line."
-    ui:     
-        title: "User interface"
-    examples:
-        title: "Examples"
-        subsections:
-            if_then_else:
-                title: "High-level IF-THEN-ELSE example and its translation"
-            do_while:
-                title: "High-level WHILE-DO example and its translation"
-opcodes_table: 
-    sections_titles: 
-        control_flow: "Control Flow"
-        data_flow: "Data Flow"
-        arithmetic_logic: "Arithmetic-Logic"
-    descriptions: 
-        NOP: "No Operation, go to the next instruction"
-        HLT: "Halt execution"
-        JMP: "Unconditional jump to the instruction at location X"
-        JZ: "Jump on Zero: if Flag Z is set, go to instruction number X, otherwise go to the next instruction"
-        JNZ: "Jump on Not Zero: if Flag Z is cleared, go to instruction number X, otherwise, go to the next instruction"
-        JN: "Jump on Negative: if Flag N is set, go to instruction number X, otherwise go to the next instruction"
-        JNN: "Jump on Not Negative: if Flag N is cleared, go to instruction number X, otherwise go to the next instruction"
-        LOD: "Load content of Memory Location X (or number #X) into the Accumulator"
-        STO: "Store the value of the Accumulator into Memory Location X"
-        ADD: "Add content of Memory Location X (or number #X) to the Accumulator. Flags are updated"
-        SUB: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated"
-        MUL: "Multiply the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
-        DIV: "Divide the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
-        AND: "Bitwise AND between the Accumulator and the content of Memory Location X (or number #X). Flags are updated"
-        CMP: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
-        NOT: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"
+        paragraphs:
+          - 'CPUVS can load or store programs from/to simple plain text files that have the ".cpuvs" extension.'
+      new_lines:
+        title: "New lines"
+        paragraphs:
+          - "In a .cpuvs file, each line may contain a single instruction."
+          - "A line that doesn't contain a valid instruction may only contain a comment."
+          - "Empty lines are allowed and will be ignored."
+          - "The content of each line will be stored in a memory address starting from address 0."
+          - "Empty lines or lines that contains only a comment will be ignored."
+      syntax:
+        title: "Syntax"
+        paragraphs:
+          - "A valid line has the following format: 'LABEL: INSTRUCTION' (without single quotes)."
+          - 'LABEL: This field is optional. If this field is omitted, the ":" symbol should also be omitted.'
+          - "INSTRUCTION: This field represents the content of an address. The syntax is identical to the one used to input instructions directly into the RAM and everything that can be written into a RAM cell can be written here (except binary input)."
+          - "Leading and trailing whitespaces and tab characters are ignored."
+          - "If the file you are trying to load into CPUVS contains an error, an error message with the details of the error will be displayed on the top edge of the simulator."
+          - 'A comment is defined as everything that follows the symbol ";" until a new line.'
+  ui:
+    title: "User interface"
+  examples:
+    title: "Examples"
+    subsections:
+      if_then_else:
+        title: "High-level IF-THEN-ELSE example and its translation"
+      do_while:
+        title: "High-level WHILE-DO example and its translation"
+opcodes_table:
+  sections_titles:
+    control_flow: "Control Flow"
+    data_flow: "Data Flow"
+    arithmetic_logic: "Arithmetic-Logic"
+  descriptions:
+    NOP: "No Operation, go to the next instruction"
+    HLT: "Halt execution"
+    JMP: "Unconditional jump to the instruction at location X"
+    JZ: "Jump on Zero: if Flag Z is set, go to instruction number X, otherwise go to the next instruction"
+    JNZ: "Jump on Not Zero: if Flag Z is cleared, go to instruction number X, otherwise, go to the next instruction"
+    JN: "Jump on Negative: if Flag N is set, go to instruction number X, otherwise go to the next instruction"
+    JNN: "Jump on Not Negative: if Flag N is cleared, go to instruction number X, otherwise go to the next instruction"
+    LOD: "Load content of Memory Location X (or number #X) into the Accumulator"
+    STO: "Store the value of the Accumulator into Memory Location X"
+    ADD: "Add content of Memory Location X (or number #X) to the Accumulator. Flags are updated"
+    SUB: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated"
+    MUL: "Multiply the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
+    DIV: "Divide the Accumulator by the content of Memory Location X (or number #X). Flags are updated"
+    AND: "Bitwise AND between the Accumulator and the content of Memory Location X (or number #X). Flags are updated"
+    CMP: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
+    NOT: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"

@@ -1,100 +1,100 @@
 title: "MANUALE"
 page_title: "Manuale"
 sections:
-    introduction:
+  introduction:
+    title: "Introduzione"
+    subsections:
+      introduction:
         title: "Introduzione"
-        subsections:
-            introduction:
-                title: "Introduzione"
-                text: |
-                    CPU Visual Simulator permette di inserire e visualizzare l'esecuzione di codice in linguaggio assembly.
-                    Istruzioni e dati numerici possono essere inseriti o modificati direttamente in RAM. E' possibile definire 
-                    "labels" (identificatori utilizzabili al posto degli indirizzi di memoria): queste labels possono 
-                    poi essere utilizzate come parametri nelle istruzioni di salto, oppure come identificatori di variabili.
-                    In ogni momento è possibile passare dalla rappresentazione simbolica a quella binaria.
-                    È inoltre possibile modificare direttamente il Program Counter, l'Accumulatore e le flags Negative
-                    e Zero della Status Word. Il programma può essere eseguito: normalmente (la CPU continua ad eseguire istruzioni
-                    finche l'esecuzione non viene pausata o il programma termina), un'istruzione alla volta oppure
-                    uno step alla volta. E' inoltre resa disponibile la funzionalità text-to-speech che, se abilitata, 
-                    attiva una voce sintetica che spiega cosa stà venedo eseguito dalla CPU.
-    instruction_set:
+        text: |
+          CPU Visual Simulator permette di inserire e visualizzare l'esecuzione di codice in linguaggio assembly.
+          Istruzioni e dati numerici possono essere inseriti o modificati direttamente in RAM. E' possibile definire 
+          "labels" (identificatori utilizzabili al posto degli indirizzi di memoria): queste labels possono 
+          poi essere utilizzate come parametri nelle istruzioni di salto, oppure come identificatori di variabili.
+          In ogni momento è possibile passare dalla rappresentazione simbolica a quella binaria.
+          È inoltre possibile modificare direttamente il Program Counter, l'Accumulatore e le flags Negative
+          e Zero della Status Word. Il programma può essere eseguito: normalmente (la CPU continua ad eseguire istruzioni
+          finche l'esecuzione non viene pausata o il programma termina), un'istruzione alla volta oppure
+          uno step alla volta. E' inoltre resa disponibile la funzionalità text-to-speech che, se abilitata, 
+          attiva una voce sintetica che spiega cosa stà venedo eseguito dalla CPU.
+  instruction_set:
+    title: "Instruction Set"
+    subsections:
+      instruction_set:
         title: "Instruction Set"
+      instruction_structure:
+        title: "Struttura istruzioni"
+        opcode_desc: "Determina l'operazione che verrà eseguita"
+        immediate_flag_desc: "Determina se l'operando è diretto o immediato"
+        operand_desc: "Il valore su cui l'istruzione va ad operare"
+      addressing_modes:
+        title: "Modalità di indirizzamento"
         subsections:
-            instruction_set:
-                title: "Instruction Set"
-            instruction_structure:
-                title: "Struttura istruzioni"
-                opcode_desc: "Determina l'operazione che verrà eseguita"
-                immediate_flag_desc: "Determina se l'operando è diretto o immediato"
-                operand_desc: "Il valore su cui l'istruzione va ad operare"
-            addressing_modes: 
-              title: "Modalità di indirizzamento"
-              subsections: 
-                immediate: 
-                  title: "Immediata"
-                  paragraphs:
-                    - "Un operando immeidato è un operando preceduto dal simbolo \"#\"."
-                    - "Il valore di un operando immediato deve essere a 8-bit (da 127 a -128)."
-                    - "Se l'operando è una label, l'indirizzo a cui la label è associata sarà usato come operando."
-                direct: 
-                  title: "Diretta"
-                  paragraphs:
-                    - "Un operando che non è preceduto dal simbolo \"#\" è un operando diretto."
-                    - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
-                    - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
-    code_files:
+          immediate:
+            title: "Immediata"
+            paragraphs:
+              - 'Un operando immeidato è un operando preceduto dal simbolo "#".'
+              - "Il valore di un operando immediato deve essere a 8-bit (da 127 a -128)."
+              - "Se l'operando è una label, l'indirizzo a cui la label è associata sarà usato come operando."
+          direct:
+            title: "Diretta"
+            paragraphs:
+              - 'Un operando che non è preceduto dal simbolo "#" è un operando diretto.'
+              - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
+              - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
+  code_files:
+    title: "File di codice"
+    subsections:
+      code_files:
         title: "File di codice"
-        subsections:
-          code_files:
-            title: "File di codice"
-            paragraphs:
-              - "CPUVS può caricare/salvare programmi da/su dei semplici file di testo che hanno l'estensione \".cpuvs\""
-          new_lines:
-            title: "Nuove righe"
-            paragraphs:
-              - "In un file -cpuvs, ogni riga può contenere una singola istruzione."
-              - "Una riga che non contiene un istruzione valida può contenere un commento."
-              - "Empty lines are allowed and will be ignored."
-              - "Righe lasciate vuote sono permesse e saranno ignorate."
-              - "Il contenuto di ogni riga sarà salvato in un indirizzo di memoria partendo dall'indirizzo 0."
-              - "Righe vuote o righe che contengono solamente un commento saranno ignorate."
-          syntax:
-            title: "Sintassi"
-            paragraphs:
-              - "Una riga valida ha il seguente formato: 'LABEL: ISTRUZIONE' (escluse le virgolette)."
-              - "LABEL: Questo campo è opzionale. Se questo campo viene omesso, anche il simbolo \":\" deve essere omesso."
-              - "ISTRUZIONE: Questo campo rappresenta il contenuto di un indirizzo- La sintassi è identica a quella usata per inserire un'istruzione direttamente in RAM e tutto quello che è permesso scrivere in una cella della ram può essere scritto qui (eccetto input di valori binary)."
-              - "Spazi e caratteri di tab all'inizio e alla fine di ogni riga sono ignorati."
-              - "Se il file che stai provando a caricare in CPUVS contiene un errore, un messaggio di errore con i dettagli dell'errore sarà mostrato nel bordo superiore del simulatore."
-              - "Un commento è definito come tutto quello che segue il simbolo \";\" fino ad una nuova riga."
-    ui: 
-        title: "Interfaccia grafica"
-    examples:
-        title: "Esempi"
-        subsections:
-            if_then_else:
-                title: "Esempio ad alto livello di IF-THEN-ELSE e la sua traduzione"
-            do_while:
-                title: "Esempio ad alto livello di WHILE-DO e la sua traduzione"
-opcodes_table: 
-    sections_titles: 
-        control_flow: "Controllo flusso"
-        data_flow: "Flusso dati"
-        arithmetic_logic: "Aritmetico-Logiche"
-    descriptions: 
-        NOP: "Nessuna operazione, vai all'istruzione successiva"
-        HLT: "Interrompi l'esecuzione"
-        JMP: "Salto incondizionato all'istruzione nella posizione di memoria X"
-        JZ: "Salta se Zero: se la Flag Z ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
-        JNZ: "Salta se non Zero: se la Flag Z ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
-        JN: "Salta se Negative: se la Flag N ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
-        JNN: "Salta se non Negative: se la Flag N ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
-        LOD: "Carica il contenuto della posizione di memoria X (o il numero #X) nell'Accumulatore"
-        STO: "Salva il valore dell'Accumulatore nella posizione di memoria X"
-        ADD: "Addiziona il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
-        SUB: "Sottrae il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
-        MUL: "Moltiplica l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
-        DIV: "Divide l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
-        AND: "AND logico tra l'accumulatore e il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
-        CMP: "Sottrarre il contenuto della posizione di memoria X (o il numero #X) dall'Accumulatore. La Status Word viene aggiornata, ma il contenuto dell'Accumulatore non viene modificato"
-        NOT: "NOT logico del contenuto della posizione di memoria X (o numero #X). Il risultato viene memorizzato nell'Accumulatore"
+        paragraphs:
+          - 'CPUVS può caricare/salvare programmi da/su dei semplici file di testo che hanno l''estensione ".cpuvs"'
+      new_lines:
+        title: "Nuove righe"
+        paragraphs:
+          - "In un file -cpuvs, ogni riga può contenere una singola istruzione."
+          - "Una riga che non contiene un istruzione valida può contenere un commento."
+          - "Empty lines are allowed and will be ignored."
+          - "Righe lasciate vuote sono permesse e saranno ignorate."
+          - "Il contenuto di ogni riga sarà salvato in un indirizzo di memoria partendo dall'indirizzo 0."
+          - "Righe vuote o righe che contengono solamente un commento saranno ignorate."
+      syntax:
+        title: "Sintassi"
+        paragraphs:
+          - "Una riga valida ha il seguente formato: 'LABEL: ISTRUZIONE' (escluse le virgolette)."
+          - 'LABEL: Questo campo è opzionale. Se questo campo viene omesso, anche il simbolo ":" deve essere omesso.'
+          - "ISTRUZIONE: Questo campo rappresenta il contenuto di un indirizzo- La sintassi è identica a quella usata per inserire un'istruzione direttamente in RAM e tutto quello che è permesso scrivere in una cella della ram può essere scritto qui (eccetto input di valori binary)."
+          - "Spazi e caratteri di tab all'inizio e alla fine di ogni riga sono ignorati."
+          - "Se il file che stai provando a caricare in CPUVS contiene un errore, un messaggio di errore con i dettagli dell'errore sarà mostrato nel bordo superiore del simulatore."
+          - 'Un commento è definito come tutto quello che segue il simbolo ";" fino ad una nuova riga.'
+  ui:
+    title: "Interfaccia grafica"
+  examples:
+    title: "Esempi"
+    subsections:
+      if_then_else:
+        title: "Esempio ad alto livello di IF-THEN-ELSE e la sua traduzione"
+      do_while:
+        title: "Esempio ad alto livello di WHILE-DO e la sua traduzione"
+opcodes_table:
+  sections_titles:
+    control_flow: "Controllo flusso"
+    data_flow: "Flusso dati"
+    arithmetic_logic: "Aritmetico-Logiche"
+  descriptions:
+    NOP: "Nessuna operazione, vai all'istruzione successiva"
+    HLT: "Interrompi l'esecuzione"
+    JMP: "Salto incondizionato all'istruzione nella posizione di memoria X"
+    JZ: "Salta se Zero: se la Flag Z ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+    JNZ: "Salta se non Zero: se la Flag Z ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+    JN: "Salta se Negative: se la Flag N ha valore 1, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+    JNN: "Salta se non Negative: se la Flag N ha valore 0, vai all'istruzione nella posizione di memoria X, altrimenti vai all'istruzione successiva"
+    LOD: "Carica il contenuto della posizione di memoria X (o il numero #X) nell'Accumulatore"
+    STO: "Salva il valore dell'Accumulatore nella posizione di memoria X"
+    ADD: "Addiziona il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
+    SUB: "Sottrae il contenuto della posizione di memoria X (o il numero #X) all'Accumulatore. La Status Word viene aggiornata"
+    MUL: "Moltiplica l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+    DIV: "Divide l'Accumulatore per il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+    AND: "AND logico tra l'accumulatore e il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
+    CMP: "Sottrarre il contenuto della posizione di memoria X (o il numero #X) dall'Accumulatore. La Status Word viene aggiornata, ma il contenuto dell'Accumulatore non viene modificato"
+    NOT: "NOT logico del contenuto della posizione di memoria X (o numero #X). Il risultato viene memorizzato nell'Accumulatore"
