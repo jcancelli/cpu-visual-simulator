@@ -8,7 +8,7 @@ steps:
     tts: "La instrucción se carga en el Registro de Instrucción"
   ir_to_cu:
     text: "El código de operación es decodificado"
-    tts: "El código di operación es decodificado"
+    tts: "El código de operación es decodificado"
   cu_to_mux:
     text: "La Unidad de Control indica al Multiplexor si el operando es directo o inmediato"
     tts: "La Unidad de Control indica al Multiplexor si el operando es directo o inmediato"
@@ -242,7 +242,7 @@ errors:
   instruction_parsing:
     invalid_binary_input: "Entrada binaria no válida"
     invalid_opcode: "'{0}' no es un código de operación válido"
-    invalid_operand: "placeholder text" # TO-DO
+    invalid_operand: "'{0}' no es un operando válido"
     operand_not_allowed: "El código de operación '{0}' no acepta operandos"
     operand_required: "El código de operación '{0}' requiere un operando"
     unknown_label: "La label '{0}' no está definida"
@@ -265,4 +265,4 @@ errors:
     invalid_instruction: "Instrucción no válida encontrada en el Registro de Instrucción"
     division_by_zero: "División entre cero"
   generic:
-    fetch_error: "placeholder text" # TO-DO
+    fetch_error: 'Se produjo un error al intentar acceder al recurso "{0}"'
