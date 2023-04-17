@@ -5,7 +5,7 @@ sections:
     title: "Introducción"
     subsections:
       introduction:
-        title: "Introducción" 
+        title: "Introducción"
         text: |
           CPU Visual Simulator le permite ingresar y visualizar la ejecución de código en lenguaje ensamblador.
           Las instrucciones y los datos numéricos se pueden insertar o modificar directamente en la RAM. Es posible definir
@@ -47,12 +47,12 @@ sections:
       code_files:
         title: "Archivos de código"
         paragraphs:
-          - "CPUVS puede cargar/guardar programas de/como simples archivos de texto que tengan la extención \".cpuvs\""
+          - 'CPUVS puede cargar/guardar programas de/como simples archivos de texto que tengan la extención ".cpuvs"'
       new_lines:
         title: "Nuevas líneas"
         paragraphs:
           - "En un archivo .cpuvs, cada línea puede contener una sola instrucción."
-          - "Una línea que no contiene una instrucción válida puede contener un comentario." 
+          - "Una línea que no contiene una instrucción válida puede contener un comentario."
           - "Las líneas vacías están permitidas y serán ignoradas."
           - "El contenido de cada línea se almacenará en una dirección de memoria comenzando de la dirección 0."
           - "Las líneas vacías o las que contengan un comentario serán ignoradas."
@@ -60,113 +60,11 @@ sections:
         title: "Sintaxis"
         paragraphs:
           - "Una línea válida tiene el siguiente formato: 'LABEL: INSTRUCCIÓN' (excluyendo las comillas)."
-          - "LABEL: Este campo es opcional. Si se omite este campo, también se debe omitir el símbolo \":\"."
+          - 'LABEL: Este campo es opcional. Si se omite este campo, también se debe omitir el símbolo ":".'
           - "INSTRUCCIÓN: Este campo representa el contenido de una dirección. La sintaxis es idéntica a la utilizada para ingresar instrucciones directamente en la RAM y todo lo que se permite escribir en una celda de la RAM se puede escribir aquí (a excepción del input en valores binarios)."
           - "Los espacios y carácteres de tabulación iniciales o finales de cada línea serán ignorados."
-          - "Si el archivo que intenta cargar en CPUVS contiene un error, se mostrará un mensaje de error con los detalles del mismo en el borde superior del simulador".
-          - "Un comentario se define como todo lo que sigue al símbolo \";\" hasta una nueva línea."
-     interfaz de usuario:
-  ui:
-    title: "Interfaz gráfica"
-  examples:
-    title: "Ejemplos"
-    subsections:
-      if_then_else:
-        title: "Ejemplo de IF-THEN-ELSE de alto nivel y su traducción"
-      do_while:
-        title: "Ejemplo de WHILE-DO de alto nivel y su traducción"
-opcodes_table:
-  sections_titles:
-    control_flow: "Control de flujo"
-    data_flow: "Flujo de datos"
-    arithmetic_logic: "Aritmética-Lógica"
-  descriptions:
-    NOP: "Ninguna Operación, pase a la siguiente instrucción"
-    HLT: "Detener la ejecución"
-    JMP: "Salto incondicional a la instrucción en la dirección de memoria X"
-    JZ: "Salta si es Cero: si la Flag Z contiene el valor 1, salta a la instrucción en la dirección de memoria X; de lo contrario, pasa a la siguiente instrucción"
-    JNZ: "Salta si no es Cero: si la Flag Z contiene el valor 0, salta a la instrucción en la dirección de memoria X; de lo contrario, pasa a la siguiente instrucción"
-    JN: "Salta si es Negativo: si la Flag N contiene el valor 1, salta a la instrucción en la dirección de memoria X; de lo contrario, pasa a la siguiente instrucción"
-    JNN: "Salta si no es Negativo: si la Flag N contiene el valor 0, salta a la instrucción en la dirección de memoria X; de lo contrario, pasa a la siguiente instrucción"
-    LOD: "Carga contenido de la dirección de memoria X (o el número #X) en el Acumulador"
-    STO: "Guarda el valor del Acumulador en la dirección de memoria X"
-    ADD: "Suma el contenido de la dirección de memoria X (o el número #X) al Acumulador. El Registro de Estado se actualiza"
-    SUB: "Resta el contenido de la dirección de memoria X (o el número #X) del Acumulador. El Registro de Estado se actualiza"
-    MUL: "Multiplica el Acumulador por el contenido de la dirección de memoria X (o el número #X). El Registro de Estado se actualiza"
-    DIV: "Divide el Acumulador por el contenido de la dirección de memoria X (o el número #X). El Registro de Estado se actualiza"
-    AND: "Operador lógico AND entre el Acumulador y el contenido de la dirección de memoria X (o número #X). El Registro de Estado se actualiza"
-    CMP: "Resta el contenido de la dirección de memoria X (o el número #X) del Acumulador. El Registro de Estado se actualiza, pero el contenido del Acumulador no se modifica"
-    NOT: "Operador lógico NOT del contenido de la dirección de memoria X (o número #X). El resultado se guarda en el Acumulador"
-
-
-
-    title: "MANUAL"
-page_title: "Manual"
-sections:
-  introduction:
-    title: "Introducción"
-    subsections:
-      introduction:
-        title: "Introducción"
-        text: |
-          CPU Visual Simulator le permite ingresar y visualizar la ejecución del código en lenguaje ensamblador.
-          Las instrucciones y los datos numéricos se pueden insertar o modificar directamente en la RAM. Es posible definir
-          "labels" (etiquetas que se usarán en vez de las direcciones de memoria): estas labels pueden ser usadas como
-          parámetros en instrucciones de salto o como identificadores de variables. 
-          En cualquier momento, es posible cambiar la representación simbolica en binaria y viceversa. También es posible 
-          modificar directamente el Contador de Programa, el Acumulador y las flags Negative y Zero del Registro de Estado   . 
-          El programa se puede ejecutar: normalmente (la CPU continúa ejecutando instrucciones hasta que la ejecución se pause o el programa finalice), 
-          una instrucción a la vez o un paso a la vez. 
-          También está disponible la función de "Lector de Texto" que, si está habilitada, activa una voz sintética que explica lo que está ejecutando la CPU.
-  instruction_set:
-    title: "Conjunto de Instrucciones"
-    subsections:
-      instruction_set:
-        title: "Conjunto de Instrucciones"
-      instruction_structure:
-        title: "Estructura de la instrucción"
-        opcode_desc: "Determina la operación a ejecutar"
-        immediate_flag_desc: "Determina si el operando es inmediato o directo"
-        operand_desc: "El valor sobre el cual opera la instrucción"
-      addressing_modes:
-        title: "Modos de direccionamiento"
-        subsections:
-          immediate:
-            title: "Inmediato"
-            paragraphs:
-              - 'Un operando inmediato es un operando precedido por el símbolo "#".'
-              - "El valor de un operando inmediato debe estar en el rango de 8 bits (de 127 a -128)."
-              - "Si el operando es una label, se utilizará como operando la dirección a la que está asociada esa label."
-          direct:
-            title: "Directo"
-            paragraphs:
-              - 'Un operando sin el símbolo "#" es un operando directo.'
-              - "Un operando directo representa la dirección de memoria donde se almacena el valor del operando."
-              - "Un operando directo debe ser una dirección de memoria válida, por lo que debe ser un valor entre 0 y 254 o una label válida."
-  code_files:
-    title: "Archivos de código"
-    subsections:
-      code_files:
-        title: "Archivos de código"
-        paragraphs:
-          - "CPUVS puede cargar/guardar programas de/como simples archivos de texto que tengan la extención \".cpuvs\""
-      new_lines:
-        title: "Nuevas líneas"
-        paragraphs:
-          - "En un archivo .cpuvs, cada línea puede contener una sola instrucción."
-          - "Una línea que no contiene una instrucción válida puede contener un comentario." 
-          - "Las líneas vacías están permitidas y serán ignoradas."
-          - "El contenido de cada línea se almacenará en una dirección de memoria comenzando de la dirección 0."
-          - "Las líneas vacías o las que contengan un comentario serán ignoradas."
-      syntax:
-        title: "Sintaxis"
-        paragraphs:
-          - "Una línea válida tiene el siguiente formato: 'LABEL: INSTRUCCIÓN' (excluyendo las comillas)."
-          - "LABEL: Este campo es opcional. Si se omite este campo, también se debe omitir el símbolo \":\"."
-          - "INSTRUCCIÓN: Este campo representa el contenido de una dirección. La sintaxis es idéntica a la utilizada para ingresar instrucciones directamente en la RAM y todo lo que se permite escribir en una celda de la RAM se puede escribir aquí (a excepción del input en valores binarios)."
-          - "Los espacios y carácteres de tabulación iniciales o finales de cada línea serán ignorados."
-          - "Si el archivo que intenta cargar en CPUVS contiene un error, se mostrará un mensaje de error con los detalles del mismo en el borde superior del simulador".
-          - "Un comentario es todo lo que sigue al símbolo \";\" hasta una nueva línea."
+          - "Si el archivo que intenta cargar en CPUVS contiene un error, se mostrará un mensaje de error con los detalles del mismo en el borde superior del simulador."
+          - 'Un comentario se define como todo lo que sigue al símbolo ";" hasta una nueva línea.'
   ui:
     title: "Interfaz gráfica"
   examples:
