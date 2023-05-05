@@ -1,42 +1,54 @@
 <script lang="ts">
 	import { Dialog, DialogOverlay } from "@rgossiaux/svelte-headlessui"
-	import { createEventDispatcher } from "svelte"
-	import text from "../../store/text"
-	import CloseButton from "../../../shared/components/buttons/CloseButton.svelte"
+	import MenuItem from "../MenuItem.svelte"
+	import CloseButton from "../../../../shared/components/buttons/CloseButton.svelte"
+	import logger, { LogCategory } from "../../../util/logger"
+	import text from "../../../store/text"
 
-	const dispatch = createEventDispatcher()
+	let showDialog = false
 
-	export let open: boolean
+	function openDialog(): void {
+		showDialog = true
+		logger.debug("Copyright notice opened", LogCategory.USER_INPUT)
+	}
 
-	function onClose() {
-		dispatch("close")
+	function closeDialog(): void {
+		showDialog = false
 	}
 </script>
 
-<Dialog {open} on:close={onClose}>
+<button on:click={openDialog}>
+	<MenuItem
+		text={$text.menu.buttons.copyright.text}
+		title={$text.menu.buttons.copyright.title}
+		icon="copyright"
+	/>
+</button>
+
+<Dialog open={showDialog} on:close={closeDialog}>
 	<DialogOverlay class="fixed top-0 left-0 bg-black/40 w-screen h-screen" />
 	<div
 		class="
-			fixed
-			top-[50vh]
-			left-[50vw]
-			max-h-screen
-			max-w-screen
-			overflow-auto
-			-translate-x-2/4
-			-translate-y-2/4
-			bg-white
-			flex
-			flex-col
-			items-center
-			justify-center
-			gap-6
-			p-10
-			rounded-2xl
-			shadow-lg
-		"
+				fixed
+				top-[50vh]
+				left-[50vw]
+				max-h-screen
+				max-w-screen
+				overflow-auto
+				-translate-x-2/4
+				-translate-y-2/4
+				bg-white
+				flex
+				flex-col
+				items-center
+				justify-center
+				gap-6
+				p-10
+				rounded-2xl
+				shadow-lg
+			"
 	>
-		<CloseButton class="absolute top-3 right-3" on:click={onClose} size={30} />
+		<CloseButton class="absolute top-3 right-3" on:click={closeDialog} size={30} />
 		<div class="text-center">
 			<h2 class="text-lg font-semibold mb-2">
 				{$text.menu.overlays.copyright.subsections.copyright_notice.title}
@@ -49,6 +61,7 @@
 				<a
 					href="https://www.linkedin.com/in/jonathan-cancelli-4b46b3209"
 					target="_blank"
+					rel="noreferrer"
 					class="text-blue-700 hover:underline"
 				>
 					LinkedIn
@@ -65,6 +78,7 @@
 				<a
 					href="https://www.ppig.org/files/2021-PPIG-32nd-DC-cortinovis.pdf"
 					target="_blank"
+					rel="noreferrer"
 					class="text-blue-700 hover:underline"
 				>
 					Cortinovis, R., and Rajan, R. (2022) Evaluating and improving the Educational CPU Visual Simulator:
