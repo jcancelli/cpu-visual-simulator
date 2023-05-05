@@ -8,6 +8,7 @@
 	import InstructionSetSection from "./sections/InstructionSet.svelte"
 	import Introduction from "./sections/Introduction.svelte"
 	import Examples from "./sections/Examples.svelte"
+	import KeyboardShortcuts from "./sections/KeyboardShortcuts.svelte"
 	import UserInterface from "./sections/UserInterface.svelte"
 	import FileSynthax from "./sections/FileSynthax.svelte"
 </script>
@@ -16,8 +17,9 @@
 	<TabList class="mt-4">
 		<Tab class="border-t border-t-gray-500">{$text.sections.introduction.title}</Tab>
 		<Tab>{$text.sections.instruction_set.title}</Tab>
-		<Tab>{$text.sections.code_files.title}</Tab>
 		<Tab>{$text.sections.ui.title}</Tab>
+		<Tab>{"Keyboard shortcuts"}</Tab>
+		<Tab>{$text.sections.code_files.title}</Tab>
 		<Tab>{$text.sections.examples.title}</Tab>
 	</TabList>
 	<TabPanels class="py-7 px-14">
@@ -28,10 +30,13 @@
 			<InstructionSetSection />
 		</TabPanel>
 		<TabPanel>
-			<FileSynthax />
+			<UserInterface />
 		</TabPanel>
 		<TabPanel>
-			<UserInterface />
+			<KeyboardShortcuts />
+		</TabPanel>
+		<TabPanel>
+			<FileSynthax />
 		</TabPanel>
 		<TabPanel>
 			<Examples />
