@@ -74,6 +74,12 @@ menu:
     save:
       text: "Save"
       title: "Save program"
+      save_to_file:
+        text: "Save to file"
+        title: "Save to file"
+      save_to_url:
+        text: "Save as URL"
+        title: "Save as URL"
     load:
       text: "Load"
       title: "Load program"
@@ -109,6 +115,13 @@ menu:
       inputs:
         filename:
           placeholder: "File name"
+    save_to_url:
+      title: "Here is your URL"
+      copied: "Copied"
+      buttons:
+        copy_to_clipboard:
+          text: "Copy to clipboard"
+          title: "Copy to clipboard"
     copyright:
       subsections:
         copyright_notice:
