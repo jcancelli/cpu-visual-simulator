@@ -2,7 +2,6 @@
 	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import { ramStore, symbolTableStore } from "../../store/state"
-	import { upload } from "../../../shared/util/file"
 	import logger, { LogCategory } from "../../util/logger"
 	import { parseProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
@@ -10,6 +9,7 @@
 	import Copyright from "./items/Copyright.svelte"
 	import Settings from "./items/Settings.svelte"
 	import Save from "./items/Save.svelte"
+	import Load from "./items/Load.svelte"
 
 	const examples = [
 		{
@@ -25,19 +25,6 @@
 			url: "resources/examples/array_sum.cpuvs"
 		}
 	] as const
-
-	async function loadProgram(): Promise<void> {
-		try {
-			const file = (await upload(".cpuvs"))[0]
-			const program = parseProgram(await file.text())
-			symbolTableStore.get().import(program.symbolTable)
-			ramStore.get().import(program.ram)
-			logger.debug("Program loaded from file", LogCategory.USER_INPUT)
-		} catch (error) {
-			logger.handled_error(error, LogCategory.USER_INPUT)
-			$messageFeedStore.error(error.message)
-		}
-	}
 
 	async function loadExample(exampleUrl: string): Promise<void> {
 		try {
@@ -62,10 +49,7 @@
 	<Copyright />
 	<Settings />
 	<Save />
-
-	<button on:click={loadProgram}>
-		<MenuItemIcon text={$text.menu.buttons.load.text} title={$text.menu.buttons.load.title} icon="open" />
-	</button>
+	<Load />
 	<Menu>
 		<MenuButton>
 			<MenuItemIcon
