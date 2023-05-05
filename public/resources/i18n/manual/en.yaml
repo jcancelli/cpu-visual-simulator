@@ -41,6 +41,11 @@ sections:
               - 'An operand with no "#" symbol is a direct operand.'
               - "A direct operand represent the address at which the operand value is stored."
               - "A valid direct operand must be a valid address, so it should be and even value between 0 and 254 or a valid label."
+  keyboard_shortcuts:
+    title: "Keyboard shortcuts"
+    subsections:
+      keyboard_shortcuts:
+        title: "Keyboard shortcuts"
   code_files:
     title: "Code files"
     subsections:
@@ -96,3 +101,43 @@ opcodes_table:
     AND: "Bitwise AND between the Accumulator and the content of Memory Location X (or number #X). Flags are updated"
     CMP: "Subtract content of Memory Location X (or number #X) from the Accumulator. Flags are updated, but the content of the Accumulator is not modified"
     NOT: "Bitwise NOT of the content of Memory Location X (or number #X). The result is stored in the Accumulator"
+shortcuts_table:
+  ram_editing:
+    title: "RAM Editing"
+    headers:
+      keys: "Keys"
+      condition: "Condition"
+      description: "Description"
+    shortcuts:
+      - keys: "ENTER"
+        condition: "No cell/label is selected"
+        description: "Select the first visible cell."
+      - keys: "ENTER"
+        condition: "A cell/label is selected"
+        description: "Commit the selected cell content to RAM."
+      - keys: "ARROW UP"
+        condition: "A cell/label is selected"
+        description: "Select the previous address."
+      - keys: "ARROW DOWN"
+        condition: "A cell/label is selected"
+        description: "Select the following address."
+      - keys: "SHIFT + ARROW UP"
+        condition: "A cell/label is selected"
+        description: |
+          All cells above the selected address (included) are shifted up by one.
+          The content of the first address is lost and "NOP" is inserted at the selected address.
+      - keys: "SHIFT + ARROW DOWN"
+        condition: "A cell/label is selected"
+        description: |
+          All cells above the selected address (not included) are shifted down by one. The content of the selected address is
+          lost and "NOP" is inserted at the first address.
+      - keys: "CTRL + ARROW UP"
+        condition: "A cell/label is selected"
+        description: |
+          All cells below the selected address (not included) are shifted up by one. The content of the selected address is
+          lost and "NOP" is inserted at the last address.
+      - keys: "CTRL + ARROW DOWN"
+        condition: "A cell/label is selected"
+        description: |
+          All cells below the selected address (included) are shifted down by one. The content of the last
+          address is lost and "NOP" is inserted at the selected address.

@@ -6,7 +6,9 @@
 <Section title={"Keyboard shortcuts"} h={2}>
 	<table class="text-center border-collapse shadow-lg {$$props.class}">
 		<tr class="bg-gray-400">
-			<th colspan="3">RAM Editing</th>
+			<th colspan="3">
+				{$text.shortcuts_table.ram_editing.title}
+			</th>
 		</tr>
 		<!-- colgroup is in this position the last-child and first-child selectors works properly -->
 		<colgroup>
@@ -15,62 +17,23 @@
 			<col class="w-[37rem] text-left" />
 		</colgroup>
 		<tr class="bg-gray-400">
-			<th>Keys</th>
-			<th>Condition</th>
-			<th class="text-left">Description</th>
+			<th>
+				{$text.shortcuts_table.ram_editing.headers.keys}
+			</th>
+			<th>
+				{$text.shortcuts_table.ram_editing.headers.condition}
+			</th>
+			<th class="text-left">
+				{$text.shortcuts_table.ram_editing.headers.description}
+			</th>
 		</tr>
-		<tr class="bg-gray-200">
-			<td>ENTER</td>
-			<td>No cell is selected</td>
-			<td class="text-left">Select the first visible cell.</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>ENTER</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">Deselect the selected address and write its content to RAM.</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>ARROW UP</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">Move the selection up by one cell.</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>ARROW DOWN</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">Move the selection down by one cell.</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>SHIFT + ARROW UP</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">
-				All cells above the selected address (included) are shifted up by one. The content of the first
-				address is lost and "NOP" is inserted at the selected address.
-			</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>SHIFT + ARROW DOWN</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">
-				All cells above the selected address are shifted down by one. The content of the selected address is
-				overwritten and "NOP" is inserted at the first address.
-			</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>CTRL + ARROW UP</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">
-				All cells below the selected address are shifted up by one. The content of the selected address is
-				overwritten and "NOP" is inserted at the last address.
-			</td>
-		</tr>
-		<tr class="bg-gray-200">
-			<td>CTRL + ARROW DOWN</td>
-			<td>A cell/label is selected</td>
-			<td class="text-left">
-				All cells below the selected address (included) are shifted down by one. The content of the last
-				address is overwritten and "NOP" is inserted at the selected address.
-			</td>
-		</tr>
+		{#each $text.shortcuts_table.ram_editing.shortcuts as shortcut}
+			<tr class="bg-gray-200">
+				<td>{shortcut.keys}</td>
+				<td>{shortcut.condition}</td>
+				<td class="text-left">{shortcut.description}</td>
+			</tr>
+		{/each}
 	</table>
 </Section>
 

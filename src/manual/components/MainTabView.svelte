@@ -18,7 +18,7 @@
 		<Tab class="border-t border-t-gray-500">{$text.sections.introduction.title}</Tab>
 		<Tab>{$text.sections.instruction_set.title}</Tab>
 		<!-- <Tab>{$text.sections.ui.title}</Tab> -->
-		<Tab>{"Keyboard shortcuts"}</Tab>
+		<Tab>{$text.sections.keyboard_shortcuts.title}</Tab>
 		<Tab>{$text.sections.code_files.title}</Tab>
 		<Tab>{$text.sections.examples.title}</Tab>
 	</TabList>

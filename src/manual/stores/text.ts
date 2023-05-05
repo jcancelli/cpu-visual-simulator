@@ -45,6 +45,14 @@ const _default = {
 				}
 			}
 		},
+		keyboard_shortcuts: {
+			title: "",
+			subsections: {
+				keyboard_shortcuts: {
+					title: ""
+				}
+			}
+		},
 		code_files: {
 			title: "",
 			subsections: {
@@ -100,6 +108,23 @@ const _default = {
 			AND: "",
 			CMP: "",
 			NOT: ""
+		}
+	},
+	shortcuts_table: {
+		ram_editing: {
+			title: "",
+			headers: {
+				keys: "",
+				condition: "",
+				description: ""
+			},
+			shortcuts: [
+				{
+					keys: "",
+					condition: "",
+					description: ""
+				}
+			]
 		}
 	}
 }

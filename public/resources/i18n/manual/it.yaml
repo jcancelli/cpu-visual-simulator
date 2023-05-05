@@ -42,6 +42,11 @@ sections:
               - 'Un operando che non è preceduto dal simbolo "#" è un operando diretto.'
               - "Un operando diretto rappresenta l'indirizzo di memoria che contiene il valore dell'operando."
               - "Un operando diretto deve essere un indirizzo di memoria valido, dovrebbe quindi essere un valore da 0 a 254 o una label valida."
+  keyboard_shortcuts:
+    title: "Scorciatoie tastiera"
+    subsections:
+      keyboard_shortcuts:
+        title: "Scorciatoie tastiera"
   code_files:
     title: "File di codice"
     subsections:
@@ -98,3 +103,45 @@ opcodes_table:
     AND: "AND logico tra l'accumulatore e il contenuto della posizione di memoria X (o numero #X). La Status Word viene aggiornata"
     CMP: "Sottrarre il contenuto della posizione di memoria X (o il numero #X) dall'Accumulatore. La Status Word viene aggiornata, ma il contenuto dell'Accumulatore non viene modificato"
     NOT: "NOT logico del contenuto della posizione di memoria X (o numero #X). Il risultato viene memorizzato nell'Accumulatore"
+shortcuts_table:
+  ram_editing:
+    title: "Modifica RAM"
+    headers:
+      keys: "Pulsanti"
+      condition: "Condizione"
+      description: "Descrizione"
+    shortcuts:
+      - keys: "ENTER"
+        condition: "Nessuna cella/label selezionata"
+        description: "Seleziona la prima cella visibile."
+      - keys: "ENTER"
+        condition: "Una cella/label è selezionata"
+        description: "Salva il contenuto della cella selezionata nella RAM."
+      - keys: "ARROW UP"
+        condition: "Una cella/label è selezionata"
+        description: "Seleziona l'indirizzo precedente."
+      - keys: "ARROW DOWN"
+        condition: "Una cella/label è selezionata"
+        description: "Seleziona l'indirizzo successivo."
+      - keys: "SHIFT + ARROW UP"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Tutte le celle sopra l'indirizzo selezionato (compreso) sono spostate in alto di uno.
+          Il contenuto del primo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
+      - keys: "SHIFT + ARROW DOWN"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Tutte le celle sopra l'indirizzo selezionato (non compreso) sono spostate in basso di uno.
+          Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito al primo
+          indirizzo.
+      - keys: "CTRL + ARROW UP"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Tutte le celle sotto l'indirizzo selezionato (non compreso) sono spostate in alto di uno.
+          Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito all'utlimo
+          indirizzo.
+      - keys: "CTRL + ARROW DOWN"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Tutte le celle sotto l'indirizzo selezionato (compreso) sono spostate in basso di uno.
+          Il contenuto dell'ultimo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
