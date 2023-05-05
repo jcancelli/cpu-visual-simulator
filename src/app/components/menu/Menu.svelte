@@ -10,6 +10,7 @@
 	import Settings from "./items/Settings.svelte"
 	import Save from "./items/Save.svelte"
 	import Load from "./items/Load.svelte"
+	import Manual from "./items/Manual.svelte"
 
 	const examples = [
 		{
@@ -37,11 +38,6 @@
 			logger.handled_error(error.message, LogCategory.USER_INPUT)
 			$messageFeedStore.error(error.message)
 		}
-	}
-
-	function openDocsPage(): void {
-		window.open("manual", "_blank").focus()
-		logger.debug("Manual opened", LogCategory.USER_INPUT)
 	}
 </script>
 
@@ -86,11 +82,5 @@
 			{/each}
 		</MenuItems>
 	</Menu>
-	<button on:click={openDocsPage}>
-		<MenuItemIcon
-			text={$text.menu.buttons.manual.text}
-			title={$text.menu.buttons.manual.title}
-			icon="manual"
-		/>
-	</button>
+	<Manual />
 </div>
