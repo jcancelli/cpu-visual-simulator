@@ -7,6 +7,7 @@
 	import { ramStore, symbolTableStore } from "../../store/state"
 	import text from "../../store/text"
 	import { exportProgram } from "../../util/programParser"
+	import logger, { LogCategory } from "../../util/logger"
 
 	const dispatch = createEventDispatcher()
 
@@ -14,21 +15,22 @@
 
 	let filename = ""
 
-	function onSave() {
+	function onSave(): void {
 		if (filename === "") {
 			return
 		}
 		download(exportProgram($ramStore, $symbolTableStore), `${filename}.cpuvs`)
 		filename = ""
+		logger.debug("Program saved to file", LogCategory.USER_INPUT)
 		dispatch("close")
 	}
 
-	function onCancel() {
+	function onCancel(): void {
 		filename = ""
 		dispatch("close")
 	}
 
-	function onClose() {
+	function onClose(): void {
 		filename = ""
 		dispatch("close")
 	}

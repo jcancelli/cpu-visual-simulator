@@ -2,14 +2,14 @@
 	import { messageFeedStore } from "../../store/state"
 	import text from "../../store/text"
 	import { ramStore, symbolTableStore } from "../../store/state"
-	import { showSettings } from "../../store/settings"
 	import { upload } from "../../../shared/util/file"
 	import logger, { LogCategory } from "../../util/logger"
 	import { parseProgram } from "../../util/programParser"
 	import { Menu, MenuButton, MenuItems, MenuItem } from "@rgossiaux/svelte-headlessui"
 	import MenuItemIcon from "./MenuItem.svelte"
-	import SaveToFileDialog from "./SaveToFileDialog.svelte"
 	import Copyright from "./items/Copyright.svelte"
+	import Settings from "./items/Settings.svelte"
+	import Save from "./items/Save.svelte"
 
 	const examples = [
 		{
@@ -25,13 +25,6 @@
 			url: "resources/examples/array_sum.cpuvs"
 		}
 	] as const
-
-	let showSaveFileDialog = false
-
-	function openSettings(): void {
-		$showSettings = true
-		logger.debug("Settings opened", LogCategory.USER_INPUT)
-	}
 
 	async function loadProgram(): Promise<void> {
 		try {
@@ -59,11 +52,6 @@
 		}
 	}
 
-	function saveProgram(): void {
-		showSaveFileDialog = true
-		logger.debug("Program saved to file", LogCategory.USER_INPUT)
-	}
-
 	function openDocsPage(): void {
 		window.open("manual", "_blank").focus()
 		logger.debug("Manual opened", LogCategory.USER_INPUT)
@@ -72,63 +60,9 @@
 
 <div class="absolute top-0 right-0 p-2 flex flex-row-reverse gap-2 z-[4]">
 	<Copyright />
-	<button on:click={openSettings}>
-		<MenuItemIcon
-			text={$text.menu.buttons.settings.text}
-			title={$text.menu.buttons.settings.title}
-			icon="settings"
-		/>
-	</button>
-	<button on:click={saveProgram}>
-		<MenuItemIcon text={$text.menu.buttons.save.text} title={$text.menu.buttons.save.title} icon="save" />
-	</button>
-	<Menu>
-		<MenuButton>
-			<MenuItemIcon text={$text.menu.buttons.save.text} title={$text.menu.buttons.save.title} icon="save" />
-		</MenuButton>
-		<MenuItems
-			class="absolute flex flex-col mt-1 bg-neutral-500 border-2 border-neutral-800 shadow-lg rounded-md"
-		>
-			<MenuItem
-				class="
-					bg-neutral-500
-					text-gray-200
-					text-sm
-					py-1
-					px-2
-					border-b-2
-					border-neutral-700
-					first:rounded-t-md
-					last:border-0
-					last:rounded-b-md
-					hover:brightness-[.93]
-					active:brightness-[.80]
-				"
-				title={"Save to file"}
-			>
-				<button class="text-base leading-none" on:click={() => {}}> Save to file </button>
-			</MenuItem>
-			<MenuItem
-				class="
-					bg-neutral-500
-					text-gray-200
-					text-sm
-					py-1
-					px-2
-					border-b-2
-					border-neutral-700
-					first:rounded-t-md
-					last:border-0
-					last:rounded-b-md
-					hover:brightness-[.93]
-					active:brightness-[.80]
-				"
-				title={"Save as URL"}
-			>
-				<button class="text-base leading-none" on:click={() => {}}> Save as URL </button>
-			</MenuItem>
-		</MenuItems>
-	</Menu>
+	<Settings />
+	<Save />
+
 	<button on:click={loadProgram}>
 		<MenuItemIcon text={$text.menu.buttons.load.text} title={$text.menu.buttons.load.title} icon="open" />
 	</button>
@@ -176,4 +110,3 @@
 		/>
 	</button>
 </div>
-<SaveToFileDialog open={showSaveFileDialog} on:close={() => (showSaveFileDialog = false)} />

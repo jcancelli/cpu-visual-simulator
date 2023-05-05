@@ -110,7 +110,15 @@ const _default = {
 			},
 			save: {
 				text: "",
-				title: ""
+				title: "",
+				save_to_file: {
+					text: "",
+					title: ""
+				},
+				save_to_url: {
+					text: "",
+					title: ""
+				}
 			},
 			load: {
 				text: "",
@@ -159,6 +167,16 @@ const _default = {
 				inputs: {
 					filename: {
 						placeholder: ""
+					}
+				}
+			},
+			save_to_url: {
+				title: "",
+				copied: "",
+				buttons: {
+					copy_to_clipboard: {
+						text: "",
+						title: ""
 					}
 				}
 			},
