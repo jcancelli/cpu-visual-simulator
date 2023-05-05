@@ -14,6 +14,7 @@
 
 	function closeDialog(): void {
 		showDialog = false
+		logger.debug("Copyright notice closed", LogCategory.USER_INPUT)
 	}
 </script>
 
