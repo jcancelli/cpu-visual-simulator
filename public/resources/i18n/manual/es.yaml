@@ -42,10 +42,10 @@ sections:
               - "Un operando directo representa la dirección de memoria donde se almacena el valor del operando."
               - "Un operando directo debe ser una dirección de memoria válida, por lo que debe ser un valor entre 0 y 254 o una label válida."
   keyboard_shortcuts:
-    title: "Keyboard shortcuts" #TODO
+    title: "Atajos de teclado"
     subsections:
       keyboard_shortcuts:
-        title: "Keyboard shortcuts" #TODO
+        title: "Atajos de teclado"
   code_files:
     title: "Archivos de código"
     subsections:
@@ -103,43 +103,41 @@ opcodes_table:
     NOT: "Operador lógico NOT del contenido de la dirección de memoria X (o número #X). El resultado se guarda en el Acumulador"
 shortcuts_table:
   ram_editing:
-    title: "Modifica RAM" #TODO
+    title: "Modificación RAM"
     headers:
-      keys: "Pulsanti" #TODO
-      condition: "Condizione" #TODO
-      description: "Descrizione" #TODO
+      keys: "Teclas"
+      condition: "Condición"
+      description: "Descripción"
     shortcuts:
-      - keys: "ENTER" #TODO
-        condition: "Nessuna cella/label selezionata" #TODO
-        description: "Seleziona la prima cella visibile." #TODO
-      - keys: "ENTER" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: "Salva il contenuto della cella selezionata nella RAM." #TODO
-      - keys: "ARROW UP" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: "Seleziona l'indirizzo precedente." #TODO
-      - keys: "ARROW DOWN" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: "Seleziona l'indirizzo successivo." #TODO
-      - keys: "SHIFT + ARROW UP" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: | #TODO
-          Tutte le celle sopra l'indirizzo selezionato (compreso) sono spostate in alto di uno.
-          Il contenuto del primo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
-      - keys: "SHIFT + ARROW DOWN" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: | #TODO
-          Tutte le celle sopra l'indirizzo selezionato (non compreso) sono spostate in basso di uno.
-          Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito al primo
-          indirizzo.
-      - keys: "CTRL + ARROW UP" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: | #TODO
-          Tutte le celle sotto l'indirizzo selezionato (non compreso) sono spostate in alto di uno.
-          Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito all'utlimo
-          indirizzo.
-      - keys: "CTRL + ARROW DOWN" #TODO
-        condition: "Una cella/label è selezionata" #TODO
-        description: | #TODO
-          Tutte le celle sotto l'indirizzo selezionato (compreso) sono spostate in basso di uno.
-          Il contenuto dell'ultimo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
+      - keys: "ENTER"
+        condition: "Ninguna celda/label seleccionada"
+        description: "Selecciona la primera celda visible."
+      - keys: "ENTER"
+        condition: "Una celda/label está seleccionada"
+        description: "Guarda el contenido de la celda seleccionada en la RAM."
+      - keys: "FLECHA ARRIBA"
+        condition: "Una celda/label está seleccionada"
+        description: "Selecciona la dirección precedente."
+      - keys: "FLECHA ABAJO"
+        condition: "Una celda/label está seleccionada"
+        description: "Selecciona la siguiente dirección."
+      - keys: "SHIFT + FLECHA ARRIBA"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Todas las celdas por encima de la dirección seleccionada (incluida) se desplazan hacia arriba de uno.
+          El contenido de la primera dirección se pierde y se ingresa "NOP" en la dirección seleccionada.
+      - keys: "SHIFT + FLECHA ABAJO"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Todas las celdas por encima de la dirección seleccionada (no incluida) se desplazan hacia abajo de uno.
+          El contenido de la dirección seleccionada se pierde y se ingresa "NOP" en la primera dirección.
+      - keys: "CTRL + FLECHA ARRIBA"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Todas las celdas por debajo de la dirección seleccionada (no incluida) se desplazan hacia arriba de uno.
+          El contenido de la dirección seleccionada se pierde y se ingresa "NOP" en la última dirección.
+      - keys: "CTRL + FLECHA ABAJO"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Todas las celdas por debajo de la dirección seleccionada (incluida) se desplazan hacia abajo de uno.
+          El contenido de la última dirección se pierde y se ingresa "NOP" en la dirección seleccionada.
