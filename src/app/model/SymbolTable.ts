@@ -2,7 +2,7 @@ import CheckedError from "../errors/CheckedError"
 import text from "../store/text"
 import { derived, Readable, writable, Writable } from "../util/customStores"
 import { validateLabel } from "../util/label"
-import { FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ram"
+import { addressToIndex, FIRST_ADDRESS, isValidAddress, LAST_ADDRESS } from "../util/ram"
 import { WORD_SIZE } from "../util/cpu"
 
 /** Event fired when a label is edited (not fired when the label is removed) */
@@ -255,6 +255,32 @@ export default class SymbolTable {
 			if (address > shiftAddress) {
 				this.notifyLabelMovedListeners(label, address - WORD_SIZE, address)
 			}
+		}
+	}
+
+	/**
+	 * Swap the content of two addresses
+	 * @param {number} a
+	 * @param {number} b
+	 */
+	swapAddresses(a: number, b: number): void {
+		if (!isValidAddress(a)) {
+			throw new Error("Invalid address: " + a)
+		}
+		if (!isValidAddress(b)) {
+			throw new Error("Invalid address: " + b)
+		}
+		const oldState = this._labels.get()
+		let newState = [...oldState]
+		const tmp = newState[a]
+		newState[a] = newState[b]
+		newState[b] = tmp
+		this._labels.set(newState)
+		if (oldState[a] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelMovedListeners(oldState[a], a, b)
+		}
+		if (oldState[b] !== SymbolTable.NO_LABEL) {
+			this.notifyLabelMovedListeners(oldState[b], b, a)
 		}
 	}
 

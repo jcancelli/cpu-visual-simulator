@@ -201,6 +201,26 @@ export default class Ram {
 		this._instructions.set(newState)
 	}
 
+	/**
+	 * Swap the content of two addresses
+	 * @param {number} a
+	 * @param {number} b
+	 */
+	swapAddresses(a: number, b: number): void {
+		if (!isValidAddress(a)) {
+			throw new Error("Invalid address: " + a)
+		}
+		if (!isValidAddress(b)) {
+			throw new Error("Invalid address: " + b)
+		}
+		const oldState = this._instructions.get()
+		let newState = [...oldState]
+		const tmp = newState[a]
+		newState[a] = newState[b]
+		newState[b] = tmp
+		this._instructions.set(newState)
+	}
+
 	*[Symbol.iterator]() {
 		const instructions = this._instructions.get()
 		for (let address = FIRST_ADDRESS; address <= LAST_ADDRESS; address += WORD_SIZE) {
