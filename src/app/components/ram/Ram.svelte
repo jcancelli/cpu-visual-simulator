@@ -11,7 +11,6 @@
 	import text from "../../store/text"
 	import Ram from "../../model/Ram"
 	import SymbolTable from "../../model/SymbolTable"
-	import { exportProgram, parseProgram } from "../../util/programParser"
 
 	export let ram: Ram
 	export let symbolTable: SymbolTable
@@ -19,11 +18,8 @@
 
 	const VISIBLE_CELLS = 18
 
-	const instructions = ram.instructions
-	const labels = symbolTable.labels
-
-	let beforeUpdateCallbacks: (() => void)[] = []
-	let afterUpdateCallbacks: (() => void)[] = []
+	const instructionsStore = ram.instructions
+	const labelsStore = symbolTable.labels
 
 	let firstVisibleAddress: number = FIRST_ADDRESS
 	let lastVisibleAddress: number
@@ -35,29 +31,12 @@
 
 	updateVisibleAddresses()
 
-	beforeUpdate(() => {
-		beforeUpdateCallbacks.forEach(callback => callback())
-		beforeUpdateCallbacks = []
-	})
-
-	afterUpdate(() => {
-		afterUpdateCallbacks.forEach(callback => callback())
-		afterUpdateCallbacks = []
-	})
-
-	export function scrollUp(): void {
-		scroll(-1, true)
+	export async function scrollUp(): Promise<void> {
+		return scroll(-1, true)
 	}
 
-	export function scrollDown(): void {
-		scroll(1, true)
-	}
-
-	export function addressIsVisible(address: number): boolean {
-		if (!isValidAddress(address)) {
-			throw new Error("Invalid address")
-		}
-		return address >= firstVisibleAddress && address <= lastVisibleAddress
+	export async function scrollDown(): Promise<void> {
+		return scroll(1, true)
 	}
 
 	export async function showAddress(address: number): Promise<void> {
@@ -73,10 +52,14 @@
 			tmpFirstAddress -= tmpLastAddress - LAST_ADDRESS
 		}
 		firstVisibleAddress = tmpFirstAddress
-		updateVisibleAddresses()
-		return new Promise<void>((resolve, reject) => {
-			afterUpdateCallbacks.push(resolve)
-		})
+		return updateVisibleAddresses()
+	}
+
+	export function addressIsVisible(address: number): boolean {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		return address >= firstVisibleAddress && address <= lastVisibleAddress
 	}
 
 	export async function flashAddress(address: number): Promise<void> {
@@ -84,9 +67,9 @@
 			throw new Error("Invalid address")
 		}
 		if (!animationsEnabled) return
-		return showAddress(address)
-			.then(async () => await tick())
-			.then(() => addressElements.find(addressElement => addressElement?.getAddress?.() === address)?.flash())
+		return showAddress(address).then(() =>
+			addressElements.find(addressElement => addressElement?.getAddress?.() === address)?.flash()
+		)
 	}
 
 	export async function flashContent(address: number): Promise<void> {
@@ -94,14 +77,31 @@
 			throw new Error("Invalid address")
 		}
 		if (!animationsEnabled) return
-		return showAddress(address)
-			.then(async () => await tick())
-			.then(() => cellElements.find(cellElement => cellElement?.getAddress?.() === address)?.flash()) // sometimes throws a "cellElement.getAddress() is not a function" error, idk why, therefore the "?." operator. Don't even kwon how to replicate the error
+		return showAddress(address).then(() =>
+			cellElements.find(cellElement => cellElement?.getAddress?.() === address)?.flash()
+		) // sometimes throws a "cellElement.getAddress() is not a function" error, idk why, therefore the "?." operator. Don't even kwon how to replicate the error
 	}
 
-	function scroll(deltaY: number, deselect: boolean): void {
+	export async function selectCell(address: number): Promise<void> {
+		if (!isValidAddress(address)) {
+			throw new Error("Invalid address")
+		}
+		await showAddress(address)
+		return ramSelection.select(address)
+	}
+
+	async function updateVisibleAddresses(): Promise<void> {
+		lastVisibleAddress = firstVisibleAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
+		visibleAddresses = []
+		for (let i = firstVisibleAddress, j = 0; i <= lastVisibleAddress; i += WORD_SIZE, j++) {
+			visibleAddresses[j] = i
+		}
+		return tick()
+	}
+
+	async function scroll(deltaY: number, deselect: boolean): Promise<void> {
 		if (deselect) {
-			beforeUpdateCallbacks.push(ramSelection.deselect)
+			await ramSelection.deselect()
 		}
 		let newFirstVisibleAddress = firstVisibleAddress + (deltaY > 0 ? WORD_SIZE : -WORD_SIZE)
 		if (newFirstVisibleAddress < FIRST_ADDRESS) {
@@ -111,51 +111,89 @@
 			newFirstVisibleAddress = LAST_ADDRESS - (VISIBLE_CELLS - 1) * WORD_SIZE
 		}
 		firstVisibleAddress = newFirstVisibleAddress
-		updateVisibleAddresses()
+		return updateVisibleAddresses()
 	}
 
-	function onWheel({ deltaY }: WheelEvent): void {
-		scroll(deltaY, true)
-	}
+	async function onArrowUp(e: KeyboardEvent): Promise<void> {
+		const selectedAddress = $ramSelection.address
+		const selectedColumn = $ramSelection.column
+		const prevAddress = selectedAddress - WORD_SIZE
 
-	function onArrowUp(e: KeyboardEvent): void {
 		if (ramSelection.noSelection()) {
 			return
 		}
 		if (e.ctrlKey) {
-			ram.moveSecondHalfUpFromAddress($ramSelection.address)
-			symbolTable.moveSecondHalfUpFromAddress($ramSelection.address)
+			await ramSelection.deselect()
+			ram.moveSecondHalfUpFromAddress(selectedAddress)
+			symbolTable.moveSecondHalfUpFromAddress(selectedAddress)
+			await showAddress(selectedAddress)
+			await ramSelection.select(selectedAddress, selectedColumn)
 			return
 		}
 		if (e.shiftKey) {
-			ram.moveFirstHalfUpFromAddress($ramSelection.address)
-			symbolTable.moveFirstHalfUpFromAddress($ramSelection.address)
+			await ramSelection.deselect()
+			ram.moveFirstHalfUpFromAddress(selectedAddress)
+			symbolTable.moveFirstHalfUpFromAddress(selectedAddress)
+			if (isValidAddress(prevAddress)) {
+				await showAddress(prevAddress)
+				await ramSelection.select(prevAddress, selectedColumn)
+			}
 			return
 		}
-		if ($ramSelection.address === firstVisibleAddress) {
-			scroll(-1, false)
+		if (e.altKey && isValidAddress(prevAddress)) {
+			await ramSelection.deselect()
+			ram.swapAddresses(selectedAddress, prevAddress)
+			symbolTable.swapAddresses(selectedAddress, prevAddress)
+			await showAddress(prevAddress)
+			await ramSelection.select(prevAddress, selectedColumn)
+			return
 		}
-		ramSelection.selectUp()
+		if (isValidAddress(prevAddress)) {
+			await showAddress(prevAddress)
+			await ramSelection.select(prevAddress, selectedColumn)
+			return
+		}
 	}
 
-	function onArrowDown(e: KeyboardEvent): void {
+	async function onArrowDown(e: KeyboardEvent): Promise<void> {
+		const selectedAddress = $ramSelection.address
+		const selectedColumn = $ramSelection.column
+		const nextAddress = selectedAddress + WORD_SIZE
+
 		if (ramSelection.noSelection()) {
 			return
 		}
 		if (e.ctrlKey) {
-			ram.moveSecondHalfDownFromAddress($ramSelection.address)
-			symbolTable.moveSecondHalfDownFromAddress($ramSelection.address)
+			await ramSelection.deselect()
+			ram.moveSecondHalfDownFromAddress(selectedAddress)
+			symbolTable.moveSecondHalfDownFromAddress(selectedAddress)
+			if (isValidAddress(nextAddress)) {
+				await showAddress(nextAddress)
+				await ramSelection.select(nextAddress, selectedColumn)
+			}
 			return
 		}
 		if (e.shiftKey) {
-			ram.moveFirstHalfDownFromAddress($ramSelection.address)
-			symbolTable.moveFirstHalfDownFromAddress($ramSelection.address)
+			await ramSelection.deselect()
+			ram.moveFirstHalfDownFromAddress(selectedAddress)
+			symbolTable.moveFirstHalfDownFromAddress(selectedAddress)
+			await showAddress(nextAddress)
+			await ramSelection.select(selectedAddress, selectedColumn)
 			return
 		}
-		if ($ramSelection.address === lastVisibleAddress) {
-			scroll(1, false)
+		if (e.altKey && isValidAddress(nextAddress)) {
+			await ramSelection.deselect()
+			ram.swapAddresses(selectedAddress, nextAddress)
+			symbolTable.swapAddresses(selectedAddress, nextAddress)
+			await showAddress(nextAddress)
+			await ramSelection.select(nextAddress, selectedColumn)
+			return
 		}
-		ramSelection.selectDown()
+		if (isValidAddress(nextAddress)) {
+			await showAddress(nextAddress)
+			await ramSelection.select(nextAddress, selectedColumn)
+			return
+		}
 	}
 
 	function onEnter(e: KeyboardEvent): void {
@@ -164,6 +202,11 @@
 		} else {
 			ramSelection.deselect()
 		}
+	}
+
+	function onClearButtonPressed() {
+		ram.clear()
+		symbolTable.clear()
 	}
 
 	function subscribeRamKeysListener(node: HTMLElement) {
@@ -187,19 +230,6 @@
 			}
 		}
 	}
-
-	function updateVisibleAddresses(): void {
-		lastVisibleAddress = firstVisibleAddress + (VISIBLE_CELLS - 1) * WORD_SIZE
-		visibleAddresses = []
-		for (let i = firstVisibleAddress, j = 0; i <= lastVisibleAddress; i += WORD_SIZE, j++) {
-			visibleAddresses[j] = i
-		}
-	}
-
-	function clear() {
-		ram.clear()
-		symbolTable.clear()
-	}
 </script>
 
 <div
@@ -207,13 +237,13 @@
 	use:subscribeRamKeysListener
 >
 	<ComponentLabel text="RAM" fontSize="LARGE" top="-30px" right="0" />
-	<div class="flex" on:wheel={onWheel}>
+	<div class="flex" on:wheel={({ deltaY }) => scroll(deltaY, true)}>
 		<div class="flex flex-col items-end justify-center">
 			{#each visibleAddresses as address, i (address)}
 				<Label
 					{symbolTable}
 					{address}
-					label={$labels[address]}
+					label={$labelsStore[address]}
 					isSelected={$ramSelection.address === address && $ramSelection.column === "LABEL"}
 					bind:this={labelElements[i]}
 					isFirstLabel={address === firstVisibleAddress}
@@ -235,7 +265,7 @@
 					<Cell
 						{symbolTable}
 						{address}
-						instruction={$instructions[address]}
+						instruction={$instructionsStore[address]}
 						isSelected={$ramSelection.address === address && $ramSelection.column === "CELL"}
 						bind:this={cellElements[i]}
 						class="
@@ -248,6 +278,8 @@
 		</div>
 	</div>
 	<div class="flex">
-		<Button on:click={clear} title={$text.ram.buttons.clear.title}>{$text.ram.buttons.clear.text}</Button>
+		<Button on:click={onClearButtonPressed} title={$text.ram.buttons.clear.title}
+			>{$text.ram.buttons.clear.text}</Button
+		>
 	</div>
 </div>
