@@ -141,3 +141,11 @@ shortcuts_table:
         description: |
           All cells below the selected address (included) are shifted down by one. The content of the last
           address is lost and "NOP" is inserted at the selected address.
+      - keys: "ALT + ARROW UP"
+        condition: "A cell/label is selected"
+        description: |
+          Swap the content of the selected address with the content of the previous address.
+      - keys: "ALT + ARROW DOWN"
+        condition: "A cell/label is selected"
+        description: |
+          Swap the content of the selected address with the content of the following address.

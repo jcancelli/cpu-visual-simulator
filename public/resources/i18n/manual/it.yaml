@@ -117,31 +117,39 @@ shortcuts_table:
       - keys: "ENTER"
         condition: "Una cella/label è selezionata"
         description: "Salva il contenuto della cella selezionata nella RAM."
-      - keys: "ARROW UP"
+      - keys: "FRECCIA SU"
         condition: "Una cella/label è selezionata"
         description: "Seleziona l'indirizzo precedente."
-      - keys: "ARROW DOWN"
+      - keys: "FRECCIA GIÙ"
         condition: "Una cella/label è selezionata"
         description: "Seleziona l'indirizzo successivo."
-      - keys: "SHIFT + ARROW UP"
+      - keys: "SHIFT + FRECCIA SU"
         condition: "Una cella/label è selezionata"
         description: |
           Tutte le celle sopra l'indirizzo selezionato (compreso) sono spostate in alto di uno.
           Il contenuto del primo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
-      - keys: "SHIFT + ARROW DOWN"
+      - keys: "SHIFT + FRECCIA GIÙ"
         condition: "Una cella/label è selezionata"
         description: |
           Tutte le celle sopra l'indirizzo selezionato (non compreso) sono spostate in basso di uno.
           Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito al primo
           indirizzo.
-      - keys: "CTRL + ARROW UP"
+      - keys: "CTRL + FRECCIA SU"
         condition: "Una cella/label è selezionata"
         description: |
           Tutte le celle sotto l'indirizzo selezionato (non compreso) sono spostate in alto di uno.
           Il contenuto dell'indirizzo selezionato viene perso e "NOP" viene inserito all'utlimo
           indirizzo.
-      - keys: "CTRL + ARROW DOWN"
+      - keys: "CTRL + FRECCIA GIÙ"
         condition: "Una cella/label è selezionata"
         description: |
           Tutte le celle sotto l'indirizzo selezionato (compreso) sono spostate in basso di uno.
           Il contenuto dell'ultimo indirizzo viene perso e "NOP" viene inserito all'indirizzo selezionato.
+      - keys: "ALT + FRECCIA SU"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Scambia il contenuto dell'indirizzo selezionato con il contenuto dell'indirizzo precedente.
+      - keys: "ALT + FRECCIA GIÙ"
+        condition: "Una cella/label è selezionata"
+        description: |
+          Scambia il contenuto dell'indirizzo selezionato con il contenuto dell'indirizzo successivo.

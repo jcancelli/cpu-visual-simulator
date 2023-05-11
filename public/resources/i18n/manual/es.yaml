@@ -141,3 +141,11 @@ shortcuts_table:
         description: |
           Todas las celdas por debajo de la dirección seleccionada (incluida) se desplazan hacia abajo de uno.
           El contenido de la última dirección se pierde y se ingresa "NOP" en la dirección seleccionada.
+      - keys: "ALT + FLECHA ARRIBA"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Intercambia el contenido de la dirección seleccionada con el contenido de la dirección anterior.
+      - keys: "ALT + FLECHA ABAJO"
+        condition: "Una celda/label está seleccionada"
+        description: |
+          Intercambia el contenido de la dirección seleccionada con el contenido de la siguiente dirección.
