@@ -5,7 +5,6 @@ const queueTask = setInterval
 
 /** Allows to execute/pause/resume a loop without hogging the execution stack. */
 export default class AsyncLoopExecutor {
-	
 	private loop: AsyncLoop
 	private _isRunning: boolean
 
@@ -38,12 +37,11 @@ export default class AsyncLoopExecutor {
 	/** Execute one cycle of the loop */
 	private async cycle(): Promise<void> {
 		const keepRunning = await this.loop.cycle()
-		
+
 		if (this._isRunning && keepRunning) {
 			queueTask(this.cycle.bind(this))
 		} else {
 			this._isRunning = false
 		}
 	}
-
 }
