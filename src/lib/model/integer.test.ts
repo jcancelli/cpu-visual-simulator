@@ -1,12 +1,18 @@
 import { describe, expect, test } from "vitest"
-import { isInRangeSigned, isInRangeUnsigned, RANGES, signedToUnsigned, unsignedToSigned } from "./integer"
+import Integer, {
+	isInRangeSigned,
+	isInRangeUnsigned,
+	RANGES,
+	signedToUnsigned,
+	unsignedToSigned,
+} from "./integer"
 
 const SIZES = [8, 16, 32] as const
 
 describe("isInRangeSigned", () => {
 	for (const size of SIZES) {
 		const RANGE = RANGES.signed[size]
-		describe(`${size} bit range`, () => {
+		describe(`${size} bit`, () => {
 			describe("Given a value out of the signed range", () => {
 				test("Too low", () => {
 					const lowValue = RANGE.lower - 1
@@ -38,7 +44,7 @@ describe("isInRangeSigned", () => {
 describe("isInRangeUnigned", () => {
 	for (const size of SIZES) {
 		const RANGE = RANGES.unsigned[size]
-		describe(`${size} bit range`, () => {
+		describe(`${size} bit`, () => {
 			describe("Given a value out of the unsigned range", () => {
 				test("Too low", () => {
 					const lowValue = RANGE.lower - 1
@@ -70,8 +76,8 @@ describe("isInRangeUnigned", () => {
 describe("signedToUnsigned", () => {
 	for (const size of SIZES) {
 		const RANGE = RANGES.signed[size]
-		describe(`${size} bit range`, () => {
-			describe("Given a value out of the signed range", () => {
+		describe(`${size} bit`, () => {
+			describe("Given a value out of the signed range throws error", () => {
 				test("Too low", () => {
 					const lowValue = RANGE.lower - 1
 					expect(() => signedToUnsigned(lowValue, size)).toThrowError()
@@ -97,7 +103,7 @@ describe("signedToUnsigned", () => {
 					expect(signedToUnsigned(0, size)).toBe(0)
 				})
 			})
-			test("Given a value which isn't an integer", () => {
+			test("Given a value which isn't an integer throws error", () => {
 				expect(() => signedToUnsigned(RANGE.upper - 0.2, size)).toThrowError()
 			})
 		})
@@ -107,8 +113,8 @@ describe("signedToUnsigned", () => {
 describe("unsignedToSigned", () => {
 	for (const size of SIZES) {
 		const RANGE = RANGES.unsigned[size]
-		describe(`${size} bit range`, () => {
-			describe("Given a value out of the unsigned range", () => {
+		describe(`${size} bit`, () => {
+			describe("Given a value out of the unsigned range throws error", () => {
 				test("Too low", () => {
 					const lowValue = RANGE.lower - 1
 					expect(() => unsignedToSigned(lowValue, size)).toThrowError()
@@ -135,8 +141,78 @@ describe("unsignedToSigned", () => {
 					expect(unsignedToSigned(RANGE.upper, size)).toBe(-1)
 				})
 			})
-			test("Given a value which isn't an integer", () => {
+			test("Given a value which isn't an integer throws error", () => {
 				expect(() => unsignedToSigned(RANGE.upper - 0.2, size)).toThrowError()
+			})
+		})
+	}
+})
+
+describe("Integer", () => {
+	for (const size of SIZES) {
+		const unsigned = RANGES.unsigned[size]
+		const signed = RANGES.signed[size]
+
+		describe(`${size} bit`, () => {
+			describe("constructor", () => {
+				describe("Value out of unsigned range throws error", () => {
+					test("Too low", () => {
+						expect(() => new Integer(size, unsigned.lower - 1)).toThrowError()
+					})
+					test("Too high", () => {
+						expect(() => new Integer(size, unsigned.upper + 1)).toThrowError()
+					})
+				})
+				test("Value is not an integer throws", () => {
+					expect(() => new Integer(size, unsigned.upper - 0.2)).toThrowError()
+				})
+				describe("Value in range", () => {
+					test("Min unsigned", () => {
+						expect(new Integer(size, unsigned.lower))
+					})
+					test("Max unsigned", () => {
+						expect(new Integer(size, unsigned.upper))
+					})
+				})
+			})
+
+			describe("signed", () => {
+				test("Min unsigned should stay 0", () => {
+					expect(new Integer(size, unsigned.lower).signed()).toBe(0)
+				})
+				test("Max unsigned should become -1", () => {
+					expect(new Integer(size, unsigned.upper).signed()).toBe(-1)
+				})
+				test("Max signed + 1 should become min signed", () => {
+					expect(new Integer(size, signed.upper + 1).signed()).toBe(signed.lower)
+				})
+				test("Max signed should stay max signed", () => {
+					expect(new Integer(size, signed.upper).signed()).toBe(signed.upper)
+				})
+			})
+
+			describe("unsigned", () => {
+				test("Min unsigned should stay min unsigned", () => {
+					expect(new Integer(size, unsigned.lower).unsigned()).toBe(unsigned.lower)
+				})
+				test("Max unsigned should stay max unsigned", () => {
+					expect(new Integer(size, unsigned.upper).unsigned()).toBe(unsigned.upper)
+				})
+			})
+
+			describe("toBinaryString", () => {
+				const allZeroes = new Integer(size, unsigned.lower).toBinaryString()
+				const allOnes = new Integer(size, unsigned.upper).toBinaryString()
+
+				test("String is 'size' long", () => {
+					expect(allZeroes.length).toBe(size)
+					expect(allOnes.length).toBe(size)
+				})
+
+				test("String is correct", () => {
+					expect(allZeroes).toBe("0".repeat(size))
+					expect(allOnes).toBe("1".repeat(size))
+				})
 			})
 		})
 	}
