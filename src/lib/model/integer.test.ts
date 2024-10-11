@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { isInRangeSigned, isInRangeUnsigned, RANGES, signedToUnsigned } from "./integer"
+import { isInRangeSigned, isInRangeUnsigned, RANGES, signedToUnsigned, unsignedToSigned } from "./integer"
 
 const SIZES = [8, 16, 32] as const
 
@@ -99,6 +99,44 @@ describe("signedToUnsigned", () => {
 			})
 			test("Given a value which isn't an integer", () => {
 				expect(() => signedToUnsigned(RANGE.upper - 0.2, size)).toThrowError()
+			})
+		})
+	}
+})
+
+describe("unsignedToSigned", () => {
+	for (const size of SIZES) {
+		const RANGE = RANGES.unsigned[size]
+		describe(`${size} bit range`, () => {
+			describe("Given a value out of the unsigned range", () => {
+				test("Too low", () => {
+					const lowValue = RANGE.lower - 1
+					expect(() => unsignedToSigned(lowValue, size)).toThrowError()
+				})
+				test("Too high", () => {
+					const highValue = RANGE.upper + 1
+					expect(() => unsignedToSigned(highValue, size)).toThrowError()
+				})
+			})
+			describe("Given a value inside of the unsigned range", () => {
+				test("Lowest unsigned should stay 0", () => {
+					expect(unsignedToSigned(RANGE.lower, size)).toBe(0)
+				})
+				test("Highest signed should stay the same", () => {
+					const maxSigned = RANGES.signed[size].upper
+					expect(unsignedToSigned(maxSigned, size)).toBe(maxSigned)
+				})
+				test("Highest signed + 1 should become lowest signed", () => {
+					const maxSigned = RANGES.signed[size].upper
+					const minSigned = RANGES.signed[size].lower
+					expect(unsignedToSigned(maxSigned + 1, size)).toBe(minSigned)
+				})
+				test("Max unsigned should become -1", () => {
+					expect(unsignedToSigned(RANGE.upper, size)).toBe(-1)
+				})
+			})
+			test("Given a value which isn't an integer", () => {
+				expect(() => unsignedToSigned(RANGE.upper - 0.2, size)).toThrowError()
 			})
 		})
 	}
