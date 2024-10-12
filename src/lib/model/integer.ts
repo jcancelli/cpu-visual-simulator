@@ -40,7 +40,7 @@ export default class Integer {
 	 * */
 	constructor(
 		protected readonly size: Size,
-		protected readonly unsignedValue: number
+		protected readonly unsignedValue: number = 0
 	) {
 		if (!isInRangeUnsigned(unsignedValue, size)) {
 			throw new Error(`Value ${unsignedValue} out of ${size} bit unsigned range`)
