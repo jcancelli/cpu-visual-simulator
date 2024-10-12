@@ -32,7 +32,7 @@ export const RANGES = {
 /** Allowed Value sizes in bits */
 export type Size = 8 | 16 | 32
 
-/** Represents a fixed size integer */
+/** Represents a fixed size integer. Instances of this class should be consifered immutable */
 export default class Integer {
 	/**
 	 * @param size - Size in bits of the value
@@ -93,7 +93,7 @@ export default class Integer {
 	 * */
 	bit(i: number): boolean {
 		const shift = i >= 0 ? this.sizeBits() - 1 - i : Math.abs(i) - 1
-		if (shift >= this.sizeBits()) {
+		if (shift >= this.sizeBits() || shift < 0) {
 			throw new Error(`Invalid bit position ${i} for integer of size ${this.sizeBits()}`)
 		}
 		return ((this.unsigned() >> shift) & 1) === 1
