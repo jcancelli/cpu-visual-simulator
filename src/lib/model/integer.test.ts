@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest"
 import Integer, {
+	RANGES,
 	isInRangeSigned,
 	isInRangeUnsigned,
-	RANGES,
 	signedToUnsigned,
 	unsignedToSigned,
 } from "./integer"
@@ -150,10 +150,10 @@ describe("unsignedToSigned", () => {
 
 describe("Integer", () => {
 	for (const size of SIZES) {
-		const unsigned = RANGES.unsigned[size]
-		const signed = RANGES.signed[size]
-
 		describe(`${size} bit`, () => {
+			const unsigned = RANGES.unsigned[size]
+			const signed = RANGES.signed[size]
+
 			describe("constructor", () => {
 				describe("Value out of unsigned range throws error", () => {
 					test("Too low", () => {
@@ -203,15 +203,71 @@ describe("Integer", () => {
 			describe("toBinaryString", () => {
 				const allZeroes = new Integer(size, unsigned.lower).toBinaryString()
 				const allOnes = new Integer(size, unsigned.upper).toBinaryString()
+				const oneZeroOne = new Integer(size, parseInt("10".repeat(size / 2), 2)).toBinaryString() // should be "101010.."
 
 				test("String is 'size' long", () => {
 					expect(allZeroes.length).toBe(size)
 					expect(allOnes.length).toBe(size)
+					expect(oneZeroOne.length).toBe(size)
 				})
 
 				test("String is correct", () => {
 					expect(allZeroes).toBe("0".repeat(size))
 					expect(allOnes).toBe("1".repeat(size))
+					expect(oneZeroOne).toBe("10".repeat(size / 2))
+				})
+			})
+
+			test("toSignedDecimalString", () => {
+				expect(new Integer(size, unsigned.lower).toSignedDecimalString()).toBe("0")
+				expect(new Integer(size, signed.upper).toSignedDecimalString()).toBe(
+					signed.upper.toString()
+				)
+				expect(new Integer(size, signed.upper + 1).toSignedDecimalString()).toBe(
+					signed.lower.toString()
+				)
+				expect(new Integer(size, unsigned.upper).toSignedDecimalString()).toBe("-1")
+			})
+
+			test("toSignedDecimalString", () => {
+				expect(new Integer(size, unsigned.lower).toUnsignedDecimalString()).toBe(
+					unsigned.lower.toString()
+				)
+				expect(new Integer(size, unsigned.upper).toUnsignedDecimalString()).toBe(
+					unsigned.upper.toString()
+				)
+			})
+
+			test("sizeBits", () => {
+				expect(new Integer(size).sizeBits()).toBe(size)
+			})
+
+			test("sizeBytes", () => {
+				expect(new Integer(size).sizeBytes()).toBe(size / 8)
+			})
+
+			describe("bit", () => {
+				describe("positive bit position", () => {
+					test("invalid position throws error", () => {
+						expect(() => new Integer(size).bit(size)).toThrowError()
+					})
+					test("valid position", () => {
+						expect(new Integer(size, (1 << (size - 1)) >>> 0).bit(0)).toBe(true)
+						expect(new Integer(size, 1 << (size - 2)).bit(0)).toBe(false)
+						expect(new Integer(size, 1).bit(size - 1)).toBe(true)
+						expect(new Integer(size, 0b10).bit(size - 1)).toBe(false)
+					})
+				})
+				describe("negative bit position", () => {
+					test("invalid position throws error", () => {
+						expect(() => new Integer(size).bit(-size - 1)).toThrowError()
+					})
+					test("valid position", () => {
+						expect(new Integer(size, (1 << (size - 1)) >>> 0).bit(-size)).toBe(true)
+						expect(new Integer(size, 1 << (size - 2)).bit(-size)).toBe(false)
+						expect(new Integer(size, 1).bit(-1)).toBe(true)
+						expect(new Integer(size, 0b10).bit(-1)).toBe(false)
+					})
 				})
 			})
 		})
