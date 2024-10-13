@@ -1,7 +1,7 @@
 import {
 	NotAnIntegerError,
-	OutOfSignedRangeError,
-	OutOfUnsignedRangeError,
+	IntegerOutOfSignedRangeError,
+	IntegerOutOfUnsignedRangeError,
 } from "$lib/errors/integer_errors"
 
 export const RANGES = {
@@ -49,7 +49,7 @@ export default class Integer {
 		protected readonly unsignedValue: number = 0
 	) {
 		if (!isInRangeUnsigned(unsignedValue, size)) {
-			throw new OutOfUnsignedRangeError(size, unsignedValue)
+			throw new IntegerOutOfUnsignedRangeError(size, unsignedValue)
 		}
 		if (!Number.isInteger(unsignedValue)) {
 			throw new NotAnIntegerError(unsignedValue)
@@ -171,7 +171,7 @@ export function isInRangeUnsigned(value: number, size: Size): boolean {
 /** Cast a signed integer to an unsigned integer if possible, otherwise throws an error */
 export function signedToUnsigned(value: number, size: Size): number {
 	if (!isInRangeSigned(value, size)) {
-		throw new OutOfSignedRangeError(size, value)
+		throw new IntegerOutOfSignedRangeError(size, value)
 	}
 	if (!Number.isInteger(value)) {
 		throw new NotAnIntegerError(value)
@@ -188,7 +188,7 @@ function signedToUnsignedUnchecked(value: number, size: Size): number {
 /** Cast an unsigned integer to an signed integer if possible, otherwise throws an error */
 export function unsignedToSigned(value: number, size: Size): number {
 	if (!isInRangeUnsigned(value, size)) {
-		throw new OutOfUnsignedRangeError(size, value)
+		throw new IntegerOutOfUnsignedRangeError(size, value)
 	}
 	if (!Number.isInteger(value)) {
 		throw new NotAnIntegerError(value)
