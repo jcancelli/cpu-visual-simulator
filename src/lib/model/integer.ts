@@ -1,3 +1,9 @@
+import {
+	NotAnIntegerError,
+	OutOfSignedRangeError,
+	OutOfUnsignedRangeError,
+} from "$lib/errors/integer_errors"
+
 export const RANGES = {
 	signed: {
 		8: {
@@ -43,10 +49,10 @@ export default class Integer {
 		protected readonly unsignedValue: number = 0
 	) {
 		if (!isInRangeUnsigned(unsignedValue, size)) {
-			throw new Error(`Value ${unsignedValue} out of ${size} bit unsigned range`)
+			throw new OutOfUnsignedRangeError(size, unsignedValue)
 		}
 		if (!Number.isInteger(unsignedValue)) {
-			throw new Error(`Cannot create integer from non-integer parameter`)
+			throw new NotAnIntegerError(unsignedValue)
 		}
 	}
 
@@ -65,6 +71,17 @@ export default class Integer {
 		const leastSignificantBits = (this.unsigned() >>> 0).toString(2)
 		const mostSignificantBits = "0".repeat(this.sizeBits() - leastSignificantBits.length)
 		return mostSignificantBits.concat(leastSignificantBits)
+	}
+
+	/** Return a string containing the base-16 representation of the integer */
+	toHexadecimalString(): string {
+		const hexString = (this.unsigned() >>> 0).toString(16)
+		// make sure to crop out all leading "f"s if the number was negative
+		const substringStartIndex = Math.max(0, hexString.length - this.sizeBits() / 4)
+		const leastSignificantDigits = hexString.substring(substringStartIndex)
+		const paddingZerosCount = this.sizeBits() / 4 - leastSignificantDigits.length
+		const mostSignificantDigits = "0".repeat(paddingZerosCount)
+		return mostSignificantDigits.concat(leastSignificantDigits)
 	}
 
 	/** Returns a string containing the decimal representation of the integer as a signed value */
@@ -98,6 +115,47 @@ export default class Integer {
 		}
 		return ((this.unsigned() >> shift) & 1) === 1
 	}
+
+	/** Creates an integer from a signed value */
+	static fromSignedNumber(size: Size, value: number): Integer {
+		// signedToUnsigned already provides validation
+		return new Integer(size, signedToUnsigned(value, size))
+	}
+
+	/** Creates an integer from an unsigned value */
+	static fromUnsignedNumber(size: Size, value: number): Integer {
+		// constructor already provides validation
+		return new Integer(size, value)
+	}
+
+	/** Creates an integer by parsing a signed value from a string */
+	static fromSignedString(size: Size, str: string): Integer {
+		// validation provided by parseInt and fromSignedNumber
+		const value = parseInt(str)
+		return Integer.fromSignedNumber(size, value)
+	}
+
+	/** Creates an integer by parsing an unsigned value from a string */
+	static fromUnsignedString(size: Size, str: string): Integer {
+		// validation provided by parseInt and fromUnsignedNumber
+		const value = parseInt(str)
+		return Integer.fromUnsignedNumber(size, value)
+	}
+
+	/**
+	 * Creates an integer by parsing a string containing a base-2 representation of a number.
+	 * Negative numbers must not contain the "-" character but will have to represented with two's
+	 * complement
+	 * */
+	static fromBinaryString(size: Size, str: string): Integer {
+		// negative numbers should be expressed without "-"
+		if (str.includes("-")) {
+			throw new Error(`Character "-" not allowed in binary strings`)
+		}
+		// validation provided by parseInt and fromUnsignedNumber
+		const value = parseInt(str, 2)
+		return Integer.fromUnsignedNumber(size, value)
+	}
 }
 
 /** Return wether a value is in the "size" bits signed range */
@@ -113,10 +171,10 @@ export function isInRangeUnsigned(value: number, size: Size): boolean {
 /** Cast a signed integer to an unsigned integer if possible, otherwise throws an error */
 export function signedToUnsigned(value: number, size: Size): number {
 	if (!isInRangeSigned(value, size)) {
-		throw new Error(`Value ${value} out of ${size} bit signed range`)
+		throw new OutOfSignedRangeError(size, value)
 	}
 	if (!Number.isInteger(value)) {
-		throw new Error(`Value ${value} is not an integer`)
+		throw new NotAnIntegerError(value)
 	}
 	return signedToUnsignedUnchecked(value, size)
 }
@@ -130,10 +188,10 @@ function signedToUnsignedUnchecked(value: number, size: Size): number {
 /** Cast an unsigned integer to an signed integer if possible, otherwise throws an error */
 export function unsignedToSigned(value: number, size: Size): number {
 	if (!isInRangeUnsigned(value, size)) {
-		throw new Error(`Value ${value} out of ${size} bit unsigned range`)
+		throw new OutOfUnsignedRangeError(size, value)
 	}
 	if (!Number.isInteger(value)) {
-		throw new Error(`Value ${value} is not an integer`)
+		throw new NotAnIntegerError(value)
 	}
 	return unsignedToSignedUnchecked(value, size)
 }
