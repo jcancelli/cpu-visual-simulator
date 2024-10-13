@@ -273,3 +273,5 @@ describe("Integer", () => {
 		})
 	}
 })
+
+// TODO: Implement tests for toHexString and all static method "constructors"
