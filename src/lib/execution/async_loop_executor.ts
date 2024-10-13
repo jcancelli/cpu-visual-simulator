@@ -1,7 +1,7 @@
 import type AsyncLoop from "./async_loop"
 
 /** Queue a macro task for execution on the stack */
-const queueTask = setInterval
+const queueTask = setTimeout
 
 /** Allows to execute/pause/resume a loop without hogging the execution stack. */
 export default class AsyncLoopExecutor {
@@ -21,6 +21,7 @@ export default class AsyncLoopExecutor {
 		if (this._isRunning) {
 			return
 		}
+		this._isRunning = true
 		queueTask(this.cycle.bind(this))
 	}
 
@@ -36,6 +37,10 @@ export default class AsyncLoopExecutor {
 
 	/** Execute one cycle of the loop */
 	private async cycle(): Promise<void> {
+		if (!this._isRunning) {
+			return
+		}
+
 		const keepRunning = await this.loop.cycle()
 
 		if (this._isRunning && keepRunning) {
