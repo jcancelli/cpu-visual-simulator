@@ -1,7 +1,7 @@
 import { InvalidArgumentError } from "$lib/errors/util"
 
 /** Parameter object for the {@link import("./graph").WireGraph} constructor */
-export class NodeDeclaration {
+export class NodeBlueprint {
 	constructor(
 		/** ID of the node. Cannot be empty */
 		public readonly id: string,

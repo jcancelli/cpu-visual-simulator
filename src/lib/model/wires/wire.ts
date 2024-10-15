@@ -3,7 +3,7 @@ import type { Node } from "./node"
 import type { WireConfig } from "./wire_config"
 
 /** Parameter object used in the {@link Graph} constructor to declare a wire between two nodes */
-export class WireDeclaration {
+export class WireBlueprint {
 	constructor(
 		public readonly nodeA: string,
 		public readonly nodeB: string,

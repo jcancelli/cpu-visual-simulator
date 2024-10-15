@@ -1,13 +1,13 @@
 import { InvalidArgumentError } from "$lib/errors/util"
-import { Node, type NodeDeclaration } from "./node"
-import { Wire, type WireDeclaration } from "./wire"
-import { WireConfig, type WireConfigDeclaration } from "./wire_config"
+import { Node, type NodeBlueprint } from "./node"
+import { Wire, type WireBlueprint } from "./wire"
+import { WireConfig, type WireConfigBlueprint } from "./wire_config"
 
 /** Parameter object for the {@link WiresGraph} constructor */
-export type GraphDeclaration = {
-	nodes: NodeDeclaration[]
-	wires: WireDeclaration[]
-	wireConfigs: WireConfigDeclaration[]
+export type WireGraphBlueprint = {
+	nodes: NodeBlueprint[]
+	wires: WireBlueprint[]
+	wireConfigs: WireConfigBlueprint[]
 }
 
 /** Path between two {@link Node} objects inside a {@link WiresGraph} instance */
@@ -28,7 +28,7 @@ export default class WiresGraph {
 	private readonly wires: Map<string, Wire> = new Map()
 	private readonly wireConfigs: Map<string, WireConfig> = new Map()
 
-	constructor({ nodes, wires, wireConfigs }: GraphDeclaration) {
+	constructor({ nodes, wires, wireConfigs }: WireGraphBlueprint) {
 		for (const { id, x, y } of nodes) {
 			if (this.nodes.has(id)) {
 				throw new InvalidArgumentError(`Duplicate Node id: "${id}"`)
