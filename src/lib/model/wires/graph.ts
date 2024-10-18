@@ -101,6 +101,18 @@ export default class WiresGraph {
 		return this.wireConfigs.get(id) ?? null
 	}
 
+	/**
+	 * Return an array of sets of nodes. A node in each set is connected (directy/indirectly)
+	 * to every other node in the same set. Nodes in different sets do not share any connection */
+	getSubGraphs(): Set<Node>[] {
+		const subgraphs: Set<Node>[] = []
+		const visited: Set<Node> = new Set()
+		for (const node of this.getNodes()) {
+			getSubgraphRecursive(node, subgraphs, visited)
+		}
+		return subgraphs
+	}
+
 	/** Return the path between the two specified nodes. Throws an error if the path does not exist */
 	getPath(fromNodeID: string, toNodeID: string): Path {
 		if (!this.nodes.has(fromNodeID)) {
@@ -195,4 +207,35 @@ export default class WiresGraph {
 /** Return the string that represent a connection between the two specified nodes */
 function pathKey(fromNodeID: string, toNodeID: string): string {
 	return `<${fromNodeID}>:<${toNodeID}>`
+}
+
+/** Helper function to Graph.getSubgraphs */
+function getSubgraphRecursive(node: Node, subgraphs: Set<Node>[], visited: Set<Node>) {
+	if (visited.has(node)) {
+		mergeSubgraphsContainingNode(node, subgraphs)
+		return
+	}
+	subgraphs.push(new Set<Node>([node]))
+	visited.add(node)
+	for (const [_, neighbour] of node.neighbours) {
+		getSubgraphRecursive(neighbour, subgraphs, visited)
+	}
+}
+
+/** Finds all subgraphs containing the same node, removes them from the array and adds their union */
+function mergeSubgraphsContainingNode(node: Node, subgraphs: Set<Node>[]) {
+	const connectedSubgraphsIndexes: number[] = []
+	for (let i = 0; i < subgraphs.length; i++) {
+		if (subgraphs[i].has(node)) {
+			connectedSubgraphsIndexes.push(i)
+		}
+	}
+	const mergedSubgraph = new Set<Node>()
+	for (const i of connectedSubgraphsIndexes) {
+		for (const element of subgraphs[i]) {
+			mergedSubgraph.add(element)
+		}
+		subgraphs.splice(i, 1)
+	}
+	subgraphs.push(mergedSubgraph)
 }
