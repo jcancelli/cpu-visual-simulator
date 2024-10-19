@@ -1,17 +1,21 @@
 <script lang="ts">
 	import { setContext } from "svelte"
 	import Menu from "./Menu.svelte"
-	import { writable } from "svelte/store"
 	import { type DebugNodesOptions } from "./sections/Nodes.svelte"
+	import { persisted } from "svelte-persisted-store"
+	import { type MenuPosition } from "./sections/General.svelte"
 
 	export let active: boolean = false
 
-	setContext("debug", writable(active))
+	setContext("debug", persisted("debug", active))
+	// General
+	setContext("debug-menu-opacity", persisted("debug-menu-opacity", 0.75))
+	setContext("debug-menu-position", persisted<MenuPosition>("debug-menu-position", "top-right"))
 	// Nodes
-	setContext("debug-nodes", writable(false))
+	setContext("debug-nodes", persisted("debug-nodes", false))
 	setContext(
 		"debug-nodes-options",
-		writable<DebugNodesOptions>({
+		persisted<DebugNodesOptions>("debug-nodes-options", {
 			label: "always",
 			radius: 6,
 		})

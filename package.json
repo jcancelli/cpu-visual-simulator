@@ -40,6 +40,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"pixi.js": "^8.5.1"
+		"pixi.js": "^8.5.1",
+		"svelte-persisted-store": "^0.11.0"
 	}
 }
