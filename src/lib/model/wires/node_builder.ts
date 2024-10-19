@@ -1,5 +1,5 @@
 import { InvalidArgumentError } from "$lib/errors/util"
-import { NodeBlueprint } from "./node"
+import type { NodeBlueprint } from "./node"
 
 export default class NodeBuilder {
 	private _x: number = 0
@@ -17,7 +17,7 @@ export default class NodeBuilder {
 		}
 	}
 
-	width(width: number): NodeBuilder {
+	setWidth(width: number): NodeBuilder {
 		if (width < 0) {
 			throw new InvalidArgumentError(`Width ${width} is not greater than 0`)
 		}
@@ -25,7 +25,7 @@ export default class NodeBuilder {
 		return this
 	}
 
-	height(height: number): NodeBuilder {
+	setHeight(height: number): NodeBuilder {
 		if (height < 0) {
 			throw new InvalidArgumentError(`Height ${height} is not greater than 0`)
 		}
@@ -33,7 +33,7 @@ export default class NodeBuilder {
 		return this
 	}
 
-	x(x: number): NodeBuilder {
+	setX(x: number): NodeBuilder {
 		if (x < 0 || x > this._width) {
 			throw new InvalidArgumentError(
 				`Value of x (${x}) is not between 0 and width (${this._width})`
@@ -43,7 +43,7 @@ export default class NodeBuilder {
 		return this
 	}
 
-	y(y: number): NodeBuilder {
+	setY(y: number): NodeBuilder {
 		if (y < 0 || y > this._height) {
 			throw new InvalidArgumentError(
 				`Value of y (${y}) is not between 0 and height (${this._height})`
@@ -53,13 +53,13 @@ export default class NodeBuilder {
 		return this
 	}
 
-	pos(x: number, y: number): NodeBuilder {
-		return this.x(x).y(y)
+	setPosition(x: number, y: number): NodeBuilder {
+		return this.setX(x).setY(y)
 	}
 
 	build(id: string): NodeBlueprint {
 		const x = this._x === 0 ? 0 : this._width / this._x
 		const y = this._y === 0 ? 0 : this._height / this._y
-		return new NodeBlueprint(x, y, id)
+		return { id, x, y }
 	}
 }

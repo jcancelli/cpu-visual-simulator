@@ -29,44 +29,109 @@ export default class WiresGraph {
 	private readonly wireConfigs: Map<string, WireConfig> = new Map()
 
 	constructor({ nodes, wires, wireConfigs }: WireGraphBlueprint) {
-		for (const { id, x, y } of nodes) {
-			if (this.nodes.has(id)) {
-				throw new InvalidArgumentError(`Duplicate Node id: "${id}"`)
-			}
-			this.nodes.set(id, new Node(id, x, y))
+		for (const node of nodes) {
+			this.addNode(node)
 		}
 
-		for (const { id } of wireConfigs) {
-			if (this.wireConfigs.has(id)) {
-				throw new InvalidArgumentError(`Duplicate WireConfig id: "${id}"`)
-			}
-			this.wireConfigs.set(id, new WireConfig(id))
+		for (const config of wireConfigs) {
+			this.addWireConfig(config)
 		}
 
-		for (const { nodeA, nodeB, configID } of wires) {
-			if (!this.nodes.has(nodeA)) {
-				throw new InvalidArgumentError(`Node "${nodeA}" does not exists`)
-			}
-			if (!this.nodes.has(nodeB)) {
-				throw new InvalidArgumentError(`Node "${nodeB}" does not exists`)
-			}
-			if (nodeA === nodeB) {
-				throw new InvalidArgumentError(`Cannot create wire connecting node "${nodeA}" with itself`)
-			}
-			if (!this.wireConfigs.has(configID)) {
-				throw new InvalidArgumentError(`WireConfig "${configID}" does not exist`)
-			}
-			if (this.wires.has(pathKey(nodeA, nodeB)) || this.wires.has(pathKey(nodeB, nodeA))) {
-				throw new InvalidArgumentError(`Duplicate wire between "${nodeA}" and "${nodeB}"`)
-			}
-			const wire = new Wire(
-				this.nodes.get(nodeA)!,
-				this.nodes.get(nodeB)!,
-				this.wireConfigs.get(configID)!
-			)
-			this.wires.set(pathKey(nodeA, nodeB), wire)
-			this.wires.set(pathKey(nodeB, nodeA), wire)
+		for (const { a, b, config } of wires) {
+			this.connect(a, b, config)
 		}
+	}
+
+	/** Add a new node */
+	addNode({ id, x, y }: NodeBlueprint) {
+		if (this.nodes.has(id)) {
+			throw new InvalidArgumentError(`Duplicate node "${id}"`)
+		}
+		this.nodes.set(id, new Node(id, x, y))
+	}
+
+	/** Remove a node */
+	removeNode(nodeToRemove: string | Node) {
+		if (!nodeToRemove) {
+			throw new InvalidArgumentError("Invalid node")
+		}
+		const nodeID = typeof nodeToRemove === "string" ? nodeToRemove : nodeToRemove.getID()
+		const node = this.nodes.get(nodeID)
+		if (!node) {
+			throw new InvalidArgumentError(`Node "${nodeID}" does not exist`)
+		}
+		for (const neighbour of node.getNeighbours()) {
+			this.disconnect(node.getID(), neighbour.getID())
+		}
+		this.nodes.delete(nodeID)
+	}
+
+	/** Add a wire configuration */
+	addWireConfig({ id, width, baseColor, animationColor }: WireConfigBlueprint) {
+		if (this.wireConfigs.has(id)) {
+			throw new InvalidArgumentError(`Duplicate wire configuration "${id}"`)
+		}
+		const config = new WireConfig(id, width, baseColor, animationColor)
+		this.wireConfigs.set(id, config)
+	}
+
+	/** Remove a wire configuration */
+	removeWireConfig(configID: string) {
+		if (!this.wireConfigs.has(configID)) {
+			throw new InvalidArgumentError(`Wire configuration "${configID}" does not exist`)
+		}
+		if (this.getWires().findIndex(wire => wire.getConfig().getID() === configID) !== -1) {
+			throw new InvalidArgumentError(`Cannot remove configuration "${configID}" because in use`)
+		}
+		this.wireConfigs.delete(configID)
+	}
+
+	/** Connect two nodes with a wire */
+	connect(a: string, b: string, configID: string) {
+		const nodeA = this.nodes.get(a)
+		const nodeB = this.nodes.get(b)
+		const config = this.wireConfigs.get(configID)
+		if (!nodeA) {
+			throw new InvalidArgumentError(`Node "${a}" does not exist`)
+		}
+		if (!nodeB) {
+			throw new InvalidArgumentError(`Node "${b}" does not exist`)
+		}
+		if (a === b) {
+			throw new InvalidArgumentError(`Cannot connect node "${a}" with itself`)
+		}
+		if (!config) {
+			throw new InvalidArgumentError(`Wire configuration "${configID}" does not exist`)
+		}
+		if (nodeA.isConnectedTo(nodeB)) {
+			throw new InvalidArgumentError(`Node "${a}" and "${b}" are already connected`)
+		}
+		nodeA.connect(nodeB)
+		nodeB.connect(nodeA)
+		const wire = new Wire(nodeA, nodeB, config)
+		this.wires.set(connectionKey(nodeA, nodeB), wire)
+		this.wires.set(connectionKey(nodeB, nodeA), wire)
+		this.pathCache.clear()
+	}
+
+	/** Disconnect two nodes */
+	disconnect(a: string, b: string) {
+		const nodeA = this.nodes.get(a)
+		const nodeB = this.nodes.get(b)
+		if (!nodeA) {
+			throw new InvalidArgumentError(`Node "${a}" does not exist`)
+		}
+		if (!nodeB) {
+			throw new InvalidArgumentError(`Node "${b}" does not exist`)
+		}
+		if (!nodeA.isConnectedTo(nodeB)) {
+			return
+		}
+		nodeA.disconnect(nodeB)
+		nodeB.disconnect(nodeA)
+		this.wires.delete(connectionKey(nodeA, nodeB))
+		this.wires.delete(connectionKey(nodeB, nodeA))
+		this.pathCache.clear()
 	}
 
 	/** Return ll the nodes in the graph */
@@ -86,8 +151,8 @@ export default class WiresGraph {
 
 	/** Return the wire connecting the nodes with ids nodeA and nodeB */
 	getWire(nodeA: string, nodeB: string): Wire | null {
-		let wire = this.wires.get(pathKey(nodeA, nodeB)) ?? null
-		wire = wire ?? this.wires.get(pathKey(nodeB, nodeA)) ?? null
+		let wire = this.wires.get(connectionKey(nodeA, nodeB)) ?? null
+		wire = wire ?? this.wires.get(connectionKey(nodeB, nodeA)) ?? null
 		return wire
 	}
 
@@ -121,7 +186,7 @@ export default class WiresGraph {
 		if (!this.nodes.has(toNodeID)) {
 			throw new InvalidArgumentError(`Node "${toNodeID}" does not exist`)
 		}
-		const key = pathKey(fromNodeID, toNodeID)
+		const key = connectionKey(fromNodeID, toNodeID)
 		if (this.pathCache.has(key)) {
 			return this.pathCache.get(key)!
 		}
@@ -139,8 +204,8 @@ export default class WiresGraph {
 			nodes,
 			wires,
 		}
-		this.pathCache.set(pathKey(fromNodeID, toNodeID), path)
-		this.pathCache.set(pathKey(toNodeID, fromNodeID), {
+		this.pathCache.set(connectionKey(fromNodeID, toNodeID), path)
+		this.pathCache.set(connectionKey(toNodeID, fromNodeID), {
 			fromID: toNodeID,
 			toID: fromNodeID,
 			nodes: nodes.toReversed(),
@@ -167,22 +232,22 @@ export default class WiresGraph {
 
 		while (tail < toVisit.length) {
 			let node = toVisit[tail++]
-			for (const [neighbourID, neighbour] of node.neighbours) {
-				if (visited.has(neighbourID)) {
+			for (const neighbour of node.getNeighbours()) {
+				if (visited.has(neighbour.getID())) {
 					continue
 				}
-				visited.add(neighbourID)
-				if (neighbourID === to.id) {
+				visited.add(neighbour.getID())
+				if (neighbour.getID() === to.getID()) {
 					const path = [neighbour]
-					while (node.id !== from.id) {
+					while (node.getID() !== from.getID()) {
 						path.push(node)
-						node = predecessor.get(node.id)!
+						node = predecessor.get(node.getID())!
 					}
 					path.push(node)
 					path.reverse()
 					return path
 				}
-				predecessor.set(neighbourID, node)
+				predecessor.set(neighbour.getID(), node)
 				toVisit.push(neighbour)
 			}
 		}
@@ -194,7 +259,7 @@ export default class WiresGraph {
 	private buildWiresPath(nodes: Node[]): Wire[] {
 		const wires: Wire[] = []
 		for (let i = 0; i < nodes.length - 1; i++) {
-			const wireKey = pathKey(nodes[i].id, nodes[i + 1].id)
+			const wireKey = connectionKey(nodes[i], nodes[i + 1])
 			if (!this.wires.has(wireKey)) {
 				throw new Error(`No wire with key "${wireKey}"`)
 			}
@@ -205,7 +270,15 @@ export default class WiresGraph {
 }
 
 /** Return the string that represent a connection between the two specified nodes */
-function pathKey(fromNodeID: string, toNodeID: string): string {
+function connectionKey(from: string | Node, to: string | Node): string {
+	if (!from) {
+		throw new InvalidArgumentError('Invalid "from" node')
+	}
+	if (!to) {
+		throw new InvalidArgumentError('Invalid "to" node')
+	}
+	const fromNodeID = typeof from === "string" ? from : from.getID()
+	const toNodeID = typeof to === "string" ? to : to.getID()
 	return `<${fromNodeID}>:<${toNodeID}>`
 }
 
@@ -217,7 +290,7 @@ function getSubgraphRecursive(node: Node, subgraphs: Set<Node>[], visited: Set<N
 	}
 	subgraphs.push(new Set<Node>([node]))
 	visited.add(node)
-	for (const [_, neighbour] of node.neighbours) {
+	for (const neighbour of node.getNeighbours()) {
 		getSubgraphRecursive(neighbour, subgraphs, visited)
 	}
 }
