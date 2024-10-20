@@ -3,7 +3,10 @@ export default class EventBus<Events extends string, EventsTypes extends TypesMa
 	private listeners: ListenersMap<Events, EventsTypes> = {}
 
 	/** Subscribe a new listener to the specified event */
-	addListener(event: Events, listener: EventListener<EventsTypes[typeof event]>) {
+	addListener<Event extends Events>(
+		event: Event,
+		listener: EventListener<EventsTypes[typeof event]>
+	) {
 		if (!this.listeners[event]) {
 			this.listeners[event] = new Set()
 		}
@@ -11,7 +14,10 @@ export default class EventBus<Events extends string, EventsTypes extends TypesMa
 	}
 
 	/** Unsubscribe a new listener to the specified event */
-	removeListener(event: Events, listener: EventListener<EventsTypes[typeof event]>) {
+	removeListener<Event extends Events>(
+		event: Event,
+		listener: EventListener<EventsTypes[typeof event]>
+	) {
 		if (!this.listeners[event]) {
 			return
 		}
@@ -19,7 +25,7 @@ export default class EventBus<Events extends string, EventsTypes extends TypesMa
 	}
 
 	/** Notify all listeners subscribed to the provided event */
-	notify(event: Events, eventData: EventsTypes[typeof event]) {
+	notify<Event extends Events>(event: Event, eventData: EventsTypes[typeof event]) {
 		if (!this.listeners[event]) {
 			return
 		}
