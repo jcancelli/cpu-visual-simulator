@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { setContext } from "svelte"
-	import Menu from "./Menu.svelte"
-	import { type DebugNodesOptions } from "./sections/Nodes.svelte"
 	import { persisted } from "svelte-persisted-store"
+	import { type DebugNodesOptions } from "./sections/Nodes.svelte"
 	import { type MenuPosition } from "./sections/General.svelte"
+	import Menu from "./Menu.svelte"
 
 	export let active: boolean = false
 

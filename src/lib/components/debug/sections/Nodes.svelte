@@ -26,7 +26,7 @@
 	{#if $active}
 		<Label>
 			Show labels
-			<Select bind:value={$options.label} items={labelItems} />
+			<Select bind:value={$options.label} items={labelItems} size={"sm"} />
 		</Label>
 		<Label>
 			Size

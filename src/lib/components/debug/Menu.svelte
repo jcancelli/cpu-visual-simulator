@@ -22,7 +22,7 @@
 >
 	<h1 class="text-2xl">Debug menu</h1>
 	<div class="flex flex-col gap-3 pl-2 pt-2">
-		<GeneralSection bind:opacity={$opacity} bind:position={$position} />
+		<GeneralSection />
 		<NodesSection />
 	</div>
 </div>

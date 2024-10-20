@@ -3,11 +3,13 @@
 </script>
 
 <script lang="ts">
-	import MenuSection from "../MenuSection.svelte"
+	import { getContext } from "svelte"
 	import { Label, Select, Range } from "flowbite-svelte"
+	import MenuSection from "../MenuSection.svelte"
+	import type { Writable } from "svelte/store"
 
-	export let opacity: number
-	export let position: MenuPosition
+	const opacity = getContext<Writable<number>>("debug-menu-opacity")
+	const position = getContext<Writable<MenuPosition>>("debug-menu-position")
 
 	const positions = [
 		{ value: "top-left", name: "Top left" },
@@ -20,10 +22,10 @@
 <MenuSection title="General">
 	<Label>
 		Position
-		<Select bind:value={position} items={positions} />
+		<Select bind:value={$position} items={positions} size={"sm"} />
 	</Label>
 	<Label>
 		Opacity
-		<Range bind:value={opacity} min={0.1} max={1} step={0.1} />
+		<Range bind:value={$opacity} min={0.1} max={1} step={0.1} />
 	</Label>
 </MenuSection>
