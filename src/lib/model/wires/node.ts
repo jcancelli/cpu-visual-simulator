@@ -1,5 +1,5 @@
 import { InvalidArgumentError } from "$lib/errors/util"
-import ListenersManager, { type Listener } from "../listeners_manager"
+import EventBus, { type EventListener } from "$lib/utility/event_bus"
 
 /** Parameter object for the {@link WireGraph} constructor */
 export type NodeBlueprint = {
@@ -11,11 +11,16 @@ export type NodeBlueprint = {
 	y: number
 }
 
+type NodeEvents = "position-changed"
+type NodeEventsTypes = {
+	"position-changed": { x: number; y: number }
+}
+
 /** Node inside a {@link WireGraph} instance. Should not be created directly. */
 export class Node {
 	/** Nodes connected to this node */
 	private readonly neighbours: Node[] = []
-	private readonly positionListeners = new ListenersManager<{ x: number; y: number }>()
+	private readonly eventBus = new EventBus<NodeEvents, NodeEventsTypes>()
 
 	constructor(
 		/** ID of the node */
@@ -55,7 +60,7 @@ export class Node {
 			return
 		}
 		this.x = value
-		this.positionListeners.notify({ x: this.x, y: this.y })
+		this.eventBus.notify("position-changed", { x: this.x, y: this.y })
 	}
 
 	/** Return node's y coordinate (value between 0 and 1) */
@@ -72,7 +77,7 @@ export class Node {
 			return
 		}
 		this.y = value
-		this.positionListeners.notify({ x: this.x, y: this.y })
+		this.eventBus.notify("position-changed", { x: this.x, y: this.y })
 	}
 
 	/** Return nodes connected to this node */
@@ -114,12 +119,12 @@ export class Node {
 	}
 
 	/** Add a listener for changes to the node's position */
-	addPositionChangedListener(listener: Listener<{ x: number; y: number }>) {
-		this.positionListeners.addListener(listener)
+	addPositionChangedListener(listener: EventListener<{ x: number; y: number }>) {
+		this.eventBus.addListener("position-changed", listener)
 	}
 
 	/** Remove a listener for changes to the node's position */
-	removePositionChangedListener(listener: Listener<{ x: number; y: number }>) {
-		this.positionListeners.removeListener(listener)
+	removePositionChangedListener(listener: EventListener<{ x: number; y: number }>) {
+		this.eventBus.removeListener("position-changed", listener)
 	}
 }

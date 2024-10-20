@@ -1,6 +1,6 @@
 import { InvalidArgumentError } from "$lib/errors/util"
+import EventBus, { type EventListener } from "$lib/utility/event_bus"
 import { Color } from "pixi.js"
-import ListenersManager, { type Listener } from "../listeners_manager"
 
 /** Metadata that defines a "class" of wires inside a {@link WireGraph} instance */
 export type WireConfigBlueprint = {
@@ -14,13 +14,18 @@ export type WireConfigBlueprint = {
 	animationColor: Color
 }
 
+type WireConfigEvents = "width-changed" | "base-color-changed" | "animation-color-changed"
+type WireConfigEventsTypes = {
+	"width-changed": number
+	"base-color-changed": Color
+	"animation-color-changed": Color
+}
+
 /**
  * Metadata that defines a "class" of wires inside a {@link WireGraph} instance.
  * Should not be created directly */
 export class WireConfig {
-	private readonly widthListeners = new ListenersManager<number>()
-	private readonly baseColorListeners = new ListenersManager<Color>()
-	private readonly animationColorListeners = new ListenersManager<Color>()
+	private readonly eventBus = new EventBus<WireConfigEvents, WireConfigEventsTypes>()
 
 	constructor(
 		/** ID of the configuration */
@@ -65,7 +70,7 @@ export class WireConfig {
 			return
 		}
 		this.width = value
-		this.widthListeners.notify(value)
+		this.eventBus.notify("width-changed", value)
 	}
 
 	/** Return wires' base color */
@@ -82,7 +87,7 @@ export class WireConfig {
 			return
 		}
 		this.baseColor = new Color(value)
-		this.baseColorListeners.notify(value)
+		this.eventBus.notify("base-color-changed", value)
 	}
 
 	/** Return wiress' animation color */
@@ -99,36 +104,36 @@ export class WireConfig {
 			return
 		}
 		this.animationColor = new Color(value)
-		this.animationColorListeners.notify(value)
+		this.eventBus.notify("animation-color-changed", value)
 	}
 
 	/** Subscribe a listener that will be notified when the width value changes */
-	addWidthChangedListener(listener: Listener<number>) {
-		this.widthListeners.addListener(listener)
+	addWidthChangedListener(listener: EventListener<number>) {
+		this.eventBus.addListener("width-changed", listener)
 	}
 
 	/** Unsubscribe a listener */
-	removeWidthChangedListener(listener: Listener<number>) {
-		this.widthListeners.removeListener(listener)
+	removeWidthChangedListener(listener: EventListener<number>) {
+		this.eventBus.removeListener("width-changed", listener)
 	}
 
 	/** Subscribe a listener that will be notified when the baseColor value changes */
-	addBaseColorChangedListener(listener: Listener<Color>) {
-		this.baseColorListeners.addListener(listener)
+	addBaseColorChangedListener(listener: EventListener<Color>) {
+		this.eventBus.addListener("base-color-changed", listener)
 	}
 
 	/** Unsubscribe a listener */
-	removeBaseColorChangedListener(listener: Listener<Color>) {
-		this.baseColorListeners.removeListener(listener)
+	removeBaseColorChangedListener(listener: EventListener<Color>) {
+		this.eventBus.removeListener("base-color-changed", listener)
 	}
 
 	/** Subscribe a listener that will be notified when the animationColor value changes */
-	addAnimationColorChangedListener(listener: Listener<Color>) {
-		this.animationColorListeners.addListener(listener)
+	addAnimationColorChangedListener(listener: EventListener<Color>) {
+		this.eventBus.addListener("animation-color-changed", listener)
 	}
 
 	/** Unsubscribe a listener */
-	removeAnimationColorChangedListener(listener: Listener<Color>) {
-		this.animationColorListeners.removeListener(listener)
+	removeAnimationColorChangedListener(listener: EventListener<Color>) {
+		this.eventBus.removeListener("animation-color-changed", listener)
 	}
 }

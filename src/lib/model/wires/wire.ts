@@ -1,5 +1,5 @@
 import { InvalidArgumentError } from "$lib/errors/util"
-import ListenersManager, { type Listener } from "../listeners_manager"
+import EventBus, { type EventListener } from "$lib/utility/event_bus"
 import type { Node } from "./node"
 import type { WireConfig } from "./wire_config"
 
@@ -13,9 +13,14 @@ export type WireBlueprint = {
 	config: string
 }
 
+type WireEvents = "config-changed"
+type WireEventsTypes = {
+	"config-changed": WireConfig
+}
+
 /** Wire that connects two nodes in a {@link Graph} instance. Should not be created directly */
 export class Wire {
-	private readonly configListeners = new ListenersManager<WireConfig>()
+	private readonly eventBus = new EventBus<WireEvents, WireEventsTypes>()
 
 	constructor(
 		/** The first node the wire is connecting */
@@ -60,7 +65,7 @@ export class Wire {
 			return
 		}
 		this.config = config
-		this.configListeners.notify(config)
+		this.eventBus.notify("config-changed", config)
 	}
 
 	/**
@@ -68,12 +73,12 @@ export class Wire {
 	 * for changes to values inside the configuration, they will only be notified if the
 	 * configuration has changed to a new one. For listening to changes to values inside the
 	 * configuration, add listeners directly to the configuration. */
-	addConfigChangedListener(listener: Listener<WireConfig>) {
-		this.configListeners.addListener(listener)
+	addConfigChangedListener(listener: EventListener<WireConfig>) {
+		this.eventBus.addListener("config-changed", listener)
 	}
 
 	/** Remove a listener for changes to the wire's configuration */
-	removeConfigChangedListener(listener: Listener<WireConfig>) {
-		this.configListeners.removeListener(listener)
+	removeConfigChangedListener(listener: EventListener<WireConfig>) {
+		this.eventBus.removeListener("config-changed", listener)
 	}
 }
