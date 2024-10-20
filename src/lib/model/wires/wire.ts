@@ -56,11 +56,11 @@ export class Wire {
 		if (!config) {
 			throw new InvalidArgumentError("Invalid configuration")
 		}
-		const hasChanged = config !== this.config
-		this.config = config
-		if (hasChanged) {
-			this.configListeners.notify(config)
+		if (this.config === config) {
+			return
 		}
+		this.config = config
+		this.configListeners.notify(config)
 	}
 
 	/**

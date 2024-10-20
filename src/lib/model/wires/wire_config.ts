@@ -2,16 +2,20 @@ import { InvalidArgumentError } from "$lib/errors/util"
 import { Color } from "pixi.js"
 import ListenersManager, { type Listener } from "../listeners_manager"
 
-/** Metadata that defines a "class" of wires inside a {@link import("./graph").WireGraph} instance */
+/** Metadata that defines a "class" of wires inside a {@link WireGraph} instance */
 export type WireConfigBlueprint = {
+	/** ID of the configuration */
 	id: string
+	/** Width of the wires */
 	width: number
+	/** Base color of the wires */
 	baseColor: Color
+	/** Color of the animations on this wire */
 	animationColor: Color
 }
 
 /**
- * Metadata that defines a "class" of wires inside a {@link import("./graph").WireGraph} instance.
+ * Metadata that defines a "class" of wires inside a {@link WireGraph} instance.
  * Should not be created directly */
 export class WireConfig {
 	private readonly widthListeners = new ListenersManager<number>()
@@ -19,9 +23,13 @@ export class WireConfig {
 	private readonly animationColorListeners = new ListenersManager<Color>()
 
 	constructor(
+		/** ID of the configuration */
 		private readonly id: string,
+		/** Width of the wires */
 		private width: number,
+		/** Base color of the wires */
 		private baseColor: Color,
+		/** Color of the animations on this wire */
 		private animationColor: Color
 	) {
 		if (!id || id === "") {
@@ -53,11 +61,11 @@ export class WireConfig {
 		if (value <= 0) {
 			throw new InvalidArgumentError("Invalid width")
 		}
-		const hasChanged = this.width !== value
-		this.width = value
-		if (hasChanged) {
-			this.widthListeners.notify(value)
+		if (this.width === value) {
+			return
 		}
+		this.width = value
+		this.widthListeners.notify(value)
 	}
 
 	/** Return wires' base color */
@@ -70,11 +78,11 @@ export class WireConfig {
 		if (!value) {
 			throw new InvalidArgumentError("Invalid base color")
 		}
-		const hasChanged = this.baseColor.toNumber() !== value.toNumber()
-		this.baseColor = new Color(value)
-		if (hasChanged) {
-			this.baseColorListeners.notify(value)
+		if (this.baseColor.toNumber() === value.toNumber()) {
+			return
 		}
+		this.baseColor = new Color(value)
+		this.baseColorListeners.notify(value)
 	}
 
 	/** Return wiress' animation color */
@@ -87,11 +95,11 @@ export class WireConfig {
 		if (!value) {
 			throw new InvalidArgumentError("Invalid animation color")
 		}
-		const hasChanged = this.baseColor.toNumber() !== value.toNumber()
-		this.animationColor = new Color(value)
-		if (hasChanged) {
-			this.animationColorListeners.notify(value)
+		if (this.animationColor.toNumber() === value.toNumber()) {
+			return
 		}
+		this.animationColor = new Color(value)
+		this.animationColorListeners.notify(value)
 	}
 
 	/** Subscribe a listener that will be notified when the width value changes */
