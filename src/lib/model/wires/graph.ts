@@ -1,32 +1,59 @@
 import { InvalidArgumentError } from "$lib/errors/util"
+import EventBus, { type EventListener } from "$lib/utility/event_bus"
 import { Node, type NodeBlueprint } from "./node"
 import { Wire, type WireBlueprint } from "./wire"
 import { WireConfig, type WireConfigBlueprint } from "./wire_config"
 
 /** Parameter object for the {@link WiresGraph} constructor */
 export type WireGraphBlueprint = {
+	/** Nodes of the graph */
 	nodes: NodeBlueprint[]
+	/** Wires of the graph */
 	wires: WireBlueprint[]
+	/** Configurations of the wires */
 	wireConfigs: WireConfigBlueprint[]
 }
 
 /** Path between two {@link Node} objects inside a {@link WiresGraph} instance */
 export type Path = {
+	/** ID of the starting node */
 	fromID: string
+	/** ID of the destination node */
 	toID: string
+	/** Nodes that compose the path */
 	nodes: Node[]
+	/** Wires that connect the nodes of the path */
 	wires: Wire[]
 }
 
-/**
- * Graph composed by {@link Node} objects connected by {@link Wire} objects.
- * Used by the Wires UI component to represent the wires connections. */
+export type WireGraphEvent =
+	| "node-added"
+	| "node-removed"
+	| "nodes-connected"
+	| "nodes-disconnected"
+	| "config-added"
+	| "config-removed"
+type WireGraphEventTypes = {
+	"node-added": Node
+	"node-removed": Node
+	"nodes-connected": Wire
+	"nodes-disconnected": Wire
+	"config-added": WireConfig
+	"config-removed": WireConfig
+}
+
+/** Model for the wires graphical components */
 export default class WiresGraph {
 	/** Cache containing precomputed paths between nodes */
 	private readonly pathCache: Map<string, Path> = new Map()
+	/** Nodes of the graph mapped to their IDs */
 	private readonly nodes: Map<string, Node> = new Map()
+	/** Wires of the graph mapped to their "connectionKey". Every wire is mapped twice: once with
+	 * the key nodeA -> nodeB and once with the key nodeB -> nodeA */
 	private readonly wires: Map<string, Wire> = new Map()
+	/** Wire's configurations mapped to their IDs */
 	private readonly wireConfigs: Map<string, WireConfig> = new Map()
+	private readonly eventBus = new EventBus<WireGraphEvent, WireGraphEventTypes>()
 
 	constructor({ nodes, wires, wireConfigs }: WireGraphBlueprint) {
 		for (const node of nodes) {
@@ -47,7 +74,9 @@ export default class WiresGraph {
 		if (this.nodes.has(id)) {
 			throw new InvalidArgumentError(`Duplicate node "${id}"`)
 		}
-		this.nodes.set(id, new Node(id, x, y))
+		const node = new Node(id, x, y)
+		this.nodes.set(id, node)
+		this.eventBus.notify("node-added", node)
 	}
 
 	/** Remove a node */
@@ -64,6 +93,7 @@ export default class WiresGraph {
 			this.disconnect(node.getID(), neighbour.getID())
 		}
 		this.nodes.delete(nodeID)
+		this.eventBus.notify("node-removed", node)
 	}
 
 	/** Add a wire configuration */
@@ -73,17 +103,20 @@ export default class WiresGraph {
 		}
 		const config = new WireConfig(id, width, baseColor, animationColor)
 		this.wireConfigs.set(id, config)
+		this.eventBus.notify("config-added", config)
 	}
 
 	/** Remove a wire configuration */
 	removeWireConfig(configID: string) {
-		if (!this.wireConfigs.has(configID)) {
+		const config = this.wireConfigs.get(configID)
+		if (!config) {
 			throw new InvalidArgumentError(`Wire configuration "${configID}" does not exist`)
 		}
 		if (this.getWires().findIndex(wire => wire.getConfig().getID() === configID) !== -1) {
 			throw new InvalidArgumentError(`Cannot remove configuration "${configID}" because in use`)
 		}
 		this.wireConfigs.delete(configID)
+		this.eventBus.notify("config-removed", config)
 	}
 
 	/** Connect two nodes with a wire */
@@ -112,26 +145,29 @@ export default class WiresGraph {
 		this.wires.set(connectionKey(nodeA, nodeB), wire)
 		this.wires.set(connectionKey(nodeB, nodeA), wire)
 		this.pathCache.clear()
+		this.eventBus.notify("nodes-connected", wire)
 	}
 
 	/** Disconnect two nodes */
 	disconnect(a: string, b: string) {
 		const nodeA = this.nodes.get(a)
 		const nodeB = this.nodes.get(b)
+		const wire = this.wires.get(connectionKey(a, b))
 		if (!nodeA) {
 			throw new InvalidArgumentError(`Node "${a}" does not exist`)
 		}
 		if (!nodeB) {
 			throw new InvalidArgumentError(`Node "${b}" does not exist`)
 		}
-		if (!nodeA.isConnectedTo(nodeB)) {
-			return
+		if (!wire) {
+			throw new InvalidArgumentError(`Nodes "${a}" and "${b}" wre not connected`)
 		}
 		nodeA.disconnect(nodeB)
 		nodeB.disconnect(nodeA)
 		this.wires.delete(connectionKey(nodeA, nodeB))
 		this.wires.delete(connectionKey(nodeB, nodeA))
 		this.pathCache.clear()
+		this.eventBus.notify("nodes-disconnected", wire)
 	}
 
 	/** Return ll the nodes in the graph */
@@ -266,6 +302,22 @@ export default class WiresGraph {
 			wires.push(this.wires.get(wireKey)!)
 		}
 		return wires
+	}
+
+	/** Subscribe an event listener */
+	addEventListener<Event extends WireGraphEvent>(
+		event: Event,
+		listener: EventListener<WireGraphEventTypes[Event]>
+	) {
+		this.eventBus.addListener(event, listener)
+	}
+
+	/** Unsubscribe an event listener */
+	removeEventListener<Event extends WireGraphEvent>(
+		event: Event,
+		listener: EventListener<WireGraphEventTypes[Event]>
+	) {
+		this.eventBus.removeListener(event, listener)
 	}
 }
 
