@@ -145,8 +145,7 @@ export default class Integer {
 	/**
 	 * Creates an integer by parsing a string containing a base-2 representation of a number.
 	 * Negative numbers must not contain the "-" character but will have to represented with two's
-	 * complement
-	 * */
+	 * complement */
 	static fromBinaryString(size: Size, str: string): Integer {
 		// negative numbers should be expressed without "-"
 		if (str.includes("-")) {
@@ -154,6 +153,20 @@ export default class Integer {
 		}
 		// validation provided by parseInt and fromUnsignedNumber
 		const value = parseInt(str, 2)
+		return Integer.fromUnsignedNumber(size, value)
+	}
+
+	/**
+	 * Creates an integer by parsing a string containing a base-16 representation of a number.
+	 * Negative numbers must not contain the "-" character but will have to represented with two's
+	 * complement */
+	static fromHexadecimalString(size: Size, str: string): Integer {
+		// negative numbers should be expressed without "-"
+		if (str.includes("-")) {
+			throw new Error(`Character "-" not allowed in hexadecimal strings`)
+		}
+		// validation provided by parseInt and fromUnsignedNumber
+		const value = parseInt(str, 16)
 		return Integer.fromUnsignedNumber(size, value)
 	}
 }
