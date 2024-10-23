@@ -11,9 +11,6 @@ importers:
       pixi.js:
         specifier: ^8.5.2
         version: 8.5.2
-      svelte-persisted-store:
-        specifier: ^0.11.0
-        version: 0.11.0(svelte@5.0.5)
     devDependencies:
       '@playwright/test':
         specifier: ^1.48.1
@@ -1509,12 +1506,6 @@ packages:
     peerDependenciesMeta:
       svelte:
         optional: true
-
-  svelte-persisted-store@0.11.0:
-    resolution: {integrity: sha512-9RgJ5DrawGyyfK22A80cfu8Jose3CV8YjEZKz9Tn94rQ0tWyEmYr+XI+wrVF6wjRbW99JMDSVcFRiM3XzVJj/w==}
-    engines: {node: '>=0.14'}
-    peerDependencies:
-      svelte: ^3.48.0 || ^4.0.0 || ^5.0.0-next.0
 
   svelte@5.0.5:
     resolution: {integrity: sha512-f4WBlP5g8W6pEoDfx741lewMlemy+LIGpEqjGPWqnHVP92wqlQXl87U5O5Bi2tkSUrO95OxOoqwU8qlqiHmFKA==}
@@ -3038,10 +3029,6 @@ snapshots:
       postcss: 8.4.47
       postcss-scss: 4.0.9(postcss@8.4.47)
     optionalDependencies:
-      svelte: 5.0.5
-
-  svelte-persisted-store@0.11.0(svelte@5.0.5):
-    dependencies:
       svelte: 5.0.5
 
   svelte@5.0.5:
