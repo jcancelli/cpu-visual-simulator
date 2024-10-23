@@ -1,23 +1,34 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	/**
 	 * Function that validates the parsed Integer.
-	 * Should throw an error if the value is not considered valid.
-	 * */
+	 * Should throw an error if the value is not considered valid. */
 	export type InputValidator = (value: Integer, base: Base, signed: boolean) => void
 
-	/** Base in which the integer should be represented in */
-	export enum Base {
-		Decimal,
-		Binary,
-	}
+	/** Basa in which an integer can be displayed in */
+	export type Base = 2 | 10 | 16
 
 	/** Function that parses the input into an Integer */
 	type InputParser = (size: Size, str: string) => Integer
 
+	interface Props {
+		/** Integer that should be edited/displayed */
+		value: Integer
+		/** Wether editing is enabled or not */
+		editable?: boolean
+		/** Wether the integer should be displayed as signed or not */
+		signed?: boolean
+		/** Base in which the integer will be represented */
+		base?: Base
+		/** Function for validating new values before being committed */
+		validator?: InputValidator
+	}
+
 	const forbiddenBinaryCharacters = /[^01]*/g
+	const forbiddenHexadecimalCharacters = /[^a-fA-F\d]*/g
 	const forbiddenUnsignedDecimalCharacters = /\D*/g
 	const forbiddenSignedDecimalCharacters = /[^-\d]*/g
 	const binaryInputRegex = /^[01]*$/
+	const hexadecimalInputRegex = /^[a-fA-F\d]*$/
 	const signedDecimalInputRegex = /^-?\d*$/
 	const unsignedDecimalInputRegex = /^\d*$/
 </script>
@@ -26,44 +37,88 @@
 	import Integer, { type Size } from "$lib/model/integer"
 	import { createEventDispatcher, onMount } from "svelte"
 
-	/** Integer that should be edited/displayed */
-	export let value: Integer
-	/** Wether editing is enabled or not */
-	export let editable: boolean = true
-	/** Wether the integer should be displayed as signed or not */
-	export let signed: boolean = true
-	/** Base in which the integer will be represented */
-	export let base: Base = Base.Decimal
-	/** Function for validating new values before being committed */
-	export let validator: InputValidator = () => {}
+	let {
+		value = $bindable(),
+		editable = $bindable(true),
+		signed = $bindable(true),
+		base = $bindable(10),
+		validator = $bindable(() => {}),
+	}: Props = $props()
 
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher<{
+		"invalid-input": { input: string }
+		changed: { value: Integer }
+		"validation-error": { input: string; error: any }
+	}>()
 
-	let inputElement: HTMLInputElement
-	let editing: boolean = false
-	let forbiddenCharacters: RegExp
-	let validInputRegexp: RegExp
-	let inputParser: InputParser
+	/** The variable the html input element is bounded to */
+	let inputEl: HTMLInputElement | undefined = $state()
+	/** The variable to which the "value" property of the input element is bound to */
+	let inputValue: string = $state("")
+	/** Wether or not the input is being edited */
+	let editing: boolean = $state(false)
+	/** Size in bits of the value */
+	let sizeBits: Size = $derived(value.sizeBits())
 
-	onMount(() => setTextToCurrentValue())
+	let {
+		/**
+		 * Regexp representing the characters that the user won't be allowed to input
+		 * given the current base and signedness */
+		forbiddenCharacters,
+		/** Regexp representing a valid input string given the current base and signedness */
+		validInputRegexp,
+		/** Function that will be used to parse user input at the end of an edit */
+		inputParser,
+	} = $derived.by(() => {
+		let forbiddenCharacters: RegExp
+		let validInputRegexp: RegExp
+		let inputParser: InputParser
+		switch (base) {
+			case 10:
+				if (signed) {
+					forbiddenCharacters = forbiddenSignedDecimalCharacters
+					validInputRegexp = signedDecimalInputRegex
+					inputParser = Integer.fromSignedString
+				} else {
+					forbiddenCharacters = forbiddenUnsignedDecimalCharacters
+					validInputRegexp = unsignedDecimalInputRegex
+					inputParser = Integer.fromUnsignedString
+				}
+				break
+			case 2:
+				forbiddenCharacters = forbiddenBinaryCharacters
+				validInputRegexp = binaryInputRegex
+				inputParser = Integer.fromBinaryString
+				break
+			case 16:
+				forbiddenCharacters = forbiddenHexadecimalCharacters
+				validInputRegexp = hexadecimalInputRegex
+				inputParser = Integer.fromHexadecimalString
+				break
+			default:
+				throw new Error("Unsupported base")
+		}
+		return { forbiddenCharacters, validInputRegexp, inputParser }
+	})
 
-	$: {
-		// here so the block is re-run when they change
-		value
-		base
-		signed
+	/** String containing the representation of the value given the current base and signedness */
+	let valueToString = $derived.by(() => {
+		switch (base) {
+			case 10:
+				return signed ? value.toSignedDecimalString() : value.toUnsignedDecimalString()
+			case 2:
+				return value.toBinaryString()
+			case 16:
+				return value.toHexadecimalString()
+			default:
+				throw new Error("Unsupported base")
+		}
+	})
 
-		setTextToCurrentValue()
-	}
-	$: {
-		// here so the block is re-run when they change
-		base
-		signed
-
-		updateForbiddenCharacters()
-		updateValidInputRegexp()
-		updateInputParser()
-	}
+	onMount(() => (inputValue = valueToString))
+	$effect(() => {
+		inputValue = valueToString
+	})
 
 	/** Focus the component */
 	export function startEdit() {
@@ -71,8 +126,8 @@
 			return
 		}
 		editing = true
-		inputElement.focus()
-		inputElement.select()
+		inputEl?.focus()
+		inputEl?.select()
 	}
 
 	/** Unfocus the component and commits any changes made */
@@ -82,17 +137,17 @@
 		}
 
 		editing = false
-		inputElement.blur()
-		const inputText = inputElement.value
+		inputEl?.blur()
+		const inputString = inputValue
 
-		if (!validInputRegexp.test(inputText.trim())) {
-			setTextToCurrentValue()
-			dispatch("invalid-input", { input: inputText })
+		if (!validInputRegexp.test(inputString.trim())) {
+			inputValue = valueToString
+			dispatch("invalid-input", { input: inputString })
 			return
 		}
 
 		try {
-			const parsedValue = inputParser(value.sizeBits(), inputText)
+			const parsedValue = inputParser(value.sizeBits(), inputString)
 			validator?.(parsedValue, base, signed)
 
 			if (parsedValue.unsigned() === value.unsigned()) {
@@ -102,109 +157,36 @@
 			value = parsedValue
 			dispatch("changed", { value })
 		} catch (error) {
-			setTextToCurrentValue()
-			dispatch("validation-error", { input: inputText, error })
+			inputValue = valueToString
+			dispatch("validation-error", { input: inputString, error })
 			return
 		}
 	}
 
 	/**
 	 * Runs on the "input" events fired by the input element.
-	 * Filters unwanted characters and keeps the text's length so that every character is visible
-	 * */
+	 * Filters unwanted characters and keeps the text's length so that every character is visible */
 	function formatText() {
-		let formattedInput = inputElement.value
+		let formattedInput = inputValue
 		formattedInput = formattedInput.replaceAll(forbiddenCharacters, "")
 		if (formattedInput.length > value.sizeBits()) {
 			formattedInput = formattedInput.substring(0, value.sizeBits())
 		}
-		inputElement.value = formattedInput
-	}
-
-	/** Returns a string representing the value in the appropriate notation */
-	function valueToString(): string {
-		switch (base) {
-			case Base.Decimal:
-				return signed ? value.toSignedDecimalString() : value.toUnsignedDecimalString()
-			case Base.Binary:
-				return value.toBinaryString()
-			default:
-				throw new Error("Unsupported base")
-		}
-	}
-
-	/** Sets the text to be in sync with the current value of the integer */
-	function setTextToCurrentValue() {
-		if (!inputElement) {
-			return
-		}
-		inputElement.value = valueToString()
-	}
-
-	/**
-	 * Update the forbiddenCharacters regexp to the most appropriate one for the current
-	 * base and signed values
-	 * */
-	function updateForbiddenCharacters() {
-		switch (base) {
-			case Base.Decimal:
-				forbiddenCharacters = signed
-					? forbiddenSignedDecimalCharacters
-					: forbiddenUnsignedDecimalCharacters
-				break
-			case Base.Binary:
-				forbiddenCharacters = forbiddenBinaryCharacters
-				break
-			default:
-				throw new Error("Unsupported base")
-		}
-	}
-
-	/**
-	 * Update the validInput regexp to the most appropriate one for the current
-	 * base and signed values
-	 * */
-	function updateValidInputRegexp() {
-		switch (base) {
-			case Base.Decimal:
-				validInputRegexp = signed ? signedDecimalInputRegex : unsignedDecimalInputRegex
-				break
-			case Base.Binary:
-				validInputRegexp = binaryInputRegex
-				break
-			default:
-				throw new Error("Unsupported base")
-		}
-	}
-
-	/**
-	 * Update the inputParser function to the most appropriate one for the current
-	 * base and signed values
-	 * */
-	function updateInputParser() {
-		switch (base) {
-			case Base.Decimal:
-				inputParser = signed ? Integer.fromSignedString : Integer.fromUnsignedString
-				break
-			case Base.Binary:
-				inputParser = Integer.fromBinaryString
-				break
-			default:
-				throw new Error("Unsupported base")
-		}
+		inputValue = formattedInput
 	}
 </script>
 
 <div class="relative flex h-fit w-fit items-center justify-center p-2 text-lg">
 	<input
 		type="text"
-		bind:this={inputElement}
+		bind:this={inputEl}
+		bind:value={inputValue}
 		disabled={!editable}
-		on:focusin={startEdit}
-		on:change={endEdit}
-		on:blur={endEdit}
-		on:input={formatText}
-		style:width={`${value.sizeBits()}ch`}
-		class="bg-transparent text-center selection:bg-transparent focus:outline-none"
+		onfocusin={startEdit}
+		onchange={endEdit}
+		onblur={endEdit}
+		oninput={formatText}
+		style:width={`${sizeBits}ch`}
+		class="box-content bg-transparent text-center selection:bg-transparent focus:outline-none"
 	/>
 </div>
