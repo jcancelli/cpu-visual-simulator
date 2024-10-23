@@ -21,6 +21,9 @@
 		base?: Base
 		/** Function for validating new values before being committed */
 		validator?: InputValidator
+		oninvalidinput?: (input: string) => void
+		onvalidationerror?: (input: string, error: Error) => void
+		onchange?: (value: Integer) => void
 	}
 
 	const forbiddenBinaryCharacters = /[^01]*/g
@@ -35,7 +38,7 @@
 
 <script lang="ts">
 	import Integer, { type Size } from "$lib/model/integer"
-	import { createEventDispatcher, onMount } from "svelte"
+	import { onMount } from "svelte"
 
 	let {
 		value = $bindable(),
@@ -43,13 +46,10 @@
 		signed = $bindable(true),
 		base = $bindable(10),
 		validator = $bindable(() => {}),
+		oninvalidinput = undefined,
+		onvalidationerror = undefined,
+		onchange = undefined,
 	}: Props = $props()
-
-	const dispatch = createEventDispatcher<{
-		"invalid-input": { input: string }
-		changed: { value: Integer }
-		"validation-error": { input: string; error: any }
-	}>()
 
 	/** The variable the html input element is bounded to */
 	let inputEl: HTMLInputElement | undefined = $state()
@@ -142,7 +142,7 @@
 
 		if (!validInputRegexp.test(inputString.trim())) {
 			inputValue = valueToString
-			dispatch("invalid-input", { input: inputString })
+			oninvalidinput?.(inputString)
 			return
 		}
 
@@ -155,10 +155,10 @@
 			}
 
 			value = parsedValue
-			dispatch("changed", { value })
+			onchange?.(value)
 		} catch (error) {
 			inputValue = valueToString
-			dispatch("validation-error", { input: inputString, error })
+			onvalidationerror?.(inputValue, error as Error)
 			return
 		}
 	}
