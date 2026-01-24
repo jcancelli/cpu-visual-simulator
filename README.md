@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/cpuvs-logo.png" alt="CPU Visual Simulator" width="550" />
+<img src="readme-assets/cpuvs-logo.png" alt="CPU Visual Simulator" width="550" />
 
 **A web-based, open-source, educational resource**
 
@@ -8,7 +8,7 @@ CPU Visual Simulator is a web based educational resource that allows students to
 
 Try it out at [https://cpuvisualsimulator.github.io](https://cpuvisualsimulator.github.io)
 
-<img src="assets/cpuvs-demo.gif" alt="CPU Visual Simulator Screenshot" width="800" style="border-radius: 15px;" />
+<img src="readme-assets/cpuvs-demo.gif" alt="CPU Visual Simulator Screenshot" width="800" style="border-radius: 15px;" />
 
 </div>
 

@@ -1,7 +1,25 @@
 {
+	"experimentalTernaries": true,
+	"experimentalOperatorPosition": "start",
+	"printWidth": 100,
+	"tabWidth": 4,
 	"useTabs": true,
-	"trailingComma": "none",
-	"printWidth": 110,
-    "semi": false,
-    "arrowParens": "avoid"
+	"semi": false,
+	"singleQuote": false,
+	"quoteProps": "as-needed",
+	"trailingComma": "all",
+	"bracketSpacing": true,
+	"objectWrap": "preserve",
+	"bracketSameLine": false,
+	"arrowParens": "avoid",
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	],
+	"tailwindStylesheet": "./src/routes/layout.css"
 }
