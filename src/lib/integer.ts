@@ -1,298 +1,169 @@
-export const RANGES = {
-	signed: {
-		8: {
-			lower: -Math.pow(2, 7),
-			upper: Math.pow(2, 7) - 1,
-		},
-		16: {
-			lower: -Math.pow(2, 15),
-			upper: Math.pow(2, 15) - 1,
-		},
-		32: {
-			lower: -Math.pow(2, 31),
-			upper: Math.pow(2, 31) - 1,
-		},
-	},
-	unsigned: {
-		8: {
-			lower: 0,
-			upper: Math.pow(2, 8) - 1,
-		},
-		16: {
-			lower: 0,
-			upper: Math.pow(2, 16) - 1,
-		},
-		32: {
-			lower: 0,
-			upper: Math.pow(2, 32) - 1,
-		},
-	},
-} as const
+export const I8_MIN = -128
+export const I8_MAX = 127
+export const U8_MIN = 0
+export const U8_MAX = 255
+export const I16_MIN = -32_768
+export const I16_MAX = 32_767
+export const U16_MIN = 0
+export const U16_MAX = 65_535
 
-export type IntSizeBits = 8 | 16 | 32
-export type IntSizeBytes = 1 | 2 | 4
+/** Check that the provided value is in the 8-bit signed range */
+export function isValidI8(value: number): boolean {
+	return value >= I8_MIN && value <= I8_MAX
+}
 
-/** Represents a fixed size integer. Instances of this class should be consifered immutable */
-export default class Integer {
-	/**
-	 * @param _sizeBits - Size in bits of the value
-	 * @param unsignedValue - Value as unsigned integer
-	 * */
-	constructor(
-		protected readonly _sizeBits: IntSizeBits,
-		protected readonly unsignedValue: number = 0,
-	) {
-		if (!isInRangeUnsigned(unsignedValue, _sizeBits)) {
-			throw new IntegerOutOfUnsignedRangeError(_sizeBits, unsignedValue)
-		}
-		if (!Number.isInteger(unsignedValue)) {
-			throw new NotAnIntegerError(unsignedValue)
-		}
-	}
+/** Check that the provided value is in the 8-bit unsigned range */
+export function isValidU8(value: number): boolean {
+	return value >= U8_MIN && value <= U8_MAX
+}
 
-	/** Returns the signed value of the integer */
-	signed(): number {
-		return unsignedToSignedUnchecked(this.unsignedValue, this.sizeBits())
-	}
+/** Check that the provided value is in the 16-bit signed range */
+export function isValidI16(value: number): boolean {
+	return value >= I16_MIN && value <= I16_MAX
+}
 
-	/** Returns the unsigned value of the integer */
-	unsigned(): number {
-		return this.unsignedValue
-	}
+/** Check that the provided value is in the 16-bit unsigned range */
+export function isValidU16(value: number): boolean {
+	return value >= U16_MIN && value <= U16_MAX
+}
 
-	/** Return a string containing the base-2 representation of the integer */
-	toBinaryString(): string {
-		const leastSignificantBits = (this.unsigned() >>> 0).toString(2)
-		const mostSignificantBits = "0".repeat(this.sizeBits() - leastSignificantBits.length)
-		return mostSignificantBits.concat(leastSignificantBits)
-	}
-
-	/** Return a string containing the base-16 representation of the integer */
-	toHexadecimalString(): string {
-		const hexString = (this.unsigned() >>> 0).toString(16)
-		// make sure to crop out all leading "f"s if the number was negative
-		const substringStartIndex = Math.max(0, hexString.length - this.sizeBits() / 4)
-		const leastSignificantDigits = hexString.substring(substringStartIndex)
-		const paddingZerosCount = this.sizeBits() / 4 - leastSignificantDigits.length
-		const mostSignificantDigits = "0".repeat(paddingZerosCount)
-		return mostSignificantDigits.concat(leastSignificantDigits)
-	}
-
-	/** Returns a string containing the decimal representation of the integer as a signed value */
-	toSignedDecimalString(): string {
-		return this.signed().toString()
-	}
-
-	/** Returns a string containing the decimal representation of the integer as an unsigned value */
-	toUnsignedDecimalString(): string {
-		return this.unsigned().toString()
-	}
-
-	/** Size in bits of the integer */
-	sizeBits(): IntSizeBits {
-		return this._sizeBits
-	}
-
-	/** Size in bytes of the integer */
-	sizeBytes(): IntSizeBytes {
-		return (this.sizeBits() / 8) as IntSizeBytes
-	}
-
-	/**
-	 * Returns wether or not the bit at position i is set
-	 * @param i - If i >= 0, 0 is the msb and size-1 the lsb. If i < 0, -1 is the lsb and -size the msb.
-	 * */
-	bit(i: number): boolean {
-		const shift = i >= 0 ? this.sizeBits() - 1 - i : Math.abs(i) - 1
-		if (shift >= this.sizeBits() || shift < 0) {
-			throw new Error(`Invalid bit position ${i} for integer of size ${this.sizeBits()}`)
-		}
-		return ((this.unsigned() >> shift) & 1) === 1
-	}
-
-	/** Creates an integer from a signed value */
-	static fromSignedNumber(sizeBits: IntSizeBits, value: number): Integer {
-		// signedToUnsigned already provides validation
-		return new Integer(sizeBits, signedToUnsigned(value, sizeBits))
-	}
-
-	/** Creates an integer from an unsigned value */
-	static fromUnsignedNumber(sizeBits: IntSizeBits, value: number): Integer {
-		// constructor already provides validation
-		return new Integer(sizeBits, value)
-	}
-
-	/** Creates an integer by parsing a signed value from a string */
-	static fromSignedString(sizeBits: IntSizeBits, str: string): Integer {
-		// validation provided by parseInt and fromSignedNumber
-		const value = parseInt(str)
-		return Integer.fromSignedNumber(sizeBits, value)
-	}
-
-	/** Creates an integer by parsing an unsigned value from a string */
-	static fromUnsignedString(sizeBits: IntSizeBits, str: string): Integer {
-		// validation provided by parseInt and fromUnsignedNumber
-		const value = parseInt(str)
-		return Integer.fromUnsignedNumber(sizeBits, value)
-	}
-
-	/**
-	 * Creates an integer by parsing a string containing a base-2 representation of a number.
-	 * Negative numbers must not contain the "-" character but will have to represented with two's
-	 * complement */
-	static fromBinaryString(sizeBits: IntSizeBits, str: string): Integer {
-		// negative numbers should be expressed without "-"
-		if (str.includes("-")) {
-			throw new IntegerParsingError(`Character "-" not allowed in binary strings`)
-		}
-		// validation provided by parseInt and fromUnsignedNumber
-		const value = parseInt(str, 2)
-		return Integer.fromUnsignedNumber(sizeBits, value)
-	}
-
-	/**
-	 * Creates an integer by parsing a string containing a base-16 representation of a number.
-	 * Negative numbers must not contain the "-" character but will have to represented with two's
-	 * complement */
-	static fromHexadecimalString(sizeBits: IntSizeBits, str: string): Integer {
-		// negative numbers should be expressed without "-"
-		if (str.includes("-")) {
-			throw new IntegerParsingError(`Character "-" not allowed in hexadecimal strings`)
-		}
-		// validation provided by parseInt and fromUnsignedNumber
-		const value = parseInt(str, 16)
-		return Integer.fromUnsignedNumber(sizeBits, value)
+/** Shortcut for checking if the input is a valid 8-bit signed integer or throw error */
+export function checkI8Throw(value: number): void {
+	if (!isValidI8(value)) {
+		throw new InvalidI8Error(value)
 	}
 }
 
-/** Create 8 bits signed integer */
-export function i8(value: number = 0): Integer {
-	return Integer.fromSignedNumber(8, value)
-}
-
-/** Create 16 bits signed integer */
-export function i16(value: number = 0): Integer {
-	return Integer.fromSignedNumber(16, value)
-}
-
-/** Create 32 bits signed integer */
-export function i32(value: number = 0): Integer {
-	return Integer.fromSignedNumber(32, value)
-}
-
-/** Create 8 bits unsigned integer */
-export function u8(value: number = 0): Integer {
-	return new Integer(8, value)
-}
-
-/** Create 16 bits unsigned integer */
-export function u16(value: number = 0): Integer {
-	return new Integer(16, value)
-}
-
-/** Create 32 bits unsigned integer */
-export function u32(value: number = 0): Integer {
-	return new Integer(32, value)
-}
-
-/** Return wether a value is in the "size" bits signed range */
-export function isInRangeSigned(value: number, sizeBits: IntSizeBits): boolean {
-	return value >= RANGES.signed[sizeBits].lower && value <= RANGES.signed[sizeBits].upper
-}
-
-/** Return wether a value is in the "size" bits unsigned range */
-export function isInRangeUnsigned(value: number, sizeBits: IntSizeBits): boolean {
-	return value >= RANGES.unsigned[sizeBits].lower && value <= RANGES.unsigned[sizeBits].upper
-}
-
-/** Cast a signed integer to an unsigned integer if possible, otherwise throws an error */
-export function signedToUnsigned(value: number, sizeBits: IntSizeBits): number {
-	if (!isInRangeSigned(value, sizeBits)) {
-		throw new IntegerOutOfSignedRangeError(sizeBits, value)
-	}
-	if (!Number.isInteger(value)) {
-		throw new NotAnIntegerError(value)
-	}
-	return signedToUnsignedUnchecked(value, sizeBits)
-}
-
-/** Cast a signed integer to an unsigned integer without validating the input */
-function signedToUnsignedUnchecked(value: number, sizeBits: IntSizeBits): number {
-	const maxUnsigned = RANGES.unsigned[sizeBits].upper
-	return value >= 0 ? value : value + maxUnsigned + 1
-}
-
-/** Cast an unsigned integer to an signed integer if possible, otherwise throws an error */
-export function unsignedToSigned(value: number, sizeBits: IntSizeBits): number {
-	if (!isInRangeUnsigned(value, sizeBits)) {
-		throw new IntegerOutOfUnsignedRangeError(sizeBits, value)
-	}
-	if (!Number.isInteger(value)) {
-		throw new NotAnIntegerError(value)
-	}
-	return unsignedToSignedUnchecked(value, sizeBits)
-}
-
-/** Cast an unsigned integer to an signed integer without validating the input */
-function unsignedToSignedUnchecked(value: number, sizeBits: IntSizeBits): number {
-	const maxSigned = RANGES.signed[sizeBits].upper
-	const maxUnsigned = RANGES.unsigned[sizeBits].upper
-	return value <= maxSigned ? value : value - maxUnsigned - 1
-}
-
-/** Thrown while parsing an integer from a string */
-export class IntegerParsingError extends Error {
-	constructor(message?: string) {
-		super(message)
-		Object.setPrototypeOf(this, IntegerParsingError)
+/** Shortcut for checking if the input is a valid 8-bit unsigned integer or throw error */
+export function checkU8Throw(value: number): void {
+	if (!isValidU8(value)) {
+		throw new InvalidU8Error(value)
 	}
 }
 
-/** Thrown when a value cannot be represented in an n-bits, signed/unsigned range */
+/** Shortcut for checking if the input is a valid 16-bit signed integer or throw error */
+export function checkI16Throw(value: number): void {
+	if (!isValidI16(value)) {
+		throw new InvalidI16Error(value)
+	}
+}
+
+/** Shortcut for checking if the input is a valid 16-bit unsigned integer or throw error */
+export function checkU16Throw(value: number): void {
+	if (!isValidU16(value)) {
+		throw new InvalidU16Error(value)
+	}
+}
+
+/** Cast an unsigned integer to an 8-bit signed integer.
+ * Only the least significant byte of the input is considered.
+ * @param unsignedValue An unsigned number of any size
+ * @returns The least significant byte of the input casted into a signed integer */
+export function i8(unsignedValue: number): number {
+	return ((unsignedValue & 0xff) << 24) >> 24
+}
+
+/** Cast a signed integer to an 8-bit unsigned integer.
+ * Only the least significant byte of the input is considered.
+ * @param signedValue A signed number of any size
+ * @returns The least significant byte of the input casted into an unsigned integer */
+export function u8(signedValue: number): number {
+	return signedValue & 0xff
+}
+
+/** Cast an unsigned integer to a 16-bit signed integer.
+ * Only the 2 least significant bytes of the input are considered.
+ * @param unsignedValue An unsigned number of any size
+ * @returns The 2 least significant bytes of the input casted into a signed integer */
+export function i16(unsignedValue: number): number {
+	return ((unsignedValue & 0xffff) << 16) >> 16
+}
+
+/** Cast a signed integer to a 16-bit unsigned integer.
+ * Only the 2 least significant bytes of the input are considered.
+ * @param signedValue A signed number of any size
+ * @returns The 2 least significant bytes of the input casted into an unsigned integer */
+export function u16(signedValue: number): number {
+	return signedValue & 0xffff
+}
+
+/** Return the most significant byte of a 16-bit signed integer.
+ * @param signedValue A signed number of any size
+ * @returns The 2nd least significant byte as an unsigned 8-bit integer */
+export function i16MSB(signedValue: number): number {
+	return (signedValue & 0xff00) >>> 8
+}
+
+/** Return the least significant byte of a 16-bit signed integer.
+ * @param signedValue A signed number of any size
+ * @returns The least significant byte as an unsigned 8-bit integer */
+export function i16LSB(signedValue: number): number {
+	return signedValue & 0xff
+}
+
+/** Return the most significant byte of a 16-bit unsigned integer.
+ * @param unsignedValue An unsigned number of any size
+ * @returns The 2nd least significant byte as an unsigned 8-bit integer */
+export function u16MSB(unsignedValue: number): number {
+	return unsignedValue >>> 8
+}
+
+/** Return the least significant byte of a 16-bit unsigned integer.
+ * @param unsignedValue An unsigned number of any size
+ * @returns The least significant byte as an unsigned 8-bit integer */
+export function u16LSB(unsignedValue: number): number {
+	return unsignedValue & 0xff
+}
+
+/** Join 2 8-bit unsigned integers into a 16-bit signed integer.
+ * The input bytes are assumed to be valid 8-bit unsigned integers.
+ * @param msb The most significant byte (unsigned)
+ * @param lsb The least significant byte (unsigned)
+ * @returns A 16-bit signed integer */
+export function joinU8ToI16(msb: number, lsb: number): number {
+	return (((msb << 8) | lsb) << 16) >> 16
+}
+
+/** Join 2 8-bit unsigned integers into a 16-bit unsigned integer.
+ * The input bytes are assumed to be valid 8-bit unsigned integers.
+ * @param msb The most significant byte (unsigned)
+ * @param lsb The least significant byte (unsigned)
+ * @returns A 16-bit unsigned integer */
+export function joinU8ToU16(msb: number, lsb: number): number {
+	return (msb << 8) | lsb
+}
+
+/** Base class for errors regarding numeric values out of a specific n-bits signed/unsigned range */
 export abstract class IntegerOutOfRangeError extends Error {
-	/**
-	 *	@param sizeBits - Number of bits used for the range
-	 *	@param signed - Wether the value is supposed to be signed or not
-	 *	@param value - The value outside of the range
-	 * */
-	constructor(
-		public readonly sizeBits: IntSizeBits,
-		public readonly signed: boolean,
-		public readonly value: number,
-	) {
-		super(`Value ${value} out of ${sizeBits}-bit ${signed ? "signed" : "unsigned"} range`)
-		Object.setPrototypeOf(this, IntegerOutOfRangeError)
+	constructor(bits: 8 | 16, signed: boolean, value: number) {
+		super(`value: ${value} out of ${bits}-bit ${signed ? "signed" : "unsigned"} range`)
 	}
 }
 
-/** Thrown when a value cannot be represented in an n-bits, unsigned range */
-export class IntegerOutOfUnsignedRangeError extends IntegerOutOfRangeError {
-	/**
-	 *	@param sizeBits - Number of bits used for the range
-	 *	@param value - The value outside of the range
-	 * */
-	constructor(sizeBits: IntSizeBits, value: number) {
-		super(sizeBits, false, value)
-		Object.setPrototypeOf(this, IntegerOutOfUnsignedRangeError)
+/** Error regarding numeric values out of 8-bit unsigned integer valid range */
+export class InvalidU8Error extends IntegerOutOfRangeError {
+	constructor(value: number) {
+		super(8, false, value)
 	}
 }
 
-/** Thrown when a value cannot be represented in an n-bits, signed range */
-export class IntegerOutOfSignedRangeError extends IntegerOutOfRangeError {
-	/**
-	 *	@param sizeBits - Number of bits used for the range
-	 *	@param value - The value outside of the range
-	 * */
-	constructor(sizeBits: IntSizeBits, value: number) {
-		super(sizeBits, true, value)
-		Object.setPrototypeOf(this, IntegerOutOfSignedRangeError)
+/** Error regarding numeric values out of 8-bit signed integer valid range */
+export class InvalidI8Error extends IntegerOutOfRangeError {
+	constructor(value: number) {
+		super(8, true, value)
 	}
 }
 
-/** Thrown when a value has is not an integer */
-export class NotAnIntegerError extends Error {
-	constructor(public readonly value: number) {
-		super(`Value ${value} is not an integer`)
-		Object.setPrototypeOf(this, NotAnIntegerError)
+/** Error regarding numeric values out of 16-bit unsigned integer valid range */
+export class InvalidU16Error extends IntegerOutOfRangeError {
+	constructor(value: number) {
+		super(16, false, value)
+	}
+}
+
+/** Error regarding numeric values out of 16-bit signed integer valid range */
+export class InvalidI16Error extends IntegerOutOfRangeError {
+	constructor(value: number) {
+		super(16, true, value)
 	}
 }
