@@ -110,63 +110,74 @@ export default class Memory {
 		this._bytes[address + 1] = lsb
 	}
 
+	/** Shift down by {@link WORD_ALIGN} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} + 1.
+	 * {@link msbAddress} + {@link WORD_ALIGN} and {@link msbAddress} + {@link WORD_ALIGN} + 1 are overwritten.
+	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are set to 0.
+	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
+	shiftFirstHalfDownFromAddress(msbAddress: number): void {
+		checkWordAddressThrow(msbAddress)
+		const lowerMsbAddress = msbAddress + WORD_ALIGN
+		const lowerLsbAddress = lowerMsbAddress + 1
+		const upperMsbAddress = MIN_ADDRESS
+		const upperLsbAddress = upperMsbAddress + 1
+		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
+			const oldAddress = newAddress - WORD_ALIGN
+			this._bytes[newAddress] = this._bytes[oldAddress]
+		}
+		this._bytes[upperMsbAddress] = 0
+		this._bytes[upperLsbAddress] = 0
+	}
+
 	/** Shift down by {@link WORD_ALIGN} all bytes from {@link msbAddress} to {@link MAX_WORD_ADDRESS} - 1.
 	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftWordsDownFromAddress(msbAddress: number): void {
+	shiftSecondHalfDownFromAddress(msbAddress: number): void {
 		checkWordAddressThrow(msbAddress)
-		const lsbAddress = msbAddress + 1
-		for (let newAddress = MAX_ADDRESS; newAddress > lsbAddress; newAddress -= 1) {
+		const lowerMsbAddress = MAX_WORD_ADDRESS
+		const lowerLsbAddress = lowerMsbAddress + 1
+		const upperMsbAddress = msbAddress
+		const upperLsbAddress = upperMsbAddress + 1
+		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
 			const oldAddress = newAddress - WORD_ALIGN
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[msbAddress] = 0
-		this._bytes[lsbAddress] = 0
+		this._bytes[upperMsbAddress] = 0
+		this._bytes[upperLsbAddress] = 0
 	}
 
-	/** Shift down by {@link WORD_ALIGN} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} - 1.
-	 * {@link msbAddress} and {@link msbAddress} + 1 are overwritten.
-	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are set to 0.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftWordsDownToAddress(msbAddress: number): void {
-		checkWordAddressThrow(msbAddress)
-		const lsbAddress = msbAddress + 1
-		for (let newAddress = lsbAddress; newAddress > MIN_ADDRESS + 1; newAddress -= 1) {
-			const oldAddress = newAddress - WORD_ALIGN
-			this._bytes[newAddress] = this._bytes[oldAddress]
-		}
-		this._bytes[MIN_ADDRESS] = 0
-		this._bytes[MIN_ADDRESS + 1] = 0
-	}
-
-	/** Shift up by {@link WORD_ALIGN} all bytes from {@link MAX_ADDRESS} to {@link msbAddress} + {@link WORD_ALIGN}.
-	 * {@link msbAddress} and {@link msbAddress} + 1 are overwritten.
-	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are set to 0.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftWordsUpFromAddress(msbAddress: number): void {
-		checkWordAddressThrow(msbAddress)
-		for (let newAddress = msbAddress; newAddress < MAX_WORD_ADDRESS; newAddress += 1) {
-			const oldAddress = newAddress + WORD_ALIGN
-			this._bytes[newAddress] = this._bytes[oldAddress]
-		}
-		this._bytes[MAX_WORD_ADDRESS] = 0
-		this._bytes[MAX_WORD_ADDRESS + 1] = 0
-	}
-
-	/** Shift up by {@link WORD_ALIGN} all bytes from {@link msbAddress} + 1 to {@link MIN_ADDRESS} + {@link WORD_ALIGN}.
+	/** Shift up by {@link WORD_ALIGN} all bytes from {@link MIN_ADDRESS} + {@link WORD_ALIGN} to {@link msbAddress} + 1.
 	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftWordsUpToAddress(msbAddress: number): void {
+	shiftFirstHalfUpFromAddress(msbAddress: number): void {
 		checkWordAddressThrow(msbAddress)
-		const lsbAddress = msbAddress + 1
-		for (let newAddress = MIN_ADDRESS; newAddress < msbAddress; newAddress += 1) {
+		const upperMsbAddress = MIN_ADDRESS
+		const lowerMsbAddress = msbAddress
+		const lowerLsbAddress = lowerMsbAddress + 1
+		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
 			const oldAddress = newAddress + WORD_ALIGN
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[msbAddress] = 0
-		this._bytes[lsbAddress] = 0
+		this._bytes[lowerMsbAddress] = 0
+		this._bytes[lowerLsbAddress] = 0
+	}
+
+	/** Shift up by {@link WORD_ALIGN} all bytes from {@link msbAddress} to {@link MAX_ADDRESS}.
+	 * {@link msbAddress} - {@link WORD_ALIGN} and {@link msbAddress} - 1 are overwritten.
+	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are set to 0.
+	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
+	shiftSecondHalfUpFromAddress(msbAddress: number): void {
+		checkWordAddressThrow(msbAddress)
+		const upperMsbAddress = msbAddress - WORD_ALIGN
+		const lowerMsbAddress = MAX_WORD_ADDRESS
+		const lowerLsbAddress = lowerMsbAddress + 1
+		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
+			const oldAddress = newAddress + WORD_ALIGN
+			this._bytes[newAddress] = this._bytes[oldAddress]
+		}
+		this._bytes[lowerMsbAddress] = 0
+		this._bytes[lowerLsbAddress] = 0
 	}
 }
 
