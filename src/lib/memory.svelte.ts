@@ -117,11 +117,11 @@ export default class Memory {
 	 * Note: "upperHalf" refers to all the addresses <= {@link msbAddress}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
 	shiftUpperHalfDownFromAddress(msbAddress: number): void {
-		checkWordAddressThrow(msbAddress)
 		if (msbAddress === MAX_WORD_ADDRESS) {
 			// Noop if it's trying to shift from the last address
 			return
 		}
+		checkWordAddressThrow(msbAddress)
 		const lowerMsbAddress = msbAddress + WORD_ALIGN
 		const lowerLsbAddress = lowerMsbAddress + 1
 		const upperMsbAddress = MIN_ADDRESS
@@ -178,11 +178,11 @@ export default class Memory {
 	 * Note: "lowerHalf" refers to all the addresses >= {@link msbAddress}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
 	shiftLowerHalfUpFromAddress(msbAddress: number): void {
-		checkWordAddressThrow(msbAddress)
 		if (msbAddress === MIN_ADDRESS) {
 			// Noop if it's trying to shift from the first address
 			return
 		}
+		checkWordAddressThrow(msbAddress)
 		const upperMsbAddress = msbAddress - WORD_ALIGN
 		const lowerMsbAddress = MAX_WORD_ADDRESS
 		const lowerLsbAddress = lowerMsbAddress + 1
