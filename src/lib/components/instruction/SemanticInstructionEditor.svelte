@@ -2,7 +2,7 @@
 	import { i8, I8_MAX, I8_MIN, u8, U8_MAX, U8_MIN } from "$lib/integer"
 	import { getImmediateFlag, setImmediateFlag, OPCODES, OPCODES_BY_NUMBER } from "$lib/opcode"
 
-	interface InstructionSymbolicEditorProps {
+	interface SemanticInstructionEditorProps {
 		msb?: number
 		lsb?: number
 		opcodeClass?: string
@@ -20,7 +20,7 @@
 		immediateFlagTrueClass = "",
 		immediateFlagFalseClass = "",
 		operandClass = "",
-	}: InstructionSymbolicEditorProps = $props()
+	}: SemanticInstructionEditorProps = $props()
 
 	const msbNoImmediateFlag = $derived(setImmediateFlag(msb, false))
 	const opcode = $derived(OPCODES_BY_NUMBER[msbNoImmediateFlag] ?? null)

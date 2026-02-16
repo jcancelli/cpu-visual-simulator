@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { u8 } from "$lib/integer"
 
-	interface InstructionBinaryEditorProps {
+	interface BinaryStringInstructionEditorProps {
 		msb?: number
 		lsb?: number
 		msbClass?: string
@@ -13,7 +13,7 @@
 		lsb = $bindable(0),
 		msbClass = "",
 		lsbClass = "",
-	}: InstructionBinaryEditorProps = $props()
+	}: BinaryStringInstructionEditorProps = $props()
 
 	/** Wether or not one of the input has focus */
 	let isEditing = $state(false)

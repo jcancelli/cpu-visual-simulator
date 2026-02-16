@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { i8, u8, I8_MAX, I8_MIN } from "$lib/integer"
+	import { u8, U8_MAX, U8_MIN } from "$lib/integer"
 
-	interface InstructionSignedEditorProps {
+	interface UnsignedBytesInstructionEditorProps {
 		msb?: number
 		lsb?: number
 		msbClass?: string
@@ -13,22 +13,22 @@
 		lsb = $bindable(0),
 		msbClass = "",
 		lsbClass = "",
-	}: InstructionSignedEditorProps = $props()
+	}: UnsignedBytesInstructionEditorProps = $props()
 
-	/** Ensures msb is casted to i8 */
-	let i8Msb = $derived(i8(msb))
-	/** Ensures lsb is casted to i8 */
-	let i8Lsb = $derived(i8(lsb))
+	/** Ensures msb is casted to u8 */
+	let u8Msb = $derived(u8(msb))
+	/** Ensures lsb is casted to u8 */
+	let u8Lsb = $derived(u8(lsb))
 	/** Wether one of the input is focused or not */
 	let isEditing = $state(false)
 	/** The value that is being edited by the input */
-	let msbInputValue = $state(i8Msb)
+	let msbInputValue = $state(u8Msb)
 	/** The value that should be displayed by the input */
-	let msbDisplayValue = $derived(isEditing ? msbInputValue : i8Msb)
+	let msbDisplayValue = $derived(isEditing ? msbInputValue : u8Msb)
 	/** The value that is being edited by the input */
-	let lsbInputValue = $state(i8Lsb)
+	let lsbInputValue = $state(u8Lsb)
 	/** The value that should be displayed by the input */
-	let lsbDisplayValue = $derived(isEditing ? lsbInputValue : i8Lsb)
+	let lsbDisplayValue = $derived(isEditing ? lsbInputValue : u8Lsb)
 </script>
 
 <input
@@ -38,18 +38,18 @@
 		() => msbDisplayValue,
 		input => {
 			msbInputValue = input
-			if (input > I8_MAX) {
-				msb = u8(I8_MAX)
-			} else if (input < I8_MIN) {
-				msb = u8(I8_MIN)
+			if (input > U8_MAX) {
+				msb = U8_MAX
+			} else if (input < U8_MIN) {
+				msb = U8_MIN
 			} else {
-				msb = u8(input ?? 0)
+				msb = input ?? 0
 			}
 			return msbInputValue
 		}
 	}
 	onfocus={() => {
-		msbInputValue = i8Msb
+		msbInputValue = u8Msb
 		isEditing = true
 	}}
 	onblur={() => {
@@ -64,18 +64,18 @@
 		() => lsbDisplayValue,
 		input => {
 			lsbInputValue = input
-			if (input > I8_MAX) {
-				lsb = u8(I8_MAX)
-			} else if (input < I8_MIN) {
-				lsb = u8(I8_MIN)
+			if (input > U8_MAX) {
+				lsb = U8_MAX
+			} else if (input < U8_MIN) {
+				lsb = U8_MIN
 			} else {
-				lsb = u8(input ?? 0)
+				lsb = input ?? 0
 			}
 			return lsbInputValue
 		}
 	}
 	onfocus={() => {
-		lsbInputValue = i8Lsb
+		lsbInputValue = lsb
 		isEditing = true
 	}}
 	onblur={() => {
