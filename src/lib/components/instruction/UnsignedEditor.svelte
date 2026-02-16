@@ -48,9 +48,11 @@
 			return msbInputValue
 		}
 	}
-	onfocus={() => (isEditing = true)}
+	onfocus={() => {
+		msbInputValue = u8Msb
+		isEditing = true
+	}}
 	onblur={() => {
-		msbInputValue = msb
 		isEditing = false
 	}}
 	class={msbClass}
@@ -72,9 +74,11 @@
 			return lsbInputValue
 		}
 	}
-	onfocus={() => (isEditing = true)}
-	onblur={() => {
+	onfocus={() => {
 		lsbInputValue = lsb
+		isEditing = true
+	}}
+	onblur={() => {
 		isEditing = false
 	}}
 	class={lsbClass}

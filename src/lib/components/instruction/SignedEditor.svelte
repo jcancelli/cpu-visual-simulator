@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { i8, I8_MAX, I8_MIN } from "$lib/integer"
+	import { i8, u8, I8_MAX, I8_MIN } from "$lib/integer"
 
 	interface InstructionSignedEditorProps {
 		msb?: number
@@ -39,18 +39,20 @@
 		input => {
 			msbInputValue = input
 			if (input > I8_MAX) {
-				msb = I8_MAX
+				msb = u8(I8_MAX)
 			} else if (input < I8_MIN) {
-				msb = I8_MIN
+				msb = u8(I8_MIN)
 			} else {
-				msb = input ?? 0
+				msb = u8(input ?? 0)
 			}
 			return msbInputValue
 		}
 	}
-	onfocus={() => (isEditing = true)}
+	onfocus={() => {
+		msbInputValue = i8Msb
+		isEditing = true
+	}}
 	onblur={() => {
-		msbInputValue = msb
 		isEditing = false
 	}}
 	class={msbClass}
@@ -63,18 +65,20 @@
 		input => {
 			lsbInputValue = input
 			if (input > I8_MAX) {
-				lsb = I8_MAX
+				lsb = u8(I8_MAX)
 			} else if (input < I8_MIN) {
-				lsb = I8_MIN
+				lsb = u8(I8_MIN)
 			} else {
-				lsb = input ?? 0
+				lsb = u8(input ?? 0)
 			}
 			return lsbInputValue
 		}
 	}
-	onfocus={() => (isEditing = true)}
+	onfocus={() => {
+		lsbInputValue = i8Lsb
+		isEditing = true
+	}}
 	onblur={() => {
-		lsbInputValue = lsb
 		isEditing = false
 	}}
 	class={lsbClass}

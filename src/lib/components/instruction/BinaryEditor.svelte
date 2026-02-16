@@ -46,9 +46,11 @@
 			return msbInputStr
 		}
 	}
-	onfocus={() => (isEditing = true)}
-	onblur={() => {
+	onfocus={() => {
 		msbInputStr = msbFormattedStr
+		isEditing = true
+	}}
+	onblur={() => {
 		isEditing = false
 	}}
 	class={msbClass}
@@ -68,9 +70,11 @@
 			return lsbInputStr
 		}
 	}
-	onfocus={() => (isEditing = true)}
-	onblur={() => {
+	onfocus={() => {
 		lsbInputStr = lsbFormattedStr
+		isEditing = true
+	}}
+	onblur={() => {
 		isEditing = false
 	}}
 	class={lsbClass}
