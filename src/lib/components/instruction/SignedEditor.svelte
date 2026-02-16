@@ -23,11 +23,11 @@
 	let isEditing = $state(false)
 	/** The value that is being edited by the input */
 	let msbInputValue = $state(i8Msb)
-	/** The value that should be displayyed by the input */
+	/** The value that should be displayed by the input */
 	let msbDisplayValue = $derived(isEditing ? msbInputValue : i8Msb)
 	/** The value that is being edited by the input */
 	let lsbInputValue = $state(i8Lsb)
-	/** The value that should be displayyed by the input */
+	/** The value that should be displayed by the input */
 	let lsbDisplayValue = $derived(isEditing ? lsbInputValue : i8Lsb)
 </script>
 
