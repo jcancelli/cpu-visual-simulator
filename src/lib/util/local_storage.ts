@@ -33,3 +33,11 @@ export function getJSON<T>(key: string): T | null {
 	}
 	return JSON.parse(str)
 }
+
+export function setString(key: string, str: string): void {
+	localStorage.setItem(key, str)
+}
+
+export function getString(key: string): string | null {
+	return localStorage.getItem(key)
+}
