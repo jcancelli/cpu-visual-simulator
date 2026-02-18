@@ -5,7 +5,7 @@ export function unreachable(message?: string): never {
 }
 
 /** Error thrown when {@link unreachable} is encountered. */
-class UnreachableError extends Error {}
+export class UnreachableError extends Error {}
 
 /** Utility function to be used as a todo marker.
  * @throws {TODOError} */
@@ -14,7 +14,7 @@ export function todo(message?: string): never {
 }
 
 /** Error thrown when {@link todo} is encountered. */
-class TODOError extends Error {}
+export class TODOError extends Error {}
 
 /** Utility function to be used as an unimplemented marker.
  * @throws {UnimplementedError} */
