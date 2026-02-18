@@ -57,14 +57,16 @@ export function checkWordAddressThrow(address: number): void {
 
 /** State of the memory */
 export default class Memory {
-	/** Readonly state containing the memory's contents. */
-	public readonly bytes: number[]
 	/** Writable state containing the memory's contents. */
 	private _bytes: number[]
 
 	constructor() {
 		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
-		this.bytes = $derived(this._bytes)
+	}
+
+	/** Readonly state containing the memory's contents. */
+	get bytes(): ReadonlyArray<number> {
+		return this._bytes
 	}
 
 	/** Set all bytes to 0. */
