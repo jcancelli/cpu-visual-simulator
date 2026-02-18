@@ -113,22 +113,26 @@ export type LabelEventListener = (event: LabelEvent) => void
 
 /** Stores the mappings between labels and addresses. */
 export default class Labels {
-	/** Public readonly derived state that maps an address to a label. */
-	public readonly addressToLabel: (string | null)[]
 	/** Private mutable state that maps an address to a label. */
 	private _addressToLabel: (string | null)[]
-	/** Public readonly derived state that maps a label to an address. */
-	public readonly labelToAddress: SvelteMap<string, number>
 	/** Private mutable state that maps a label to an address. */
 	private _labelToAddress: SvelteMap<string, number>
 	private eventListeners: LabelEventListener[]
 
 	constructor() {
 		this._addressToLabel = $state(new Array(MEMORY_SIZE_BYTES).fill(null))
-		this.addressToLabel = $derived(this._addressToLabel)
 		this._labelToAddress = $state(new SvelteMap())
-		this.labelToAddress = $derived(this._labelToAddress)
 		this.eventListeners = []
+	}
+
+	/** Public readonly derived state that maps an address to a label. */
+	get addressToLabel(): ReadonlyArray<string | null> {
+		return this._addressToLabel
+	}
+
+	/** Public readonly state that maps a label to an address. */
+	get labelToAddress(): ReadonlyMap<string, number> {
+		return this._labelToAddress
 	}
 
 	/** Remove all labels. */
