@@ -23,4 +23,4 @@ export function unimplemented(message?: string): never {
 }
 
 /** Error thrown when {@link unimplemented} is encountered. */
-class UnimplementedError extends Error {}
+export class UnimplementedError extends Error {}
