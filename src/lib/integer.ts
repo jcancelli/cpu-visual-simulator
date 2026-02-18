@@ -7,49 +7,62 @@ export const I16_MAX = 32_767
 export const U16_MIN = 0
 export const U16_MAX = 65_535
 
+/** 8-bit signed integer. */
+export type I8 = number
+/** 8-bit unsigned integer. */
+export type U8 = number
+/** 16-bit signed integer. */
+export type I16 = number
+/** 16-bit unsigned integer. */
+export type U16 = number
+
 /** Check that the provided value is in the 8-bit signed range */
-export function isValidI8(value: number): boolean {
+export function isValidI8(value: number): value is I8 {
 	return value >= I8_MIN && value <= I8_MAX
 }
 
 /** Check that the provided value is in the 8-bit unsigned range */
-export function isValidU8(value: number): boolean {
+export function isValidU8(value: number): value is U8 {
 	return value >= U8_MIN && value <= U8_MAX
 }
 
 /** Check that the provided value is in the 16-bit signed range */
-export function isValidI16(value: number): boolean {
+export function isValidI16(value: number): value is I16 {
 	return value >= I16_MIN && value <= I16_MAX
 }
 
 /** Check that the provided value is in the 16-bit unsigned range */
-export function isValidU16(value: number): boolean {
+export function isValidU16(value: number): value is U16 {
 	return value >= U16_MIN && value <= U16_MAX
 }
 
-/** Shortcut for checking if the input is a valid 8-bit signed integer or throw error */
-export function checkI8Throw(value: number): void {
+/** Asserts that {@link value} is a valid {@link I8}.
+ * @throws {InvalidI8Error} */
+export function assertI8(value: number): asserts value is I8 {
 	if (!isValidI8(value)) {
 		throw new InvalidI8Error(value)
 	}
 }
 
-/** Shortcut for checking if the input is a valid 8-bit unsigned integer or throw error */
-export function checkU8Throw(value: number): void {
+/** Asserts that {@link value} is a valid {@link U8}.
+ * @throws {InvalidU8Error} */
+export function assertU8(value: number): asserts value is U8 {
 	if (!isValidU8(value)) {
 		throw new InvalidU8Error(value)
 	}
 }
 
-/** Shortcut for checking if the input is a valid 16-bit signed integer or throw error */
-export function checkI16Throw(value: number): void {
+/** Asserts that {@link value} is a valid {@link I16}.
+ * @throws {InvalidI16Error} */
+export function assertI16(value: number): asserts value is I16 {
 	if (!isValidI16(value)) {
 		throw new InvalidI16Error(value)
 	}
 }
 
-/** Shortcut for checking if the input is a valid 16-bit unsigned integer or throw error */
-export function checkU16Throw(value: number): void {
+/** Asserts that {@link value} is a valid {@link U16}.
+ * @throws {InvalidU16Error} */
+export function assertU16(value: number): asserts value is U16 {
 	if (!isValidU16(value)) {
 		throw new InvalidU16Error(value)
 	}
@@ -59,7 +72,7 @@ export function checkU16Throw(value: number): void {
  * Only the least significant byte of the input is considered.
  * @param unsignedValue An unsigned number of any size
  * @returns The least significant byte of the input casted into a signed integer */
-export function i8(unsignedValue: number): number {
+export function i8(unsignedValue: number): I8 {
 	return ((unsignedValue & 0xff) << 24) >> 24
 }
 
@@ -67,7 +80,7 @@ export function i8(unsignedValue: number): number {
  * Only the least significant byte of the input is considered.
  * @param signedValue A signed number of any size
  * @returns The least significant byte of the input casted into an unsigned integer */
-export function u8(signedValue: number): number {
+export function u8(signedValue: number): U8 {
 	return signedValue & 0xff
 }
 
@@ -75,7 +88,7 @@ export function u8(signedValue: number): number {
  * Only the 2 least significant bytes of the input are considered.
  * @param unsignedValue An unsigned number of any size
  * @returns The 2 least significant bytes of the input casted into a signed integer */
-export function i16(unsignedValue: number): number {
+export function i16(unsignedValue: number): I16 {
 	return ((unsignedValue & 0xffff) << 16) >> 16
 }
 
@@ -83,35 +96,35 @@ export function i16(unsignedValue: number): number {
  * Only the 2 least significant bytes of the input are considered.
  * @param signedValue A signed number of any size
  * @returns The 2 least significant bytes of the input casted into an unsigned integer */
-export function u16(signedValue: number): number {
+export function u16(signedValue: number): U16 {
 	return signedValue & 0xffff
 }
 
 /** Return the most significant byte of a 16-bit signed integer.
  * @param signedValue A signed number of any size
  * @returns The 2nd least significant byte as an unsigned 8-bit integer */
-export function i16MSB(signedValue: number): number {
+export function i16MSB(signedValue: number): U8 {
 	return (signedValue & 0xff00) >>> 8
 }
 
 /** Return the least significant byte of a 16-bit signed integer.
  * @param signedValue A signed number of any size
  * @returns The least significant byte as an unsigned 8-bit integer */
-export function i16LSB(signedValue: number): number {
+export function i16LSB(signedValue: number): U8 {
 	return signedValue & 0xff
 }
 
 /** Return the most significant byte of a 16-bit unsigned integer.
  * @param unsignedValue An unsigned number of any size
  * @returns The 2nd least significant byte as an unsigned 8-bit integer */
-export function u16MSB(unsignedValue: number): number {
+export function u16MSB(unsignedValue: number): U8 {
 	return unsignedValue >>> 8
 }
 
 /** Return the least significant byte of a 16-bit unsigned integer.
  * @param unsignedValue An unsigned number of any size
  * @returns The least significant byte as an unsigned 8-bit integer */
-export function u16LSB(unsignedValue: number): number {
+export function u16LSB(unsignedValue: number): U8 {
 	return unsignedValue & 0xff
 }
 
@@ -120,7 +133,7 @@ export function u16LSB(unsignedValue: number): number {
  * @param msb The most significant byte (unsigned)
  * @param lsb The least significant byte (unsigned)
  * @returns A 16-bit signed integer */
-export function joinU8ToI16(msb: number, lsb: number): number {
+export function joinU8ToI16(msb: U8, lsb: U8): I16 {
 	return (((msb << 8) | lsb) << 16) >> 16
 }
 
@@ -129,7 +142,7 @@ export function joinU8ToI16(msb: number, lsb: number): number {
  * @param msb The most significant byte (unsigned)
  * @param lsb The least significant byte (unsigned)
  * @returns A 16-bit unsigned integer */
-export function joinU8ToU16(msb: number, lsb: number): number {
+export function joinU8ToU16(msb: U8, lsb: U8): U16 {
 	return (msb << 8) | lsb
 }
 
