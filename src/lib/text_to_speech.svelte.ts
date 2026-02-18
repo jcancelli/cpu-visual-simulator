@@ -4,30 +4,22 @@ import { getString, setString } from "./util/local_storage"
 /** True if text to speech is not available on this browser */
 export const TEXT_TO_SPEECH_UNAVAILABLE = window.speechSynthesis === undefined
 
+/** Wrapper for {@link window.speechSynthesis} */
 export default class TextToSpeech {
 	/** The utterance that is currently being read. */
 	private utterance: SpeechSynthesisUtterance | null
 	/** Private mutable state containing the promise that resolves when TTS has finished reading. */
 	private _speechPromise: Promise<void> | null
-	/** Public readonly derived state containing the promise that resolves when TTS has finished reading. */
-	public readonly speechPromise: Promise<void> | null
 	/** Private mutable state containing all the currently available voices for the current locale. */
 	private _voices: SpeechSynthesisVoice[]
-	/** Public readonly derived state containing all the currently available voices for the current locale. */
-	public readonly voices: SpeechSynthesisVoice[]
-	/** Private mutable state containing the voice currently being used by TTS */
+	/** Private mutable state containing the currently selected voice. */
 	private _voice: SpeechSynthesisVoice | null
-	/** Public readonly derived state containing the voice currently being used by TTS */
-	public readonly voice: SpeechSynthesisVoice | null
 
 	constructor() {
 		this.utterance = null
 		this._speechPromise = $state(null)
-		this.speechPromise = $derived(this._speechPromise)
 		this._voices = $state([])
-		this.voices = $derived(this._voices)
 		this._voice = $state(null)
-		this.voice = $derived(this._voice)
 
 		if (!TEXT_TO_SPEECH_UNAVAILABLE) {
 			const locale = getLocale()
@@ -74,9 +66,23 @@ export default class TextToSpeech {
 		this._speechPromise = null
 	}
 
-	/** Set the voice used for synthesis.
-	 * If TTS is not supported by the browser, nothing happens. */
-	setVoice(voice: SpeechSynthesisVoice): void {
+	/** Readonly state containing the promise that resolves when TTS has finished reading. */
+	get speechPromise(): Promise<void> | null {
+		return this._speechPromise
+	}
+
+	/** Readonly state containing all the currently available voices for the current locale. */
+	get voices(): ReadonlyArray<SpeechSynthesisVoice> {
+		return this._voices
+	}
+
+	/** Mutable state containing the currently selected voice. */
+	get voice(): SpeechSynthesisVoice | null {
+		return this._voice
+	}
+
+	/** Mutable state containing the currently selected voice. */
+	set voice(voice: SpeechSynthesisVoice) {
 		if (TEXT_TO_SPEECH_UNAVAILABLE) {
 			return
 		}
