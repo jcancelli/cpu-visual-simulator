@@ -206,6 +206,35 @@ export default class Memory {
 	}
 }
 
+/** Operation that can be signaled to the memory on the control bus. */
+export enum MemoryOperation {
+	READ = 0b1,
+	WRITE = 0b10,
+}
+
+/** Check if the specified value is a valid {@link MemoryOperation}. */
+export function isMemoryOperation(value: number): value is MemoryOperation {
+	return value === MemoryOperation.READ || value === MemoryOperation.WRITE
+}
+
+/** Assert that the specified value is a valid {@link MemoryOperation}.
+ * @throws {InvalidMemoryOperationError}*/
+export function assertMemoryOperation(value: number): asserts value is MemoryOperation {
+	if (!isMemoryOperation(value)) {
+		throw new InvalidMemoryOperationError(value)
+	}
+}
+
+/** Error regarding an unexpected value presented as memory operation. */
+export class InvalidMemoryOperationError extends Error {
+	public readonly value: number
+
+	constructor(value: number) {
+		super(`Invalid memory operation value: ${value.toString(2)}`)
+		this.value = value
+	}
+}
+
 /** Base class for errors regarding an invalid address */
 export abstract class InvalidAddressError extends Error {
 	/** The address that caused the error. */
