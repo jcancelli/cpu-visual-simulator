@@ -1,5 +1,5 @@
 import {
-	checkWordAddressThrow,
+	assertWordAddress,
 	MAX_WORD_ADDRESS,
 	MEMORY_SIZE_BYTES,
 	MIN_ADDRESS,
@@ -8,6 +8,7 @@ import {
 import { CHAR_CODE_UNDERSCORE, isUppercaseLetter } from "./util/text"
 import { unreachable } from "./util/development"
 import { SvelteMap } from "svelte/reactivity"
+import type { U8 } from "./integer"
 
 /** IDs of both UI and logical components regarding the labels */
 export enum LabelsComponent {
@@ -71,7 +72,7 @@ export function validateLabel(
 
 /** Shortcut to check if a label is valid.
  * @throws {InvalidLabelError} if the label is invalid. */
-export function checkLabelFormatThrow(label: string): void {
+export function assertValidLabel(label: string): void {
 	const result = validateLabel(label)
 	if (result !== VALID_LABEL) {
 		throw new InvalidLabelError(label, result)
@@ -86,14 +87,14 @@ export const LABEL_REMOVED_EVENT = 3
 export interface LabelAddressChangeEvent {
 	type: typeof ADDRESS_CHANGED_LABEL_EVENT
 	label: string
-	oldAddress: number
-	newAddress: number
+	oldAddress: U8
+	newAddress: U8
 }
 
 /** Event emitted when the label mapped to an address is changed. */
 export interface AddressRemappedEvent {
 	type: typeof ADDRESS_REMAPPED_LABEL_EVENT
-	address: number
+	address: U8
 	oldLabel: string
 	newLabel: string
 }
@@ -102,7 +103,7 @@ export interface AddressRemappedEvent {
 export interface LabelRemovedEvent {
 	type: typeof LABEL_REMOVED_EVENT
 	label: string
-	address: number
+	address: U8
 }
 
 /** Represents an event regarding a label. */
@@ -116,7 +117,7 @@ export default class Labels {
 	/** Private mutable state that maps an address to a label. */
 	private _addressToLabel: (string | null)[]
 	/** Private mutable state that maps a label to an address. */
-	private _labelToAddress: SvelteMap<string, number>
+	private _labelToAddress: SvelteMap<string, U8>
 	private eventListeners: LabelEventListener[]
 
 	constructor() {
@@ -131,7 +132,7 @@ export default class Labels {
 	}
 
 	/** Public readonly state that maps a label to an address. */
-	get labelToAddress(): ReadonlyMap<string, number> {
+	get labelToAddress(): ReadonlyMap<string, U8> {
 		return this._labelToAddress
 	}
 
@@ -156,9 +157,9 @@ export default class Labels {
 	 * @throws {InvalidLabelError} if the label is invalid.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address.
 	 * @throws {DuplicateLabelError} if the same label is already mapped to an address. */
-	setLabel(label: string, address: number): void {
-		checkLabelFormatThrow(label)
-		checkWordAddressThrow(address)
+	setLabel(label: string, address: U8): void {
+		assertValidLabel(label)
+		assertWordAddress(address)
 		if (this.getAddress(label) !== null) {
 			throw new DuplicateLabelError(label)
 		}
@@ -197,8 +198,8 @@ export default class Labels {
 	 * If no label is mapped to the specified address, no operation is performed.
 	 * If a label is mapped to the specified address, all listeners are notified with a {@link LabelRemovedEvent}.
 	 * @throws {InvalidWordAddressError} if the specified address is not a valid word address. */
-	clearAddress(address: number): void {
-		checkWordAddressThrow(address)
+	clearAddress(address: U8): void {
+		assertWordAddress(address)
 		const label = this.getLabel(address)
 		if (label === null) {
 			return
@@ -213,13 +214,13 @@ export default class Labels {
 	}
 
 	/** @returns The address mapped to the specified label or null if the label does not exist */
-	getAddress(label: string): number | null {
+	getAddress(label: string): U8 | null {
 		return this._labelToAddress.get(label) ?? null
 	}
 
 	/** @returns The label mapped to the specified address or null if the address is invalid or if
 	 * the address does not have any label mapped to it. */
-	getLabel(address: number): string | null {
+	getLabel(address: U8): string | null {
 		return this._addressToLabel[address] ?? null
 	}
 
@@ -230,12 +231,12 @@ export default class Labels {
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link address} + {@link WORD_ALIGN}.
 	 * Note: "upperHalf" refers to all the addresses <= {@link address}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftUpperHalfDownFromAddress(address: number): void {
+	shiftUpperHalfDownFromAddress(address: U8): void {
 		if (address === MAX_WORD_ADDRESS) {
 			// Noop if it's trying to shift from the last address
 			return
 		}
-		checkWordAddressThrow(address)
+		assertWordAddress(address)
 		const upperAddress = MIN_ADDRESS
 		const lowerAddress = address + WORD_ALIGN
 		for (let newAddress = lowerAddress; newAddress > upperAddress; newAddress -= WORD_ALIGN) {
@@ -250,8 +251,8 @@ export default class Labels {
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link MAX_WORD_ADDRESS}.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link address}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftLowerHalfDownFromAddress(address: number): void {
-		checkWordAddressThrow(address)
+	shiftLowerHalfDownFromAddress(address: U8): void {
+		assertWordAddress(address)
 		const upperAddress = address
 		const lowerAddress = MAX_WORD_ADDRESS
 		for (let newAddress = lowerAddress; newAddress > upperAddress; newAddress -= WORD_ALIGN) {
@@ -266,8 +267,8 @@ export default class Labels {
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link MIN_ADDRESS}.
 	 * Note: "upperHalf" refers to all the addresses <= {@link address}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftUpperHalfUpFromAddress(address: number): void {
-		checkWordAddressThrow(address)
+	shiftUpperHalfUpFromAddress(address: U8): void {
+		assertWordAddress(address)
 		const upperAddress = MIN_ADDRESS
 		const lowerAddress = address
 		for (let newAddress = upperAddress; newAddress < lowerAddress; newAddress += WORD_ALIGN) {
@@ -283,12 +284,12 @@ export default class Labels {
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link address} - {@link WORD_ALIGN}.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link address}.
 	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftLowerHalfUpFromAddress(address: number): void {
+	shiftLowerHalfUpFromAddress(address: U8): void {
 		if (address === MIN_ADDRESS) {
 			// Noop if it's trying to shift from the first address
 			return
 		}
-		checkWordAddressThrow(address)
+		assertWordAddress(address)
 		const upperAddress = address - WORD_ALIGN
 		const lowerAddress = MAX_WORD_ADDRESS
 		for (let newAddress = upperAddress; newAddress < lowerAddress; newAddress += WORD_ALIGN) {
@@ -329,7 +330,7 @@ export default class Labels {
 	 * If a label is mapped to {@link oldAddress}, that label is moved to {@link newAddress} and all
 	 * listeners are notified with a {@link LabelAddressChangeEvent}.
 	 * No validation is performed on the provided addresses. */
-	private moveLabel(oldAddress: number, newAddress: number): void {
+	private moveLabel(oldAddress: U8, newAddress: U8): void {
 		const overwrittenLabel = this._addressToLabel[newAddress]
 		if (overwrittenLabel !== null) {
 			this._labelToAddress.delete(overwrittenLabel)
