@@ -10,6 +10,12 @@ import {
 	u8,
 } from "./integer"
 
+/** IDs of both UI and logical components regarding the memory */
+export enum MemoryComponent {
+	ADDRESS = "ADDRESS",
+	CELL = "CELL",
+}
+
 /** The lowest valid address */
 export const MIN_ADDRESS = 0
 /** The highest valid address for a byte */

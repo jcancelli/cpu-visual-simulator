@@ -9,6 +9,11 @@ import { CHAR_CODE_UNDERSCORE, isUppercaseLetter } from "./util/text"
 import { unreachable } from "./util/development"
 import { SvelteMap } from "svelte/reactivity"
 
+/** IDs of both UI and logical components regarding the labels */
+export enum LabelsComponent {
+	LABEL = "LABEL",
+}
+
 /** Maximum length for a valid label */
 export const LABEL_MAX_LENGTH = 10
 
