@@ -22,6 +22,14 @@ export const NO_SIGNAL = Symbol("NO_SIGNAL")
 /** Either a value or {@link NO_SIGNAL} */
 export type BusSignal<T> = typeof NO_SIGNAL | T
 
+/** Asserts that the signal carries a value.
+ * @throws {NoSignalError}*/
+export function assertSignal<T>(signal: BusSignal<T>): asserts signal is T {
+	if (signal === NO_SIGNAL) {
+		throw new NoSignalError()
+	}
+}
+
 /** Represents a bus transporting data that can be interpreted as a signed or unsigned integer */
 export abstract class Bus<T, SignalValidationError extends Error = never> {
 	/** The value of the signal */
@@ -153,6 +161,9 @@ export class OpcodeBus extends Bus<Opcode> {
 
 /** Base class for errors regarding a bus */
 export abstract class BusError extends Error {}
+
+/** Error thrown when a value was expected to be found on a {@link Bus}, but {@link NO_SIGNAL} was found */
+export class NoSignalError extends BusError {}
 
 /** An error regarding an invalid value being put on a bus */
 export class InvalidBusSignalError<T extends Error> extends BusError {
