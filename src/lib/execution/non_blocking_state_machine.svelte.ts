@@ -8,12 +8,8 @@ export interface StateMachine {
  * Allows the state machine to be executed without blocking the UI.
  * Allows also to pause/resume the execution of the state machine */
 export default class NonBlockingStateMachine {
-	/** Private variable holding the state of the statemachine execution.
-	 * Initialized using the $state rune */
+	/** Wether the state machine is executing or not */
 	private _isRunning: boolean
-	/** Public readonly constant that mirrors {@link NonBlockingStateMachine._isRunning}.
-	 * Initialized using the $derived rune*/
-	public readonly isRunning: boolean
 	/** The state machine that is being executed */
 	private readonly stateMachine: StateMachine
 	/** Function that wraps the state machine logic with {@link NonBlockingStateMachine} logic.
@@ -24,14 +20,13 @@ export default class NonBlockingStateMachine {
 
 	constructor(stateMachine: StateMachine) {
 		this._isRunning = $state(false)
-		this.isRunning = $derived(this._isRunning)
 		this.stateMachine = stateMachine
 		this.stepFunction = async () => {
 			if (!this._isRunning) {
 				return
 			}
 			this.stepPromise = this.stateMachine.step().then(shouldKeepGoing => {
-				// NOTE: Need to && with _isRunning because the user might have tried to stop execution
+				// Need to && with _isRunning because the user might have tried to stop execution
 				this._isRunning = this._isRunning && shouldKeepGoing
 				if (this._isRunning) {
 					setTimeout(this.stepFunction)
@@ -70,5 +65,10 @@ export default class NonBlockingStateMachine {
 	/** Await for the step that was lastly executed to finish */
 	async awaitStepDone(): Promise<void> {
 		await this.stepPromise
+	}
+
+	/** Wether the state machine is executing or not */
+	get isRunning(): boolean {
+		return this._isRunning
 	}
 }
