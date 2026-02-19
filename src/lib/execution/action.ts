@@ -1,7 +1,4 @@
-import type { BusID } from "$lib/bus.svelte"
-import type { CPUComponent } from "$lib/cpu.svelte"
-import type { LabelsComponent } from "$lib/labels.svelte"
-import type { MemoryComponent, MemoryOperation } from "$lib/memory.svelte"
+import type { MemoryOperation } from "$lib/memory.svelte"
 
 /** Identifier of the type of an {@link Action} */
 export enum ActionType {
@@ -73,15 +70,39 @@ export const endStep: EndStepAction = { type: ActionType.END_STEP }
 
 // Bus
 /** Source or destination for a {@link Bus} read/write operation */
-export type BusIOSource = CPUComponent | MemoryComponent
+export enum BusIO {
+	// CPU
+	PROGRAM_COUNTER,
+	PROGRAM_COUNTER_INCREMENT,
+	INSTRUCTION_REGISTER,
+	DECODER_CTRL_UNIT,
+	MUX,
+	ALU,
+	ACCUMULATOR,
+	STATUS_WORD,
+	// Memory
+	MEMORY,
+}
+/** IDs of all the busses */
+export enum BusID {
+	DATA,
+	ADDRESS,
+	CONTROL,
+	OPCODE_DECODER,
+	MUX_ALU,
+	CONTROL_UNIT_MUX,
+	CONTROL_UNIT_ALU,
+	ALU_STATUS_WORD,
+	ALU_ACCUMULATOR,
+}
 /** Put a signal on a {@link Bus} */
-export type SignalBusAction = ActionBase<ActionType.SIGNAL_BUS, { source: BusIOSource; bus: BusID }>
+export type SignalBusAction = ActionBase<ActionType.SIGNAL_BUS, { source: BusIO; bus: BusID }>
 /** End the signal on a {@link Bus} */
 export type EndSignalBusAction = ActionBase<ActionType.END_SIGNAL_BUS, { bus: BusID }>
 /** Read the signal from a {@link Bus} */
-export type ReadBusAction = ActionBase<ActionType.READ_BUS, { source: BusIOSource; bus: BusID }>
+export type ReadBusAction = ActionBase<ActionType.READ_BUS, { source: BusIO; bus: BusID }>
 /** Put a signal on a {@link Bus} */
-export function signalBus(source: BusIOSource, bus: BusID): SignalBusAction {
+export function signalBus(source: BusIO, bus: BusID): SignalBusAction {
 	return {
 		type: ActionType.SIGNAL_BUS,
 		source,
@@ -96,7 +117,7 @@ export function endSignalBus(bus: BusID): EndSignalBusAction {
 	}
 }
 /** Read the signal from a {@link Bus} */
-export function readBus(source: BusIOSource, bus: BusID): ReadBusAction {
+export function readBus(source: BusIO, bus: BusID): ReadBusAction {
 	return {
 		type: ActionType.READ_BUS,
 		source,
@@ -171,11 +192,32 @@ export const awaitTextToSpeechEnd: AwaitTextoToSpeechEndAction = {
 
 // UI animations
 /** Identifier of an UI element */
-export type UIElementID = CPUComponent | MemoryComponent | LabelsComponent
+export enum UIElement {
+	// CPU
+	PROGRAM_COUNTER,
+	PROGRAM_COUNTER_INCREMENT,
+	INSTRUCTION_REGISTER,
+	INSTRUCTION_REGISTER_OPERAND,
+	INSTRUCTION_REGISTER_OPCODE,
+	DECODER_CTRL_UNIT,
+	MUX,
+	ALU_OPERAND_1,
+	ALU_OPERAND_2,
+	ALU_OPERATION,
+	ACCUMULATOR,
+	STATUS_WORD,
+	STATUS_WORD_ZERO_FLAG,
+	STATUS_WORD_NEGATIVE_FLAG,
+	// Memory
+	MEMORY_ADDRESS,
+	MEMORY_DATA,
+	// Labels
+	LABEL,
+}
 /** Flash an UI element */
-export type FlashUIElementAction = ActionBase<ActionType.FLASH_UI_ELEMENT, { element: UIElementID }>
+export type FlashUIElementAction = ActionBase<ActionType.FLASH_UI_ELEMENT, { element: UIElement }>
 /** Flash an UI element */
-export function flashUIElement(element: UIElementID): FlashUIElementAction {
+export function flashUIElement(element: UIElement): FlashUIElementAction {
 	return {
 		type: ActionType.FLASH_UI_ELEMENT,
 		element,
