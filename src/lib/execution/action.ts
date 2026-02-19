@@ -1,4 +1,5 @@
 import type { MemoryOperation } from "$lib/memory.svelte"
+import type { Notification, NotificationLevel } from "$lib/notifications.svelte"
 
 /** Identifier of the type of an {@link Action} */
 export enum ActionType {
@@ -23,6 +24,8 @@ export enum ActionType {
 	AWAIT_TEXT_TO_SPEECH_END,
 	// UI animations
 	FLASH_UI_ELEMENT,
+	// Notifications
+	NOTIFY_USER,
 }
 
 /** All {@link ActionType}s as list */
@@ -46,6 +49,7 @@ export type Action =
 	| TextToSpeechReadAction
 	| AwaitTextoToSpeechEndAction
 	| FlashUIElementAction
+	| NotifyUserAction
 
 /** Template for an {@link Action} type */
 export type ActionBase<T extends ActionType, U = never> = Readonly<
@@ -221,6 +225,27 @@ export function flashUIElement(element: UIElement): FlashUIElementAction {
 	return {
 		type: ActionType.FLASH_UI_ELEMENT,
 		element,
+	}
+}
+
+// Notifications
+/** Display a notification */
+export type NotifyUserAction = ActionBase<ActionType.NOTIFY_USER, { notification: Notification }>
+/** Display a notification */
+export function notifyUser(
+	level: NotificationLevel,
+	message: string,
+	timerMs?: number,
+	undeletable?: true,
+): NotifyUserAction {
+	return {
+		type: ActionType.NOTIFY_USER,
+		notification: {
+			level,
+			message,
+			timerMs,
+			undeletable,
+		},
 	}
 }
 
