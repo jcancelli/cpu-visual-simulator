@@ -16,19 +16,6 @@ import {
 } from "./memory.svelte"
 import { type Opcode } from "./opcode"
 
-/** IDs of all the busses */
-export enum BusID {
-	DATA,
-	ADDRESS,
-	CONTROL,
-	OPCODE_DECODER,
-	MUX_ALU,
-	CONTROL_UNIT_MUX,
-	CONTROL_UNIT_ALU,
-	ALU_STATUS_WORD,
-	ALU_ACCUMULATOR,
-}
-
 /** Value representing no signal on a bus */
 export const NO_SIGNAL = Symbol("NO_SIGNAL")
 

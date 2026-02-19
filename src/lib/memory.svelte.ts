@@ -1,3 +1,4 @@
+import type { ByteBus, MemoryOperationBus, WordBus } from "./bus.svelte"
 import {
 	assertI16,
 	assertI8,
@@ -20,12 +21,6 @@ export type AlignedAddress<Alignment extends number> = Address & { __alignment: 
 export type ByteAlignedAddress = AlignedAddress<1>
 /** A word (16-bit) aligned {@link Address} */
 export type WordAlignedAddress = AlignedAddress<2>
-
-/** IDs of both UI and logical components regarding the memory */
-export enum MemoryComponent {
-	ADDRESS = "ADDRESS",
-	CELL = "CELL",
-}
 
 /** The lowest valid address */
 export const MIN_ADDRESS = 0
@@ -87,9 +82,18 @@ export function assertWordAlignedAddress(address: number): asserts address is Wo
 export default class Memory {
 	/** Writable state containing the memory's contents. */
 	private _bytes: U8[]
+	/** Reference to the data bus */
+	private dataBus: WordBus
+	/** Reference to the address bus */
+	private addressBus: ByteBus
+	/** Reference to the control bus */
+	private controlBus: MemoryOperationBus
 
-	constructor() {
+	constructor(dataBus: WordBus, addressBus: ByteBus, controlBus: MemoryOperationBus) {
 		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
+		this.dataBus = $state(dataBus)
+		this.addressBus = $state(addressBus)
+		this.controlBus = $state(controlBus)
 	}
 
 	/** Readonly state containing the memory's contents. */
