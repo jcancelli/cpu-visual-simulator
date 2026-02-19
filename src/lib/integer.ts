@@ -7,14 +7,20 @@ export const I16_MAX = 32_767
 export const U16_MIN = 0
 export const U16_MAX = 65_535
 
+/** A signed integer type brand. */
+export type Signed = { __signed: true }
+/** An unsigned integer type brand. */
+export type Unsigned = { __signed: false }
+/** A sized integer type brand. */
+export type Sized<Bits extends number> = { __bits: Bits }
 /** 8-bit signed integer. */
-export type I8 = number
+export type I8 = number & Signed & Sized<8>
 /** 8-bit unsigned integer. */
-export type U8 = number
+export type U8 = number & Unsigned & Sized<8>
 /** 16-bit signed integer. */
-export type I16 = number
+export type I16 = number & Signed & Sized<16>
 /** 16-bit unsigned integer. */
-export type U16 = number
+export type U16 = number & Unsigned & Sized<16>
 
 /** Check that the provided value is in the 8-bit signed range */
 export function isValidI8(value: number): value is I8 {
@@ -73,7 +79,7 @@ export function assertU16(value: number): asserts value is U16 {
  * @param unsignedValue An unsigned number of any size
  * @returns The least significant byte of the input casted into a signed integer */
 export function i8(unsignedValue: number): I8 {
-	return ((unsignedValue & 0xff) << 24) >> 24
+	return (((unsignedValue & 0xff) << 24) >> 24) as I8
 }
 
 /** Cast a signed integer to an 8-bit unsigned integer.
@@ -81,7 +87,7 @@ export function i8(unsignedValue: number): I8 {
  * @param signedValue A signed number of any size
  * @returns The least significant byte of the input casted into an unsigned integer */
 export function u8(signedValue: number): U8 {
-	return signedValue & 0xff
+	return (signedValue & 0xff) as U8
 }
 
 /** Cast an unsigned integer to a 16-bit signed integer.
@@ -89,7 +95,7 @@ export function u8(signedValue: number): U8 {
  * @param unsignedValue An unsigned number of any size
  * @returns The 2 least significant bytes of the input casted into a signed integer */
 export function i16(unsignedValue: number): I16 {
-	return ((unsignedValue & 0xffff) << 16) >> 16
+	return (((unsignedValue & 0xffff) << 16) >> 16) as I16
 }
 
 /** Cast a signed integer to a 16-bit unsigned integer.
@@ -97,35 +103,35 @@ export function i16(unsignedValue: number): I16 {
  * @param signedValue A signed number of any size
  * @returns The 2 least significant bytes of the input casted into an unsigned integer */
 export function u16(signedValue: number): U16 {
-	return signedValue & 0xffff
+	return (signedValue & 0xffff) as U16
 }
 
 /** Return the most significant byte of a 16-bit signed integer.
  * @param signedValue A signed number of any size
  * @returns The 2nd least significant byte as an unsigned 8-bit integer */
-export function i16MSB(signedValue: number): U8 {
-	return (signedValue & 0xff00) >>> 8
+export function i16MSB(signedValue: I16): U8 {
+	return ((signedValue & 0xff00) >>> 8) as U8
 }
 
 /** Return the least significant byte of a 16-bit signed integer.
  * @param signedValue A signed number of any size
  * @returns The least significant byte as an unsigned 8-bit integer */
-export function i16LSB(signedValue: number): U8 {
-	return signedValue & 0xff
+export function i16LSB(signedValue: I16): U8 {
+	return (signedValue & 0xff) as U8
 }
 
 /** Return the most significant byte of a 16-bit unsigned integer.
  * @param unsignedValue An unsigned number of any size
  * @returns The 2nd least significant byte as an unsigned 8-bit integer */
-export function u16MSB(unsignedValue: number): U8 {
-	return unsignedValue >>> 8
+export function u16MSB(unsignedValue: U16): U8 {
+	return (unsignedValue >>> 8) as U8
 }
 
 /** Return the least significant byte of a 16-bit unsigned integer.
  * @param unsignedValue An unsigned number of any size
  * @returns The least significant byte as an unsigned 8-bit integer */
-export function u16LSB(unsignedValue: number): U8 {
-	return unsignedValue & 0xff
+export function u16LSB(unsignedValue: U16): U8 {
+	return (unsignedValue & 0xff) as U8
 }
 
 /** Join 2 8-bit unsigned integers into a 16-bit signed integer.
@@ -134,7 +140,7 @@ export function u16LSB(unsignedValue: number): U8 {
  * @param lsb The least significant byte (unsigned)
  * @returns A 16-bit signed integer */
 export function joinU8ToI16(msb: U8, lsb: U8): I16 {
-	return (((msb << 8) | lsb) << 16) >> 16
+	return ((((msb << 8) | lsb) << 16) >> 16) as I16
 }
 
 /** Join 2 8-bit unsigned integers into a 16-bit unsigned integer.
@@ -143,7 +149,7 @@ export function joinU8ToI16(msb: U8, lsb: U8): I16 {
  * @param lsb The least significant byte (unsigned)
  * @returns A 16-bit unsigned integer */
 export function joinU8ToU16(msb: U8, lsb: U8): U16 {
-	return (msb << 8) | lsb
+	return ((msb << 8) | lsb) as U16
 }
 
 /** Base class for errors regarding numeric values out of a specific n-bits signed/unsigned range */
