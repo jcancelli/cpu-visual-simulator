@@ -1,5 +1,5 @@
 import type { MemoryOperation } from "$lib/memory.svelte"
-import type { Notification, NotificationLevel } from "$lib/notifications.svelte"
+import type { Notification, NotificationType } from "$lib/notifications.svelte"
 
 /** Identifier of the type of an {@link Action} */
 export enum ActionType {
@@ -233,18 +233,18 @@ export function flashUIElement(element: UIElement): FlashUIElementAction {
 export type NotifyUserAction = ActionBase<ActionType.NOTIFY_USER, { notification: Notification }>
 /** Display a notification */
 export function notifyUser(
-	level: NotificationLevel,
+	type: NotificationType,
 	message: string,
 	timerMs?: number,
-	undeletable?: true,
+	undismissable?: true,
 ): NotifyUserAction {
 	return {
 		type: ActionType.NOTIFY_USER,
 		notification: {
-			level,
+			type,
 			message,
 			timerMs,
-			undeletable,
+			undismissable,
 		},
 	}
 }
