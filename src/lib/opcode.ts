@@ -1,4 +1,4 @@
-import type { I8, U8 } from "./integer"
+import type { SizedInt } from "./integer"
 
 /** Immediate flag bit set to 1, all other bits set to 0 */
 export const IMMEDIATE_FLAG_BIT = 1 << 7
@@ -6,17 +6,17 @@ export const IMMEDIATE_FLAG_BIT = 1 << 7
 export const IMMEDIATE_FLAG_MASK = ~IMMEDIATE_FLAG_BIT >>> 0
 
 /** Return wether or not the immediate flag is set. The input value is assumed to be an 8-bit integer */
-export function getImmediateFlag(value: U8 | I8): boolean {
+export function getImmediateFlag(value: SizedInt<8>): boolean {
 	return (value & IMMEDIATE_FLAG_BIT) !== 0
 }
 
 /** Return the provided value with the immediate flag set/unset.
  * The input value is assumed to be an 8-bit integer */
-export function setImmediateFlag(value: U8 | I8, flag: boolean = true): number {
+export function setImmediateFlag(value: SizedInt<8>, flag: boolean = true): SizedInt<8> {
 	if (flag) {
-		return value | IMMEDIATE_FLAG_BIT
+		return (value | IMMEDIATE_FLAG_BIT) as SizedInt<8>
 	}
-	return value & IMMEDIATE_FLAG_MASK
+	return (value & IMMEDIATE_FLAG_MASK) as SizedInt<8>
 }
 
 export const OPCODE_NUMBER_NOP = 0
@@ -256,11 +256,14 @@ export const OPCODES_BY_STRING = {
 
 /** All possible numeric values of a valid opcode.
  * Variations where the immediate flag is set are included for opcodes that allow for it. */
-export const OPCODES_BY_NUMBER = OPCODES.reduce<{ [key: U8]: Opcode }>((accumulator, opcode) => {
-	if (opcode.takesImmediate) {
-		const numericWithImmediate = setImmediateFlag(opcode.numeric, true)
-		accumulator[numericWithImmediate] = opcode
-	}
-	accumulator[opcode.numeric] = opcode
-	return accumulator
-}, {})
+export const OPCODES_BY_NUMBER = OPCODES.reduce<{ [key: number]: Opcode }>(
+	(accumulator, opcode) => {
+		if (opcode.takesImmediate) {
+			const numericWithImmediate = setImmediateFlag(opcode.numeric as SizedInt<8>, true)
+			accumulator[numericWithImmediate] = opcode
+		}
+		accumulator[opcode.numeric] = opcode
+		return accumulator
+	},
+	{},
+)
