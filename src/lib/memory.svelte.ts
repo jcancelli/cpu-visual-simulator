@@ -3,15 +3,23 @@ import {
 	assertI8,
 	assertU16,
 	assertU8,
+	i16LSB,
 	i16MSB,
 	isValidU8,
 	u16LSB,
 	u16MSB,
 	u8,
-	type I16,
-	type U16,
 	type U8,
 } from "./integer"
+
+/** A value that is a valid memory address */
+export type Address = U8
+/** An {@link Address} with a specific alignment */
+export type AlignedAddress<Alignment extends number> = Address & { __alignment: Alignment }
+/** A byte (8-bit) aligned {@link Address} */
+export type ByteAlignedAddress = AlignedAddress<1>
+/** A word (16-bit) aligned {@link Address} */
+export type WordAlignedAddress = AlignedAddress<2>
 
 /** IDs of both UI and logical components regarding the memory */
 export enum MemoryComponent {
@@ -26,35 +34,52 @@ export const MAX_ADDRESS = 255
 /** The highest valid address for a word */
 export const MAX_WORD_ADDRESS = 254
 /** Size of a word in bytes */
-export const WORD_ALIGN = 2
+export const WORD_ALIGNMENT = 2
 /** Size in bytes of the memory */
 export const MEMORY_SIZE_BYTES = 256
 /** Size in words of the memory */
-export const MEMORY_SIZE_WORDS = MEMORY_SIZE_BYTES / WORD_ALIGN
+export const MEMORY_SIZE_WORDS = MEMORY_SIZE_BYTES / WORD_ALIGNMENT
 
-/** Return wether or not the provided value is a valid address for a byte */
-export function isValidByteAddress(address: number): boolean {
+/** Check if the provided value is in the valid memory address range */
+export function isInAddressRange(address: number): address is Address {
 	return isValidU8(address)
 }
 
-/** Return wether or not the provided value is a valid address for a word */
-export function isValidWordAddress(address: number): boolean {
-	return isValidU8(address) && (address & 1) === 0
+/** Check if the provided value is a valid, byte-aligned address */
+export function isByteAlignedAddress(address: number): address is ByteAlignedAddress {
+	return isInAddressRange(address)
 }
 
-/** Shortcut to check if an address can point to a byte.
- * @throws {InvalidByteAddressError} when the address is not a valid byte address */
-export function assertByteAddress(address: number): void {
-	if (!isValidByteAddress(address)) {
-		throw new InvalidByteAddressError(address)
+/** Check if the provided value is a valid, word-aligned address */
+export function isWordAlignedAddress(address: number): address is WordAlignedAddress {
+	return isInAddressRange(address) && (address & 1) === 0
+}
+
+/** Asserts that the provided value is in the valid memory address range.
+ * @throws {AddressOutOfRangeError} */
+export function assertAddressInRange(address: number): asserts address is Address {
+	if (!isInAddressRange(address)) {
+		throw new AddressOutOfRangeError(address)
 	}
 }
 
-/** Shortcut to check if an address can point to a word.
- * @throws {InvalidWordAddressError} when the address is not a valid word address */
-export function assertWordAddress(address: number): void {
-	if (!isValidWordAddress(address)) {
-		throw new InvalidWordAddressError(address)
+/** Asserts that the provided value is a valid, byte-aligned address.
+ * @throws {AddressOutOfRangeError}
+ * @throws {InvalidByteAlignedAddressError} */
+export function assertByteAlignedAddress(address: number): asserts address is ByteAlignedAddress {
+	assertAddressInRange(address)
+	if (!isByteAlignedAddress(address)) {
+		throw new InvalidByteAlignedAddressError(address)
+	}
+}
+
+/** Asserts that the provided value is a valid, word-aligned address.
+ * @throws {AddressOutOfRangeError}
+ * @throws {InvalidWordAlignedAddressError} */
+export function assertWordAlignedAddress(address: number): asserts address is WordAlignedAddress {
+	assertAddressInRange(address)
+	if (!isWordAlignedAddress(address)) {
+		throw new InvalidWordAlignedAddressError(address)
 	}
 }
 
@@ -75,134 +100,138 @@ export default class Memory {
 	/** Set all bytes to 0. */
 	clear(): void {
 		for (let address = MIN_ADDRESS; address <= MAX_ADDRESS; address += 1) {
-			this._bytes[address] = 0
+			this._bytes[address] = 0 as U8
 		}
 	}
 
 	/** Write the specified 8-bit unsigned integer at the specified address.
-	 * @throws {InvalidByteAddressError} if the address is not a valid byte address.
-	 * @throws {InvalidU8Error} if the value is not a valid 8-bit unsigned integer. */
-	writeU8(address: U8, value: U8): void {
-		assertByteAddress(address)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidByteAlignedAddressError}
+	 * @throws {InvalidU8Error} */
+	writeU8(address: number, value: number): void {
+		assertByteAlignedAddress(address)
 		assertU8(value)
 		this._bytes[address] = value
 	}
 
 	/** Write the specified 8-bit signed integer at the specified address.
-	 * @throws {InvalidByteAddressError} if the address is not a valid byte address.
-	 * @throws {InvalidI8Error} if the value is not a valid 8-bit signed integer. */
-	writeI8(address: U8, value: U8): void {
-		assertByteAddress(address)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidByteAlignedAddressError}
+	 * @throws {InvalidI8Error} */
+	writeI8(address: number, value: number): void {
+		assertByteAlignedAddress(address)
 		assertI8(value)
 		this._bytes[address] = u8(value)
 	}
 
 	/** Write the specified 16-bit unsigned integer at the specified address.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address.
-	 * @throws {InvalidU16Error} if the value is not a valid 16-bit unsigned integer. */
-	writeU16(address: U8, value: U16): void {
-		assertWordAddress(address)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError}
+	 * @throws {InvalidU16Error} */
+	writeU16(address: number, value: number): void {
+		assertWordAlignedAddress(address)
 		assertU16(value)
-		const msb = u16MSB(value)
-		const lsb = u16LSB(value)
-		this._bytes[address] = msb
-		this._bytes[address + 1] = lsb
+		this._bytes[address] = u16MSB(value)
+		this._bytes[address + 1] = u16LSB(value)
 	}
 
 	/** Write the specified 16-bit signed integer at the specified address.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address.
-	 * @throws {InvalidI16Error} if the value is not a valid 16-bit signed integer. */
-	writeI16(address: U8, value: I16): void {
-		assertWordAddress(address)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError}
+	 * @throws {InvalidI16Error} */
+	writeI16(address: number, value: number): void {
+		assertWordAlignedAddress(address)
 		assertI16(value)
-		const msb = i16MSB(value)
-		const lsb = u16LSB(value)
-		this._bytes[address] = msb
-		this._bytes[address + 1] = lsb
+		this._bytes[address] = i16MSB(value)
+		this._bytes[address + 1] = i16LSB(value)
 	}
 
-	/** Shift down by {@link WORD_ALIGN} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} + 1.
-	 * {@link msbAddress} + {@link WORD_ALIGN} and {@link msbAddress} + {@link WORD_ALIGN} + 1 are overwritten.
+	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} + 1.
+	 * {@link msbAddress} + {@link WORD_ALIGNMENT} and {@link msbAddress} + {@link WORD_ALIGNMENT} + 1 are overwritten.
 	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are set to 0.
 	 * If {@link msbAddress} === {@link MAX_WORD_ADDRESS}, the shift is not performed.
 	 * Note: "upperHalf" refers to all the addresses <= {@link msbAddress}.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftUpperHalfDownFromAddress(msbAddress: U8): void {
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	shiftUpperHalfDownFromAddress(msbAddress: number): void {
 		if (msbAddress === MAX_WORD_ADDRESS) {
 			// Noop if it's trying to shift from the last address
 			return
 		}
-		assertWordAddress(msbAddress)
-		const lowerMsbAddress = msbAddress + WORD_ALIGN
+		assertWordAlignedAddress(msbAddress)
+		const lowerMsbAddress = msbAddress + WORD_ALIGNMENT
 		const lowerLsbAddress = lowerMsbAddress + 1
 		const upperMsbAddress = MIN_ADDRESS
 		const upperLsbAddress = upperMsbAddress + 1
 		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
-			const oldAddress = newAddress - WORD_ALIGN
+			const oldAddress = newAddress - WORD_ALIGNMENT
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[upperMsbAddress] = 0
-		this._bytes[upperLsbAddress] = 0
+		this._bytes[upperMsbAddress] = 0 as U8
+		this._bytes[upperLsbAddress] = 0 as U8
 	}
 
-	/** Shift down by {@link WORD_ALIGN} all bytes from {@link msbAddress} to {@link MAX_WORD_ADDRESS} - 1.
+	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link MAX_WORD_ADDRESS} - 1.
 	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link msbAddress}.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftLowerHalfDownFromAddress(msbAddress: U8): void {
-		assertWordAddress(msbAddress)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	shiftLowerHalfDownFromAddress(msbAddress: number): void {
+		assertWordAlignedAddress(msbAddress)
 		const lowerMsbAddress = MAX_WORD_ADDRESS
 		const lowerLsbAddress = lowerMsbAddress + 1
 		const upperMsbAddress = msbAddress
 		const upperLsbAddress = upperMsbAddress + 1
 		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
-			const oldAddress = newAddress - WORD_ALIGN
+			const oldAddress = newAddress - WORD_ALIGNMENT
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[upperMsbAddress] = 0
-		this._bytes[upperLsbAddress] = 0
+		this._bytes[upperMsbAddress] = 0 as U8
+		this._bytes[upperLsbAddress] = 0 as U8
 	}
 
-	/** Shift up by {@link WORD_ALIGN} all bytes from {@link MIN_ADDRESS} + {@link WORD_ALIGN} to {@link msbAddress} + 1.
+	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link MIN_ADDRESS} + {@link WORD_ALIGNMENT} to {@link msbAddress} + 1.
 	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * Note: "upperHalf" refers to all the addresses <= {@link msbAddress}.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftUpperHalfUpFromAddress(msbAddress: U8): void {
-		assertWordAddress(msbAddress)
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	shiftUpperHalfUpFromAddress(msbAddress: number): void {
+		assertWordAlignedAddress(msbAddress)
 		const upperMsbAddress = MIN_ADDRESS
 		const lowerMsbAddress = msbAddress
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
-			const oldAddress = newAddress + WORD_ALIGN
+			const oldAddress = newAddress + WORD_ALIGNMENT
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[lowerMsbAddress] = 0
-		this._bytes[lowerLsbAddress] = 0
+		this._bytes[lowerMsbAddress] = 0 as U8
+		this._bytes[lowerLsbAddress] = 0 as U8
 	}
 
-	/** Shift up by {@link WORD_ALIGN} all bytes from {@link msbAddress} to {@link MAX_ADDRESS}.
-	 * {@link msbAddress} - {@link WORD_ALIGN} and {@link msbAddress} - 1 are overwritten.
+	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link MAX_ADDRESS}.
+	 * {@link msbAddress} - {@link WORD_ALIGNMENT} and {@link msbAddress} - 1 are overwritten.
 	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are set to 0.
 	 * If {@link msbAddress} === {@link MIN_ADDRESS}, the shift is not performed.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link msbAddress}.
-	 * @throws {InvalidWordAddressError} if the address is not a valid word address. */
-	shiftLowerHalfUpFromAddress(msbAddress: U8): void {
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	shiftLowerHalfUpFromAddress(msbAddress: number): void {
 		if (msbAddress === MIN_ADDRESS) {
 			// Noop if it's trying to shift from the first address
 			return
 		}
-		assertWordAddress(msbAddress)
-		const upperMsbAddress = msbAddress - WORD_ALIGN
+		assertWordAlignedAddress(msbAddress)
+		const upperMsbAddress = msbAddress - WORD_ALIGNMENT
 		const lowerMsbAddress = MAX_WORD_ADDRESS
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
-			const oldAddress = newAddress + WORD_ALIGN
+			const oldAddress = newAddress + WORD_ALIGNMENT
 			this._bytes[newAddress] = this._bytes[oldAddress]
 		}
-		this._bytes[lowerMsbAddress] = 0
-		this._bytes[lowerLsbAddress] = 0
+		this._bytes[lowerMsbAddress] = 0 as U8
+		this._bytes[lowerLsbAddress] = 0 as U8
 	}
 }
 
@@ -225,18 +254,11 @@ export function assertMemoryOperation(value: number): asserts value is MemoryOpe
 	}
 }
 
-/** Error regarding an unexpected value presented as memory operation. */
-export class InvalidMemoryOperationError extends Error {
-	public readonly value: number
+/** Base class for an error regarding memory. */
+export abstract class MemoryError extends Error {}
 
-	constructor(value: number) {
-		super(`Invalid memory operation value: ${value.toString(2)}`)
-		this.value = value
-	}
-}
-
-/** Base class for errors regarding an invalid address */
-export abstract class InvalidAddressError extends Error {
+/** Base class for errors regarding a memory address. */
+export abstract class AddressError extends MemoryError {
 	/** The address that caused the error. */
 	public readonly address: number
 
@@ -246,16 +268,44 @@ export abstract class InvalidAddressError extends Error {
 	}
 }
 
-/** Error regarding an address that cannot point to a byte */
-export class InvalidByteAddressError extends InvalidAddressError {
+/** Error regarding an address that is not in the valid memory address range. */
+export class AddressOutOfRangeError extends AddressError {
 	constructor(address: number) {
-		super(address, `Invalid byte address: ${address}`)
+		super(address, `Address out of range: ${address}`)
 	}
 }
 
-/** Error regarding an address that cannot point to a word (16-bit value) */
-export class InvalidWordAddressError extends InvalidAddressError {
+/** Error regarding an address that doesn't match a given alignment. */
+export abstract class MisalignedAddressError extends AddressError {
+	/** The required alignment */
+	public readonly alignment: number
+
+	constructor(address: number, alignment: number) {
+		super(address, `Address: ${address}, Alignment: ${alignment}`)
+		this.alignment = alignment
+	}
+}
+
+/** Error regarding an address that is not byte-aligned. */
+export class InvalidByteAlignedAddressError extends MisalignedAddressError {
 	constructor(address: number) {
-		super(address, `Invalid word address: ${address}`)
+		super(address, 1)
+	}
+}
+
+/** Error regarding an address that is not word-aligned. */
+export class InvalidWordAlignedAddressError extends MisalignedAddressError {
+	constructor(address: number) {
+		super(address, 2)
+	}
+}
+
+/** Error regarding an unexpected value presented as memory operation. */
+export class InvalidMemoryOperationError extends MemoryError {
+	public readonly value: number
+
+	constructor(value: number) {
+		super(`Invalid memory operation value: ${value.toString(2)}`)
+		this.value = value
 	}
 }
