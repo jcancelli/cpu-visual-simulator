@@ -77,7 +77,7 @@ export function validateLabel(
  * @throws {InvalidLabelError} */
 export function assertValidLabel(label: string): asserts label is Label {
 	const result = validateLabel(label)
-	if (validateLabel(label) !== LabelValidationResult.VALID) {
+	if (result !== LabelValidationResult.VALID) {
 		throw new InvalidLabelError(label, result)
 	}
 }
