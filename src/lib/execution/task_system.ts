@@ -51,14 +51,16 @@ export type ActionHandlerResult = ActionUnhandled | ActionHandled
 /** An object that can provide an implementation for the execution of some {@link Action} */
 export interface ActionPerformer {
 	/** @returns The handlers for some {@link Action}s mapped to their {@link ActionType}s */
-	getActionHandlersMappings(): ActionHandlerMapping<ActionType>[]
+	getActionHandlersMappings(): ActionHandlerMapping[]
 }
 
 /** Maps an {@link ActionHandler} to an {@link ActionType} */
-export interface ActionHandlerMapping<Type extends ActionType> {
-	action: Type
-	handler: ActionHandler<Type>
-}
+export type ActionHandlerMapping = {
+	[Type in ActionType]: {
+		action: Type
+		handler: ActionHandler<Type>
+	}
+}[ActionType]
 
 /** System that schedules and executes {@link Task}s */
 export class TaskSystem {
