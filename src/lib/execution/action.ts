@@ -15,7 +15,7 @@ export enum ActionType {
 	EXECUTE_INSTRUCTION,
 	SET_MEMORY_OPERATION,
 	// Memory
-	MEMORY_OPERATION,
+	PERFORM_MEMORY_OPERATION,
 	// Step description
 	UPDATE_STEP_DESCRIPTION,
 	// Text-to-speech
@@ -41,7 +41,7 @@ export type Action =
 	| DecodeInstructionAction
 	| ExecuteInstructionAction
 	| SetMemoryOperationAction
-	| MemoryOperationAction
+	| PerformMemoryOperationAction
 	| UpdateStepDescriptionAction
 	| TextToSpeechReadAction
 	| AwaitTextoToSpeechEndAction
@@ -153,10 +153,10 @@ export function setMemoryOperation(operation: MemoryOperation): SetMemoryOperati
 
 // Memory
 /** Perform whatever operation was signaled to the memory */
-export type MemoryOperationAction = ActionBase<ActionType.MEMORY_OPERATION>
+export type PerformMemoryOperationAction = ActionBase<ActionType.PERFORM_MEMORY_OPERATION>
 /** Perform whatever operation was signaled to the memory */
-export const memoryOperation: MemoryOperationAction = {
-	type: ActionType.MEMORY_OPERATION,
+export const performMemoryOperation: PerformMemoryOperationAction = {
+	type: ActionType.PERFORM_MEMORY_OPERATION,
 }
 
 // Step description
@@ -239,7 +239,7 @@ export type ActionTypeMapping = {
 	[ActionType.EXECUTE_INSTRUCTION]: ExecuteInstructionAction
 	[ActionType.SET_MEMORY_OPERATION]: SetMemoryOperationAction
 	// Memory
-	[ActionType.MEMORY_OPERATION]: MemoryOperationAction
+	[ActionType.PERFORM_MEMORY_OPERATION]: PerformMemoryOperationAction
 	// Step description
 	[ActionType.UPDATE_STEP_DESCRIPTION]: UpdateStepDescriptionAction
 	// Text-to-speech
