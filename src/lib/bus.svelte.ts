@@ -58,6 +58,13 @@ export abstract class Bus<T, SignalValidationError extends Error = never> {
 		this._signal = NO_SIGNAL
 	}
 
+	/** Read the signal.
+	 * @throws {NoSignalError} */
+	readSignalOrThrow(): T {
+		assertSignal(this._signal)
+		return this._signal
+	}
+
 	/** Wether a signal is being transmitted or not */
 	hasSignal(): boolean {
 		return this._signal !== NO_SIGNAL
