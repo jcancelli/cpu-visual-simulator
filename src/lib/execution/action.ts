@@ -1,5 +1,22 @@
 import type { MemoryOperation } from "$lib/memory.svelte"
 import type { Notification, NotificationType } from "$lib/notifications.svelte"
+import { TaskMetadata } from "./task_system"
+
+/** Metadata of an {@link Action} */
+export class ActionMetadata<T extends ActionType> extends TaskMetadata {
+	public readonly isAction: true
+	public readonly type: T
+
+	constructor(type: T) {
+		super()
+		this.isAction = true
+		this.type = type
+	}
+
+	override toString(): string {
+		return `ACTION ${ActionType[this.type]} (${this.id})`
+	}
+}
 
 /** Identifier of the type of an {@link Action} */
 export enum ActionType {
@@ -30,7 +47,7 @@ export enum ActionType {
 
 /** All {@link ActionType}s as list */
 export const ACTION_TYPES = Object.values(ActionType).filter(
-	v => typeof v !== "string",
+	enumValue => typeof enumValue !== "string",
 ) as ReadonlyArray<ActionType>
 
 /** An action that can be performed by the {@link TaskSystem} */
@@ -53,7 +70,7 @@ export type Action =
 
 /** Template for an {@link Action} type */
 export type ActionBase<T extends ActionType, U = never> = Readonly<
-	[U] extends [never] ? { type: T } : { type: T } & U
+	[U] extends [never] ? { meta: ActionMetadata<T> } : { meta: ActionMetadata<T> } & U
 >
 
 // Execution
@@ -64,13 +81,15 @@ export type EndInstructionAction = ActionBase<ActionType.END_INSTRUCTION>
 /** Signal the end of a step */
 export type EndStepAction = ActionBase<ActionType.END_STEP>
 /** Halt the execution */
-export const haltExecution: HaltExecutionAction = { type: ActionType.HALT_EXECUTION }
+export const haltExecution: HaltExecutionAction = {
+	meta: new ActionMetadata(ActionType.HALT_EXECUTION),
+}
 /** Signal the end of an instruction */
 export const endInstruction: EndInstructionAction = {
-	type: ActionType.END_INSTRUCTION,
+	meta: new ActionMetadata(ActionType.END_INSTRUCTION),
 }
 /** Signal the end of a step */
-export const endStep: EndStepAction = { type: ActionType.END_STEP }
+export const endStep: EndStepAction = { meta: new ActionMetadata(ActionType.END_STEP) }
 
 // Bus
 /** Source or destination for a {@link Bus} read/write operation */
@@ -108,7 +127,7 @@ export type ReadBusAction = ActionBase<ActionType.READ_BUS, { source: BusIO; bus
 /** Put a signal on a {@link Bus} */
 export function signalBus(source: BusIO, bus: BusID): SignalBusAction {
 	return {
-		type: ActionType.SIGNAL_BUS,
+		meta: new ActionMetadata(ActionType.SIGNAL_BUS),
 		source,
 		bus,
 	}
@@ -116,14 +135,14 @@ export function signalBus(source: BusIO, bus: BusID): SignalBusAction {
 /** End the signal on a {@link Bus} */
 export function endSignalBus(bus: BusID): EndSignalBusAction {
 	return {
-		type: ActionType.END_SIGNAL_BUS,
+		meta: new ActionMetadata(ActionType.END_SIGNAL_BUS),
 		bus,
 	}
 }
 /** Read the signal from a {@link Bus} */
 export function readBus(source: BusIO, bus: BusID): ReadBusAction {
 	return {
-		type: ActionType.READ_BUS,
+		meta: new ActionMetadata(ActionType.READ_BUS),
 		source,
 		bus,
 	}
@@ -141,16 +160,16 @@ export type SetMemoryOperationAction = ActionBase<
 >
 /** Decode the opcode signal found on the bus between instruction register and decoder */
 export const decodeInstruction: DecodeInstructionAction = {
-	type: ActionType.DECODE_INSTRUCTION,
+	meta: new ActionMetadata(ActionType.DECODE_INSTRUCTION),
 }
 /** Execute whatever instruction the ALU was set to perform */
 export const executeInstruction: ExecuteInstructionAction = {
-	type: ActionType.EXECUTE_INSTRUCTION,
+	meta: new ActionMetadata(ActionType.EXECUTE_INSTRUCTION),
 }
 /** Set the operation that the control unit will signal on the control bus */
 export function setMemoryOperation(operation: MemoryOperation): SetMemoryOperationAction {
 	return {
-		type: ActionType.SET_MEMORY_OPERATION,
+		meta: new ActionMetadata(ActionType.SET_MEMORY_OPERATION),
 		operation,
 	}
 }
@@ -160,7 +179,7 @@ export function setMemoryOperation(operation: MemoryOperation): SetMemoryOperati
 export type PerformMemoryOperationAction = ActionBase<ActionType.PERFORM_MEMORY_OPERATION>
 /** Perform whatever operation was signaled to the memory */
 export const performMemoryOperation: PerformMemoryOperationAction = {
-	type: ActionType.PERFORM_MEMORY_OPERATION,
+	meta: new ActionMetadata(ActionType.PERFORM_MEMORY_OPERATION),
 }
 
 // Step description
@@ -172,7 +191,7 @@ export type UpdateStepDescriptionAction = ActionBase<
 /** Set the text for the step description box */
 export function updateStepDescription(text: string): UpdateStepDescriptionAction {
 	return {
-		type: ActionType.UPDATE_STEP_DESCRIPTION,
+		meta: new ActionMetadata(ActionType.UPDATE_STEP_DESCRIPTION),
 		text,
 	}
 }
@@ -185,13 +204,13 @@ export type AwaitTextoToSpeechEndAction = ActionBase<ActionType.AWAIT_TEXT_TO_SP
 /** Read some text */
 export function textToSpeechRead(text: string): TextToSpeechReadAction {
 	return {
-		type: ActionType.TEXT_TO_SPEECH_READ,
+		meta: new ActionMetadata(ActionType.TEXT_TO_SPEECH_READ),
 		text,
 	}
 }
 /** Wait for text-to-speech to finish reading */
 export const awaitTextToSpeechEnd: AwaitTextoToSpeechEndAction = {
-	type: ActionType.AWAIT_TEXT_TO_SPEECH_END,
+	meta: new ActionMetadata(ActionType.AWAIT_TEXT_TO_SPEECH_END),
 }
 
 // UI animations
@@ -223,7 +242,7 @@ export type FlashUIElementAction = ActionBase<ActionType.FLASH_UI_ELEMENT, { ele
 /** Flash an UI element */
 export function flashUIElement(element: UIElement): FlashUIElementAction {
 	return {
-		type: ActionType.FLASH_UI_ELEMENT,
+		meta: new ActionMetadata(ActionType.FLASH_UI_ELEMENT),
 		element,
 	}
 }
@@ -239,7 +258,7 @@ export function notifyUser(
 	undismissable?: true,
 ): NotifyUserAction {
 	return {
-		type: ActionType.NOTIFY_USER,
+		meta: new ActionMetadata(ActionType.NOTIFY_USER),
 		notification: {
 			type,
 			message,
@@ -249,8 +268,8 @@ export function notifyUser(
 	}
 }
 
-/** Utility type that maps an {@link ActionType} to it's associated {@link Action} */
-export type ActionTypeMapping = {
+/** Utility type that maps an {@link ActionType} to its associated {@link Action} */
+export type ActionOfType = {
 	// Execution
 	[ActionType.HALT_EXECUTION]: HaltExecutionAction
 	[ActionType.END_INSTRUCTION]: EndInstructionAction
@@ -275,3 +294,6 @@ export type ActionTypeMapping = {
 	// Notifications
 	[ActionType.NOTIFY_USER]: NotifyUserAction
 }
+
+/** Utility type that maps an {@link Action}  to its associated {@link ActionType} */
+export type ActionTypeOf<T extends Action> = T["meta"]["type"]
