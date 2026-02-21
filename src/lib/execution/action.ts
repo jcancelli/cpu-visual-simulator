@@ -272,4 +272,6 @@ export type ActionTypeMapping = {
 	[ActionType.AWAIT_TEXT_TO_SPEECH_END]: AwaitTextoToSpeechEndAction
 	// UI animations
 	[ActionType.FLASH_UI_ELEMENT]: FlashUIElementAction
+	// Notifications
+	[ActionType.NOTIFY_USER]: NotifyUserAction
 }
