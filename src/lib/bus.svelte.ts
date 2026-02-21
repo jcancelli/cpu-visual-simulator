@@ -30,6 +30,9 @@ export function assertSignal<T>(signal: BusSignal<T>): asserts signal is T {
 	}
 }
 
+/** Readonly version of a {@link Bus} */
+export type ReadonlyBus<T extends Bus<unknown>> = Omit<T, "sendSignal" | "endSignal">
+
 /** Represents a bus transporting data that can be interpreted as a signed or unsigned integer */
 export abstract class Bus<T, SignalValidationError extends Error = never> {
 	/** The value of the signal */
@@ -39,9 +42,9 @@ export abstract class Bus<T, SignalValidationError extends Error = never> {
 		this._signal = $state(NO_SIGNAL)
 	}
 
-	/** Put a signal on the bus.
+	/** Send a signal on the bus.
 	 * @throws {InvalidBusSignalError<SignalValidationError>} */
-	putSignal(signal: T): void {
+	sendSignal(signal: T): void {
 		try {
 			this.assertValidSignal(signal)
 			this._signal = signal
