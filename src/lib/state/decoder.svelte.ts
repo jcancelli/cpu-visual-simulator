@@ -2,8 +2,10 @@ import type { U8 } from "$lib/integer"
 import { getImmediateFlag, OPCODE_NOP, OPCODES_BY_NUMBER, type Opcode } from "$lib/opcode"
 import { type ByteBus } from "./bus.svelte"
 
-export const INVALID_OPCODE = Symbol("INVALID_OPCODE")
+/** An opcode that was decoded by the {@link Decoder} */
 export type DecodedOpcode = Opcode | typeof INVALID_OPCODE
+/** A value that represents an invalid opcode decoded by the {@link Decoder} */
+export const INVALID_OPCODE = Symbol("INVALID_OPCODE")
 
 /** State of the decoder */
 export class Decoder {
