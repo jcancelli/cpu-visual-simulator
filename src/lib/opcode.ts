@@ -5,19 +5,34 @@ export const IMMEDIATE_FLAG_BIT = 1 << 7
 /** Immediate flag bit set to 0, all other bits set to 1 */
 export const IMMEDIATE_FLAG_MASK = ~IMMEDIATE_FLAG_BIT >>> 0
 
-/** Return wether or not the immediate flag is set. The input value is assumed to be an 8-bit integer */
+/** @returns The state of the immediate flag bit for the provided value value */
 export function getImmediateFlag(value: SizedInt<8>): boolean {
 	return (value & IMMEDIATE_FLAG_BIT) !== 0
 }
 
-/** Return the provided value with the immediate flag set/unset.
- * The input value is assumed to be an 8-bit integer */
+/** @returns The provided value with the immediate flag bit set to either 1 or 0 */
 export function setImmediateFlag(value: SizedInt<8>, flag: boolean = true): SizedInt<8> {
 	if (flag) {
 		return (value | IMMEDIATE_FLAG_BIT) as SizedInt<8>
 	}
 	return (value & IMMEDIATE_FLAG_MASK) as SizedInt<8>
 }
+
+/** @returns The provided value with the immediate flag bit set to 0 */
+export function withoutImmediateFlag(value: SizedInt<8>): SizedInt<8> {
+	return setImmediateFlag(value, false)
+}
+
+/** @returns The provided value with the immediate flag bit set to 1 */
+export function withImmediateFlag(value: SizedInt<8>): SizedInt<8> {
+	return setImmediateFlag(value, true)
+}
+
+/** An opcode that could be invalid */
+export type DecodedOpcode = Opcode | typeof INVALID_OPCODE
+
+/** A value that represents an invalid opcode */
+export const INVALID_OPCODE = Symbol("INVALID_OPCODE")
 
 export const OPCODE_NUMBER_NOP = 0
 export const OPCODE_NUMBER_HLT = 1
@@ -235,7 +250,7 @@ export const OPCODES = [
 ] as const
 
 /** All opcodes mapped to their symbolic representation. */
-export const OPCODES_BY_STRING = {
+const OPCODES_BY_STRING = {
 	[OPCODE_STRING_NOP]: OPCODE_NOP,
 	[OPCODE_STRING_HLT]: OPCODE_HLT,
 	[OPCODE_STRING_JMP]: OPCODE_JMP,
@@ -254,16 +269,28 @@ export const OPCODES_BY_STRING = {
 	[OPCODE_STRING_NOT]: OPCODE_NOT,
 } as const
 
+/** @returns The {@link Opcode} matching the provided string or {@link INVALID_OPCODE} */
+export function getOpcodeByString(value: string): DecodedOpcode {
+	return OPCODES_BY_STRING[value as OpcodeString] ?? INVALID_OPCODE
+}
+
+/** Check if the provided string is a valid {@link OpcodeString} */
+export function isOpcodeString(value: string): value is OpcodeString {
+	return getOpcodeByString(value) !== INVALID_OPCODE
+}
+
 /** All possible numeric values of a valid opcode.
  * Variations where the immediate flag is set are included for opcodes that allow for it. */
-export const OPCODES_BY_NUMBER = OPCODES.reduce<{ [key: number]: Opcode }>(
-	(accumulator, opcode) => {
-		if (opcode.takesImmediate) {
-			const numericWithImmediate = setImmediateFlag(opcode.numeric as SizedInt<8>, true)
-			accumulator[numericWithImmediate] = opcode
-		}
-		accumulator[opcode.numeric] = opcode
-		return accumulator
-	},
-	{},
-)
+const OPCODES_BY_NUMBER = OPCODES.reduce<{ [key: number]: Opcode }>((accumulator, opcode) => {
+	if (opcode.takesImmediate) {
+		const numericWithImmediate = withImmediateFlag(opcode.numeric as SizedInt<8>)
+		accumulator[numericWithImmediate] = opcode
+	}
+	accumulator[opcode.numeric] = opcode
+	return accumulator
+}, {})
+
+/** @returns The {@link Opcode} matching the provided number or {@link INVALID_OPCODE} */
+export function getOpcodeByNumber(value: number): DecodedOpcode {
+	return OPCODES_BY_NUMBER[value] ?? INVALID_OPCODE
+}

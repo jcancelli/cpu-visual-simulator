@@ -1,11 +1,6 @@
 import type { U8 } from "$lib/integer"
-import { getImmediateFlag, OPCODE_NOP, OPCODES_BY_NUMBER, type Opcode } from "$lib/opcode"
+import { getImmediateFlag, getOpcodeByNumber, OPCODE_NOP, type DecodedOpcode } from "$lib/opcode"
 import { type ByteBus } from "./bus.svelte"
-
-/** An opcode that was decoded by the {@link Decoder} */
-export type DecodedOpcode = Opcode | typeof INVALID_OPCODE
-/** A value that represents an invalid opcode decoded by the {@link Decoder} */
-export const INVALID_OPCODE = Symbol("INVALID_OPCODE")
 
 /** State of the decoder */
 export class Decoder {
@@ -43,7 +38,7 @@ export class Decoder {
 
 	/** Decode into an opcode the numeric value read from the bus connected to the instruction register */
 	decodeOpcode(): void {
-		this._decodedOpcode = OPCODES_BY_NUMBER[this.rawOpcode] ?? INVALID_OPCODE
+		this._decodedOpcode = getOpcodeByNumber(this.rawOpcode)
 		this._decodedImmediateFlag = getImmediateFlag(this.rawOpcode)
 	}
 }
