@@ -1,6 +1,7 @@
+import { INVALID_OPCODE } from "$lib/opcode"
 import { unreachable } from "$lib/util/development"
 import type { AddressingModeBus, MemoryOperationBus, OpcodeBus } from "./bus.svelte"
-import { INVALID_OPCODE, type Decoder } from "./decoder.svelte"
+import { type Decoder } from "./decoder.svelte"
 import { assertMemoryOperation, MemoryOperation } from "./memory.svelte"
 import { AddressingMode } from "./multiplexer.svelte"
 
