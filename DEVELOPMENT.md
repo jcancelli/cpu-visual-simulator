@@ -75,6 +75,7 @@
 # TODO
 
 - Add jsdoc comments to the top of all the files
+- Make it so that eslint doesn't bitch about unused types when the types are only used in the JsDoc comments
 
 # Bugs
 
