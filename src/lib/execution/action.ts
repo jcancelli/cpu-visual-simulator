@@ -1,104 +1,50 @@
-import type { MemoryOperation } from "$lib/memory.svelte"
+import { MemoryOperation } from "$lib/state/memory.svelte"
 import type { Notification, NotificationType } from "$lib/notifications.svelte"
-import { TaskMetadata } from "./task_system"
+import { Action, ActionType } from "./task"
 
-/** Metadata of an {@link Action} */
-export class ActionMetadata<T extends ActionType> extends TaskMetadata {
-	public readonly isAction: true
-	public readonly type: T
+/** Base class for all actions regarding execution */
+export abstract class ExecutionAction extends Action {}
 
-	constructor(type: T) {
-		super()
-		this.isAction = true
-		this.type = type
-	}
-
-	override toString(): string {
-		return `ACTION ${ActionType[this.type]} (${this.id})`
+/** Halt the execution */
+export class HaltExecutionAction extends ExecutionAction {
+	constructor() {
+		super(ActionType.HALT_EXECUTION)
 	}
 }
 
-/** Identifier of the type of an {@link Action} */
-export enum ActionType {
-	// Execution
-	HALT_EXECUTION,
-	END_INSTRUCTION,
-	END_STEP,
-	// Bus
-	SIGNAL_BUS,
-	END_SIGNAL_BUS,
-	READ_BUS,
-	// Cpu
-	DECODE_INSTRUCTION,
-	EXECUTE_INSTRUCTION,
-	SET_MEMORY_OPERATION,
-	// Memory
-	PERFORM_MEMORY_OPERATION,
-	// Step description
-	UPDATE_STEP_DESCRIPTION,
-	// Text-to-speech
-	TEXT_TO_SPEECH_READ,
-	AWAIT_TEXT_TO_SPEECH_END,
-	// UI animations
-	FLASH_UI_ELEMENT,
-	// Notifications
-	NOTIFY_USER,
-}
-
-/** All {@link ActionType}s as list */
-export const ACTION_TYPES = Object.values(ActionType).filter(
-	enumValue => typeof enumValue !== "string",
-) as ReadonlyArray<ActionType>
-
-/** An action that can be performed by the {@link TaskSystem} */
-export type Action =
-	| HaltExecutionAction
-	| EndInstructionAction
-	| EndStepAction
-	| SignalBusAction
-	| EndSignalBusAction
-	| ReadBusAction
-	| DecodeInstructionAction
-	| ExecuteInstructionAction
-	| SetMemoryOperationAction
-	| PerformMemoryOperationAction
-	| UpdateStepDescriptionAction
-	| TextToSpeechReadAction
-	| AwaitTextoToSpeechEndAction
-	| FlashUIElementAction
-	| NotifyUserAction
-
-/** Template for an {@link Action} type */
-export type ActionBase<T extends ActionType, U = never> = Readonly<
-	[U] extends [never] ? { meta: ActionMetadata<T> } : { meta: ActionMetadata<T> } & U
->
-
-// Execution
-/** Halt the execution */
-export type HaltExecutionAction = ActionBase<ActionType.HALT_EXECUTION>
 /** Signal the end of an instruction */
-export type EndInstructionAction = ActionBase<ActionType.END_INSTRUCTION>
-/** Signal the end of a step */
-export type EndStepAction = ActionBase<ActionType.END_STEP>
-/** Halt the execution */
-export const haltExecution: HaltExecutionAction = {
-	meta: new ActionMetadata(ActionType.HALT_EXECUTION),
+export class EndInstructionAction extends ExecutionAction {
+	constructor() {
+		super(ActionType.END_INSTRUCTION)
+	}
 }
-/** Signal the end of an instruction */
-export const endInstruction: EndInstructionAction = {
-	meta: new ActionMetadata(ActionType.END_INSTRUCTION),
-}
-/** Signal the end of a step */
-export const endStep: EndStepAction = { meta: new ActionMetadata(ActionType.END_STEP) }
 
-// Bus
-/** Source or destination for a {@link Bus} read/write operation */
-export enum BusIO {
+/** Signal the end of a step */
+export class EndStepAction extends ExecutionAction {
+	constructor() {
+		super(ActionType.END_STEP)
+	}
+}
+
+/** Instance of {@link HaltExecutionAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const haltExecution = new HaltExecutionAction()
+
+/** Instance of {@link EndInstructionAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const endInstruction = new EndInstructionAction()
+
+/** Instance of {@link EndStepAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const endStep = new EndStepAction()
+
+/** Source or destination for a read/write operation */
+export enum Register {
 	// CPU
 	PROGRAM_COUNTER,
-	PROGRAM_COUNTER_INCREMENT,
 	INSTRUCTION_REGISTER,
-	DECODER_CTRL_UNIT,
+	DECODER,
+	CONTROL_UNIT,
 	MUX,
 	ALU,
 	ACCUMULATOR,
@@ -106,114 +52,216 @@ export enum BusIO {
 	// Memory
 	MEMORY,
 }
+
 /** IDs of all the busses */
 export enum BusID {
 	DATA,
 	ADDRESS,
-	CONTROL,
+	MEMORY_CONTROL,
 	OPCODE_DECODER,
 	MUX_ALU,
-	CONTROL_UNIT_MUX,
-	CONTROL_UNIT_ALU,
-	ALU_STATUS_WORD,
+	MUX_CONTROL,
+	ALU_CONTROL,
+	STATUS_WORD,
 	ALU_ACCUMULATOR,
 }
+
+/** Base class for an action regarding busses */
+export abstract class BusAction extends Action {}
+
 /** Put a signal on a {@link Bus} */
-export type SignalBusAction = ActionBase<ActionType.SIGNAL_BUS, { source: BusIO; bus: BusID }>
+export class SendSignalBusAction extends BusAction {
+	/** The bus carrying the signal */
+	public readonly bus: BusID
+	/** The source of the data */
+	public readonly from: Register
+
+	constructor(bus: BusID, from: Register) {
+		super(ActionType.SEND_SIGNAL)
+		this.bus = bus
+		this.from = from
+	}
+}
+
 /** End the signal on a {@link Bus} */
-export type EndSignalBusAction = ActionBase<ActionType.END_SIGNAL_BUS, { bus: BusID }>
-/** Read the signal from a {@link Bus} */
-export type ReadBusAction = ActionBase<ActionType.READ_BUS, { source: BusIO; bus: BusID }>
-/** Put a signal on a {@link Bus} */
-export function signalBus(source: BusIO, bus: BusID): SignalBusAction {
-	return {
-		meta: new ActionMetadata(ActionType.SIGNAL_BUS),
-		source,
-		bus,
+export class EndSignalBusAction extends BusAction {
+	/** The bus carrying the signal */
+	public readonly bus: BusID
+
+	constructor(bus: BusID) {
+		super(ActionType.END_SIGNAL)
+		this.bus = bus
 	}
 }
+
+/** Read the signal from a {@link Bus} */
+export class ReadSignalBusAction extends BusAction {
+	/** The bus carrying the signal */
+	public readonly bus: BusID
+	/** Where the signal will be wrote into */
+	public readonly into: Register
+
+	constructor(bus: BusID, into: Register) {
+		super(ActionType.READ_SIGNAL)
+		this.bus = bus
+		this.into = into
+	}
+}
+
+/** Put the value from a data source onto a {@link Bus} */
+export function startSignalOnBus(bus: BusID, from: Register): SendSignalBusAction {
+	return new SendSignalBusAction(bus, from)
+}
+
 /** End the signal on a {@link Bus} */
-export function endSignalBus(bus: BusID): EndSignalBusAction {
-	return {
-		meta: new ActionMetadata(ActionType.END_SIGNAL_BUS),
-		bus,
-	}
+export function endSignalOnBus(bus: BusID): EndSignalBusAction {
+	return new EndSignalBusAction(bus)
 }
-/** Read the signal from a {@link Bus} */
-export function readBus(source: BusIO, bus: BusID): ReadBusAction {
-	return {
-		meta: new ActionMetadata(ActionType.READ_BUS),
-		source,
-		bus,
+
+/** Write the signal found on a {@link Bus} into a destination */
+export function readSignalFromBus(bus: BusID, into: Register): ReadSignalBusAction {
+	return new ReadSignalBusAction(bus, into)
+}
+
+/** Base class for an action regarding the {@link CPU} */
+export abstract class CPUAction extends Action {}
+
+/** Decode the opcode read by the decoder */
+export class DecodeInstructionAction extends CPUAction {
+	constructor() {
+		super(ActionType.DECODE_INSTRUCTION)
 	}
 }
 
-// Cpu
-/** Decode the opcode signal found on the bus between instruction register and decoder */
-export type DecodeInstructionAction = ActionBase<ActionType.DECODE_INSTRUCTION>
 /** Execute whatever instruction the ALU was set to perform */
-export type ExecuteInstructionAction = ActionBase<ActionType.EXECUTE_INSTRUCTION>
-/** Set the operation that the control unit will signal on the control bus */
-export type SetMemoryOperationAction = ActionBase<
-	ActionType.SET_MEMORY_OPERATION,
-	{ operation: MemoryOperation }
->
-/** Decode the opcode signal found on the bus between instruction register and decoder */
-export const decodeInstruction: DecodeInstructionAction = {
-	meta: new ActionMetadata(ActionType.DECODE_INSTRUCTION),
-}
-/** Execute whatever instruction the ALU was set to perform */
-export const executeInstruction: ExecuteInstructionAction = {
-	meta: new ActionMetadata(ActionType.EXECUTE_INSTRUCTION),
-}
-/** Set the operation that the control unit will signal on the control bus */
-export function setMemoryOperation(operation: MemoryOperation): SetMemoryOperationAction {
-	return {
-		meta: new ActionMetadata(ActionType.SET_MEMORY_OPERATION),
-		operation,
+export class ExecuteInstructionAction extends CPUAction {
+	constructor() {
+		super(ActionType.EXECUTE_INSTRUCTION)
 	}
 }
 
-// Memory
-/** Perform whatever operation was signaled to the memory */
-export type PerformMemoryOperationAction = ActionBase<ActionType.PERFORM_MEMORY_OPERATION>
-/** Perform whatever operation was signaled to the memory */
-export const performMemoryOperation: PerformMemoryOperationAction = {
-	meta: new ActionMetadata(ActionType.PERFORM_MEMORY_OPERATION),
+/** Instruct the control unit on what operation it sould signal to the memory next */
+export class SetMemoryOperationAction extends CPUAction {
+	/** The memory operation that should be signaled next */
+	public readonly operation: MemoryOperation
+
+	constructor(operation: MemoryOperation) {
+		super(ActionType.SET_MEMORY_OPERATION)
+		this.operation = operation
+	}
 }
 
-// Step description
+/** Instance of {@link DecodeInstructionAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const decodeInstruction = new DecodeInstructionAction()
+
+/** Instance of {@link ExecuteInstructionAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const executeInstruction = new ExecuteInstructionAction()
+
+/** Instance of {@link SetMemoryOperationAction} for a {@link MemoryOperation.FETCH} operation.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const setMemoryFetchOperation = new SetMemoryOperationAction(MemoryOperation.FETCH)
+
+/** Instance of {@link SetMemoryOperationAction} for a {@link MemoryOperation.READ} operation.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const setMemoryReadOperation = new SetMemoryOperationAction(MemoryOperation.READ)
+
+/** Instance of {@link SetMemoryOperationAction} for a {@link MemoryOperation.WRITE} operation.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const setMemoryWriteOperation = new SetMemoryOperationAction(MemoryOperation.WRITE)
+
+/** Base class for all actions regarding the {@link Memory} */
+export abstract class MemoryAction extends Action {}
+
+/** Perform whatever operation was signaled to the memory */
+export class PerformMemoryOperationAction extends MemoryAction {
+	constructor() {
+		super(ActionType.PERFORM_MEMORY_OPERATION)
+	}
+}
+
+/** Instance of {@link PerformMemoryOperationAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const performMemoryOperation = new PerformMemoryOperationAction()
+
+/** Base class for actions regarding the step description */
+export abstract class StepDescriptionAction extends Action {}
+
 /** Set the text for the step description box */
-export type UpdateStepDescriptionAction = ActionBase<
-	ActionType.UPDATE_STEP_DESCRIPTION,
-	{ text: string }
->
+export class UpdateStepDescriptionAction extends StepDescriptionAction {
+	/** The key for the localized text */
+	public readonly text: string
+
+	// TODO: Maybe use an enum instead of a string?
+	constructor(text: string) {
+		super(ActionType.UPDATE_STEP_DESCRIPTION)
+		this.text = text
+	}
+}
+
 /** Set the text for the step description box */
 export function updateStepDescription(text: string): UpdateStepDescriptionAction {
-	return {
-		meta: new ActionMetadata(ActionType.UPDATE_STEP_DESCRIPTION),
-		text,
+	return new UpdateStepDescriptionAction(text)
+}
+
+/** Base class for actions regarding text-to-speech */
+export abstract class TextToSpeechAction extends Action {}
+
+/** Read some text (no internationalization) */
+export class TTSReadAction extends TextToSpeechAction {
+	/** The text that will be read by text-to-speech */
+	public readonly text: string
+
+	constructor(text: string) {
+		super(ActionType.TEXT_TO_SPEECH_READ)
+		this.text = text
 	}
 }
 
-// Text-to-speech
-/** Read some text */
-export type TextToSpeechReadAction = ActionBase<ActionType.TEXT_TO_SPEECH_READ, { text: string }>
-/** Wait for text-to-speech to finish reading */
-export type AwaitTextoToSpeechEndAction = ActionBase<ActionType.AWAIT_TEXT_TO_SPEECH_END>
-/** Read some text */
-export function textToSpeechRead(text: string): TextToSpeechReadAction {
-	return {
-		meta: new ActionMetadata(ActionType.TEXT_TO_SPEECH_READ),
-		text,
+/** Read some text from the localized strings */
+export class TTSReadLocalizedAction<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	T extends Record<string, any> | undefined = undefined,
+> extends TextToSpeechAction {
+	/** The key for the localized text */
+	public readonly text: string
+	/** The parameters for the localized text */
+	public readonly params: T
+
+	// TODO: Maybe use an enum instead of string?
+	constructor(text: string, params: T) {
+		super(ActionType.TEXT_TO_SPEECH_LOCALIZED_READ)
+		this.text = text
+		this.params = params
 	}
 }
+
 /** Wait for text-to-speech to finish reading */
-export const awaitTextToSpeechEnd: AwaitTextoToSpeechEndAction = {
-	meta: new ActionMetadata(ActionType.AWAIT_TEXT_TO_SPEECH_END),
+export class WaitTextToSpeechEndAction extends TextToSpeechAction {
+	constructor() {
+		super(ActionType.WAIT_TEXT_TO_SPEECH_END)
+	}
 }
 
-// UI animations
+/** Read some text (no internationalization) */
+export function ttsRead(text: string): TTSReadAction {
+	return new TTSReadAction(text)
+}
+
+/** Read some text from the localized strings */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ttsLocalizedRead<T extends Record<string, any> | undefined>(
+	text: string,
+	params?: T,
+): TTSReadAction {
+	return new TTSReadLocalizedAction(text, params)
+}
+
+/** Instance of {@link WaitTextToSpeechEndAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const waitTextToSpeechEnd = new WaitTextToSpeechEndAction()
+
 /** Identifier of an UI element */
 export enum UIElement {
 	// CPU
@@ -237,47 +285,64 @@ export enum UIElement {
 	// Labels
 	LABEL,
 }
+
+/** Base class for actions regarding UI elements */
+export abstract class UIElementAction extends Action {}
+
 /** Flash an UI element */
-export type FlashUIElementAction = ActionBase<ActionType.FLASH_UI_ELEMENT, { element: UIElement }>
-/** Flash an UI element */
-export function flashUIElement(element: UIElement): FlashUIElementAction {
-	return {
-		meta: new ActionMetadata(ActionType.FLASH_UI_ELEMENT),
-		element,
+export class FlashUIElementAction extends UIElementAction {
+	/** The UI element that will be flashed */
+	public readonly element: UIElement
+
+	constructor(element: UIElement) {
+		super(ActionType.FLASH_UI_ELEMENT)
+		this.element = element
 	}
 }
 
-// Notifications
-/** Display a notification */
-export type NotifyUserAction = ActionBase<ActionType.NOTIFY_USER, { notification: Notification }>
-/** Display a notification */
-export function notifyUser(
+/** Flash an UI element */
+export function flashUIElement(element: UIElement): FlashUIElementAction {
+	return new FlashUIElementAction(element)
+}
+
+/** Base class for actions regarding user notifications */
+export abstract class NotificationAction extends Action {}
+
+/** Send a notification */
+export class SendNotificationAction extends NotificationAction {
+	public readonly notification: Notification
+
+	constructor(notification: Notification) {
+		super(ActionType.SEND_NOTIFICATION)
+		this.notification = notification
+	}
+}
+
+/** Send a notification */
+export function sendNotification(
 	type: NotificationType,
 	message: string,
 	timerMs?: number,
 	undismissable?: true,
-): NotifyUserAction {
-	return {
-		meta: new ActionMetadata(ActionType.NOTIFY_USER),
-		notification: {
-			type,
-			message,
-			timerMs,
-			undismissable,
-		},
-	}
+): SendNotificationAction {
+	return new SendNotificationAction({
+		type,
+		message,
+		timerMs,
+		undismissable,
+	})
 }
 
-/** Utility type that maps an {@link ActionType} to its associated {@link Action} */
+/** Utility type that maps an {@link ActionType} to its associated {@link Action} subclass */
 export type ActionOfType = {
 	// Execution
 	[ActionType.HALT_EXECUTION]: HaltExecutionAction
 	[ActionType.END_INSTRUCTION]: EndInstructionAction
 	[ActionType.END_STEP]: EndStepAction
 	// Bus
-	[ActionType.SIGNAL_BUS]: SignalBusAction
-	[ActionType.END_SIGNAL_BUS]: EndSignalBusAction
-	[ActionType.READ_BUS]: ReadBusAction
+	[ActionType.SEND_SIGNAL]: SendSignalBusAction
+	[ActionType.END_SIGNAL]: EndSignalBusAction
+	[ActionType.READ_SIGNAL]: ReadSignalBusAction
 	// Cpu
 	[ActionType.DECODE_INSTRUCTION]: DecodeInstructionAction
 	[ActionType.EXECUTE_INSTRUCTION]: ExecuteInstructionAction
@@ -287,13 +352,11 @@ export type ActionOfType = {
 	// Step description
 	[ActionType.UPDATE_STEP_DESCRIPTION]: UpdateStepDescriptionAction
 	// Text-to-speech
-	[ActionType.TEXT_TO_SPEECH_READ]: TextToSpeechReadAction
-	[ActionType.AWAIT_TEXT_TO_SPEECH_END]: AwaitTextoToSpeechEndAction
+	[ActionType.TEXT_TO_SPEECH_READ]: TTSReadAction
+	[ActionType.TEXT_TO_SPEECH_LOCALIZED_READ]: TTSReadLocalizedAction
+	[ActionType.WAIT_TEXT_TO_SPEECH_END]: WaitTextToSpeechEndAction
 	// UI animations
 	[ActionType.FLASH_UI_ELEMENT]: FlashUIElementAction
 	// Notifications
-	[ActionType.NOTIFY_USER]: NotifyUserAction
+	[ActionType.SEND_NOTIFICATION]: SendNotificationAction
 }
-
-/** Utility type that maps an {@link Action}  to its associated {@link ActionType} */
-export type ActionTypeOf<T extends Action> = T["meta"]["type"]
