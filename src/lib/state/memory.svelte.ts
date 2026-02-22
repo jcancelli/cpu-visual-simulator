@@ -1,4 +1,15 @@
-import type { ByteBus, MemoryOperationBus, WordBus } from "./bus.svelte"
+import { type ByteBus, type MemoryOperationBus, type WordBus } from "./bus.svelte"
+import {
+	BusID,
+	Register,
+	type ReadSignalBusAction,
+	type SendSignalBusAction,
+} from "$lib/execution/action"
+import {
+	MEMORY_FETCH_ACTIONS,
+	MEMORY_READ_ACTIONS,
+	MEMORY_WRITE_ACTIONS,
+} from "$lib/execution/actions_presets"
 import {
 	assertI16,
 	assertI8,
@@ -7,11 +18,22 @@ import {
 	i16LSB,
 	i16MSB,
 	isValidU8,
+	joinU8ToI16,
+	joinU8ToU16,
 	u16LSB,
 	u16MSB,
 	u8,
+	type I16,
+	type U16,
 	type U8,
-} from "./integer"
+} from "$lib/integer"
+import { todo, unreachable } from "$lib/util/development"
+import {
+	ActionHandlerMap,
+	type ActionConsumer,
+	type ActionHandlerResult,
+} from "$lib/execution/action_performer"
+import { ActionType, Task } from "$lib/execution/task"
 
 /** A value that is a valid memory address */
 export type Address = U8
@@ -78,10 +100,40 @@ export function assertWordAlignedAddress(address: number): asserts address is Wo
 	}
 }
 
+/** Operation that can be signaled to the memory on the control bus */
+export enum MemoryOperation {
+	READ = 0b1,
+	WRITE = 0b10,
+	FETCH = 0b100,
+}
+
+/** Check if the specified value is a valid {@link MemoryOperation} */
+export function isMemoryOperation(value: number): value is MemoryOperation {
+	return value === MemoryOperation.READ || value === MemoryOperation.WRITE
+}
+
+/** Assert that the specified value is a valid {@link MemoryOperation}
+ * @throws {InvalidMemoryOperationError}*/
+export function assertMemoryOperation(value: number): asserts value is MemoryOperation {
+	if (!isMemoryOperation(value)) {
+		throw new InvalidMemoryOperationError(value)
+	}
+}
+
+/** Action types handled by the {@link Memory} */
+export type MemoryHandledActions =
+	| ActionType.SEND_SIGNAL
+	| ActionType.READ_SIGNAL
+	| ActionType.PERFORM_MEMORY_OPERATION
+
 /** State of the memory */
-export default class Memory {
+export default class Memory implements ActionConsumer<MemoryHandledActions> {
 	/** Writable state containing the memory's contents. */
 	private _bytes: U8[]
+	/** The currently selected address */
+	private _selectedAddress: WordAlignedAddress
+	/** The current memory operation */
+	private _selectedOperation: MemoryOperation
 	/** Reference to the data bus */
 	private dataBus: WordBus
 	/** Reference to the address bus */
@@ -89,19 +141,39 @@ export default class Memory {
 	/** Reference to the control bus */
 	private controlBus: MemoryOperationBus
 
+	public readonly actionHandlers: ActionHandlerMap<MemoryHandledActions>
+
 	constructor(dataBus: WordBus, addressBus: ByteBus, controlBus: MemoryOperationBus) {
 		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
-		this.dataBus = $state(dataBus)
-		this.addressBus = $state(addressBus)
-		this.controlBus = $state(controlBus)
+		this._selectedAddress = $state(0 as WordAlignedAddress)
+		this._selectedOperation = $state(MemoryOperation.READ)
+		this.dataBus = dataBus
+		this.addressBus = addressBus
+		this.controlBus = controlBus
+		this.actionHandlers = new ActionHandlerMap({
+			[ActionType.SEND_SIGNAL]: this.handleSendSignalBusAction.bind(this),
+			[ActionType.READ_SIGNAL]: this.handleReadSignalBusAction.bind(this),
+			[ActionType.PERFORM_MEMORY_OPERATION]:
+				this.handlePerformMemoryOperationAction.bind(this),
+		})
 	}
 
-	/** Readonly state containing the memory's contents. */
+	/** Readonly state containing the memory's contents */
 	get bytes(): ReadonlyArray<U8> {
 		return this._bytes
 	}
 
-	/** Set all bytes to 0. */
+	/** The currently selected address */
+	get selectedAddress(): WordAlignedAddress {
+		return this._selectedAddress
+	}
+
+	/** The current memory operation */
+	get selectedOperation(): MemoryOperation {
+		return this._selectedOperation
+	}
+
+	/** Set all bytes to 0 */
 	clear(): void {
 		for (let address = MIN_ADDRESS; address <= MAX_ADDRESS; address += 1) {
 			this._bytes[address] = 0 as U8
@@ -148,6 +220,22 @@ export default class Memory {
 		assertI16(value)
 		this._bytes[address] = i16MSB(value)
 		this._bytes[address + 1] = i16LSB(value)
+	}
+
+	/** Read a 16-bit unsigned integer from the specified address.
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	readU16(address: number): U16 {
+		assertWordAlignedAddress(address)
+		return joinU8ToU16(this._bytes[address], this._bytes[address + 1])
+	}
+
+	/** Read a 16-bit signed integer from the specified address.
+	 * @throws {AddressOutOfRangeError}
+	 * @throws {InvalidWordAlignedAddressError} */
+	readI16(address: number): I16 {
+		assertWordAlignedAddress(address)
+		return joinU8ToI16(this._bytes[address], this._bytes[address + 1])
 	}
 
 	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} + 1.
@@ -237,24 +325,46 @@ export default class Memory {
 		this._bytes[lowerMsbAddress] = 0 as U8
 		this._bytes[lowerLsbAddress] = 0 as U8
 	}
-}
 
-/** Operation that can be signaled to the memory on the control bus. */
-export enum MemoryOperation {
-	READ = 0b1,
-	WRITE = 0b10,
-}
+	/** {@link ActionHandler} for {@link SendSignalBusAction} */
+	private async handleSendSignalBusAction(
+		action: SendSignalBusAction,
+	): Promise<ActionHandlerResult> {
+		if (action.from !== Register.MEMORY || action.bus !== BusID.DATA) {
+			unreachable()
+		}
+		const data = this.readU16(this.selectedAddress)
+		this.dataBus.sendSignal(data)
+		return { actionWasHandled: true }
+	}
 
-/** Check if the specified value is a valid {@link MemoryOperation}. */
-export function isMemoryOperation(value: number): value is MemoryOperation {
-	return value === MemoryOperation.READ || value === MemoryOperation.WRITE
-}
+	/** {@link ActionHandler} for {@link ReadSignalBusAction} */
+	private async handleReadSignalBusAction(
+		action: ReadSignalBusAction,
+	): Promise<ActionHandlerResult> {
+		todo(action.toString())
+	}
 
-/** Assert that the specified value is a valid {@link MemoryOperation}.
- * @throws {InvalidMemoryOperationError}*/
-export function assertMemoryOperation(value: number): asserts value is MemoryOperation {
-	if (!isMemoryOperation(value)) {
-		throw new InvalidMemoryOperationError(value)
+	/** {@link ActionHandler} for {@link PerformMemoryOperationAction} */
+	private async handlePerformMemoryOperationAction(): Promise<ActionHandlerResult> {
+		const newTasks: Task[] = []
+		switch (this._selectedOperation) {
+			case MemoryOperation.READ:
+				newTasks.push(...MEMORY_READ_ACTIONS)
+				break
+
+			case MemoryOperation.WRITE:
+				newTasks.push(...MEMORY_WRITE_ACTIONS)
+				break
+
+			case MemoryOperation.FETCH:
+				newTasks.push(...MEMORY_FETCH_ACTIONS)
+				break
+
+			default:
+				unreachable()
+		}
+		todo()
 	}
 }
 
