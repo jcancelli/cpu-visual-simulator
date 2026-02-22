@@ -238,7 +238,7 @@ export class TTSReadLocalizedAction<
 }
 
 /** Wait for text-to-speech to finish reading */
-export class WaitTextToSpeechEndAction extends TextToSpeechAction {
+export class WaitTTSEndAction extends TextToSpeechAction {
 	constructor() {
 		super(ActionType.WAIT_TEXT_TO_SPEECH_END)
 	}
@@ -258,9 +258,9 @@ export function ttsLocalizedRead<T extends Record<string, any> | undefined>(
 	return new TTSReadLocalizedAction(text, params)
 }
 
-/** Instance of {@link WaitTextToSpeechEndAction}.
+/** Instance of {@link WaitTTSEndAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
-export const waitTextToSpeechEnd = new WaitTextToSpeechEndAction()
+export const waitTTSEnd = new WaitTTSEndAction()
 
 /** Identifier of an UI element */
 export enum UIElement {
@@ -354,7 +354,7 @@ export type ActionOfType = {
 	// Text-to-speech
 	[ActionType.TEXT_TO_SPEECH_READ]: TTSReadAction
 	[ActionType.TEXT_TO_SPEECH_LOCALIZED_READ]: TTSReadLocalizedAction
-	[ActionType.WAIT_TEXT_TO_SPEECH_END]: WaitTextToSpeechEndAction
+	[ActionType.WAIT_TEXT_TO_SPEECH_END]: WaitTTSEndAction
 	// UI animations
 	[ActionType.FLASH_UI_ELEMENT]: FlashUIElementAction
 	// Notifications
