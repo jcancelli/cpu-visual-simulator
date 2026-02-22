@@ -6,8 +6,8 @@ import {
 	WORD_ALIGNMENT,
 	type WordAlignedAddress,
 } from "./memory.svelte"
-import { CHAR_CODE_UNDERSCORE, isUppercaseLetter } from "./util/text"
-import { unreachable } from "./util/development"
+import { CHAR_CODE_UNDERSCORE, isUppercaseLetter } from "$lib/util/text"
+import { unreachable } from "$lib/util/development"
 import { SvelteMap } from "svelte/reactivity"
 
 /** Maximum length for a valid label */

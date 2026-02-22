@@ -1,6 +1,6 @@
 import type { ByteBus } from "./bus.svelte"
 import { CPUError } from "./cpu.svelte"
-import { i8, type I8, type U8 } from "./integer"
+import { i8, type I8, type U8 } from "$lib/integer"
 
 /** The bit of the status word zero flag */
 export const ZERO_FLAG_BIT = 1 << 7

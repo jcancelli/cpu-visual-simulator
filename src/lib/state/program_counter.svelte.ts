@@ -1,5 +1,5 @@
 import type { AddressBus } from "./bus.svelte"
-import { assertI8, assertU8, i8, u8, type I8, type U8 } from "./integer"
+import { assertI8, assertU8, i8, u8, type I8, type U8 } from "$lib/integer"
 import { assertWordAlignedAddress, type WordAlignedAddress } from "./memory.svelte"
 
 /** State of the program counter */

@@ -9,7 +9,7 @@ import {
 	type I16,
 	type U16,
 	type U8,
-} from "./integer"
+} from "$lib/integer"
 
 /** State of the accumulator */
 export class Accumulator {

@@ -1,5 +1,5 @@
 import type { AddressBus, ByteBus, WordBus } from "./bus.svelte"
-import { i16, u16LSB, u16MSB, type I16, type U16, type U8 } from "./integer"
+import { i16, u16LSB, u16MSB, type I16, type U16, type U8 } from "$lib/integer"
 import type { WordAlignedAddress } from "./memory.svelte"
 
 /** State of the instruction register */

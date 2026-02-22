@@ -8,7 +8,7 @@ import {
 	InvalidU8Error,
 	type U16,
 	type U8,
-} from "./integer"
+} from "$lib/integer"
 import {
 	AddressOutOfRangeError,
 	assertMemoryOperation,
@@ -18,7 +18,7 @@ import {
 	type MemoryOperation,
 	type WordAlignedAddress,
 } from "./memory.svelte"
-import { type Opcode } from "./opcode"
+import { type Opcode } from "$lib/opcode"
 
 /** Value representing no signal on a bus */
 export const NO_SIGNAL = Symbol("NO_SIGNAL")
