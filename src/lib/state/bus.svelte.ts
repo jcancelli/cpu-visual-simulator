@@ -1,4 +1,3 @@
-import { assertAddressingMode, InvalidAddressingModeError, type AddressingMode } from "./cpu.svelte"
 import {
 	assertU16,
 	assertU8,
@@ -19,6 +18,11 @@ import {
 	type WordAlignedAddress,
 } from "./memory.svelte"
 import { type Opcode } from "$lib/opcode"
+import {
+	assertAddressingMode,
+	type AddressingMode,
+	type InvalidAddressingModeError,
+} from "./multiplexer.svelte"
 
 /** Value representing no signal on a bus */
 export const NO_SIGNAL = Symbol("NO_SIGNAL")
