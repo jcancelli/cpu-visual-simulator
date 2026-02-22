@@ -1,10 +1,45 @@
-import { ActionType } from "./execution/action"
-import type { ActionHandlerMapping, ActionPerformer } from "./execution/task_system"
+import type { TTSReadAction, TTSReadLocalizedAction } from "./execution/action"
+import {
+	ACTION_HANDLED,
+	ActionHandlerMap,
+	type ActionConsumer,
+	type ActionHandlerResult,
+} from "./execution/action_performer"
+import { ActionType } from "./execution/task"
 import { type Locale } from "./paraglide/runtime"
-import { todo } from "./util/development"
+import { todo, unreachable } from "./util/development"
 
-/** Wrapper for {@link window.speechSynthesis} */
-export default class TextToSpeech implements ActionPerformer {
+/** The minimum value for the text to speech pitch */
+export const MIN_TTS_PITCH = 0
+/** The maximum value for the text to speech pitch */
+export const MAX_TTS_PITCH = 2
+/** The default value for the text to speech pitch */
+export const DEFAULT_TTS_PITCH = 1
+/** The minimum value for the text to speech rate */
+export const MIN_TTS_RATE = 0.1
+/** The maximum value for the text to speech rate */
+export const MAX_TTS_RATE = 10
+/** The default value for the text to speech rate */
+export const DEFAULT_TTS_RATE = 1
+/** The minimum value for the text to speech volume */
+export const MIN_TTS_VOLUME = 0
+/** The maximum value for the text to speech volume */
+export const MAX_TTS_VOLUME = 1
+/** The default value for the text to speech volume */
+export const DEFAULT_TTS_VOLUME = 1
+/** Time in milliseconds after which, if not already resolved, the {@link TextToSpeech.isAvailable} promise is resolved to false */
+export const TTS_UNAVAILABLE_TIMEOUT_MS = 10_000
+
+/** The action types handled by text to speech */
+export type TextToSpeechHandledActionTypes =
+	| ActionType.TEXT_TO_SPEECH_READ
+	| ActionType.TEXT_TO_SPEECH_LOCALIZED_READ
+	| ActionType.WAIT_TEXT_TO_SPEECH_END
+
+/** Wrapper around {@link window.speechSynthesis} */
+export default class TextToSpeech implements ActionConsumer<TextToSpeechHandledActionTypes> {
+	/** Promise that resolves wether text to speech is available on this browser or not.
+	 * Resolves to false if after {@link TTS_UNAVAILABLE_TIMEOUT_MS} milliseconds it hasn't already resolved */
 	public readonly isAvailable: Promise<boolean>
 	/** Wether text-to-speech is enabled or not */
 	private _isEnabled: boolean
@@ -16,6 +51,14 @@ export default class TextToSpeech implements ActionPerformer {
 	private _voices: SpeechSynthesisVoice[]
 	/** Private mutable state containing the currently selected voice. */
 	private _voice: SpeechSynthesisVoice | null
+	/** The pitch at which text to speech will read its sentences */
+	private _pitch: number
+	/** The rate at which text to speech will read its sentences */
+	private _rate: number
+	/** The volume at which text to speech will read its sentences */
+	private _volume: number
+
+	public readonly actionHandlers: ActionHandlerMap<TextToSpeechHandledActionTypes>
 
 	constructor(locale: Locale, initVoiceURI?: string) {
 		this.isAvailable = new Promise<boolean>(resolve => {
@@ -63,39 +106,15 @@ export default class TextToSpeech implements ActionPerformer {
 		this._speechPromise = $state(null)
 		this._voices = $state([])
 		this._voice = $state(null)
-	}
-
-	/** Read the provided text at the specified rate after the previous sentence (if any) has ended.
-	 * If TTS is not supported by the browser, nothing happens.
-	 * @returns A promise that is resolved when the utterance has ended. */
-	async read(text: string, rate: number = 1): Promise<void> {
-		if (!(await this.isAvailable) || !this._isEnabled) {
-			return
-		}
-		await this._speechPromise
-		this._speechPromise = new Promise(resolve => {
-			this.utterance = new SpeechSynthesisUtterance(text)
-			this.utterance.rate = rate
-			this.utterance.voice = this._voice
-			this.utterance.onend = this.utterance.onerror = () => resolve()
-			window.speechSynthesis.speak(this.utterance)
+		this._pitch = $state(DEFAULT_TTS_PITCH)
+		this._rate = $state(DEFAULT_TTS_RATE)
+		this._volume = $state(DEFAULT_TTS_VOLUME)
+		this.actionHandlers = new ActionHandlerMap({
+			[ActionType.TEXT_TO_SPEECH_READ]: this.handleTTSReadAction.bind(this),
+			[ActionType.TEXT_TO_SPEECH_LOCALIZED_READ]:
+				this.handleTTSReadLocalizedAction.bind(this),
+			[ActionType.WAIT_TEXT_TO_SPEECH_END]: this.handleWaitTTSEndAction.bind(this),
 		})
-		return this._speechPromise
-	}
-
-	/** Stop reading */
-	async stopReading(): Promise<void> {
-		if (!(await this.isAvailable)) {
-			return
-		}
-		window.speechSynthesis.cancel()
-		this.utterance = null
-		this._speechPromise = null
-	}
-
-	/** Await fot TTS to stop reading */
-	async awaitReadingEnd(): Promise<void> {
-		await this._speechPromise
 	}
 
 	/** Wether text-to-speech is enabled or not */
@@ -130,24 +149,109 @@ export default class TextToSpeech implements ActionPerformer {
 			return
 		}
 		this._voice = voice
+		if (this.utterance !== null) {
+			this.utterance.voice = voice
+		}
 	}
 
-	getActionHandlersMappings(): ActionHandlerMapping[] {
-		return [
-			{
-				action: ActionType.TEXT_TO_SPEECH_READ,
-				handler: async () => {
-					todo("Define text-to-speech localized strings") // TODO: Define text to speech localized strings
-				},
-			},
-			{
-				action: ActionType.AWAIT_TEXT_TO_SPEECH_END,
-				handler: async () => {
-					await this._speechPromise
-					return { actionWasHandled: true }
-				},
-			},
-		]
+	/** The pitch at which text to speech will read its sentences */
+	get pitch(): number {
+		return this._pitch
+	}
+
+	/** The pitch at which text to speech will read its sentences */
+	set pitch(pitch: number) {
+		if (pitch < MIN_TTS_PITCH || pitch > MAX_TTS_PITCH) {
+			unreachable()
+		}
+		this._pitch = pitch
+		if (this.utterance !== null) {
+			this.utterance.pitch = pitch
+		}
+	}
+
+	/** The rate at which text to speech will read its sentences */
+	get rate(): number {
+		return this._rate
+	}
+
+	/** The rate at which text to speech will read its sentences */
+	set rate(rate: number) {
+		if (rate < MIN_TTS_RATE || rate > MAX_TTS_RATE) {
+			unreachable()
+		}
+		this._rate = rate
+		if (this.utterance !== null) {
+			this.utterance.rate = rate
+		}
+	}
+
+	/** The volume at which text to speech will read its sentences */
+	get volume(): number {
+		return this._volume
+	}
+
+	/** The volume at which text to speech will read its sentences */
+	set volume(volume: number) {
+		if (volume < MIN_TTS_VOLUME || volume > MAX_TTS_VOLUME) {
+			unreachable()
+		}
+		this._volume = volume
+		if (this.utterance !== null) {
+			this.utterance.volume = volume
+		}
+	}
+
+	/** Read the provided text after the previous sentence (if any) has ended.
+	 * If TTS is not supported by the browser, nothing happens.
+	 * @returns A promise that is resolved when the utterance has ended. */
+	async read(text: string): Promise<void> {
+		if (!(await this.isAvailable) || !this._isEnabled) {
+			return
+		}
+		await this._speechPromise
+		this._speechPromise = new Promise(resolve => {
+			this.utterance = new SpeechSynthesisUtterance(text)
+			this.utterance.rate = this._rate
+			this.utterance.voice = this._voice
+			this.utterance.onend = this.utterance.onerror = () => resolve()
+			window.speechSynthesis.speak(this.utterance)
+		})
+		return this._speechPromise
+	}
+
+	/** Stop reading */
+	async stopReading(): Promise<void> {
+		if (!(await this.isAvailable)) {
+			return
+		}
+		window.speechSynthesis.cancel()
+		this.utterance = null
+		this._speechPromise = null
+	}
+
+	/** Await fot TTS to stop reading */
+	async awaitReadingEnd(): Promise<void> {
+		await this._speechPromise
+	}
+
+	/** {@link ActionHandler} for {@link TTSReadAction} */
+	private async handleTTSReadAction(action: TTSReadAction): Promise<ActionHandlerResult> {
+		this.read(action.text)
+		return ACTION_HANDLED
+	}
+
+	/** {@link ActionHandler} for {@link TTSReadLocalizedAction} */
+	private async handleTTSReadLocalizedAction(
+		action: TTSReadLocalizedAction,
+	): Promise<ActionHandlerResult> {
+		todo(action.toString()) // TODO: implement
+	}
+
+	/** {@link ActionHandler} for {@link WaitTTSEndAction} */
+	private async handleWaitTTSEndAction(): Promise<ActionHandlerResult> {
+		await this._speechPromise
+		return ACTION_HANDLED
 	}
 }
 
