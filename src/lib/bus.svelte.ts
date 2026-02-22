@@ -10,9 +10,13 @@ import {
 	type U8,
 } from "./integer"
 import {
+	AddressOutOfRangeError,
 	assertMemoryOperation,
+	assertWordAlignedAddress,
 	InvalidMemoryOperationError,
+	InvalidWordAlignedAddressError,
 	type MemoryOperation,
+	type WordAlignedAddress,
 } from "./memory.svelte"
 import { type Opcode } from "./opcode"
 
@@ -94,7 +98,7 @@ export abstract class Bus<T, SignalValidationError extends Error = never> {
 	protected abstract signalToUnsigned(signal: T): number
 }
 
-/** A bus that transports an 8-bit integer */
+/** A bus that transmits an 8-bit integer signal */
 export class ByteBus extends Bus<U8, InvalidU8Error> {
 	protected override assertValidSignal(signal: U8): asserts signal is U8 {
 		assertU8(signal)
@@ -109,7 +113,7 @@ export class ByteBus extends Bus<U8, InvalidU8Error> {
 	}
 }
 
-/** A bus that transports a 16-bit integer */
+/** A bus that transmits a 16-bit integer signal */
 export class WordBus extends Bus<U16, InvalidU16Error> {
 	protected override assertValidSignal(signal: U16): asserts signal is U16 {
 		assertU16(signal)
@@ -124,7 +128,7 @@ export class WordBus extends Bus<U16, InvalidU16Error> {
 	}
 }
 
-/** A bus that transports a {@link MemoryOperation} */
+/** A bus that transmits a {@link MemoryOperation} signal */
 export class MemoryOperationBus extends Bus<MemoryOperation, InvalidMemoryOperationError> {
 	protected override assertValidSignal(
 		signal: MemoryOperation,
@@ -141,7 +145,7 @@ export class MemoryOperationBus extends Bus<MemoryOperation, InvalidMemoryOperat
 	}
 }
 
-/** A bus that transports an {@link AddressingMode} */
+/** A bus that transmits an {@link AddressingMode} signal */
 export class AddressingModeBus extends Bus<AddressingMode, InvalidAddressingModeError> {
 	protected override assertValidSignal(signal: AddressingMode): asserts signal is AddressingMode {
 		assertAddressingMode(signal)
@@ -156,16 +160,36 @@ export class AddressingModeBus extends Bus<AddressingMode, InvalidAddressingMode
 	}
 }
 
-/** A bus that transports an {@link Opcode} */
+/** A bus that transmits an {@link Opcode} signal */
 export class OpcodeBus extends Bus<Opcode> {
-	protected assertValidSignal(signal: Opcode): asserts signal is Opcode {}
+	protected override assertValidSignal(signal: Opcode): asserts signal is Opcode {}
 
-	protected signalToSigned(signal: Opcode): number {
+	protected override signalToSigned(signal: Opcode): number {
 		return i8(signal.numeric)
 	}
 
-	protected signalToUnsigned(signal: Opcode): number {
+	protected override signalToUnsigned(signal: Opcode): number {
 		return signal.numeric
+	}
+}
+
+/** A bus that transmits a {@link WordAlignedAddress} signal */
+export class AddressBus extends Bus<
+	WordAlignedAddress,
+	AddressOutOfRangeError | InvalidWordAlignedAddressError
+> {
+	protected override assertValidSignal(
+		signal: WordAlignedAddress,
+	): asserts signal is WordAlignedAddress {
+		assertWordAlignedAddress(signal)
+	}
+
+	protected override signalToSigned(signal: WordAlignedAddress): number {
+		return i8(signal)
+	}
+
+	protected override signalToUnsigned(signal: WordAlignedAddress): number {
+		return signal
 	}
 }
 
