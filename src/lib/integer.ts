@@ -7,20 +7,24 @@ export const I16_MAX = 32_767
 export const U16_MIN = 0
 export const U16_MAX = 65_535
 
-/** A signed integer type brand. */
-export type SignedInt = number & { __signed: true }
-/** An unsigned integer type brand. */
-export type UnsignedInt = number & { __signed: false }
-/** A sized integer type brand. */
-export type SizedInt<Bits extends number> = number & { __bits: Bits }
-/** 8-bit signed integer. */
-export type I8 = SignedInt & SizedInt<8>
-/** 8-bit unsigned integer. */
-export type U8 = UnsignedInt & SizedInt<8>
-/** 16-bit signed integer. */
-export type I16 = SignedInt & SizedInt<16>
-/** 16-bit unsigned integer. */
-export type U16 = UnsignedInt & SizedInt<16>
+/** Type brand representing signedness of an integer type */
+export type Signed = { __signed: true }
+/** Type brand representing unsignedness of an integer type */
+export type Unsigned = { __signed: false }
+/** Type brand representing the size in bits of an integer type */
+export type Sized<Bits extends number> = { __bits: Bits }
+/** A signed integer of a specific size in bits */
+export type Int<Bits extends number> = number & Signed & Sized<Bits>
+/** An unsigned integer of a specific size in bits */
+export type UInt<Bits extends number> = number & Unsigned & Sized<Bits>
+/** 8-bit signed integer */
+export type I8 = Int<8>
+/** 8-bit unsigned integer */
+export type U8 = UInt<8>
+/** 16-bit signed integer */
+export type I16 = Int<16>
+/** 16-bit unsigned integer */
+export type U16 = UInt<16>
 
 /** Check that the provided value is in the 8-bit signed range */
 export function isValidI8(value: number): value is I8 {
