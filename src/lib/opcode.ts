@@ -1,211 +1,196 @@
-import type { SizedInt } from "./integer"
+import type { Byte } from "./integer"
 
 /** Immediate flag bit set to 1, all other bits set to 0 */
 export const IMMEDIATE_FLAG_BIT = 1 << 7
 /** Immediate flag bit set to 0, all other bits set to 1 */
 export const IMMEDIATE_FLAG_MASK = ~IMMEDIATE_FLAG_BIT >>> 0
 
-/** @returns The state of the immediate flag bit for the provided value value */
-export function getImmediateFlag(value: SizedInt<8>): boolean {
+/** The input is assumed to be a valid 8-bit integer, no validation is performed.
+ * @returns The state of the immediate flag bit for the provided value value */
+export function getImmediateFlag<T extends Byte>(value: T): boolean {
 	return (value & IMMEDIATE_FLAG_BIT) !== 0
 }
 
-/** @returns The provided value with the immediate flag bit set to either 1 or 0 */
-export function setImmediateFlag(value: SizedInt<8>, flag: boolean = true): SizedInt<8> {
+/** The input is assumed to be a valid 8-bit integer, no validation is performed.
+ * @returns The provided value with the immediate flag bit set to either 1 or 0 */
+export function setImmediateFlag<T extends Byte>(value: T, flag: boolean = true): T {
 	if (flag) {
-		return (value | IMMEDIATE_FLAG_BIT) as SizedInt<8>
+		return (value | IMMEDIATE_FLAG_BIT) as T
 	}
-	return (value & IMMEDIATE_FLAG_MASK) as SizedInt<8>
+	return (value & IMMEDIATE_FLAG_MASK) as T
 }
 
-/** @returns The provided value with the immediate flag bit set to 0 */
-export function withoutImmediateFlag(value: SizedInt<8>): SizedInt<8> {
+/** The input is assumed to be a valid 8-bit integer, no validation is performed.
+ * @returns The provided value with the immediate flag bit set to 0 */
+export function withoutImmediateFlag<T extends Byte>(value: T): T {
 	return setImmediateFlag(value, false)
 }
 
-/** @returns The provided value with the immediate flag bit set to 1 */
-export function withImmediateFlag(value: SizedInt<8>): SizedInt<8> {
+/** The input is assumed to be a valid 8-bit integer, no validation is performed.
+ * @returns The provided value with the immediate flag bit set to 1 */
+export function withImmediateFlag<T extends Byte>(value: T): T {
 	return setImmediateFlag(value, true)
 }
 
-/** An opcode that could be invalid */
-export type DecodedOpcode = Opcode | typeof INVALID_OPCODE
+/** The numeric representation of an opcode with the immediate flag bit set to 0 */
+export enum OpcodeNumeric {
+	NOP = 0,
+	HLT = 1,
+	JMP = 2,
+	JZ = 3,
+	JNZ = 4,
+	JN = 5,
+	JNN = 6,
+	LOD = 7,
+	STO = 8,
+	ADD = 9,
+	SUB = 10,
+	MUL = 11,
+	DIV = 12,
+	AND = 13,
+	CMP = 14,
+	NOT = 15,
+}
 
-/** A value that represents an invalid opcode */
-export const INVALID_OPCODE = Symbol("INVALID_OPCODE")
+/** The symbolic representation of an opcode */
+export enum OpcodeSymbolic {
+	NOP = "NOP",
+	HLT = "HLT",
+	JMP = "JMP",
+	JZ = "JZ",
+	JNZ = "JNZ",
+	JN = "JN",
+	JNN = "JNN",
+	LOD = "LOD",
+	STO = "STO",
+	ADD = "ADD",
+	SUB = "SUB",
+	MUL = "MUL",
+	DIV = "DIV",
+	AND = "AND",
+	CMP = "CMP",
+	NOT = "NOT",
+}
 
-export const OPCODE_NUMBER_NOP = 0
-export const OPCODE_NUMBER_HLT = 1
-export const OPCODE_NUMBER_JMP = 2
-export const OPCODE_NUMBER_JZ = 3
-export const OPCODE_NUMBER_JNZ = 4
-export const OPCODE_NUMBER_JN = 5
-export const OPCODE_NUMBER_JNN = 6
-export const OPCODE_NUMBER_LOD = 7
-export const OPCODE_NUMBER_STO = 8
-export const OPCODE_NUMBER_ADD = 9
-export const OPCODE_NUMBER_SUB = 10
-export const OPCODE_NUMBER_MUL = 11
-export const OPCODE_NUMBER_DIV = 12
-export const OPCODE_NUMBER_AND = 13
-export const OPCODE_NUMBER_CMP = 14
-export const OPCODE_NUMBER_NOT = 15
-
-/** The numeric representation of an opcode (without the immediate flag). */
-export type OpcodeNumber =
-	| typeof OPCODE_NUMBER_NOP
-	| typeof OPCODE_NUMBER_HLT
-	| typeof OPCODE_NUMBER_JMP
-	| typeof OPCODE_NUMBER_JZ
-	| typeof OPCODE_NUMBER_JNZ
-	| typeof OPCODE_NUMBER_JN
-	| typeof OPCODE_NUMBER_JNN
-	| typeof OPCODE_NUMBER_LOD
-	| typeof OPCODE_NUMBER_STO
-	| typeof OPCODE_NUMBER_ADD
-	| typeof OPCODE_NUMBER_SUB
-	| typeof OPCODE_NUMBER_MUL
-	| typeof OPCODE_NUMBER_DIV
-	| typeof OPCODE_NUMBER_AND
-	| typeof OPCODE_NUMBER_CMP
-	| typeof OPCODE_NUMBER_NOT
-
-export const OPCODE_STRING_NOP = "NOP"
-export const OPCODE_STRING_HLT = "HLT"
-export const OPCODE_STRING_JMP = "JMP"
-export const OPCODE_STRING_JZ = "JZ"
-export const OPCODE_STRING_JNZ = "JNZ"
-export const OPCODE_STRING_JN = "JN"
-export const OPCODE_STRING_JNN = "JNN"
-export const OPCODE_STRING_LOD = "LOD"
-export const OPCODE_STRING_STO = "STO"
-export const OPCODE_STRING_ADD = "ADD"
-export const OPCODE_STRING_SUB = "SUB"
-export const OPCODE_STRING_MUL = "MUL"
-export const OPCODE_STRING_DIV = "DIV"
-export const OPCODE_STRING_AND = "AND"
-export const OPCODE_STRING_CMP = "CMP"
-export const OPCODE_STRING_NOT = "NOT"
-
-/** The symbolic representation of an opcode. */
-export type OpcodeString =
-	| typeof OPCODE_STRING_NOP
-	| typeof OPCODE_STRING_HLT
-	| typeof OPCODE_STRING_JMP
-	| typeof OPCODE_STRING_JZ
-	| typeof OPCODE_STRING_JNZ
-	| typeof OPCODE_STRING_JN
-	| typeof OPCODE_STRING_JNN
-	| typeof OPCODE_STRING_LOD
-	| typeof OPCODE_STRING_STO
-	| typeof OPCODE_STRING_ADD
-	| typeof OPCODE_STRING_SUB
-	| typeof OPCODE_STRING_MUL
-	| typeof OPCODE_STRING_DIV
-	| typeof OPCODE_STRING_AND
-	| typeof OPCODE_STRING_CMP
-	| typeof OPCODE_STRING_NOT
-
+/** No-operation */
 export const OPCODE_NOP = {
-	symbolic: OPCODE_STRING_NOP,
-	numeric: OPCODE_NUMBER_NOP,
+	symbolic: OpcodeSymbolic.NOP,
+	numeric: OpcodeNumeric.NOP,
 	takesOperand: false,
 	takesImmediate: false,
 } as const
+/** Halt execution */
 export const OPCODE_HLT = {
-	symbolic: OPCODE_STRING_HLT,
-	numeric: OPCODE_NUMBER_HLT,
+	symbolic: OpcodeSymbolic.HLT,
+	numeric: OpcodeNumeric.HLT,
 	takesOperand: false,
 	takesImmediate: false,
 } as const
+/** Unconditional jump */
 export const OPCODE_JMP = {
-	symbolic: OPCODE_STRING_JMP,
-	numeric: OPCODE_NUMBER_JMP,
+	symbolic: OpcodeSymbolic.JMP,
+	numeric: OpcodeNumeric.JMP,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Jump if zero flag is 1 */
 export const OPCODE_JZ = {
-	symbolic: OPCODE_STRING_JZ,
-	numeric: OPCODE_NUMBER_JZ,
+	symbolic: OpcodeSymbolic.JZ,
+	numeric: OpcodeNumeric.JZ,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Jump if zero flag is 0 */
 export const OPCODE_JNZ = {
-	symbolic: OPCODE_STRING_JNZ,
-	numeric: OPCODE_NUMBER_JNZ,
+	symbolic: OpcodeSymbolic.JNZ,
+	numeric: OpcodeNumeric.JNZ,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Jump if negative flag is 1 */
 export const OPCODE_JN = {
-	symbolic: OPCODE_STRING_JN,
-	numeric: OPCODE_NUMBER_JN,
+	symbolic: OpcodeSymbolic.JN,
+	numeric: OpcodeNumeric.JN,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Jump if negative flag is 0 */
 export const OPCODE_JNN = {
-	symbolic: OPCODE_STRING_JNN,
-	numeric: OPCODE_NUMBER_JNN,
+	symbolic: OpcodeSymbolic.JNN,
+	numeric: OpcodeNumeric.JNN,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Load value into accumulator */
 export const OPCODE_LOD = {
-	symbolic: OPCODE_STRING_LOD,
-	numeric: OPCODE_NUMBER_LOD,
+	symbolic: OpcodeSymbolic.LOD,
+	numeric: OpcodeNumeric.LOD,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "=",
 } as const
+/** Store value of the accumulator into memory */
 export const OPCODE_STO = {
-	symbolic: OPCODE_STRING_STO,
-	numeric: OPCODE_NUMBER_STO,
+	symbolic: OpcodeSymbolic.STO,
+	numeric: OpcodeNumeric.STO,
 	takesOperand: true,
 	takesImmediate: false,
 } as const
+/** Addition */
 export const OPCODE_ADD = {
-	symbolic: OPCODE_STRING_ADD,
-	numeric: OPCODE_NUMBER_ADD,
+	symbolic: OpcodeSymbolic.ADD,
+	numeric: OpcodeNumeric.ADD,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "+",
 } as const
+/** Subtraction */
 export const OPCODE_SUB = {
-	symbolic: OPCODE_STRING_SUB,
-	numeric: OPCODE_NUMBER_SUB,
+	symbolic: OpcodeSymbolic.SUB,
+	numeric: OpcodeNumeric.SUB,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "-",
 } as const
+/** Multiplication */
 export const OPCODE_MUL = {
-	symbolic: OPCODE_STRING_MUL,
-	numeric: OPCODE_NUMBER_MUL,
+	symbolic: OpcodeSymbolic.MUL,
+	numeric: OpcodeNumeric.MUL,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "*",
 } as const
+/** Division */
 export const OPCODE_DIV = {
-	symbolic: OPCODE_STRING_DIV,
-	numeric: OPCODE_NUMBER_DIV,
+	symbolic: OpcodeSymbolic.DIV,
+	numeric: OpcodeNumeric.DIV,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "/",
 } as const
+/** Bitwise AND */
 export const OPCODE_AND = {
-	symbolic: OPCODE_STRING_AND,
-	numeric: OPCODE_NUMBER_AND,
+	symbolic: OpcodeSymbolic.AND,
+	numeric: OpcodeNumeric.AND,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "&",
 } as const
+/** Compare operands and update status word:
+ * - first==second: zero flag = 1 and negative flag = 0
+ * - first<second: zero flag = 0 and negative flag = 1
+ * - first>second: zero flag = 0 and negative flag = 0 */
 export const OPCODE_CMP = {
-	symbolic: OPCODE_STRING_CMP,
-	numeric: OPCODE_NUMBER_CMP,
+	symbolic: OpcodeSymbolic.CMP,
+	numeric: OpcodeNumeric.CMP,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: ":",
 } as const
+/** Bitwise NOT */
 export const OPCODE_NOT = {
-	symbolic: OPCODE_STRING_NOT,
-	numeric: OPCODE_NUMBER_NOT,
+	symbolic: OpcodeSymbolic.NOT,
+	numeric: OpcodeNumeric.NOT,
 	takesOperand: true,
 	takesImmediate: true,
 	aluSymbol: "!",
@@ -229,7 +214,13 @@ export type Opcode =
 	| typeof OPCODE_CMP
 	| typeof OPCODE_NOT
 
-/** All the opcodes. */
+/** Opcode for the specified numeric value */
+export type OpcodeForNumeric<T extends OpcodeNumeric> = Extract<Opcode, { numeric: T }>
+
+/** Opcode for the specified symbolic value */
+export type OpcodeForSymbolic<T extends OpcodeSymbolic> = Extract<Opcode, { symbolic: T }>
+
+/** All the opcodes */
 export const OPCODES = [
 	OPCODE_NOP,
 	OPCODE_HLT,
@@ -249,48 +240,218 @@ export const OPCODES = [
 	OPCODE_NOT,
 ] as const
 
-/** All opcodes mapped to their symbolic representation. */
-const OPCODES_BY_STRING = {
-	[OPCODE_STRING_NOP]: OPCODE_NOP,
-	[OPCODE_STRING_HLT]: OPCODE_HLT,
-	[OPCODE_STRING_JMP]: OPCODE_JMP,
-	[OPCODE_STRING_JZ]: OPCODE_JZ,
-	[OPCODE_STRING_JNZ]: OPCODE_JNZ,
-	[OPCODE_STRING_JN]: OPCODE_JN,
-	[OPCODE_STRING_JNN]: OPCODE_JNN,
-	[OPCODE_STRING_LOD]: OPCODE_LOD,
-	[OPCODE_STRING_STO]: OPCODE_STO,
-	[OPCODE_STRING_ADD]: OPCODE_ADD,
-	[OPCODE_STRING_SUB]: OPCODE_SUB,
-	[OPCODE_STRING_MUL]: OPCODE_MUL,
-	[OPCODE_STRING_DIV]: OPCODE_DIV,
-	[OPCODE_STRING_AND]: OPCODE_AND,
-	[OPCODE_STRING_CMP]: OPCODE_CMP,
-	[OPCODE_STRING_NOT]: OPCODE_NOT,
-} as const
+/** All opcodes mapped to their symbolic representation */
+const OPCODES_BY_SYMBOLIC = OPCODES.reduce(
+	(map, opcode) => {
+		map[opcode.symbolic] = opcode
+		return map
+	},
+	{} as Record<string, Opcode>,
+) as Readonly<Record<string, Opcode>>
 
-/** @returns The {@link Opcode} matching the provided string or {@link INVALID_OPCODE} */
-export function getOpcodeByString(value: string): DecodedOpcode {
-	return OPCODES_BY_STRING[value as OpcodeString] ?? INVALID_OPCODE
+/** @returns The {@link Opcode} matching the provided string or undefined */
+export function getOpcodeBySymbolic(value: string): Opcode | undefined {
+	return OPCODES_BY_SYMBOLIC[value]
 }
 
-/** Check if the provided string is a valid {@link OpcodeString} */
-export function isOpcodeString(value: string): value is OpcodeString {
-	return getOpcodeByString(value) !== INVALID_OPCODE
+/** @returns The {@link Opcode} matching the provided string.
+ * @throws {InvalidSymbolicOpcodeError} */
+export function getOpcodeBySymbolicOrThrow(value: string): Opcode {
+	const opcode = OPCODES_BY_SYMBOLIC[value]
+	if (opcode === undefined) {
+		throw new InvalidSymbolicOpcodeError(value)
+	}
+	return opcode
 }
+
+/** Check if the provided string is a valid {@link OpcodeSymbolic} */
+export function isOpcodeSymbolic(value: string): value is OpcodeSymbolic {
+	return OPCODES_BY_SYMBOLIC[value] !== undefined
+}
+
+/** Assert that the provided string is a valid {@link OpcodeSymbolic}.
+ * @throws {InvalidSymbolicOpcodeError} */
+export function assertOpcodeSymbolic(value: string): asserts value is OpcodeSymbolic {
+	if (!isOpcodeSymbolic(value)) {
+		throw new InvalidSymbolicOpcodeError(value)
+	}
+}
+
+/** All opcodes indexed by their numeric representation */
+const OPCODES_BY_NUMERIC_NO_IMMEDIATE = OPCODES.reduce(
+	(map, opcode) => {
+		map[opcode.numeric] = opcode
+		return map
+	},
+	{} as Record<number, Opcode>,
+) as Readonly<Record<number, Opcode>>
+
+/** All opcodes that take an immediate operand indexed by their numeric representation with the immediate flag set */
+const OPCODES_BY_NUMERIC_WITH_IMMEDIATE = OPCODES.reduce(
+	(map, opcode) => {
+		if (opcode.takesImmediate) {
+			map[withImmediateFlag(opcode.numeric as Byte)] = opcode
+		}
+		return map
+	},
+	{} as Record<number, Opcode>,
+) as Readonly<Record<number, Opcode>>
 
 /** All possible numeric values of a valid opcode.
  * Variations where the immediate flag is set are included for opcodes that allow for it. */
-const OPCODES_BY_NUMBER = OPCODES.reduce<{ [key: number]: Opcode }>((accumulator, opcode) => {
-	if (opcode.takesImmediate) {
-		const numericWithImmediate = withImmediateFlag(opcode.numeric as SizedInt<8>)
-		accumulator[numericWithImmediate] = opcode
-	}
-	accumulator[opcode.numeric] = opcode
-	return accumulator
-}, {})
+const OPCODES_BY_NUMERIC = {
+	...OPCODES_BY_NUMERIC_NO_IMMEDIATE,
+	...OPCODES_BY_NUMERIC_WITH_IMMEDIATE,
+} as const
 
-/** @returns The {@link Opcode} matching the provided number or {@link INVALID_OPCODE} */
-export function getOpcodeByNumber(value: number): DecodedOpcode {
-	return OPCODES_BY_NUMBER[value] ?? INVALID_OPCODE
+/** @returns The {@link Opcode} matching the provided number or undefined.
+ * Variations with the immediate flag set are also matched. */
+export function getOpcodeByNumeric(value: number): Opcode | undefined {
+	return OPCODES_BY_NUMERIC[value]
+}
+
+/** @returns The {@link Opcode} matching the provided number.
+ * Variations with the immediate flag set are also matched.
+ * @throws {InvalidNumericOpcodeError} */
+export function getOpcodeByNumericOrThrow(value: number): Opcode {
+	const opcode = OPCODES_BY_NUMERIC[value]
+	if (opcode === undefined) {
+		throw new InvalidNumericOpcodeError(value)
+	}
+	return opcode
+}
+
+/** Check if the provided number is a valid {@link OpcodeNumeric}.
+ * Values with the immediate flag set evaluate to false even if their opcode allows for it. */
+export function isOpcodeNumeric(opcode: number): opcode is OpcodeNumeric {
+	return OPCODES_BY_NUMERIC_NO_IMMEDIATE[opcode] !== undefined
+}
+
+/** Assert that the provided number is a valid {@link OpcodeNumeric}.
+ * Values with the immediate flag set are considered invalid even if their opcode allows for it.
+ * @throws {InvalidNumericOpcodeError} */
+export function assertOpcodeNumeric(opcode: number): asserts opcode is OpcodeNumeric {
+	if (!isOpcodeNumeric(opcode)) {
+		throw new InvalidNumericOpcodeError(opcode)
+	}
+}
+
+/** Opcode that takes an operand */
+export type OpcodeWithOperand = Exclude<Opcode, { takesOperand: false }>
+
+/** Check if an opcode takes an operand */
+export function opcodeTakesOperand(opcode: Opcode): opcode is OpcodeWithOperand {
+	return opcode.takesOperand
+}
+
+/** Assert that an opcode takes operands.
+ * @throws {OperandNotAllowedError} */
+export function assertOpcodeTakesOperand(opcode: Opcode): asserts opcode is OpcodeWithOperand {
+	if (opcodeDoesNotTakeOperand(opcode)) {
+		throw new OperandNotAllowedError(opcode)
+	}
+}
+
+/** Opcode that does not take an operand */
+export type OpcodeWithoutOperand = Exclude<Opcode, { takesOperand: true }>
+
+/** Check if an opcode does not take an operand */
+export function opcodeDoesNotTakeOperand(opcode: Opcode): opcode is OpcodeWithoutOperand {
+	return !opcode.takesOperand
+}
+
+/** Assert that an opcode does not take an operand.
+ * @throws {OperandRequiredError} */
+export function assertOpcodeDoesNotTakeOperand(
+	opcode: Opcode,
+): asserts opcode is OpcodeWithoutOperand {
+	if (opcodeTakesOperand(opcode)) {
+		throw new OperandRequiredError(opcode)
+	}
+}
+
+/** Opcode that takes the immediate flag */
+export type OpcodeWithImmediate = Exclude<Opcode, { takesImmediate: false }>
+
+/** Check that an opcode allows immediate operands */
+export function opcodeAllowsImmediateOperand(opcode: Opcode): opcode is OpcodeWithImmediate {
+	return opcode.takesImmediate
+}
+
+/** Assert that an opcode allows immediate operands.
+ * @throws {ImmediateFlagNotAllowedError} */
+export function assertOpcodeAllowsImmediateOperand(
+	opcode: Opcode,
+): asserts opcode is OpcodeWithImmediate {
+	if (opcodeDoesNotAllowImmediateOperand(opcode)) {
+		throw new ImmediateFlagNotAllowedError(opcode)
+	}
+}
+
+/** Opcode that does not take the immediate flag */
+export type OpcodeWithoutImmediate = Exclude<Opcode, { takesImmediate: true }>
+
+/** Check that an opcode does not allow immediate operands */
+export function opcodeDoesNotAllowImmediateOperand(
+	opcode: Opcode,
+): opcode is OpcodeWithoutImmediate {
+	return !opcode.takesImmediate
+}
+
+/** Base class for errors regarding {@link Opcode} */
+export abstract class OpcodeError extends Error {}
+
+/** Error regarding a number that does not match any valid {@link OpcodeNumeric} */
+export class InvalidNumericOpcodeError extends OpcodeError {
+	/** The value that caused the error */
+	public readonly invalidValue: number
+
+	constructor(invalidValue: number) {
+		super(`"${invalidValue}" is not a valid numeric opcode value`)
+		this.invalidValue = invalidValue
+	}
+}
+
+/** Error regarding a string that does not match any valid {@link OpcodeSymbolic} */
+export class InvalidSymbolicOpcodeError extends OpcodeError {
+	/** The value that caused the error */
+	public readonly invalidValue: string
+
+	constructor(invalidValue: string) {
+		super(`"${invalidValue}" is not a valid opcode`)
+		this.invalidValue = invalidValue
+	}
+}
+
+/** Error regarding an opcode that does not take operands but an operand was found */
+export class OperandNotAllowedError extends OpcodeError {
+	/** The opcode that caused the error */
+	public readonly opcode: OpcodeWithoutOperand
+
+	constructor(opcode: OpcodeWithoutOperand) {
+		super(`Opcode ${opcode.symbolic} does not take an operand`)
+		this.opcode = opcode
+	}
+}
+
+/** Error regarding an opcode that needs an operand but no operand was found */
+export class OperandRequiredError extends OpcodeError {
+	/** The opcode that caused the error */
+	public readonly opcode: OpcodeWithOperand
+
+	constructor(opcode: OpcodeWithOperand) {
+		super(`Opcode ${opcode.symbolic} requires an operand`)
+		this.opcode = opcode
+	}
+}
+
+/** Error regarding an opcode that does not allow immediate operands but an immediate flag was found */
+export class ImmediateFlagNotAllowedError extends OpcodeError {
+	/** The opcode that caused the error */
+	public readonly opcode: OpcodeWithoutImmediate
+
+	constructor(opcode: OpcodeWithoutImmediate) {
+		super(`Opcode ${opcode.symbolic} does not allow immediate operands`)
+		this.opcode = opcode
+	}
 }
