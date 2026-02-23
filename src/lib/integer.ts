@@ -13,10 +13,16 @@ export type Signed = { __signed: true }
 export type Unsigned = { __signed: false }
 /** Type brand representing the size in bits of an integer type */
 export type Sized<Bits extends number> = { __bits: Bits }
+/** A signed or unsigned integer of {@link Bits} size */
+export type SizedInt<Bits extends number> = number & Sized<Bits>
+/** An 8-bit signed or unsigned integer */
+export type Byte = SizedInt<8>
+/** A 16-bit signed or unsigned integer */
+export type Word = SizedInt<16>
 /** A signed integer of a specific size in bits */
-export type Int<Bits extends number> = number & Signed & Sized<Bits>
+export type Int<Bits extends number> = SizedInt<Bits> & Signed
 /** An unsigned integer of a specific size in bits */
-export type UInt<Bits extends number> = number & Unsigned & Sized<Bits>
+export type UInt<Bits extends number> = SizedInt<Bits> & Unsigned
 /** 8-bit signed integer */
 export type I8 = Int<8>
 /** 8-bit unsigned integer */
