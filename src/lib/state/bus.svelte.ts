@@ -1,28 +1,19 @@
 import {
+	assertI16,
+	assertI8,
 	assertU16,
 	assertU8,
 	i16,
 	i8,
-	InvalidU16Error,
-	InvalidU8Error,
+	u16,
+	u8,
+	type I16,
+	type I8,
+	type Int,
 	type U16,
 	type U8,
+	type UInt,
 } from "$lib/integer"
-import {
-	AddressOutOfRangeError,
-	assertMemoryOperation,
-	assertWordAlignedAddress,
-	InvalidMemoryOperationError,
-	InvalidWordAlignedAddressError,
-	type MemoryOperation,
-	type WordAlignedAddress,
-} from "./memory.svelte"
-import { type Opcode } from "$lib/opcode"
-import {
-	assertAddressingMode,
-	type AddressingMode,
-	type InvalidAddressingModeError,
-} from "./multiplexer.svelte"
 
 /** Value representing no signal on a bus */
 export const NO_SIGNAL = Symbol("NO_SIGNAL")
@@ -39,177 +30,125 @@ export function assertSignal<T>(signal: BusSignal<T>): asserts signal is T {
 }
 
 /** Readonly version of a {@link Bus} */
-export type ReadonlyBus<T extends Bus<unknown>> = Omit<T, "sendSignal" | "endSignal">
+export type ReadonlyBus<Bits extends number> = Omit<
+	Bus<Bits>,
+	"sendSignalSigned" | "sendSignalUnsigned" | "endSignal"
+>
 
-/** Represents a bus transporting data that can be interpreted as a signed or unsigned integer */
-export abstract class Bus<T, SignalValidationError extends Error = never> {
-	/** The value of the signal */
-	private _signal: BusSignal<T>
+/** Base class for the state of a bus that carries a {@link Bits} sized signal */
+export abstract class Bus<Bits extends number> {
+	/** The signal carried by this bus */
+	private signal: BusSignal<UInt<Bits>>
 
 	constructor() {
-		this._signal = $state(NO_SIGNAL)
+		this.signal = $state(NO_SIGNAL)
 	}
 
-	/** Send a signal on the bus.
-	 * @throws {InvalidBusSignalError<SignalValidationError>} */
-	sendSignal(signal: T): void {
-		try {
-			this.assertValidSignal(signal)
-			this._signal = signal
-		} catch (error: unknown) {
-			throw new InvalidBusSignalError(error as SignalValidationError)
+	/** The signal carried by this bus as a signed integer */
+	get signedSignal(): BusSignal<Int<Bits>> {
+		if (this.signal === NO_SIGNAL) {
+			return NO_SIGNAL
 		}
+		return this.castToSigned(this.signal)
 	}
 
-	/** End the signal that was put on the bus (sets the signal to {@link NO_SIGNAL}) */
-	endSignal(): void {
-		this._signal = NO_SIGNAL
+	/** The signal carried by this bus as an unsigned integer */
+	get unsignedSignal(): BusSignal<UInt<Bits>> {
+		return this.signal
 	}
 
-	/** Read the signal.
+	/** Send a signed integer as a signal on this bus.
+	 * @throws {IntegerOutOfRangeError} */
+	sendSignalSigned(signal: Int<Bits>): void {
+		this.assertIsValidSigned(signal)
+		this.signal = this.castToUnsigned(signal)
+	}
+
+	/** Send an unsigned integer as a signal on this bus.
+	 * @throws {IntegerOutOfRangeError} */
+	sendSignalUnsigned(signal: UInt<Bits>): void {
+		this.assertIsValidUnsigned(signal)
+		this.signal = signal
+	}
+
+	/** Read the signal on this bus as a signed integer or throw an error if there is no signal.
 	 * @throws {NoSignalError} */
-	readSignalOrThrow(): T {
-		assertSignal(this._signal)
-		return this._signal
+	readSignedSignalOrThrow(): Int<Bits> {
+		assertSignal(this.signal)
+		return this.castToSigned(this.signal)
 	}
 
-	/** Wether a signal is being transmitted or not */
+	/** Read the signal on this bus as an unsigned integer or throw an error if there is no signal.
+	 * @throws {NoSignalError} */
+	readUnsignedSignalOrThrow(): UInt<Bits> {
+		assertSignal(this.signal)
+		return this.signal
+	}
+
+	/** End the last signal sent on this bus */
+	endSignal(): void {
+		this.signal = NO_SIGNAL
+	}
+
+	/** @returns Wether or not this bus carries a signal */
 	hasSignal(): boolean {
-		return this._signal !== NO_SIGNAL
+		return this.signal !== NO_SIGNAL
 	}
 
-	/** The value of the signal */
-	get signal(): BusSignal<T> {
-		return this._signal
-	}
-
-	/** The value of the signal as a signed integer. 0 if there is no signal */
-	get signedSignal(): number {
-		return this._signal === NO_SIGNAL ? 0 : this.signalToSigned(this._signal)
-	}
-
-	/** The value of the signal as an unsigned integer. 0 if there is no signal */
-	get unsignedSignal(): number {
-		return this._signal === NO_SIGNAL ? 0 : this.signalToUnsigned(this._signal)
-	}
-
-	/** Asserts that a value is a valid signal.
-	 * @throws {SignalValidationError} */
-	protected abstract assertValidSignal(signal: T): asserts signal is T
-	/** Cast a signal value to a signed integer */
-	protected abstract signalToSigned(signal: T): number
-	/** Cast a signal value to an unsigned integer */
-	protected abstract signalToUnsigned(signal: T): number
+	/** Assert that the provided value is a valid signed integer or {@link Bits} bits */
+	protected abstract assertIsValidSigned(signal: Int<Bits>): asserts signal is Int<Bits>
+	/** Assert that the provided value is a valid unsigned integer or {@link Bits} bits */
+	protected abstract assertIsValidUnsigned(signal: UInt<Bits>): asserts signal is UInt<Bits>
+	/** Cast the provided signed integer of size {@link Bits} to an unsigned integer of the same size */
+	protected abstract castToUnsigned(signal: Int<Bits>): UInt<Bits>
+	/** Cast the provided unsigned integer of size {@link Bits} to a signed integer of the same size */
+	protected abstract castToSigned(signal: UInt<Bits>): Int<Bits>
 }
 
-/** A bus that transmits an 8-bit integer signal */
-export class ByteBus extends Bus<U8, InvalidU8Error> {
-	protected override assertValidSignal(signal: U8): asserts signal is U8 {
+/** The state of an 8-bit bus */
+export class ByteBus extends Bus<8> {
+	protected override assertIsValidSigned(signal: I8): asserts signal is I8 {
+		assertI8(signal)
+	}
+
+	protected override assertIsValidUnsigned(signal: U8): asserts signal is U8 {
 		assertU8(signal)
 	}
 
-	protected override signalToSigned(signal: U8): number {
-		return i8(signal)
+	protected override castToUnsigned(signal: I8): U8 {
+		return u8(signal)
 	}
 
-	protected override signalToUnsigned(signal: U8): number {
-		return signal
+	protected override castToSigned(signal: U8): I8 {
+		return i8(signal)
 	}
 }
 
-/** A bus that transmits a 16-bit integer signal */
-export class WordBus extends Bus<U16, InvalidU16Error> {
-	protected override assertValidSignal(signal: U16): asserts signal is U16 {
+/** The state of a 16-bit bus */
+export class WordBus extends Bus<16> {
+	protected override assertIsValidSigned(signal: I16): asserts signal is I16 {
+		assertI16(signal)
+	}
+
+	protected override assertIsValidUnsigned(signal: U16): asserts signal is U16 {
 		assertU16(signal)
 	}
 
-	protected override signalToSigned(signal: U16): number {
+	protected override castToUnsigned(signal: I16): U16 {
+		return u16(signal)
+	}
+
+	protected override castToSigned(signal: U16): I16 {
 		return i16(signal)
 	}
-
-	protected override signalToUnsigned(signal: U16): number {
-		return signal
-	}
 }
 
-/** A bus that transmits a {@link MemoryOperation} signal */
-export class MemoryOperationBus extends Bus<MemoryOperation, InvalidMemoryOperationError> {
-	protected override assertValidSignal(
-		signal: MemoryOperation,
-	): asserts signal is MemoryOperation {
-		assertMemoryOperation(signal)
-	}
-
-	protected override signalToSigned(signal: MemoryOperation): number {
-		return i8(signal)
-	}
-
-	protected override signalToUnsigned(signal: MemoryOperation): number {
-		return signal
-	}
-}
-
-/** A bus that transmits an {@link AddressingMode} signal */
-export class AddressingModeBus extends Bus<AddressingMode, InvalidAddressingModeError> {
-	protected override assertValidSignal(signal: AddressingMode): asserts signal is AddressingMode {
-		assertAddressingMode(signal)
-	}
-
-	protected override signalToSigned(signal: AddressingMode): number {
-		return i8(signal)
-	}
-
-	protected override signalToUnsigned(signal: AddressingMode): number {
-		return signal
-	}
-}
-
-/** A bus that transmits an {@link Opcode} signal */
-export class OpcodeBus extends Bus<Opcode> {
-	protected override assertValidSignal(signal: Opcode): asserts signal is Opcode {}
-
-	protected override signalToSigned(signal: Opcode): number {
-		return i8(signal.numeric)
-	}
-
-	protected override signalToUnsigned(signal: Opcode): number {
-		return signal.numeric
-	}
-}
-
-/** A bus that transmits a {@link WordAlignedAddress} signal */
-export class AddressBus extends Bus<
-	WordAlignedAddress,
-	AddressOutOfRangeError | InvalidWordAlignedAddressError
-> {
-	protected override assertValidSignal(
-		signal: WordAlignedAddress,
-	): asserts signal is WordAlignedAddress {
-		assertWordAlignedAddress(signal)
-	}
-
-	protected override signalToSigned(signal: WordAlignedAddress): number {
-		return i8(signal)
-	}
-
-	protected override signalToUnsigned(signal: WordAlignedAddress): number {
-		return signal
-	}
-}
-
-/** Base class for errors regarding a bus */
+/** Base class for errors regarding a {@link Bus} */
 export abstract class BusError extends Error {}
 
-/** Error thrown when a value was expected to be found on a {@link Bus}, but {@link NO_SIGNAL} was found */
-export class NoSignalError extends BusError {}
-
-/** An error regarding an invalid value being put on a bus */
-export class InvalidBusSignalError<T extends Error> extends BusError {
-	/** The error thrown during signal validation */
-	public readonly validationError: T
-
-	constructor(validationError: T) {
-		super(validationError.message)
-		this.validationError = validationError
+/** Error regarding a read signal operation on a {@link Bus} that is not carrying a signal */
+export class NoSignalError extends BusError {
+	constructor() {
+		super(`Trying to read from a bus with no signal`)
 	}
 }
