@@ -9,12 +9,20 @@ import {
 } from "./action_performer"
 import { Action, ACTION_TYPES, ActionGroup, type ActionType, type Task } from "./task"
 
-/** System that schedules and executes {@link Task|tasks} */
+/** System that schedules and executes {@link Task|tasks} without blocking other code from executing */
 export class TaskSystem {
 	/** The {@link ActionHandler|action handlers} available to this task system indexed by the {@link ActionType|action type} they handle */
 	private actionHandlers: Record<ActionType, ActionHandler<Action>[]>
 	/** The FIFO queue of tasks that are scheduled for execution */
 	private taskQueue: Task[]
+	/** The ID returned by setTimeout */
+	private timeoutID: number
+	/** Wether this task system is active or not */
+	private _isActive: boolean
+	/** Wether this task system is idle or not.
+	 * - `true` if this task system is active and the task queue is empty
+	 * - `false` if this task system is inactive or the task queue is not empty */
+	private _isIdle: boolean
 
 	constructor() {
 		this.actionHandlers = ACTION_TYPES.reduce(
@@ -25,6 +33,45 @@ export class TaskSystem {
 			{} as Record<ActionType, ActionHandler<Action>[]>,
 		)
 		this.taskQueue = []
+		this.timeoutID = -1
+		this._isActive = $state(false)
+		this._isIdle = $state(false)
+	}
+
+	/** Wether this task system is active or not */
+	get isActive(): boolean {
+		return this._isActive
+	}
+
+	/** Wether this task system is idle or not.
+	 * - `true` if this task system is active and the task queue is empty
+	 * - `false` if this task system is inactive or the task queue is not empty */
+	get isIdle(): boolean {
+		return this._isIdle
+	}
+
+	/** Activate this task system */
+	activate(): void {
+		if (this._isActive) {
+			return
+		}
+		this._isActive = true
+		this._isIdle = this.taskQueue.length === 0
+		if (!this._isIdle) {
+			this.submitJavascriptMacrotask()
+		}
+	}
+
+	/** Deactivate this task system */
+	deactivate(): void {
+		if (!this._isActive) {
+			return
+		}
+		this._isActive = false
+		if (!this._isIdle) {
+			this.clearJavascriptMacrotask()
+		}
+		this._isIdle = false
 	}
 
 	/** Add all the {@link ActionHandler|action handlers} exposed by the consumer to the ones dispatched by this task system */
@@ -40,28 +87,60 @@ export class TaskSystem {
 	/** Add tasks at the start of the task queue */
 	submitTasksBefore(...tasks: Task[]): void {
 		this.taskQueue.unshift(...tasks)
+		if (this._isIdle && tasks.length > 0) {
+			this._isIdle = false
+			this.submitJavascriptMacrotask()
+		}
 	}
 
 	/** Add tasks to the end of the task queue */
 	submitTasksAfter(...tasks: Task[]): void {
 		this.taskQueue.push(...tasks)
+		if (this._isIdle && tasks.length > 0) {
+			this._isIdle = false
+			this.submitJavascriptMacrotask()
+		}
 	}
 
 	/** Cancel all tasks scheduled for execution */
 	cancelAllTasks(): void {
+		this.clearJavascriptMacrotask()
 		this.taskQueue = []
+		if (this._isActive) {
+			this._isIdle = true
+		}
 	}
 
-	/** All tasks scheduled for execution were executed (the task queue is empty) */
-	isDone(): boolean {
-		return this.taskQueue.length === 0
+	/** Submit {@link TaskSystem.step} to the javascript engine macrotask queue */
+	private submitJavascriptMacrotask(): void {
+		this.timeoutID = setTimeout(this.step, 0, this)
+	}
+
+	/** Clear {@link TaskSystem.step} macrotask from the javascript engine macrotask queue */
+	private clearJavascriptMacrotask(): void {
+		clearTimeout(this.timeoutID)
+		this.timeoutID = -1
+	}
+
+	/** If active and not idle, execute one step and add the execution of the next step to the javascript engine macrotask queue,
+	 * effectively implementing a loop that does not block other code from executing */
+	private async step(): Promise<void> {
+		if (!this._isActive || this._isIdle) {
+			return
+		}
+		await this.executeNextTask()
+		if (!this._isActive) {
+			return
+		}
+		if (this.taskQueue.length === 0) {
+			this._isIdle = true
+			return
+		}
+		this.submitJavascriptMacrotask()
 	}
 
 	/** Execute the next task scheduled for execution */
-	async executeNextTask(): Promise<void> {
-		if (this.isDone()) {
-			return
-		}
+	private async executeNextTask(): Promise<void> {
 		const nextTask = this.taskQueue.shift()!
 		const newTasksRequestsPromises: Promise<ScheduleTasksRequest | null>[] = []
 		if (nextTask instanceof Action) {
@@ -76,12 +155,12 @@ export class TaskSystem {
 			unreachable()
 		}
 		const newTasksRequests = await Promise.all(newTasksRequestsPromises)
-		this.submitTasksBefore(
+		this.taskQueue.unshift(
 			...newTasksRequests
 				.filter(isScheduleTasksNowRequest)
 				.flatMap(request => request.scheduleNow),
 		)
-		this.submitTasksAfter(
+		this.taskQueue.push(
 			...newTasksRequests
 				.filter(isScheduleTasksLaterRequest)
 				.flatMap(request => request.scheduleLater),
