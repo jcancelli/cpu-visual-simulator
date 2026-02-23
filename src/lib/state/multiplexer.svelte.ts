@@ -1,6 +1,6 @@
 import type { U16 } from "$lib/integer"
 import { unreachable } from "$lib/util/development"
-import type { AddressBus, AddressingModeBus, WordBus } from "./bus.svelte"
+import type { Bus } from "./bus.svelte"
 import { CPUError } from "./cpu.svelte"
 
 /** From which bus the operand should be read */
@@ -30,24 +30,24 @@ export class Multiplexer {
 	private _addressingMode: AddressingMode
 	/** The signal that this MUX is repeating */
 	private signal: U16
-	/** The bus connected to the instruction register opcode */
-	private opcodeBus: AddressBus
+	/** The bus connected to the instruction register operand */
+	private instructionRegisterBus: Bus<8>
 	/** The data bus */
-	private dataBus: WordBus
+	private dataBus: Bus<16>
 	/** The bus connected to the ALU */
-	private aluBus: WordBus
+	private aluBus: Bus<16>
 	/** The bus connected to the control unit */
-	private controlBus: AddressingModeBus
+	private controlBus: Bus<8>
 
 	constructor(
-		opcodeBus: AddressBus,
-		dataBus: WordBus,
-		aluBus: WordBus,
-		controlBus: AddressingModeBus,
+		instructionRegisterBus: Bus<8>,
+		dataBus: Bus<16>,
+		aluBus: Bus<16>,
+		controlBus: Bus<8>,
 	) {
 		this._addressingMode = $state(AddressingMode.DIRECT)
 		this.signal = $state(0 as U16)
-		this.opcodeBus = opcodeBus
+		this.instructionRegisterBus = instructionRegisterBus
 		this.dataBus = dataBus
 		this.aluBus = aluBus
 		this.controlBus = controlBus
@@ -63,11 +63,12 @@ export class Multiplexer {
 	readSignal(): void {
 		switch (this._addressingMode) {
 			case AddressingMode.DIRECT:
-				this.signal = this.dataBus.readSignalOrThrow()
+				this.signal = this.dataBus.readSignalUnsignedOrThrow()
 				break
 
 			case AddressingMode.IMMEDIATE:
-				this.signal = this.opcodeBus.readSignalOrThrow() as unknown as U16
+				this.signal =
+					this.instructionRegisterBus.readSignalUnsignedOrThrow() as unknown as U16
 				break
 
 			default:
@@ -77,13 +78,16 @@ export class Multiplexer {
 
 	/** Send the repeated signal value to the bus connected to the ALU */
 	sendSignal(): void {
-		this.aluBus.sendSignal(this.signal)
+		this.aluBus.sendSignalUnsigned(this.signal)
 	}
 
 	/** Set the value of the current {@link AddressingMode} to the value found on the bus connected to the control unit.
-	 * @throws {NoSignalError} */
+	 * @throws {NoSignalError}
+	 * @throws {InvalidAddressingModeError} */
 	readAddressingModeSignal(): void {
-		this._addressingMode = this.controlBus.readSignalOrThrow()
+		const mode = this.controlBus.readSignalUnsignedOrThrow()
+		assertAddressingMode(mode)
+		this._addressingMode = mode
 	}
 }
 

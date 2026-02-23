@@ -1,6 +1,6 @@
-import { INVALID_OPCODE } from "$lib/opcode"
+import type { U8 } from "$lib/integer"
 import { unreachable } from "$lib/util/development"
-import type { AddressingModeBus, MemoryOperationBus, OpcodeBus } from "./bus.svelte"
+import type { Bus } from "./bus.svelte"
 import { type Decoder } from "./decoder.svelte"
 import { assertMemoryOperation, MemoryOperation } from "./memory.svelte"
 import { AddressingMode } from "./multiplexer.svelte"
@@ -11,17 +11,17 @@ export class ControlUnit {
 	/** The currently selected memory operation */
 	private _memoryOperation: MemoryOperation
 	/** Control bus connected to the memory */
-	private memoryControlBus: MemoryOperationBus
+	private memoryControlBus: Bus<8>
 	/** Control bus connected to the multiplexer */
-	private muxControlBus: AddressingModeBus
+	private muxControlBus: Bus<8>
 	/** Control bus connected to the ALU */
-	private aluControlBus: OpcodeBus
+	private aluControlBus: Bus<8>
 
 	constructor(
 		decoder: Decoder,
-		muxControlBus: AddressingModeBus,
-		aluControlBus: OpcodeBus,
-		memoryControlBus: MemoryOperationBus,
+		muxControlBus: Bus<8>,
+		aluControlBus: Bus<8>,
+		memoryControlBus: Bus<8>,
 	) {
 		this.decoder = decoder
 		this._memoryOperation = $state(MemoryOperation.FETCH)
@@ -43,21 +43,23 @@ export class ControlUnit {
 
 	/** Send the decoded {@link Opcode} to the bus connected to the ALU */
 	sendOperationSignal(): void {
-		if (this.decoder.decodedOpcode === INVALID_OPCODE) {
-			unreachable()
+		if (!this.decoder.decodeSuccess) {
+			unreachable("Execution should have been stopped before this")
 		}
-		this.aluControlBus.sendSignal(this.decoder.decodedOpcode)
+		this.aluControlBus.sendSignalUnsigned(this.decoder.decodedOpcode.numeric as U8)
 	}
 
-	/** Send the correct {@link AddressingMode} for the decoded instruction to the bus connected to the Multiplexer */
+	/** Send the correct {@link AddressingMode} for the decoded instruction to the bus connected to the multiplexer */
 	sendAddressingModeSignal(): void {
-		this.muxControlBus.sendSignal(
-			this.decoder.decodedImmediateFlag ? AddressingMode.IMMEDIATE : AddressingMode.DIRECT,
-		)
+		if (this.decoder.decodedImmediateFlag) {
+			this.muxControlBus.sendSignalUnsigned(AddressingMode.IMMEDIATE as U8)
+		} else {
+			this.muxControlBus.sendSignalUnsigned(AddressingMode.DIRECT as U8)
+		}
 	}
 
 	/** Send the currently selected {@link MemoryOperation} to the control bus connected to the memory */
 	sendMemoryOperationSignal(): void {
-		this.memoryControlBus.sendSignal(this._memoryOperation)
+		this.memoryControlBus.sendSignalUnsigned(this._memoryOperation as U8)
 	}
 }

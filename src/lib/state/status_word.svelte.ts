@@ -1,4 +1,4 @@
-import type { ByteBus } from "./bus.svelte"
+import type { Bus } from "./bus.svelte"
 import { CPUError } from "./cpu.svelte"
 import { i8, type I8, type U8 } from "$lib/integer"
 
@@ -30,9 +30,9 @@ export function assertValidStatusWord(value: number): void {
 export class StatusWord {
 	private _unsigned: U8
 	/** The value connecting the status word to the ALU */
-	private aluBus: ByteBus
+	private aluBus: Bus<8>
 
-	constructor(aluBus: ByteBus) {
+	constructor(aluBus: Bus<8>) {
 		this._unsigned = $state(0 as U8)
 		this.aluBus = aluBus
 	}
@@ -73,14 +73,14 @@ export class StatusWord {
 	 * @throws {NoSignalError}
 	 * @throws {InvalidStatusWordError} */
 	readAluSignal(): void {
-		const signal = this.aluBus.readSignalOrThrow()
+		const signal = this.aluBus.readSignalUnsignedOrThrow()
 		assertValidStatusWord(signal)
 		this._unsigned = signal
 	}
 
 	/** Send the value of the status word on the bus connecting it to the ALU */
 	sendAluSignal(): void {
-		this.aluBus.sendSignal(this._unsigned)
+		this.aluBus.sendSignalUnsigned(this._unsigned)
 	}
 }
 

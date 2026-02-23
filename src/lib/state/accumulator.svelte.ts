@@ -1,4 +1,4 @@
-import type { WordBus } from "./bus.svelte"
+import type { Bus } from "./bus.svelte"
 import {
 	assertI16,
 	assertU16,
@@ -15,11 +15,11 @@ import {
 export class Accumulator {
 	private _signed: I16
 	/** The bus connected to the ALU */
-	private aluBus: WordBus
+	private aluBus: Bus<16>
 	/** The data bus */
-	private dataBus: WordBus
+	private dataBus: Bus<16>
 
-	constructor(aluBus: WordBus, dataBus: WordBus) {
+	constructor(aluBus: Bus<16>, dataBus: Bus<16>) {
 		this._signed = $state(0 as I16)
 		this.aluBus = $state(aluBus)
 		this.dataBus = $state(dataBus)
@@ -56,11 +56,11 @@ export class Accumulator {
 	/** Set the value of the accumulator to the value sent by the ALU.
 	 * @throws {NoSignalError} */
 	readAluSignal(): void {
-		this.unsigned = this.aluBus.readSignalOrThrow()
+		this._signed = this.aluBus.readSignalSignedOrThrow()
 	}
 
 	/** Send the value of the accumulator on the data bus */
 	sendDataSignal(): void {
-		this.dataBus.sendSignal(this.unsigned)
+		this.dataBus.sendSignalSigned(this._signed)
 	}
 }

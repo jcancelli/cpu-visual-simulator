@@ -1,4 +1,3 @@
-import { type ByteBus, type MemoryOperationBus, type WordBus } from "./bus.svelte"
 import {
 	BusID,
 	Register,
@@ -34,6 +33,7 @@ import {
 	type ActionHandlerResult,
 } from "$lib/execution/action_performer"
 import { ActionType, Task } from "$lib/execution/task"
+import type { Bus } from "./bus.svelte"
 
 /** A value that is a valid memory address */
 export type Address = U8
@@ -135,15 +135,15 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 	/** The current memory operation */
 	private _selectedOperation: MemoryOperation
 	/** Reference to the data bus */
-	private dataBus: WordBus
+	private dataBus: Bus<16>
 	/** Reference to the address bus */
-	private addressBus: ByteBus
+	private addressBus: Bus<8>
 	/** Reference to the control bus */
-	private controlBus: MemoryOperationBus
+	private controlBus: Bus<8>
 
 	public readonly actionHandlers: ActionHandlerMap<MemoryHandledActions>
 
-	constructor(dataBus: WordBus, addressBus: ByteBus, controlBus: MemoryOperationBus) {
+	constructor(dataBus: Bus<16>, addressBus: Bus<8>, controlBus: Bus<8>) {
 		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
 		this._selectedAddress = $state(0 as WordAlignedAddress)
 		this._selectedOperation = $state(MemoryOperation.READ)
@@ -334,7 +334,7 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 			unreachable()
 		}
 		const data = this.readU16(this.selectedAddress)
-		this.dataBus.sendSignal(data)
+		this.dataBus.sendSignalUnsigned(data)
 		return { actionWasHandled: true }
 	}
 

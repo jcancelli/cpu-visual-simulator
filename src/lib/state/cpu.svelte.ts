@@ -1,12 +1,4 @@
 import {
-	ByteBus,
-	MemoryOperationBus,
-	AddressingModeBus,
-	WordBus,
-	OpcodeBus,
-	AddressBus,
-} from "./bus.svelte"
-import {
 	BusID,
 	ReadSignalBusAction,
 	Register,
@@ -31,6 +23,7 @@ import { Multiplexer } from "./multiplexer.svelte"
 import { ArithmeticLogicUnit } from "./arithmetic_logic_unit.svelte"
 import { Accumulator } from "./accumulator.svelte"
 import { StatusWord } from "./status_word.svelte"
+import type { Bus } from "./bus.svelte"
 
 /** Actions handled by the {@link CPU} */
 export type CPUHandledAction =
@@ -60,15 +53,15 @@ export default class CPU implements ActionConsumer<CPUHandledAction> {
 	private readonly readSignalHandlerMap: EnumCombinationMap<() => void, [Register, BusID]>
 
 	constructor(
-		dataBus: WordBus,
-		addressBus: AddressBus,
-		memoryControlBus: MemoryOperationBus,
-		opcodeDecoderBus: ByteBus,
-		muxAluBus: WordBus,
-		muxControlBus: AddressingModeBus,
-		aluControlBus: OpcodeBus,
-		statusWordBus: ByteBus,
-		aluAccumulatorBus: WordBus,
+		dataBus: Bus<16>,
+		addressBus: Bus<8>,
+		memoryControlBus: Bus<8>,
+		opcodeDecoderBus: Bus<8>,
+		muxAluBus: Bus<16>,
+		muxControlBus: Bus<8>,
+		aluControlBus: Bus<8>,
+		statusWordBus: Bus<8>,
+		aluAccumulatorBus: Bus<16>,
 	) {
 		this._instructionRegister = new InstructionRegister(dataBus, opcodeDecoderBus, addressBus)
 		this._programCounter = new ProgramCounter(addressBus)

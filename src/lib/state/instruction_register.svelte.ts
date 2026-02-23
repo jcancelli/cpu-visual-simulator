@@ -1,18 +1,17 @@
-import type { AddressBus, ByteBus, WordBus } from "./bus.svelte"
 import { i16, u16LSB, u16MSB, type I16, type U16, type U8 } from "$lib/integer"
-import type { WordAlignedAddress } from "./memory.svelte"
+import type { Bus } from "./bus.svelte"
 
 /** State of the instruction register */
 export class InstructionRegister {
 	private _unsigned: U16
 	/** The data bus */
-	private dataBus: WordBus
+	private dataBus: Bus<16>
 	/** The bus connected to the decoder */
-	private opcodeBus: ByteBus
+	private opcodeBus: Bus<8>
 	/** The address bus and the bus connected to the MUX */
-	private operandBus: AddressBus
+	private operandBus: Bus<8>
 
-	constructor(dataBus: WordBus, opcodeBus: ByteBus, operandBus: AddressBus) {
+	constructor(dataBus: Bus<16>, opcodeBus: Bus<8>, operandBus: Bus<8>) {
 		this._unsigned = $state(0 as U16)
 		this.dataBus = dataBus
 		this.opcodeBus = opcodeBus
@@ -38,17 +37,16 @@ export class InstructionRegister {
 	/** Set the instruction register value to the value found on the data bus.
 	 * @throws {NoSignalError} */
 	readDataSignal(): void {
-		this._unsigned = this.dataBus.readSignalOrThrow()
+		this._unsigned = this.dataBus.readSignalUnsignedOrThrow()
 	}
 
 	/** Send the value of the opcode on the bus connected to the decoder */
 	sendOpcodeSignal(): void {
-		this.opcodeBus.sendSignal(this.msb)
+		this.opcodeBus.sendSignalUnsigned(this.msb)
 	}
 
-	/** Send the value of the operand to the address bus
-	 * @throws {InvalidBusSignalError} */
+	/** Send the value of the operand to the address bus */
 	sendOperandSignal(): void {
-		this.operandBus.sendSignal(this.lsb as WordAlignedAddress)
+		this.operandBus.sendSignalUnsigned(this.lsb)
 	}
 }

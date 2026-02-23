@@ -1,13 +1,13 @@
-import type { AddressBus } from "./bus.svelte"
+import type { Bus } from "./bus.svelte"
 import { assertI8, assertU8, i8, u8, type I8, type U8 } from "$lib/integer"
 import { assertWordAlignedAddress, type WordAlignedAddress } from "./memory.svelte"
 
 /** State of the program counter */
 export class ProgramCounter {
 	private _address: WordAlignedAddress
-	private addressBus: AddressBus
+	private addressBus: Bus<8>
 
-	constructor(addressBus: AddressBus) {
+	constructor(addressBus: Bus<8>) {
 		this._address = $state(0 as WordAlignedAddress)
 		this.addressBus = addressBus
 	}
@@ -51,14 +51,17 @@ export class ProgramCounter {
 	}
 
 	/** Set the program counter value to the value found on the address bus.
-	 * @throws {NoSignalError} */
+	 * @throws {NoSignalError}
+	 *  @throws {AddressOutOfRangeError}
+	 *  @throws {InvalidWordAlignedAddressError} */
 	readAddressSignal(): void {
-		const signal = this.addressBus.readSignalOrThrow()
+		const signal = this.addressBus.readSignalUnsignedOrThrow()
+		assertWordAlignedAddress(signal)
 		this._address = signal
 	}
 
 	/** Send the value of the opcode on the address bus */
 	sendAddressSignal(): void {
-		this.addressBus.sendSignal(this._address)
+		this.addressBus.sendSignalUnsigned(this._address)
 	}
 }
