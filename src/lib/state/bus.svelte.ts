@@ -37,7 +37,7 @@ export type ReadonlyBus<Bits extends number> = Omit<
 
 /** Base class for the state of a bus that carries a {@link Bits} sized signal */
 export abstract class Bus<Bits extends number> {
-	/** The signal carried by this bus */
+	/** The signal carried by this bus as an unsigned value */
 	private signal: BusSignal<UInt<Bits>>
 
 	constructor() {
@@ -45,42 +45,42 @@ export abstract class Bus<Bits extends number> {
 	}
 
 	/** The signal carried by this bus as a signed integer */
-	get signedSignal(): BusSignal<Int<Bits>> {
+	get signalSigned(): BusSignal<Int<Bits>> {
 		if (this.signal === NO_SIGNAL) {
 			return NO_SIGNAL
 		}
-		return this.castToSigned(this.signal)
+		return this.unsignedToSigned(this.signal)
 	}
 
 	/** The signal carried by this bus as an unsigned integer */
-	get unsignedSignal(): BusSignal<UInt<Bits>> {
+	get signalUnsigned(): BusSignal<UInt<Bits>> {
 		return this.signal
 	}
 
 	/** Send a signed integer as a signal on this bus.
 	 * @throws {IntegerOutOfRangeError} */
 	sendSignalSigned(signal: Int<Bits>): void {
-		this.assertIsValidSigned(signal)
-		this.signal = this.castToUnsigned(signal)
+		this.assertSigned(signal)
+		this.signal = this.signedToUnsigned(signal)
 	}
 
 	/** Send an unsigned integer as a signal on this bus.
 	 * @throws {IntegerOutOfRangeError} */
 	sendSignalUnsigned(signal: UInt<Bits>): void {
-		this.assertIsValidUnsigned(signal)
+		this.assertUnsigned(signal)
 		this.signal = signal
 	}
 
 	/** Read the signal on this bus as a signed integer or throw an error if there is no signal.
 	 * @throws {NoSignalError} */
-	readSignedSignalOrThrow(): Int<Bits> {
+	readSignalSignedOrThrow(): Int<Bits> {
 		assertSignal(this.signal)
-		return this.castToSigned(this.signal)
+		return this.unsignedToSigned(this.signal)
 	}
 
 	/** Read the signal on this bus as an unsigned integer or throw an error if there is no signal.
 	 * @throws {NoSignalError} */
-	readUnsignedSignalOrThrow(): UInt<Bits> {
+	readSignalUnsignedOrThrow(): UInt<Bits> {
 		assertSignal(this.signal)
 		return this.signal
 	}
@@ -96,49 +96,49 @@ export abstract class Bus<Bits extends number> {
 	}
 
 	/** Assert that the provided value is a valid signed integer or {@link Bits} bits */
-	protected abstract assertIsValidSigned(signal: Int<Bits>): asserts signal is Int<Bits>
+	protected abstract assertSigned(signal: Int<Bits>): asserts signal is Int<Bits>
 	/** Assert that the provided value is a valid unsigned integer or {@link Bits} bits */
-	protected abstract assertIsValidUnsigned(signal: UInt<Bits>): asserts signal is UInt<Bits>
+	protected abstract assertUnsigned(signal: UInt<Bits>): asserts signal is UInt<Bits>
 	/** Cast the provided signed integer of size {@link Bits} to an unsigned integer of the same size */
-	protected abstract castToUnsigned(signal: Int<Bits>): UInt<Bits>
+	protected abstract signedToUnsigned(signal: Int<Bits>): UInt<Bits>
 	/** Cast the provided unsigned integer of size {@link Bits} to a signed integer of the same size */
-	protected abstract castToSigned(signal: UInt<Bits>): Int<Bits>
+	protected abstract unsignedToSigned(signal: UInt<Bits>): Int<Bits>
 }
 
 /** The state of an 8-bit bus */
 export class ByteBus extends Bus<8> {
-	protected override assertIsValidSigned(signal: I8): asserts signal is I8 {
+	protected override assertSigned(signal: I8): asserts signal is I8 {
 		assertI8(signal)
 	}
 
-	protected override assertIsValidUnsigned(signal: U8): asserts signal is U8 {
+	protected override assertUnsigned(signal: U8): asserts signal is U8 {
 		assertU8(signal)
 	}
 
-	protected override castToUnsigned(signal: I8): U8 {
+	protected override signedToUnsigned(signal: I8): U8 {
 		return u8(signal)
 	}
 
-	protected override castToSigned(signal: U8): I8 {
+	protected override unsignedToSigned(signal: U8): I8 {
 		return i8(signal)
 	}
 }
 
 /** The state of a 16-bit bus */
 export class WordBus extends Bus<16> {
-	protected override assertIsValidSigned(signal: I16): asserts signal is I16 {
+	protected override assertSigned(signal: I16): asserts signal is I16 {
 		assertI16(signal)
 	}
 
-	protected override assertIsValidUnsigned(signal: U16): asserts signal is U16 {
+	protected override assertUnsigned(signal: U16): asserts signal is U16 {
 		assertU16(signal)
 	}
 
-	protected override castToUnsigned(signal: I16): U16 {
+	protected override signedToUnsigned(signal: I16): U16 {
 		return u16(signal)
 	}
 
-	protected override castToSigned(signal: U16): I16 {
+	protected override unsignedToSigned(signal: U16): I16 {
 		return i16(signal)
 	}
 }
