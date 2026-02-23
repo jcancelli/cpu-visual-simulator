@@ -1,7 +1,7 @@
+import { InvalidAddressingModeError } from "$lib/errors/cpu"
 import type { U16 } from "$lib/integer"
 import { unreachable } from "$lib/util/development"
 import type { Bus } from "./bus.svelte"
-import { CPUError } from "./cpu.svelte"
 
 /** From which bus the operand should be read */
 export enum AddressingMode {
@@ -88,16 +88,5 @@ export class Multiplexer {
 		const mode = this.controlBus.readSignalUnsignedOrThrow()
 		assertAddressingMode(mode)
 		this._addressingMode = mode
-	}
-}
-
-/** Error regarding an invalid {@link AddressingMode} value */
-export class InvalidAddressingModeError extends CPUError {
-	/** The invalid value that caused the error */
-	public readonly value: number
-
-	constructor(value: number) {
-		super(`Invalid addressing mode: ${value.toString(2)}`)
-		this.value = value
 	}
 }

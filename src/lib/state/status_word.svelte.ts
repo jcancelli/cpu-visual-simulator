@@ -1,6 +1,6 @@
 import type { Bus } from "./bus.svelte"
-import { CPUError } from "./cpu.svelte"
 import { i8, type I8, type U8 } from "$lib/integer"
+import { InvalidStatusWordError } from "$lib/errors/cpu"
 
 /** The bit of the status word zero flag */
 export const ZERO_FLAG_BIT = 1 << 7
@@ -81,16 +81,5 @@ export class StatusWord {
 	/** Send the value of the status word on the bus connecting it to the ALU */
 	sendAluSignal(): void {
 		this.aluBus.sendSignalUnsigned(this._unsigned)
-	}
-}
-
-/** Error regarding an invalid status word value */
-export class InvalidStatusWordError extends CPUError {
-	/** The invalid value */
-	public readonly value: number
-
-	constructor(value: number) {
-		super(`Invalid status word value: ${value.toString(2).padStart(8, "0")}`)
-		this.value = value
 	}
 }

@@ -219,6 +219,3 @@ export default class CPU implements ActionConsumer<CPUHandledAction> {
 		return ACTION_HANDLED
 	}
 }
-
-/** Base class for errors regarding the CPU */
-export class CPUError extends Error {}
