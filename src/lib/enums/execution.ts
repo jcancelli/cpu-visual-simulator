@@ -1,6 +1,6 @@
 /** Named breakpoints of the execution. These steps have a textual description displayed in the step description
  * box UI element and a text to speech sentence associated to them.
- * If the {@link Execution} {@link StepMode|stepping mode} is set to {@link StepMode.STEP}, every time the end
+ * If the {@link Execution} {@link ExecutionSteppingMode|stepping mode} is set to {@link ExecutionSteppingMode.STEP}, every time the end
  * of the step is signaled the execution is paused */
 export enum ExecutionStep {
 	PROGRAM_COUNTER_TO_ADDRESS_BUS,
@@ -24,4 +24,22 @@ export enum ExecutionStep {
 	UPDATE_STATUS_WORD,
 	ACCUMULATOR_TO_DATA_BUS,
 	ACCUMULATOR_STORED_TO_MEMORY,
+}
+
+/** The stage of the {@link Execution} */
+export enum ExecutionStage {
+	FETCH,
+	DECODE,
+	EXECUTE,
+	INCREMENT_PROGRAM_COUNTER,
+}
+
+/** Stepping mode for the {@link Execution} */
+export enum ExecutionSteppingMode {
+	/** Keep executing until the end of the program is reached */
+	PROGRAM,
+	/** Keep executing until the end of the instruction is reached */
+	INSTRUCTION,
+	/** Keep executing until the end of the step is reached */
+	STEP,
 }
