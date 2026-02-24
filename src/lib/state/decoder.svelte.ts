@@ -1,5 +1,5 @@
-import type { U8 } from "$lib/integer"
-import { getImmediateFlag, getOpcodeByNumeric, OPCODE_NOP, type Opcode } from "$lib/opcode"
+import type { U8 } from "$lib/types/integer"
+import { getImmediateFlag, getOpcodeByNumeric, OPCODE_NOP, type Opcode } from "$lib/types/opcode"
 import { type Bus } from "./bus.svelte"
 
 /** State of the decoder */

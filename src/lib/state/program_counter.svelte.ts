@@ -1,6 +1,6 @@
 import type { Bus } from "./bus.svelte"
-import { assertI8, assertU8, i8, u8, type I8, type U8 } from "$lib/integer"
-import { assertWordAlignedAddress, type WordAlignedAddress } from "./memory.svelte"
+import { assertI8, assertU8, i8, u8, type I8, type U8 } from "$lib/types/integer"
+import { assertWordAlignedAddress, type WordAlignedAddress } from "$lib/types/address"
 
 /** State of the program counter */
 export class ProgramCounter {

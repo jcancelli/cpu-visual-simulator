@@ -1,4 +1,4 @@
-import { i16, u16LSB, u16MSB, type I16, type U16, type U8 } from "$lib/integer"
+import { i16, u16LSB, u16MSB, type I16, type U16, type U8 } from "$lib/types/integer"
 import type { Bus } from "./bus.svelte"
 
 /** State of the instruction register */

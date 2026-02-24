@@ -1,18 +1,3 @@
-import {
-	BusID,
-	ReadSignalBusAction,
-	Register,
-	SetMemoryOperationAction,
-	type SendSignalBusAction,
-} from "$lib/execution/action"
-import {
-	type ActionHandlerResult,
-	ACTION_HANDLED,
-	ACTION_UNHANDLED,
-	type ActionConsumer,
-	ActionHandlerMap,
-} from "$lib/execution/action_performer"
-import { ActionType } from "$lib/execution/task"
 import { todo } from "$lib/util/development"
 import type { EnumCombinationMap } from "$lib/util/types"
 import { InstructionRegister } from "./instruction_register.svelte"
@@ -24,17 +9,19 @@ import { ArithmeticLogicUnit } from "./arithmetic_logic_unit.svelte"
 import { Accumulator } from "./accumulator.svelte"
 import { StatusWord } from "./status_word.svelte"
 import type { Bus } from "./bus.svelte"
+import type { ActionType } from "$lib/types/action"
+import { BusID, Register } from "$lib/types/bus"
 
 /** Actions handled by the {@link CPU} */
 export type CPUHandledAction =
 	| ActionType.SEND_SIGNAL
 	| ActionType.READ_SIGNAL
-	| ActionType.DECODE_INSTRUCTION
-	| ActionType.EXECUTE_INSTRUCTION
+	| ActionType.DECODE_OPCODE
+	| ActionType.EXECUTE_ALU_OPERATION
 	| ActionType.SET_MEMORY_OPERATION
 
 /** The CPU state */
-export default class CPU implements ActionConsumer<CPUHandledAction> {
+export default class CPU {
 	private _instructionRegister: InstructionRegister
 	private _programCounter: ProgramCounter
 	private _decoder: Decoder
@@ -85,8 +72,8 @@ export default class CPU implements ActionConsumer<CPUHandledAction> {
 		this.actionHandlers = new ActionHandlerMap({
 			[ActionType.SEND_SIGNAL]: this.handleSendSignalAction.bind(this),
 			[ActionType.READ_SIGNAL]: this.handleReadSignalAction.bind(this),
-			[ActionType.DECODE_INSTRUCTION]: this.handleDecodeInstructionAction.bind(this),
-			[ActionType.EXECUTE_INSTRUCTION]: this.handleExecuteInstructionAction.bind(this),
+			[ActionType.DECODE_OPCODE]: this.handleDecodeInstructionAction.bind(this),
+			[ActionType.EXECUTE_ALU_OPERATION]: this.handleExecuteInstructionAction.bind(this),
 			[ActionType.SET_MEMORY_OPERATION]: this.handleSetMemoryOperationAction.bind(this),
 		})
 		this.sendSignalHandlerMap = {

@@ -1,22 +1,10 @@
 import {
-	BusID,
-	Register,
-	type ReadSignalBusAction,
-	type SendSignalBusAction,
-} from "$lib/execution/action"
-import {
-	MEMORY_FETCH_ACTIONS,
-	MEMORY_READ_ACTIONS,
-	MEMORY_WRITE_ACTIONS,
-} from "$lib/execution/actions_presets"
-import {
 	assertI16,
 	assertI8,
 	assertU16,
 	assertU8,
 	i16LSB,
 	i16MSB,
-	isValidU8,
 	joinU8ToI16,
 	joinU8ToU16,
 	u16LSB,
@@ -25,115 +13,33 @@ import {
 	type I16,
 	type U16,
 	type U8,
-} from "$lib/integer"
+} from "$lib/types/integer"
 import { todo, unreachable } from "$lib/util/development"
-import {
-	ActionHandlerMap,
-	type ActionConsumer,
-	type ActionHandlerResult,
-} from "$lib/execution/action_performer"
-import { ActionType, Task } from "$lib/execution/task"
 import type { Bus } from "./bus.svelte"
-
-/** A value that is a valid memory address */
-export type Address = U8
-/** An {@link Address} with a specific alignment */
-export type AlignedAddress<Alignment extends number> = Address & { __alignment: Alignment }
-/** A byte (8-bit) aligned {@link Address} */
-export type ByteAlignedAddress = AlignedAddress<1>
-/** A word (16-bit) aligned {@link Address} */
-export type WordAlignedAddress = AlignedAddress<2>
-
-/** The lowest valid address */
-export const MIN_ADDRESS = 0
-/** The highest valid address for a byte */
-export const MAX_ADDRESS = 255
-/** The highest valid address for a word */
-export const MAX_WORD_ADDRESS = 254
-/** Size of a word in bytes */
-export const WORD_ALIGNMENT = 2
-/** Size in bytes of the memory */
-export const MEMORY_SIZE_BYTES = 256
-/** Size in words of the memory */
-export const MEMORY_SIZE_WORDS = MEMORY_SIZE_BYTES / WORD_ALIGNMENT
-
-/** Check if the provided value is in the valid memory address range */
-export function isInAddressRange(address: number): address is Address {
-	return isValidU8(address)
-}
-
-/** Check if the provided value is a valid, byte-aligned address */
-export function isByteAlignedAddress(address: number): address is ByteAlignedAddress {
-	return isInAddressRange(address)
-}
-
-/** Check if the provided value is a valid, word-aligned address */
-export function isWordAlignedAddress(address: number): address is WordAlignedAddress {
-	return isInAddressRange(address) && (address & 1) === 0
-}
-
-/** Asserts that the provided value is in the valid memory address range.
- * @throws {AddressOutOfRangeError} */
-export function assertAddressInRange(address: number): asserts address is Address {
-	if (!isInAddressRange(address)) {
-		throw new AddressOutOfRangeError(address)
-	}
-}
-
-/** Asserts that the provided value is a valid, byte-aligned address.
- * @throws {AddressOutOfRangeError}
- * @throws {InvalidByteAlignedAddressError} */
-export function assertByteAlignedAddress(address: number): asserts address is ByteAlignedAddress {
-	assertAddressInRange(address)
-	if (!isByteAlignedAddress(address)) {
-		throw new InvalidByteAlignedAddressError(address)
-	}
-}
-
-/** Asserts that the provided value is a valid, word-aligned address.
- * @throws {AddressOutOfRangeError}
- * @throws {InvalidWordAlignedAddressError} */
-export function assertWordAlignedAddress(address: number): asserts address is WordAlignedAddress {
-	assertAddressInRange(address)
-	if (!isWordAlignedAddress(address)) {
-		throw new InvalidWordAlignedAddressError(address)
-	}
-}
-
-/** Operation that can be signaled to the memory on the control bus */
-export enum MemoryOperation {
-	READ = 0b1,
-	WRITE = 0b10,
-	FETCH = 0b100,
-}
-
-/** Check if the specified value is a valid {@link MemoryOperation} */
-export function isMemoryOperation(value: number): value is MemoryOperation {
-	return value === MemoryOperation.READ || value === MemoryOperation.WRITE
-}
-
-/** Assert that the specified value is a valid {@link MemoryOperation}
- * @throws {InvalidMemoryOperationError}*/
-export function assertMemoryOperation(value: number): asserts value is MemoryOperation {
-	if (!isMemoryOperation(value)) {
-		throw new InvalidMemoryOperationError(value)
-	}
-}
+import type { ActionType } from "$lib/types/action"
+import {
+	assertByteAlignedAddress,
+	assertWordAlignedAddress,
+	MAX_ADDRESS,
+	MAX_WORD_ADDRESS,
+	MEMORY_SIZE_BYTES,
+	MIN_ADDRESS,
+	WORD_ALIGNMENT,
+	type WordAlignedAddress,
+} from "$lib/types/address"
+import { MemoryOperation as Operation } from "$lib/types/memory"
 
 /** Action types handled by the {@link Memory} */
-export type MemoryHandledActions =
-	| ActionType.SEND_SIGNAL
-	| ActionType.READ_SIGNAL
-	| ActionType.PERFORM_MEMORY_OPERATION
+export type MemoryHandledActions = ActionType.SEND_SIGNAL | ActionType.READ_SIGNAL
 
 /** State of the memory */
-export default class Memory implements ActionConsumer<MemoryHandledActions> {
+export default class Memory {
 	/** Writable state containing the memory's contents. */
 	private _bytes: U8[]
 	/** The currently selected address */
 	private _selectedAddress: WordAlignedAddress
 	/** The current memory operation */
-	private _selectedOperation: MemoryOperation
+	private _selectedOperation: Operation
 	/** Reference to the data bus */
 	private dataBus: Bus<16>
 	/** Reference to the address bus */
@@ -141,12 +47,10 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 	/** Reference to the control bus */
 	private controlBus: Bus<8>
 
-	public readonly actionHandlers: ActionHandlerMap<MemoryHandledActions>
-
 	constructor(dataBus: Bus<16>, addressBus: Bus<8>, controlBus: Bus<8>) {
 		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
 		this._selectedAddress = $state(0 as WordAlignedAddress)
-		this._selectedOperation = $state(MemoryOperation.READ)
+		this._selectedOperation = $state(Operation.READ)
 		this.dataBus = dataBus
 		this.addressBus = addressBus
 		this.controlBus = controlBus
@@ -169,7 +73,7 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 	}
 
 	/** The current memory operation */
-	get selectedOperation(): MemoryOperation {
+	get selectedOperation(): Operation {
 		return this._selectedOperation
 	}
 
@@ -349,15 +253,15 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 	private async handlePerformMemoryOperationAction(): Promise<ActionHandlerResult> {
 		const newTasks: Task[] = []
 		switch (this._selectedOperation) {
-			case MemoryOperation.READ:
+			case Operation.READ:
 				newTasks.push(...MEMORY_READ_ACTIONS)
 				break
 
-			case MemoryOperation.WRITE:
+			case Operation.WRITE:
 				newTasks.push(...MEMORY_WRITE_ACTIONS)
 				break
 
-			case MemoryOperation.FETCH:
+			case Operation.FETCH:
 				newTasks.push(...MEMORY_FETCH_ACTIONS)
 				break
 
@@ -365,61 +269,5 @@ export default class Memory implements ActionConsumer<MemoryHandledActions> {
 				unreachable()
 		}
 		todo()
-	}
-}
-
-/** Base class for an error regarding memory. */
-export abstract class MemoryError extends Error {}
-
-/** Base class for errors regarding a memory address. */
-export abstract class AddressError extends MemoryError {
-	/** The address that caused the error. */
-	public readonly address: number
-
-	constructor(address: number, message: string) {
-		super(message)
-		this.address = address
-	}
-}
-
-/** Error regarding an address that is not in the valid memory address range. */
-export class AddressOutOfRangeError extends AddressError {
-	constructor(address: number) {
-		super(address, `Address out of range: ${address}`)
-	}
-}
-
-/** Error regarding an address that doesn't match a given alignment. */
-export abstract class MisalignedAddressError extends AddressError {
-	/** The required alignment */
-	public readonly alignment: number
-
-	constructor(address: number, alignment: number) {
-		super(address, `Address: ${address}, Alignment: ${alignment}`)
-		this.alignment = alignment
-	}
-}
-
-/** Error regarding an address that is not byte-aligned. */
-export class InvalidByteAlignedAddressError extends MisalignedAddressError {
-	constructor(address: number) {
-		super(address, 1)
-	}
-}
-
-/** Error regarding an address that is not word-aligned. */
-export class InvalidWordAlignedAddressError extends MisalignedAddressError {
-	constructor(address: number) {
-		super(address, 2)
-	}
-}
-
-/** Error regarding an unexpected value presented as memory operation. */
-export class InvalidMemoryOperationError extends MemoryError {
-	public readonly value: number
-
-	constructor(value: number) {
-		super(`Invalid memory operation value: ${value.toString(2)}`)
-		this.value = value
 	}
 }

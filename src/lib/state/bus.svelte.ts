@@ -1,3 +1,4 @@
+import { assertSignal, NO_SIGNAL, type BusSignal } from "$lib/types/bus"
 import {
 	assertI16,
 	assertI8,
@@ -13,21 +14,7 @@ import {
 	type U16,
 	type U8,
 	type UInt,
-} from "$lib/integer"
-
-/** Value representing no signal on a bus */
-export const NO_SIGNAL = Symbol("NO_SIGNAL")
-
-/** Either a value or {@link NO_SIGNAL} */
-export type BusSignal<T> = typeof NO_SIGNAL | T
-
-/** Asserts that the signal carries a value.
- * @throws {NoSignalError}*/
-export function assertSignal<T>(signal: BusSignal<T>): asserts signal is T {
-	if (signal === NO_SIGNAL) {
-		throw new NoSignalError()
-	}
-}
+} from "$lib/types/integer"
 
 /** Readonly version of a {@link Bus} */
 export type ReadonlyBus<Bits extends number> = Omit<
@@ -140,15 +127,5 @@ export class WordBus extends Bus<16> {
 
 	protected override unsignedToSigned(signal: U16): I16 {
 		return i16(signal)
-	}
-}
-
-/** Base class for errors regarding a {@link Bus} */
-export abstract class BusError extends Error {}
-
-/** Error regarding a read signal operation on a {@link Bus} that is not carrying a signal */
-export class NoSignalError extends BusError {
-	constructor() {
-		super(`Trying to read from a bus with no signal`)
 	}
 }

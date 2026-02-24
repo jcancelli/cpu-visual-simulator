@@ -1,6 +1,12 @@
 import type { ScheduleTasksRequest } from "$lib/execution/action_performer"
-import { type I16, type U8 } from "$lib/integer"
-import { getOpcodeByNumericOrThrow, OPCODE_NOP, OpcodeNumeric, type Opcode } from "$lib/opcode"
+import { assertStatusWord } from "$lib/types/cpu"
+import { type I16, type U8 } from "$lib/types/integer"
+import {
+	getOpcodeByNumericOrThrow,
+	OPCODE_NOP,
+	OpcodeNumeric,
+	type Opcode,
+} from "$lib/types/opcode"
 import { todo } from "$lib/util/development"
 import type { Bus } from "./bus.svelte"
 
@@ -87,9 +93,12 @@ export class ArithmeticLogicUnit {
 	}
 
 	/** Read the value of the status word from the bus connected to its register.
-	 * @throws {NoSignalError} */
+	 * @throws {NoSignalError}
+	 * @throws {InvalidStatusWordError} */
 	readStatusWordSignal(): void {
-		this.statusWord = this.statusWordBus.readSignalUnsignedOrThrow()
+		const signal = this.statusWordBus.readSignalUnsignedOrThrow()
+		assertStatusWord(signal)
+		this.statusWord = signal
 	}
 
 	/** Send the value of the status word updated by the last operation on the bus connected to the status word register */
