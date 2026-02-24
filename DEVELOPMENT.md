@@ -62,13 +62,13 @@
     - [ ] Loading examples
 - [ ] Touch support
 - [ ] Execution
-    - [ ] Define steps
-    - [ ] Implement task system
+    - [x] Define steps
+    - [x] Implement task system
     - [ ] Implement actions
 - [ ] State
-    - [x] Memory
-    - [x] Labels
-    - [x] Cpu
+    - [ ] Memory
+    - [ ] Labels
+    - [ ] Cpu
     - [ ] Local storage persistence
         - [ ] Local storage versioning
 
@@ -86,7 +86,7 @@
 - [ ] Consider changing behavior of immediate label operands.
       Current: `LOD #LABEL` with LABEL assigned to 254 (or any other address outside 8-bit signed range [0,127]) errors out
       Idea: cast it to signed integer
-- [ ] Define granularity of the steps
+- [x] Define granularity of the steps
 - [ ] Disconnect address bus from operand bus and connect it to the bottom of the MUX.
       This way if the opcode needs to be put on the address bus it needs to be sent through the MUX first.
       The control unit should also select input/output of the mux.
