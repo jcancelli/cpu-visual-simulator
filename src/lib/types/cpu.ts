@@ -33,14 +33,14 @@ export const NEGATIVE_FLAG_MASK = ~NEGATIVE_FLAG_BIT >>> 0
 export const ALL_FLAGS = ZERO_FLAG_BIT | NEGATIVE_FLAG_BIT
 
 /** Check if the provided value is a valid status word value */
-export function isValidStatusWord(value: number): boolean {
+export function isStatusWord(value: number): boolean {
 	return (value & ALL_FLAGS) === value
 }
 
 /** Asserts that the provided value is a valid status word value.
  * @throws {InvalidStatusWordError} */
-export function assertValidStatusWord(value: number): void {
-	if (!isValidStatusWord(value)) {
+export function assertStatusWord(value: number): void {
+	if (!isStatusWord(value)) {
 		throw new InvalidStatusWordError(value)
 	}
 }
