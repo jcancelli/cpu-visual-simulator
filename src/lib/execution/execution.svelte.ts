@@ -4,6 +4,7 @@ import { unreachable } from "$lib/util/development"
 import type { ActionHandler, SubmitTasksFunction } from "./action_handler"
 import type { ActionHandlerFor } from "./actions"
 import type { StartStepAction } from "./actions/execution"
+import { FETCH_AND_DECODE_ACTIONS } from "./steps_actions"
 import { Action, ActionGroup, type Task } from "./task"
 
 /** Lists of action handlers indexed by the action type that they handle */
@@ -85,7 +86,7 @@ export class Execution {
 		this._steppingMode = steppingMode
 		this.start()
 		if (this.taskQueue.length === 0) {
-			this.taskQueue.push() // TODO: submit tasks
+			this.taskQueue.push(...FETCH_AND_DECODE_ACTIONS)
 		}
 	}
 
