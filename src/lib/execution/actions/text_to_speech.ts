@@ -67,7 +67,7 @@ export function ttsReadLocalized<T extends Record<string, any> | undefined>(
 }
 
 /** Read the description of an execution step */
-export function ttsReadExecutionStep(step: ExecutionStep): TextToSpeechReadExecutionStepAction {
+export function ttsReadStep(step: ExecutionStep): TextToSpeechReadExecutionStepAction {
 	return new TextToSpeechReadExecutionStepAction(step)
 }
 
