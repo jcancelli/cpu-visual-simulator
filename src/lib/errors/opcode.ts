@@ -3,9 +3,10 @@ import {
 	type OpcodeWithoutImmediate,
 	type OpcodeWithoutOperand,
 } from "$lib/types/opcode"
+import { CPUVSError } from "./cpuvs"
 
 /** Base class for errors regarding {@link Opcode} */
-export abstract class OpcodeError extends Error {}
+export abstract class OpcodeError extends CPUVSError {}
 
 /** Error regarding a number that does not match any valid {@link OpcodeNumeric} */
 export class InvalidNumericOpcodeError extends OpcodeError {

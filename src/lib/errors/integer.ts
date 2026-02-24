@@ -1,5 +1,7 @@
+import { CPUVSError } from "./cpuvs"
+
 /** Base class for errors regarding numeric values out of a specific n-bits signed/unsigned range */
-export abstract class IntegerOutOfRangeError extends Error {
+export abstract class IntegerOutOfRangeError extends CPUVSError {
 	constructor(bits: 8 | 16, signed: boolean, value: number) {
 		super(`value: ${value} out of ${bits}-bit ${signed ? "signed" : "unsigned"} range`)
 	}

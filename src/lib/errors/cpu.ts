@@ -1,5 +1,7 @@
+import { CPUVSError } from "./cpuvs"
+
 /** Base class for errors regarding the CPU */
-export class CPUError extends Error {}
+export class CPUError extends CPUVSError {}
 
 /** Error regarding an invalid {@link AddressingMode} value */
 export class InvalidAddressingModeError extends CPUError {
