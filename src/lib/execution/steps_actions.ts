@@ -157,8 +157,17 @@ export const INCREMENT_PROGRAM_COUNTER_ACTIONS = [
 
 /** Actions that implement the behaviour of when the program counter reached the last address */
 export const MAX_ADDRESS_REACHED_ACTIONS = [
-	concurrently(startStep(Step.MAX_ADDRESS_REACHED), ttsReadStep(Step.MAX_ADDRESS_REACHED)),
-	concurrently(resetProgramCounter, flashUI(UI.PROGRAM_COUNTER)),
-	concurrently(waitTextToSpeechToFinish, waitUIAnimation(UI.PROGRAM_COUNTER)),
+	concurrently(
+		startStep(Step.MAX_ADDRESS_REACHED), //
+		ttsReadStep(Step.MAX_ADDRESS_REACHED),
+	),
+	concurrently(
+		resetProgramCounter, //
+		flashUI(UI.PROGRAM_COUNTER),
+	),
+	concurrently(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.PROGRAM_COUNTER),
+	),
 	endProgram,
 ] as const
