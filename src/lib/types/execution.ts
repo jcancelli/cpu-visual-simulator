@@ -26,14 +26,6 @@ export enum ExecutionStep {
 	ACCUMULATOR_STORED_TO_MEMORY,
 }
 
-/** The stage of the {@link Execution} */
-export enum ExecutionStage {
-	FETCH,
-	DECODE,
-	EXECUTE,
-	INCREMENT_PROGRAM_COUNTER,
-}
-
 /** Stepping mode for the {@link Execution} */
 export enum ExecutionSteppingMode {
 	/** Keep executing until the end of the program is reached */

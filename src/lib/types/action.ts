@@ -4,9 +4,9 @@
 export enum ActionType {
 	// Execution
 	HALT_EXECUTION,
-	SET_EXECUTION_STEP,
-	END_EXECUTION_STEP,
-	TRANSITION_EXECUTION_STAGE,
+	END_STEP,
+	END_INSTRUCTION,
+	END_PROGRAM,
 	// Bus
 	SEND_SIGNAL,
 	END_SIGNAL,
@@ -36,9 +36,9 @@ export enum ActionType {
 /** Action types that control the execution of the simulator */
 export type ExecutionControlActionType =
 	| typeof ActionType.HALT_EXECUTION
-	| typeof ActionType.SET_EXECUTION_STEP
-	| typeof ActionType.END_EXECUTION_STEP
-	| typeof ActionType.TRANSITION_EXECUTION_STAGE
+	| typeof ActionType.END_STEP
+	| typeof ActionType.END_INSTRUCTION
+	| typeof ActionType.END_PROGRAM
 
 /** All {@link ActionType} enum values in a list */
 export const ACTION_TYPES = Object.values(ActionType).filter(
