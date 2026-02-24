@@ -2,7 +2,12 @@ import { BusID, Register } from "$lib/types/bus"
 import { ExecutionStep as Step } from "$lib/types/execution"
 import { UI } from "$lib/types/ui"
 import { readSignalFromBus, sendSignalOnBus } from "./actions/bus"
-import { decodeOpcode, setMemoryFetchOperation } from "./actions/cpu"
+import {
+	decodeOpcode,
+	incrementProgramCounter,
+	resetProgramCounter,
+	setMemoryFetchOperation,
+} from "./actions/cpu"
 import { endInstruction, endProgram, endStep, startStep } from "./actions/execution"
 import { ttsReadStep, waitTextToSpeechToFinish } from "./actions/text_to_speech"
 import { flashUI, waitUIAnimation } from "./actions/animation"
@@ -83,8 +88,9 @@ export const FETCH_AND_DECODE_ACTIONS = [
 		waitTextToSpeechToFinish,
 		waitUIAnimation(UI.DECODER),
 		decodeOpcode,
-		// At this point it is responsability of the decoder to end the step and procede with the execution
+		// At this point it is responsability of the decoder to procede with the execution
 	),
+	endStep,
 ] as const
 
 /** Actions that implement what happens when an invalid opcode is decoded by the decoder */
@@ -105,7 +111,8 @@ export const NOP_ACTIONS = [
 		ttsReadStep(Step.NO_OP),
 	),
 	waitTextToSpeechToFinish,
-	endInstruction,
+	endStep,
+	incrementProgramCounter,
 ] as const
 
 /** Actions that implement the HLT instruction */
@@ -115,5 +122,43 @@ export const HLT_ACTIONS = [
 		ttsReadStep(Step.HALT),
 	),
 	waitTextToSpeechToFinish,
+	endProgram,
+] as const
+
+/** Actions that implement the incrementing of the program counter */
+export const INCREMENT_PROGRAM_COUNTER_ACTIONS = [
+	concurrently(
+		startStep(Step.INCREMENT_PROGRAM_COUNTER),
+		ttsReadStep(Step.INCREMENT_PROGRAM_COUNTER),
+	),
+	flashUI(UI.PROGRAM_COUNTER),
+	waitUIAnimation(UI.PROGRAM_COUNTER),
+	concurrently(
+		sendSignalOnBus(Register.PROGRAM_COUNTER, BusID.ADDRESS),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	readSignalFromBus(Register.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
+	concurrently(
+		sendSignalOnBus(Register.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	concurrently(
+		readSignalFromBus(Register.PROGRAM_COUNTER, BusID.ADDRESS),
+		flashUI(UI.PROGRAM_COUNTER),
+	),
+	concurrently(
+		waitUIAnimation(UI.PROGRAM_COUNTER), //
+		waitTextToSpeechToFinish,
+	),
+	endInstruction,
+] as const
+
+/** Actions that implement the behaviour of when the program counter reached the last address */
+export const MAX_ADDRESS_REACHED_ACTIONS = [
+	concurrently(startStep(Step.MAX_ADDRESS_REACHED), ttsReadStep(Step.MAX_ADDRESS_REACHED)),
+	concurrently(resetProgramCounter, flashUI(UI.PROGRAM_COUNTER)),
+	concurrently(waitTextToSpeechToFinish, waitUIAnimation(UI.PROGRAM_COUNTER)),
 	endProgram,
 ] as const

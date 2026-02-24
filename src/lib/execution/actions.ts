@@ -6,6 +6,7 @@ import type {
 	ExecuteALUOperationAction,
 	ExecuteOpcodeAction,
 	IncrementProgramCounterAction,
+	ResetProgramCounterAction,
 	SetMemoryOperationAction,
 } from "./actions/cpu"
 import type {
@@ -44,6 +45,7 @@ export type ActionOfType = {
 	[ActionType.EXECUTE_ALU_OPERATION]: ExecuteALUOperationAction
 	[ActionType.SET_MEMORY_OPERATION]: SetMemoryOperationAction
 	[ActionType.INCREMENT_PROGRAM_COUNTER]: IncrementProgramCounterAction
+	[ActionType.RESET_PROGRAM_COUNTER]: ResetProgramCounterAction
 	// Text to speech
 	[ActionType.TEXT_TO_SPEECH_READ]: TextToSpeechReadAction
 	[ActionType.TEXT_TO_SPEECH_READ_LOCALIZED]: TextToSpeechReadLocalizedAction

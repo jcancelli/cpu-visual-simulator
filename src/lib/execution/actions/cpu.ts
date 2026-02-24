@@ -44,6 +44,13 @@ export class IncrementProgramCounterAction extends CPUAction {
 	}
 }
 
+/** Reset the program counter to the first address */
+export class ResetProgramCounterAction extends CPUAction {
+	constructor() {
+		super(ActionType.RESET_PROGRAM_COUNTER)
+	}
+}
+
 /** Instance of {@link DecodeOpcodeAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
 export const decodeOpcode = new DecodeOpcodeAction()
@@ -71,3 +78,7 @@ export const setMemoryWriteOperation = new SetMemoryOperationAction(MemoryOperat
 /** Instance of {@link IncrementProgramCounterAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
 export const incrementProgramCounter = new IncrementProgramCounterAction()
+
+/** Instance of {@link ResetProgramCounterAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const resetProgramCounter = new ResetProgramCounterAction()

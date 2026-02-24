@@ -1,6 +1,16 @@
 import type { Bus } from "./bus.svelte"
 import { assertI8, assertU8, i8, u8, type I8, type U8 } from "$lib/types/integer"
-import { assertWordAlignedAddress, type WordAlignedAddress } from "$lib/types/address"
+import {
+	assertWordAlignedAddress,
+	MAX_WORD_ADDRESS,
+	type WordAlignedAddress,
+} from "$lib/types/address"
+import type { IncrementProgramCounterAction } from "$lib/execution/actions/cpu"
+import type { SubmitTasksFunction } from "$lib/execution/action_handler"
+import {
+	INCREMENT_PROGRAM_COUNTER_ACTIONS,
+	MAX_ADDRESS_REACHED_ACTIONS,
+} from "$lib/execution/steps_actions"
 
 /** State of the program counter */
 export class ProgramCounter {
@@ -63,5 +73,18 @@ export class ProgramCounter {
 	/** Send the value of the opcode on the address bus */
 	sendAddressSignal(): void {
 		this.addressBus.sendSignalUnsigned(this._address)
+	}
+
+	/** {@link ActionHandler} for {@link IncrementProgramCounterAction} */
+	handleIncrementProgramCounterAction(
+		_: IncrementProgramCounterAction,
+		submitTasks: SubmitTasksFunction,
+	): boolean {
+		if (this._address === MAX_WORD_ADDRESS) {
+			submitTasks(...MAX_ADDRESS_REACHED_ACTIONS)
+		} else {
+			submitTasks(...INCREMENT_PROGRAM_COUNTER_ACTIONS)
+		}
+		return true
 	}
 }
