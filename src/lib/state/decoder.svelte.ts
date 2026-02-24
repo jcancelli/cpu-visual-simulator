@@ -1,3 +1,7 @@
+import type { SubmitTasksFunction } from "$lib/execution/action_handler"
+import { executeOpcode, type DecodeOpcodeAction } from "$lib/execution/actions/cpu"
+import { endStep } from "$lib/execution/actions/execution"
+import { INVALID_OPCODE_ACTIONS } from "$lib/execution/steps_actions"
 import type { U8 } from "$lib/types/integer"
 import { getImmediateFlag, getOpcodeByNumeric, OPCODE_NOP, type Opcode } from "$lib/types/opcode"
 import { type Bus } from "./bus.svelte"
@@ -45,12 +49,21 @@ export class Decoder {
 	}
 
 	/** Decode the opcode associated with the numeric value previously read from the bus connected to the instruction register */
-	decodeOpcode(): void {
+	handleDecodeOpcodeAction(_: DecodeOpcodeAction, submitTasks: SubmitTasksFunction): boolean {
 		const opcode = getOpcodeByNumeric(this.rawOpcode)
-		this._decodeSuccess = opcode !== undefined
 		this._decodedImmediateFlag = getImmediateFlag(this.rawOpcode)
 		if (opcode !== undefined) {
 			this._decodedOpcode = opcode
 		}
+		this._decodeSuccess = opcode !== undefined
+		// Make sure to end the decode opcode step
+		submitTasks(endStep)
+		// Submit task to continue the execution
+		if (!this._decodeSuccess) {
+			submitTasks(...INVALID_OPCODE_ACTIONS)
+		} else {
+			submitTasks(executeOpcode)
+		}
+		return true
 	}
 }

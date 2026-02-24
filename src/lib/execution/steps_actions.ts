@@ -3,7 +3,7 @@ import { ExecutionStep as Step } from "$lib/types/execution"
 import { UI } from "$lib/types/ui"
 import { readSignalFromBus, sendSignalOnBus } from "./actions/bus"
 import { decodeOpcode, setMemoryFetchOperation } from "./actions/cpu"
-import { endStep, startStep } from "./actions/execution"
+import { endStep, haltExecution, startStep } from "./actions/execution"
 import { ttsReadStep, waitTextToSpeechToFinish } from "./actions/text_to_speech"
 import { flashUI, waitUIAnimation } from "./actions/animation"
 import { concurrently } from "./task"
@@ -85,4 +85,15 @@ export const FETCH_AND_DECODE_ACTIONS = [
 		decodeOpcode,
 		// At this point it is responsability of the decoder to end the step and procede with the execution
 	),
+] as const
+
+/** Actions that implement what happens when an invalid opcode is decoded by the decoder */
+export const INVALID_OPCODE_ACTIONS = [
+	concurrently(
+		startStep(Step.INVALID_OPCODE),
+		ttsReadStep(Step.INVALID_OPCODE),
+		//sendNotification,
+	),
+	waitTextToSpeechToFinish,
+	haltExecution,
 ] as const
