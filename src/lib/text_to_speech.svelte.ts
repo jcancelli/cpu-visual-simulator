@@ -1,11 +1,8 @@
-import type { TTSReadAction, TTSReadLocalizedAction } from "./execution/action"
-import {
-	ACTION_HANDLED,
-	ActionHandlerMap,
-	type ActionConsumer,
-	type ActionHandlerResult,
-} from "./execution/action_performer"
-import { ActionType } from "./execution/task"
+import type {
+	TextToSpeechReadAction,
+	TextToSpeechReadExecutionStepAction,
+	TextToSpeechReadLocalizedAction,
+} from "./execution/actions/text_to_speech"
 import { type Locale } from "./paraglide/runtime"
 import { todo, unreachable } from "./util/development"
 
@@ -30,14 +27,8 @@ export const DEFAULT_TTS_VOLUME = 1
 /** Time in milliseconds after which, if not already resolved, the {@link TextToSpeech.isAvailable} promise is resolved to false */
 export const TTS_UNAVAILABLE_TIMEOUT_MS = 10_000
 
-/** The action types handled by text to speech */
-export type TextToSpeechHandledActionTypes =
-	| ActionType.TEXT_TO_SPEECH_READ
-	| ActionType.TEXT_TO_SPEECH_LOCALIZED_READ
-	| ActionType.WAIT_TEXT_TO_SPEECH_END
-
 /** Wrapper around {@link window.speechSynthesis} */
-export default class TextToSpeech implements ActionConsumer<TextToSpeechHandledActionTypes> {
+export default class TextToSpeech {
 	/** Promise that resolves wether text to speech is available on this browser or not.
 	 * Resolves to false if after {@link TTS_UNAVAILABLE_TIMEOUT_MS} milliseconds it hasn't already resolved */
 	public readonly isAvailable: Promise<boolean>
@@ -57,8 +48,6 @@ export default class TextToSpeech implements ActionConsumer<TextToSpeechHandledA
 	private _rate: number
 	/** The volume at which text to speech will read its sentences */
 	private _volume: number
-
-	public readonly actionHandlers: ActionHandlerMap<TextToSpeechHandledActionTypes>
 
 	constructor(locale: Locale, initVoiceURI?: string) {
 		this.isAvailable = new Promise<boolean>(resolve => {
@@ -109,12 +98,6 @@ export default class TextToSpeech implements ActionConsumer<TextToSpeechHandledA
 		this._pitch = $state(DEFAULT_TTS_PITCH)
 		this._rate = $state(DEFAULT_TTS_RATE)
 		this._volume = $state(DEFAULT_TTS_VOLUME)
-		this.actionHandlers = new ActionHandlerMap({
-			[ActionType.TEXT_TO_SPEECH_READ]: this.handleTTSReadAction.bind(this),
-			[ActionType.TEXT_TO_SPEECH_LOCALIZED_READ]:
-				this.handleTTSReadLocalizedAction.bind(this),
-			[ActionType.WAIT_TEXT_TO_SPEECH_END]: this.handleWaitTTSEndAction.bind(this),
-		})
 	}
 
 	/** Wether text-to-speech is enabled or not */
@@ -235,23 +218,26 @@ export default class TextToSpeech implements ActionConsumer<TextToSpeechHandledA
 		await this._speechPromise
 	}
 
-	/** {@link ActionHandler} for {@link TTSReadAction} */
-	private async handleTTSReadAction(action: TTSReadAction): Promise<ActionHandlerResult> {
+	/** {@link ActionHandler} for {@link TextToSpeechReadAction} */
+	handleReadAction(action: TextToSpeechReadAction): boolean {
 		this.read(action.text)
-		return ACTION_HANDLED
+		return true
 	}
 
-	/** {@link ActionHandler} for {@link TTSReadLocalizedAction} */
-	private async handleTTSReadLocalizedAction(
-		action: TTSReadLocalizedAction,
-	): Promise<ActionHandlerResult> {
+	/** {@link ActionHandler} for {@link TextToSpeechReadLocalizedAction} */
+	handleReadLocalizedAction(action: TextToSpeechReadLocalizedAction): boolean {
 		todo(action.toString()) // TODO: implement
 	}
 
-	/** {@link ActionHandler} for {@link WaitTTSEndAction} */
-	private async handleWaitTTSEndAction(): Promise<ActionHandlerResult> {
+	/** {@link ActionHandler} for {@link TextToSpeechReadExecutionStepAction} */
+	handleReadStepAction(action: TextToSpeechReadExecutionStepAction): boolean {
+		todo(action.toString())
+	}
+
+	/** {@link ActionHandler} for {@link WaitTextToSpeechFinishAction} */
+	async handleWaitFinishAction(): Promise<boolean> {
 		await this._speechPromise
-		return ACTION_HANDLED
+		return true
 	}
 }
 
