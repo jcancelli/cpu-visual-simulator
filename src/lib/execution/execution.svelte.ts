@@ -1,19 +1,29 @@
-import { ACTION_TYPES, ActionType, type ExecutionControlActionType } from "$lib/types/action"
-import { ExecutionSteppingMode as SteppingMode } from "$lib/types/execution"
+import { ActionType } from "$lib/types/action"
+import { ExecutionStep, ExecutionSteppingMode as SteppingMode } from "$lib/types/execution"
 import { unreachable } from "$lib/util/development"
 import type { ActionHandler, SubmitTasksFunction } from "./action_handler"
 import type { ActionHandlerFor } from "./actions"
+import type { StartStepAction } from "./actions/execution"
 import { Action, ActionGroup, type Task } from "./task"
 
-/** {@link ActionHandler|Action handlers} indexed by the {@link ActionType|action type} they handle
- * except actions that control the flow of execution */
-export type ActionHandlersMap = {
-	[T in Exclude<ActionType, ExecutionControlActionType>]?: ActionHandlerFor<T>[]
+/** Lists of action handlers indexed by the action type that they handle */
+export type ActionHandlersMapping = {
+	[T in MappableActions]: ActionHandlerFor<T>[]
 }
 
-/** {@link ActionHandler|Action handlers} indexed by the {@link ActionType|action type} they handle */
-type ActionHandlers = {
-	[T in ActionType]: ActionHandler<Action>[]
+/** All of the actions that can be mapped to an handler */
+export type MappableActions = Exclude<
+	ActionType,
+	| typeof ActionType.HALT_EXECUTION
+	| typeof ActionType.START_STEP
+	| typeof ActionType.END_STEP
+	| typeof ActionType.END_INSTRUCTION
+	| typeof ActionType.END_PROGRAM
+>
+
+/** Lists of action handlers indexed by the action type that they handle */
+type _ActionHandlersMapping = {
+	[T in ActionType]: ActionHandlerFor<T>[]
 }
 
 /** Execution controller for the simulator.
@@ -26,36 +36,32 @@ export class Execution {
 	private _isExecuting: boolean
 	/** The stepping mode currently selected */
 	private _steppingMode: SteppingMode
+	/** The currently executing step or null if execution was resetted */
+	private _step: ExecutionStep | null
 	/** The FIFO queue of tasks that are scheduled for execution */
 	private taskQueue: Task[]
 	/** ID of the javascript macrotask that will execute the next task in queue */
 	private macrotaskID: number
 	/** All the action handlers available, indexed by their action types */
-	private readonly actionHandlers: ActionHandlers
+	private readonly actionHandlers: _ActionHandlersMapping
 	/** Instance of a {@link SubmitTasksFunction} that will be passed to the action handlers when invoked.
 	 * Stored in a variable so that it will be created just once */
 	private readonly submitTasksFunc: SubmitTasksFunction
 
-	constructor(actionHandlers: ActionHandlersMap) {
+	constructor(actionHandlers: ActionHandlersMapping) {
 		this._isExecuting = $state(false)
 		this._steppingMode = $state(SteppingMode.PROGRAM)
+		this._step = $state(null)
 		this.taskQueue = []
 		this.macrotaskID = -1
-		this.actionHandlers = ACTION_TYPES.reduce((map, actionType) => {
-			const inputActionHandlers = (actionHandlers as ActionHandlers)[actionType]
-			if (inputActionHandlers === undefined) {
-				map[actionType] = []
-			} else {
-				map[actionType] = [...inputActionHandlers]
-			}
-			return map
-		}, {} as ActionHandlers)
-		this.actionHandlers[ActionType.HALT_EXECUTION] = [this.handleHaltExecutionAction.bind(this)]
-		this.actionHandlers[ActionType.END_STEP] = [this.handleEndStepAction.bind(this)]
-		this.actionHandlers[ActionType.END_INSTRUCTION] = [
-			this.handleEndInstructionAction.bind(this),
-		]
-		this.actionHandlers[ActionType.END_PROGRAM] = [this.handleEndProgramAction.bind(this)]
+		this.actionHandlers = {
+			...actionHandlers,
+			[ActionType.HALT_EXECUTION]: [this.handleHaltExecutionAction.bind(this)],
+			[ActionType.START_STEP]: [this.handleStartStepAction.bind(this)],
+			[ActionType.END_STEP]: [this.handleEndStepAction.bind(this)],
+			[ActionType.END_INSTRUCTION]: [this.handleEndInstructionAction.bind(this)],
+			[ActionType.END_PROGRAM]: [this.handleEndProgramAction.bind(this)],
+		}
 		this.submitTasksFunc = (...newTasks) => this.taskQueue.push(...newTasks)
 	}
 
@@ -67,6 +73,11 @@ export class Execution {
 	/** The stepping mode currently selected */
 	get steppingMode(): SteppingMode {
 		return this._steppingMode
+	}
+
+	/** The currently executing step or null if execution was resetted */
+	get step(): ExecutionStep | null {
+		return this._step
 	}
 
 	/** Start/resume the execution with the specified stepping mode */
@@ -104,6 +115,7 @@ export class Execution {
 	reset(): void {
 		this.stop()
 		this.taskQueue = []
+		this._step = null
 	}
 
 	/** Log all the currently scheduled tasks to the console */
@@ -181,7 +193,7 @@ export class Execution {
 
 	/** Execute the provided action */
 	private async executeAction(action: Action): Promise<void> {
-		const handlers = this.actionHandlers[action.type]
+		const handlers = this.actionHandlers[action.type] as ActionHandler<Action>[]
 		try {
 			for (const handler of handlers) {
 				const actionWasHandled = await handler(action, this.submitTasksFunc)
@@ -203,7 +215,13 @@ export class Execution {
 		return true
 	}
 
-	/** {@link ActionHandler} for {@link EndExecutionStepAction} */
+	/** {@link ActionHandler} for {@link StartStepAction} */
+	private handleStartStepAction(action: StartStepAction): boolean {
+		this._step = action.step
+		return true
+	}
+
+	/** {@link ActionHandler} for {@link EndStepAction} */
 	private handleEndStepAction(): boolean {
 		if (this._steppingMode === SteppingMode.STEP) {
 			this.pause()

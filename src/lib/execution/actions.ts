@@ -13,6 +13,7 @@ import type {
 	EndInstructionAction,
 	EndProgramAction,
 	HaltExecutionAction,
+	StartStepAction,
 } from "./actions/execution"
 import type {
 	TextToSpeechReadAction,
@@ -24,29 +25,35 @@ import type {
 	CancelUIElementAnimationAction,
 	FlashUIElementAction,
 	WaitUIElementAnimationAction,
-} from "./actions/ui"
+} from "./actions/animation"
 import type { Action } from "./task"
 
 /** Utility type where {@link Action} subclasses are indexed by their {@link ActionType} */
 export type ActionOfType = {
+	// Execution
 	[ActionType.HALT_EXECUTION]: HaltExecutionAction
+	[ActionType.START_STEP]: StartStepAction
 	[ActionType.END_STEP]: EndStepAction
 	[ActionType.END_INSTRUCTION]: EndInstructionAction
 	[ActionType.END_PROGRAM]: EndProgramAction
-	[ActionType.END_STEP]: EndStepAction
+	// Bus
 	[ActionType.SEND_SIGNAL]: SendSignalBusAction
 	[ActionType.END_SIGNAL]: EndSignalBusAction
 	[ActionType.READ_SIGNAL]: ReadSignalBusAction
+	// CPU
 	[ActionType.DECODE_OPCODE]: DecodeOpcodeAction
 	[ActionType.EXECUTE_OPCODE]: ExecuteOpcodeAction
 	[ActionType.EXECUTE_ALU_OPERATION]: ExecuteALUOperationAction
 	[ActionType.SET_MEMORY_OPERATION]: SetMemoryOperationAction
 	[ActionType.INCREMENT_PROGRAM_COUNTER]: IncrementProgramCounterAction
+	// Text to speech
 	[ActionType.TEXT_TO_SPEECH_READ]: TextToSpeechReadAction
 	[ActionType.TEXT_TO_SPEECH_READ_LOCALIZED]: TextToSpeechReadLocalizedAction
 	[ActionType.TEXT_TO_SPEECH_READ_EXECUTION_STEP]: TextToSpeechReadExecutionStepAction
 	[ActionType.WAIT_TEXT_TO_SPEECH_FINISH]: WaitTextToSpeechFinishAction
+	// Notifications
 	[ActionType.SEND_NOTIFICATION]: Action // TODO:
+	// Animations
 	[ActionType.FLASH_UI_ELEMENT]: FlashUIElementAction
 	[ActionType.WAIT_UI_ELEMENT_ANIMATION]: WaitUIElementAnimationAction
 	[ActionType.CANCEL_UI_ELEMENT_ANIMATION]: CancelUIElementAnimationAction
