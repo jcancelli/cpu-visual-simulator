@@ -1,3 +1,5 @@
+import { NoSignalError } from "$lib/errors/bus"
+
 /** Source or destination for a read/write {@link Bus} operation */
 export enum Register {
 	// CPU
@@ -32,4 +34,18 @@ export enum BusID {
 	ALU_CONTROL,
 	STATUS_WORD,
 	ALU_ACCUMULATOR,
+}
+
+/** Value representing no signal on a bus */
+export const NO_SIGNAL = Symbol("NO_SIGNAL")
+
+/** Either a value or {@link NO_SIGNAL} */
+export type BusSignal<T> = typeof NO_SIGNAL | T
+
+/** Asserts that the signal carries a value.
+ * @throws {NoSignalError}*/
+export function assertSignal<T>(signal: BusSignal<T>): asserts signal is T {
+	if (signal === NO_SIGNAL) {
+		throw new NoSignalError()
+	}
 }
