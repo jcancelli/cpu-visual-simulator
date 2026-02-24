@@ -1,6 +1,5 @@
 import type { SubmitTasksFunction } from "$lib/execution/action_handler"
 import { executeOpcode, type DecodeOpcodeAction } from "$lib/execution/actions/cpu"
-import { endStep } from "$lib/execution/actions/execution"
 import { INVALID_OPCODE_ACTIONS } from "$lib/execution/steps_actions"
 import type { U8 } from "$lib/types/integer"
 import { getImmediateFlag, getOpcodeByNumeric, OPCODE_NOP, type Opcode } from "$lib/types/opcode"
@@ -56,9 +55,6 @@ export class Decoder {
 			this._decodedOpcode = opcode
 		}
 		this._decodeSuccess = opcode !== undefined
-		// Make sure to end the decode opcode step
-		submitTasks(endStep)
-		// Submit task to continue the execution
 		if (!this._decodeSuccess) {
 			submitTasks(...INVALID_OPCODE_ACTIONS)
 		} else {
