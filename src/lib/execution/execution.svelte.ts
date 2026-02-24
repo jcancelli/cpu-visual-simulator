@@ -5,7 +5,7 @@ import type { ActionHandler, SubmitTasksFunction } from "./action_handler"
 import type { ActionHandlerFor } from "./actions"
 import type { StartStepAction } from "./actions/execution"
 import { FETCH_AND_DECODE_ACTIONS } from "./steps_actions"
-import { Action, ActionGroup, type Task } from "./task"
+import { Action, AtomicActionGroup, type Task } from "./task"
 
 /** Lists of action handlers indexed by the action type that they handle */
 export type ActionHandlersMapping = {
@@ -127,7 +127,7 @@ export class Execution {
 		for (const task of this.taskQueue) {
 			if (task instanceof Action) {
 				console.debug(`${taskIndex.toString().padStart(3)} - ${task.toString()}`)
-			} else if (task instanceof ActionGroup) {
+			} else if (task instanceof AtomicActionGroup) {
 				console.group(`${taskIndex.toString().padStart(3)} - ${task.toString()}`)
 				for (const action of task.actions) {
 					console.debug(action.toString())
@@ -187,8 +187,10 @@ export class Execution {
 			await this.executeAction(nextTask)
 			return
 		}
-		if (nextTask instanceof ActionGroup) {
-			await Promise.all(nextTask.actions.map(action => this.executeAction(action)))
+		if (nextTask instanceof AtomicActionGroup) {
+			for (const action of nextTask.actions) {
+				await this.executeAction(action)
+			}
 			return
 		}
 		unreachable()

@@ -28,8 +28,9 @@ export abstract class Action extends Task {
 	}
 }
 
-/** Grouping of actions that should be executed concurrently */
-export class ActionGroup extends Task {
+/** A group of actions that should be either all executed or none of them.
+ * The order of execution is preserved. */
+export class AtomicActionGroup extends Task {
 	public readonly actions: ReadonlyArray<Action>
 
 	constructor(actions: Action[]) {
@@ -42,7 +43,8 @@ export class ActionGroup extends Task {
 	}
 }
 
-/** Group actions that should be executed concurrently */
-export function concurrently(...actions: Action[]): ActionGroup {
-	return new ActionGroup(actions)
+/** A group of actions that should be either all executed or none of them.
+ * The order of execution is preserved. */
+export function atomic(...actions: Action[]): AtomicActionGroup {
+	return new AtomicActionGroup(actions)
 }
