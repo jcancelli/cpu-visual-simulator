@@ -1,3 +1,4 @@
+import { InvalidLabelError } from "$lib/errors/label"
 import { unreachable } from "$lib/util/development"
 import { CHAR_CODE_UNDERSCORE, isUppercaseLetter } from "$lib/util/text"
 
@@ -61,7 +62,7 @@ export function validateLabel(
 
 /** Assert that the provided string is a valid {@link Label}.
  * @throws {InvalidLabelError} */
-export function assertValidLabel(label: string): asserts label is Label {
+export function assertLabel(label: string): asserts label is Label {
 	const result = validateLabel(label)
 	if (result !== LabelValidationResult.VALID) {
 		throw new InvalidLabelError(label, result)
