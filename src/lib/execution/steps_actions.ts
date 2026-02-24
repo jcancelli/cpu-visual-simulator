@@ -3,7 +3,7 @@ import { ExecutionStep as Step } from "$lib/types/execution"
 import { UI } from "$lib/types/ui"
 import { readSignalFromBus, sendSignalOnBus } from "./actions/bus"
 import { decodeOpcode, setMemoryFetchOperation } from "./actions/cpu"
-import { endStep, haltExecution, startStep } from "./actions/execution"
+import { endInstruction, endProgram, endStep, startStep } from "./actions/execution"
 import { ttsReadStep, waitTextToSpeechToFinish } from "./actions/text_to_speech"
 import { flashUI, waitUIAnimation } from "./actions/animation"
 import { concurrently } from "./task"
@@ -95,5 +95,25 @@ export const INVALID_OPCODE_ACTIONS = [
 		//sendNotification,
 	),
 	waitTextToSpeechToFinish,
-	haltExecution,
+	endProgram,
+] as const
+
+/** Actions that implement the NOP instruction */
+export const NOP_ACTIONS = [
+	concurrently(
+		startStep(Step.NO_OP), //
+		ttsReadStep(Step.NO_OP),
+	),
+	waitTextToSpeechToFinish,
+	endInstruction,
+] as const
+
+/** Actions that implement the HLT instruction */
+export const HLT_ACTIONS = [
+	concurrently(
+		startStep(Step.HALT), //
+		ttsReadStep(Step.HALT),
+	),
+	waitTextToSpeechToFinish,
+	endProgram,
 ] as const

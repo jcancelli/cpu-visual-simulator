@@ -1,9 +1,13 @@
 import type { U8 } from "$lib/types/integer"
-import { unreachable } from "$lib/util/development"
+import { todo, unreachable } from "$lib/util/development"
 import type { Bus } from "./bus.svelte"
 import { type Decoder } from "./decoder.svelte"
 import { assertMemoryOperation, MemoryOperation as Operation } from "$lib/types/memory"
 import { Addressing } from "$lib/types/cpu"
+import type { ExecuteOpcodeAction } from "$lib/execution/actions/cpu"
+import type { SubmitTasksFunction } from "$lib/execution/action_handler"
+import { OpcodeNumeric } from "$lib/types/opcode"
+import { HLT_ACTIONS, NOP_ACTIONS } from "$lib/execution/steps_actions"
 
 /** State of the control unit */
 export class ControlUnit {
@@ -61,5 +65,39 @@ export class ControlUnit {
 	/** Send the currently selected {@link Operation} to the control bus connected to the memory */
 	sendMemoryOperationSignal(): void {
 		this.memoryControlBus.sendSignalUnsigned(this._memoryOperation as U8)
+	}
+
+	/** {@link ActionHandler} for {@link ExecuteOpcodeAction} */
+	handleExecuteOpcodeAction(_: ExecuteOpcodeAction, submitTasks: SubmitTasksFunction): boolean {
+		switch (this.decoder.decodedOpcode.numeric) {
+			case OpcodeNumeric.NOP:
+				submitTasks(...NOP_ACTIONS)
+				break
+
+			case OpcodeNumeric.HLT:
+				submitTasks(...HLT_ACTIONS)
+				break
+
+			case OpcodeNumeric.JMP:
+			case OpcodeNumeric.JZ:
+			case OpcodeNumeric.JNZ:
+			case OpcodeNumeric.JN:
+			case OpcodeNumeric.JNN:
+			case OpcodeNumeric.LOD:
+			case OpcodeNumeric.STO:
+			case OpcodeNumeric.ADD:
+			case OpcodeNumeric.SUB:
+			case OpcodeNumeric.MUL:
+			case OpcodeNumeric.DIV:
+			case OpcodeNumeric.AND:
+			case OpcodeNumeric.CMP:
+			case OpcodeNumeric.NOT:
+				todo()
+				break
+
+			default:
+				unreachable()
+		}
+		return true
 	}
 }
