@@ -4,6 +4,7 @@
 export enum ActionType {
 	// Execution
 	HALT_EXECUTION,
+	START_STEP,
 	END_STEP,
 	END_INSTRUCTION,
 	END_PROGRAM,
@@ -32,13 +33,6 @@ export enum ActionType {
 	WAIT_WIRE_ANIMATION,
 	CANCEL_WIRE_ANIMATION,
 }
-
-/** Action types that control the execution of the simulator */
-export type ExecutionControlActionType =
-	| typeof ActionType.HALT_EXECUTION
-	| typeof ActionType.END_STEP
-	| typeof ActionType.END_INSTRUCTION
-	| typeof ActionType.END_PROGRAM
 
 /** All {@link ActionType} enum values in a list */
 export const ACTION_TYPES = Object.values(ActionType).filter(
