@@ -5,13 +5,6 @@ import { Action } from "../task"
 /** Base class for all actions regarding execution */
 export abstract class ExecutionAction extends Action {}
 
-/** Halt the execution */
-export class HaltExecutionAction extends ExecutionAction {
-	constructor() {
-		super(ActionType.HALT_EXECUTION)
-	}
-}
-
 /** Signal the start of a new execution step */
 export class StartStepAction extends ExecutionAction {
 	/** The step now executing */
@@ -43,10 +36,6 @@ export class EndProgramAction extends ExecutionAction {
 		super(ActionType.END_PROGRAM)
 	}
 }
-
-/** Instance of {@link HaltExecutionAction}.
- * Stored in a constant so that it can be reused without instancing new objects */
-export const haltExecution = new HaltExecutionAction()
 
 /** Instances of {@link StartStepAction} indexed by their step.
  * Stored in a constant so that they can be reused without instancing new objects */

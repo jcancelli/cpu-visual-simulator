@@ -3,7 +3,6 @@
  * Note: the code relies for this to be a numeric enum, don't change it into a string enum. */
 export enum ActionType {
 	// Execution
-	HALT_EXECUTION,
 	START_STEP,
 	END_STEP,
 	END_INSTRUCTION,
@@ -33,8 +32,3 @@ export enum ActionType {
 	WAIT_WIRE_ANIMATION,
 	CANCEL_WIRE_ANIMATION,
 }
-
-/** All {@link ActionType} enum values in a list */
-export const ACTION_TYPES = Object.values(ActionType).filter(
-	enumValue => typeof enumValue !== "string",
-) as ReadonlyArray<ActionType>

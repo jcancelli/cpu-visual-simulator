@@ -15,7 +15,6 @@ export type ActionHandlersMapping = {
 /** All of the actions that can be mapped to an handler */
 export type MappableActions = Exclude<
 	ActionType,
-	| typeof ActionType.HALT_EXECUTION
 	| typeof ActionType.START_STEP
 	| typeof ActionType.END_STEP
 	| typeof ActionType.END_INSTRUCTION
@@ -57,7 +56,6 @@ export class Execution {
 		this.macrotaskID = -1
 		this.actionHandlers = {
 			...actionHandlers,
-			[ActionType.HALT_EXECUTION]: [this.handleHaltExecutionAction.bind(this)],
 			[ActionType.START_STEP]: [this.handleStartStepAction.bind(this)],
 			[ActionType.END_STEP]: [this.handleEndStepAction.bind(this)],
 			[ActionType.END_INSTRUCTION]: [this.handleEndInstructionAction.bind(this)],
@@ -85,6 +83,10 @@ export class Execution {
 	play(steppingMode: SteppingMode): void {
 		this._steppingMode = steppingMode
 		this.start()
+		// WARN: Make sure that using the length of the task queue doesn't cause bugs.
+		// Is there a situation when the task queue is empty but the execution is not
+		// at the start of a new instruction?
+		// Maybe just to be sure i should store this information in a variable
 		if (this.taskQueue.length === 0) {
 			this.taskQueue.push(...FETCH_AND_DECODE_ACTIONS)
 		}
@@ -210,12 +212,6 @@ export class Execution {
 		console.warn(`Unhandled action: ${action.toString()}`)
 	}
 
-	/** {@link ActionHandler} for {@link HaltExecutionAction} */
-	private handleHaltExecutionAction(): boolean {
-		this.reset()
-		return true
-	}
-
 	/** {@link ActionHandler} for {@link StartStepAction} */
 	private handleStartStepAction(action: StartStepAction): boolean {
 		this._step = action.step
@@ -225,31 +221,22 @@ export class Execution {
 	/** {@link ActionHandler} for {@link EndStepAction} */
 	private handleEndStepAction(): boolean {
 		if (this._steppingMode === SteppingMode.STEP) {
-			this.pause()
+			this.stop()
 		}
 		return true
 	}
 
 	/** {@link ActionHandler} for {@link EndInstructionAction} */
 	private handleEndInstructionAction(): boolean {
-		this.assertNoTasks()
 		if (this._steppingMode !== SteppingMode.PROGRAM) {
-			this.pause()
+			this.stop()
 		}
 		return true
 	}
 
 	/** {@link ActionHandler} for {@link EndProgramAction} */
 	private handleEndProgramAction(): boolean {
-		this.reset()
+		this.stop()
 		return true
-	}
-
-	/** Assert that the task queue is empty */
-	private assertNoTasks(): void {
-		if (this.taskQueue.length !== 0) {
-			this.debugTasks()
-			unreachable("The task queue is not empty")
-		}
 	}
 }

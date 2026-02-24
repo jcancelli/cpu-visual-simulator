@@ -12,7 +12,6 @@ import type {
 	EndStepAction,
 	EndInstructionAction,
 	EndProgramAction,
-	HaltExecutionAction,
 	StartStepAction,
 } from "./actions/execution"
 import type {
@@ -31,7 +30,6 @@ import type { Action } from "./task"
 /** Utility type where {@link Action} subclasses are indexed by their {@link ActionType} */
 export type ActionOfType = {
 	// Execution
-	[ActionType.HALT_EXECUTION]: HaltExecutionAction
 	[ActionType.START_STEP]: StartStepAction
 	[ActionType.END_STEP]: EndStepAction
 	[ActionType.END_INSTRUCTION]: EndInstructionAction
