@@ -58,7 +58,7 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 	/** The size of this register in bits */
 	public readonly sizeBits: number
 	/** The value of this register as an unsigned integer */
-	protected _unsigned: UInt<Bits>
+	private _unsigned: UInt<Bits>
 
 	constructor(sizeBits: Bits, initialValue?: UInt<Bits>) {
 		this.sizeBits = sizeBits
@@ -74,7 +74,9 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 	 * @throws {IntegerOutOfRangeError} */
 	set signed(value: number) {
 		this.assertSigned(value)
-		this._unsigned = this.signedToUnsigned(value)
+		const unsigned = this.signedToUnsigned(value)
+		this.assertValid(unsigned)
+		this._unsigned = unsigned
 	}
 
 	/** The value of this register as an unsigned integer */
@@ -86,6 +88,7 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 	 * @throws {IntegerOutOfRangeError} */
 	set unsigned(value: number) {
 		this.assertUnsigned(value)
+		this.assertValid(value)
 		this._unsigned = value
 	}
 
@@ -97,6 +100,8 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 	protected abstract signedToUnsigned(signed: Int<Bits>): UInt<Bits>
 	/** Cast the provided unsigned integer of size {@link Bits} to a signed integer of the same size */
 	protected abstract unsignedToSigned(unsigned: UInt<Bits>): Int<Bits>
+	/** Assert with subclass specific validation */
+	protected abstract assertValid(unsigned: UInt<Bits>): void
 }
 
 /** Implementation of a {@link ByteRegister} */
@@ -120,6 +125,8 @@ export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
 	protected override unsignedToSigned(unsigned: UInt<8>): Int<8> {
 		return i8(unsigned)
 	}
+
+	protected override assertValid(): void {}
 }
 
 /** Implementation of a {@link WordRegister} */
@@ -129,12 +136,12 @@ export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
 	}
 
 	get msb(): U8 {
-		return u16MSB(this._unsigned)
+		return u16MSB(this.unsigned)
 	}
 
 	set msb(value: number) {
 		assertU8(value)
-		this._unsigned = setU16MSB(this._unsigned, value)
+		this.unsigned = setU16MSB(this.unsigned, value)
 	}
 
 	get lsb(): U8 {
@@ -143,7 +150,7 @@ export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
 
 	set lsb(value: number) {
 		assertU8(value)
-		this._unsigned = setU16LSB(this._unsigned, value)
+		this.unsigned = setU16LSB(this.unsigned, value)
 	}
 
 	protected override assertSigned(signed: number): asserts signed is Int<16> {
@@ -161,4 +168,6 @@ export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
 	protected override unsignedToSigned(unsigned: UInt<16>): Int<16> {
 		return i16(unsigned)
 	}
+
+	protected override assertValid(): void {}
 }
