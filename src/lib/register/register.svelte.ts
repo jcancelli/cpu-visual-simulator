@@ -23,7 +23,7 @@ export type RegisterSizeBits = 8 | 16
 /** A container for an integer of a fixed size */
 export interface Register<Bits extends RegisterSizeBits> {
 	/** The size in bits for the register */
-	readonly sizeBits: number
+	get sizeBits(): Bits
 	/** The value of the register as a signed integer */
 	get signed(): Int<Bits>
 	/** The value of the register as a signed integer.
@@ -55,14 +55,14 @@ export interface WordRegister extends Register<16> {
 
 /** Base class for the implementation of a {@link Register} */
 export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Register<Bits> {
-	public readonly sizeBits: number
 	private _unsigned: UInt<Bits>
 
-	constructor(sizeBits: Bits, initialValue?: UInt<Bits>) {
-		this.sizeBits = sizeBits
+	constructor(initialValue?: UInt<Bits>) {
 		this._unsigned = $state(initialValue ?? (0 as UInt<Bits>))
 		this.assertValid(this._unsigned)
 	}
+
+	abstract get sizeBits(): Bits
 
 	get signed(): Int<Bits> {
 		return this.unsignedToSigned(this._unsigned)
@@ -100,7 +100,11 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 /** Implementation of a {@link ByteRegister} */
 export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
 	constructor(initialValue: U8) {
-		super(8, initialValue)
+		super(initialValue)
+	}
+
+	override get sizeBits(): 8 {
+		return 8
 	}
 
 	protected override assertSigned(signed: number): asserts signed is Int<8> {
@@ -126,7 +130,11 @@ export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
 /** Implementation of a {@link WordRegister} */
 export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
 	constructor(initialValue: U16) {
-		super(16, initialValue)
+		super(initialValue)
+	}
+
+	override get sizeBits(): 16 {
+		return 16
 	}
 
 	get msb(): U8 {
