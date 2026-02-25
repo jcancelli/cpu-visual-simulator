@@ -1,10 +1,5 @@
-import type {
-	TextToSpeechReadAction,
-	TextToSpeechReadExecutionStepAction,
-	TextToSpeechReadLocalizedAction,
-} from "./execution/actions/text_to_speech"
 import { type Locale } from "./paraglide/runtime"
-import { todo, unreachable } from "./util/development"
+import { unreachable } from "./util/development"
 
 /** The minimum value for the text to speech pitch */
 export const MIN_TTS_PITCH = 0
@@ -216,28 +211,6 @@ export default class TextToSpeech {
 	/** Await fot TTS to stop reading */
 	async awaitReadingEnd(): Promise<void> {
 		await this._speechPromise
-	}
-
-	/** {@link ActionHandler} for {@link TextToSpeechReadAction} */
-	handleReadAction(action: TextToSpeechReadAction): boolean {
-		this.read(action.text)
-		return true
-	}
-
-	/** {@link ActionHandler} for {@link TextToSpeechReadLocalizedAction} */
-	handleReadLocalizedAction(action: TextToSpeechReadLocalizedAction): boolean {
-		todo(action.toString()) // TODO: implement
-	}
-
-	/** {@link ActionHandler} for {@link TextToSpeechReadExecutionStepAction} */
-	handleReadStepAction(action: TextToSpeechReadExecutionStepAction): boolean {
-		todo(action.toString())
-	}
-
-	/** {@link ActionHandler} for {@link WaitTextToSpeechFinishAction} */
-	async handleWaitFinishAction(): Promise<boolean> {
-		await this._speechPromise
-		return true
 	}
 }
 
