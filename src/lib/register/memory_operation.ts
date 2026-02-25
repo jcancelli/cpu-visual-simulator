@@ -4,9 +4,9 @@ import { ByteRegisterImpl, type ByteRegister } from "./register.svelte"
 
 /** Register that can store a valid memory operation value */
 export interface MemoryOperationRegister extends ByteRegister {
-	/** The value of the memory operation */
+	/** The value of the memory operation stored in this register */
 	get value(): MemoryOperation
-	/** The value of the memory operation.
+	/** The value of the memory operation stored in this register.
 	 * @throws {InvalidMemoryOperationError} */
 	set value(value: MemoryOperation)
 }
