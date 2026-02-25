@@ -1,5 +1,5 @@
 import { ActionType } from "$lib/types/action"
-import type { BusID, Register } from "$lib/types/bus"
+import type { BusID, RegisterID } from "$lib/types/bus"
 import { Action } from "../task"
 
 /** Base class for an action regarding busses */
@@ -8,14 +8,18 @@ export abstract class BusAction extends Action {}
 /** Send a signal on a {@link Bus} */
 export class SendSignalBusAction extends BusAction {
 	/** The source of the signal */
-	public readonly from: Register
+	public readonly from: RegisterID
 	/** The bus carrying the signal */
 	public readonly onBus: BusID
 
-	constructor(from: Register, onBus: BusID) {
-		super(ActionType.SEND_SIGNAL)
+	constructor(from: RegisterID, onBus: BusID) {
+		super()
 		this.from = from
 		this.onBus = onBus
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.SEND_SIGNAL
 	}
 }
 
@@ -25,27 +29,35 @@ export class EndSignalBusAction extends BusAction {
 	public readonly bus: BusID
 
 	constructor(bus: BusID) {
-		super(ActionType.END_SIGNAL)
+		super()
 		this.bus = bus
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.END_SIGNAL
 	}
 }
 
 /** Read the signal from a {@link Bus} */
 export class ReadSignalBusAction extends BusAction {
 	/** The destination of the signal */
-	public readonly into: Register
+	public readonly into: RegisterID
 	/** The bus carrying the signal */
 	public readonly fromBus: BusID
 
-	constructor(into: Register, fromBus: BusID) {
-		super(ActionType.READ_SIGNAL)
+	constructor(into: RegisterID, fromBus: BusID) {
+		super()
 		this.into = into
 		this.fromBus = fromBus
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.READ_SIGNAL
 	}
 }
 
 /** Send a signal on a {@link Bus} */
-export function sendSignalOnBus(from: Register, onBus: BusID): SendSignalBusAction {
+export function sendSignalOnBus(from: RegisterID, onBus: BusID): SendSignalBusAction {
 	return new SendSignalBusAction(from, onBus)
 }
 
@@ -55,6 +67,6 @@ export function endSignalOnBus(bus: BusID): EndSignalBusAction {
 }
 
 /** Read the signal carried by a {@link Bus} and store it into a destination */
-export function readSignalFromBus(into: Register, fromBus: BusID): ReadSignalBusAction {
+export function readSignalFromBus(into: RegisterID, fromBus: BusID): ReadSignalBusAction {
 	return new ReadSignalBusAction(into, fromBus)
 }

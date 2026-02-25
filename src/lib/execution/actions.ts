@@ -1,31 +1,32 @@
 import { ActionType } from "$lib/types/action"
 import type { ActionHandler } from "./action_handler"
-import type { EndSignalBusAction, ReadSignalBusAction, SendSignalBusAction } from "./actions/bus"
+import type { EndSignalBusAction, ReadSignalBusAction, SendSignalBusAction } from "./action/bus"
 import type {
 	DecodeOpcodeAction,
 	ExecuteALUOperationAction,
 	ExecuteOpcodeAction,
-	IncrementProgramCounterAction,
+	IncrementAddressAction,
+	IncrementIncrementerAction,
 	ResetProgramCounterAction,
 	SetMemoryOperationAction,
-} from "./actions/cpu"
+} from "./action/cpu"
 import type {
 	EndStepAction,
 	EndInstructionAction,
 	EndProgramAction,
 	StartStepAction,
-} from "./actions/execution"
+} from "./action/execution"
 import type {
 	TextToSpeechReadAction,
 	TextToSpeechReadExecutionStepAction,
 	TextToSpeechReadLocalizedAction,
 	WaitTextToSpeechFinishAction,
-} from "./actions/text_to_speech"
+} from "./action/text_to_speech"
 import type {
 	CancelUIElementAnimationAction,
 	FlashUIElementAction,
 	WaitUIElementAnimationAction,
-} from "./actions/animation"
+} from "./action/animation"
 import type { Action } from "./task"
 
 /** Utility type where {@link Action} subclasses are indexed by their {@link ActionType} */
@@ -44,7 +45,8 @@ export type ActionOfType = {
 	[ActionType.EXECUTE_OPCODE]: ExecuteOpcodeAction
 	[ActionType.EXECUTE_ALU_OPERATION]: ExecuteALUOperationAction
 	[ActionType.SET_MEMORY_OPERATION]: SetMemoryOperationAction
-	[ActionType.INCREMENT_PROGRAM_COUNTER]: IncrementProgramCounterAction
+	[ActionType.INCREMENT_ADDRESS]: IncrementAddressAction
+	[ActionType.INCREMENT_INCREMENTER]: IncrementIncrementerAction
 	[ActionType.RESET_PROGRAM_COUNTER]: ResetProgramCounterAction
 	// Text to speech
 	[ActionType.TEXT_TO_SPEECH_READ]: TextToSpeechReadAction

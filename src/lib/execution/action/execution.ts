@@ -11,29 +11,33 @@ export class StartStepAction extends ExecutionAction {
 	public readonly step: Step
 
 	constructor(step: Step) {
-		super(ActionType.START_STEP)
+		super()
 		this.step = step
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.START_STEP
 	}
 }
 
 /** Signal the end of the currently executing step */
 export class EndStepAction extends ExecutionAction {
-	constructor() {
-		super(ActionType.END_STEP)
+	override get actionType(): ActionType {
+		return ActionType.END_STEP
 	}
 }
 
 /** Signal the end of the currently executing instruction */
 export class EndInstructionAction extends ExecutionAction {
-	constructor() {
-		super(ActionType.END_INSTRUCTION)
+	override get actionType(): ActionType {
+		return ActionType.END_INSTRUCTION
 	}
 }
 
 /** Signal the end of the currently executing program */
 export class EndProgramAction extends ExecutionAction {
-	constructor() {
-		super(ActionType.END_PROGRAM)
+	override get actionType(): ActionType {
+		return ActionType.END_PROGRAM
 	}
 }
 

@@ -11,8 +11,12 @@ export class TextToSpeechReadAction extends TextToSpeechAction {
 	public readonly text: string
 
 	constructor(text: string) {
-		super(ActionType.TEXT_TO_SPEECH_READ)
+		super()
 		this.text = text
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.TEXT_TO_SPEECH_READ
 	}
 }
 
@@ -28,9 +32,13 @@ export class TextToSpeechReadLocalizedAction<
 
 	// TODO: Maybe use an enum instead of string?
 	constructor(text: string, params?: T) {
-		super(ActionType.TEXT_TO_SPEECH_READ_LOCALIZED)
+		super()
 		this.text = text
 		this.params = params
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.TEXT_TO_SPEECH_READ_LOCALIZED
 	}
 }
 
@@ -40,15 +48,19 @@ export class TextToSpeechReadExecutionStepAction extends TextToSpeechAction {
 	public readonly step: ExecutionStep
 
 	constructor(step: ExecutionStep) {
-		super(ActionType.TEXT_TO_SPEECH_READ_EXECUTION_STEP)
+		super()
 		this.step = step
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.TEXT_TO_SPEECH_READ_EXECUTION_STEP
 	}
 }
 
 /** Wait for text-to-speech to finish reading */
 export class WaitTextToSpeechFinishAction extends TextToSpeechAction {
-	constructor() {
-		super(ActionType.WAIT_TEXT_TO_SPEECH_FINISH)
+	override get actionType(): ActionType {
+		return ActionType.WAIT_TEXT_TO_SPEECH_FINISH
 	}
 }
 

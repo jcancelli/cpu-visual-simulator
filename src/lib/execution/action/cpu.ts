@@ -7,22 +7,22 @@ export abstract class CPUAction extends Action {}
 
 /** Decode the opcode read by the decoder */
 export class DecodeOpcodeAction extends CPUAction {
-	constructor() {
-		super(ActionType.DECODE_OPCODE)
+	override get actionType(): ActionType {
+		return ActionType.DECODE_OPCODE
 	}
 }
 
 /** Execute the opcode decoded by the decoder */
 export class ExecuteOpcodeAction extends CPUAction {
-	constructor() {
-		super(ActionType.EXECUTE_OPCODE)
+	override get actionType(): ActionType {
+		return ActionType.EXECUTE_OPCODE
 	}
 }
 
 /** Execute whatever instruction the ALU was set to perform */
 export class ExecuteALUOperationAction extends CPUAction {
-	constructor() {
-		super(ActionType.EXECUTE_ALU_OPERATION)
+	override get actionType(): ActionType {
+		return ActionType.EXECUTE_ALU_OPERATION
 	}
 }
 
@@ -32,22 +32,33 @@ export class SetMemoryOperationAction extends CPUAction {
 	public readonly operation: MemoryOperation
 
 	constructor(operation: MemoryOperation) {
-		super(ActionType.SET_MEMORY_OPERATION)
+		super()
 		this.operation = operation
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.SET_MEMORY_OPERATION
 	}
 }
 
 /** Increment the program counter or halt execution if the end of the program was reached */
-export class IncrementProgramCounterAction extends CPUAction {
-	constructor() {
-		super(ActionType.INCREMENT_PROGRAM_COUNTER)
+export class IncrementAddressAction extends CPUAction {
+	override get actionType(): ActionType {
+		return ActionType.INCREMENT_ADDRESS
+	}
+}
+
+/** Increment the value stored in the program counter incrementer */
+export class IncrementIncrementerAction extends CPUAction {
+	override get actionType(): ActionType {
+		return ActionType.INCREMENT_INCREMENTER
 	}
 }
 
 /** Reset the program counter to the first address */
 export class ResetProgramCounterAction extends CPUAction {
-	constructor() {
-		super(ActionType.RESET_PROGRAM_COUNTER)
+	override get actionType(): ActionType {
+		return ActionType.RESET_PROGRAM_COUNTER
 	}
 }
 
@@ -75,9 +86,13 @@ export const setMemoryReadOperation = new SetMemoryOperationAction(MemoryOperati
  * Stored in a constant so that it can be reused without instancing new objects */
 export const setMemoryWriteOperation = new SetMemoryOperationAction(MemoryOperation.WRITE)
 
-/** Instance of {@link IncrementProgramCounterAction}.
+/** Instance of {@link IncrementAddressAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
-export const incrementProgramCounter = new IncrementProgramCounterAction()
+export const incrementAddress = new IncrementAddressAction()
+
+/** Instance of {@link IncrementIncrementerAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const incrementIncrementer = new IncrementIncrementerAction()
 
 /** Instance of {@link ResetProgramCounterAction}.
  * Stored in a constant so that it can be reused without instancing new objects */

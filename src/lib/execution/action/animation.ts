@@ -10,8 +10,12 @@ export class FlashUIElementAction extends AnimationAction {
 	public readonly element: UI
 
 	constructor(element: UI) {
-		super(ActionType.FLASH_UI_ELEMENT)
+		super()
 		this.element = element
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.FLASH_UI_ELEMENT
 	}
 }
 
@@ -20,8 +24,12 @@ export class WaitUIElementAnimationAction extends AnimationAction {
 	public readonly element: UI
 
 	constructor(element: UI) {
-		super(ActionType.WAIT_UI_ELEMENT_ANIMATION)
+		super()
 		this.element = element
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.WAIT_UI_ELEMENT_ANIMATION
 	}
 }
 
@@ -30,8 +38,12 @@ export class CancelUIElementAnimationAction extends AnimationAction {
 	public readonly element: UI
 
 	constructor(element: UI) {
-		super(ActionType.CANCEL_UI_ELEMENT_ANIMATION)
+		super()
 		this.element = element
+	}
+
+	override get actionType(): ActionType {
+		return ActionType.CANCEL_UI_ELEMENT_ANIMATION
 	}
 }
 

@@ -4,7 +4,7 @@ import { ActionType } from "$lib/types/action"
 import type { BusID, RegisterID } from "$lib/types/bus"
 import { assert } from "$lib/util/development"
 import type { ActionHandler } from "../action_handler"
-import type { EndSignalBusAction, ReadSignalBusAction, SendSignalBusAction } from "../actions/bus"
+import type { EndSignalBusAction, ReadSignalBusAction, SendSignalBusAction } from "../action/bus"
 
 /** Busses indexed by their ID */
 export type BusByID = {

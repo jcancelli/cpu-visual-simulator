@@ -16,15 +16,10 @@ export abstract class Task {
 
 /** An action that can be performed by the task system */
 export abstract class Action extends Task {
-	public readonly type: ActionType
-
-	constructor(type: ActionType) {
-		super()
-		this.type = type
-	}
+	abstract get actionType(): ActionType
 
 	override toString(): string {
-		return `ACTION ID-${this.id} ${ActionType[this.type]}`
+		return `ACTION ID-${this.id} ${ActionType[this.actionType]}`
 	}
 }
 
