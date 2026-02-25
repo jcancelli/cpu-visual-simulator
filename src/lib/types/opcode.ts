@@ -5,7 +5,7 @@ import {
 	OperandNotAllowedError,
 	OperandRequiredError,
 } from "$lib/errors/opcode"
-import type { Byte } from "./integer"
+import type { Byte, U8 } from "./integer"
 
 /** Immediate flag bit set to 1, all other bits set to 0 */
 export const IMMEDIATE_FLAG_BIT = 1 << 7
@@ -403,4 +403,9 @@ export function opcodeDoesNotAllowImmediateOperand(
 	opcode: Opcode,
 ): opcode is OpcodeWithoutImmediate {
 	return !opcode.takesImmediate
+}
+
+/** Encode an opcode and an immediate flag into its numeric representation. No validation is performed. */
+export function encodeOpcode(opcode: Opcode = OPCODE_NOP, immediateFlag: boolean = false): U8 {
+	return setImmediateFlag(opcode.numeric as U8, immediateFlag)
 }
