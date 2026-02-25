@@ -85,9 +85,9 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 		this._unsigned = value
 	}
 
-	/** Assert that the provided value is a valid signed integer or {@link Bits} bits */
+	/** Assert that the provided value is a valid signed integer of {@link Bits} bits */
 	protected abstract assertSigned(signed: number): asserts signed is Int<Bits>
-	/** Assert that the provided value is a valid unsigned integer or {@link Bits} bits */
+	/** Assert that the provided value is a valid unsigned integer of {@link Bits} bits */
 	protected abstract assertUnsigned(unsigned: number): asserts unsigned is UInt<Bits>
 	/** Cast the provided signed integer of size {@link Bits} to an unsigned integer of the same size */
 	protected abstract signedToUnsigned(signed: Int<Bits>): UInt<Bits>
