@@ -12,7 +12,10 @@ export interface MemoryOperationRegister extends ByteRegister {
 }
 
 /** Implementation of {@link MemoryOperationRegister} */
-export class StatusWordRegisterImpl extends ByteRegisterImpl implements MemoryOperationRegister {
+export class MemoryOperationRegisterImpl
+	extends ByteRegisterImpl
+	implements MemoryOperationRegister
+{
 	constructor(initialValue: MemoryOperation = MemoryOperation.FETCH) {
 		super(initialValue as U8)
 	}
