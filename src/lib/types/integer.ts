@@ -1,3 +1,10 @@
+import {
+	InvalidI16Error,
+	InvalidI8Error,
+	InvalidU16Error,
+	InvalidU8Error,
+} from "$lib/errors/integer"
+
 export const I8_MIN = -128
 export const I8_MAX = 127
 export const U8_MIN = 0
@@ -160,4 +167,20 @@ export function joinU8ToI16(msb: U8, lsb: U8): I16 {
  * @returns A 16-bit unsigned integer */
 export function joinU8ToU16(msb: U8, lsb: U8): U16 {
 	return ((msb << 8) | lsb) as U16
+}
+
+/** Set the most significant byte of an unsigned 16-bit integer.
+ * @param value The 16-bit integer
+ * @param msb The new value of the most significant byte
+ * @returns The input value with the most significant byte updated */
+export function setU16MSB(value: U16, msb: U8): U16 {
+	return ((msb << 8) | (value & 0xff)) as U16
+}
+
+/** Set the least significant byte of an unsigned 16-bit integer.
+ * @param value The 16-bit integer
+ * @param lsb The new value of the least significant byte
+ * @returns The input value with the least significant byte updated */
+export function setU16LSB(value: U16, lsb: U8): U16 {
+	return (lsb | (value & 0xff00)) as U16
 }
