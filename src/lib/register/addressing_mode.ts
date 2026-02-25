@@ -4,9 +4,9 @@ import { ByteRegisterImpl, type ByteRegister } from "./register.svelte"
 
 /** Register that can store a valid memory operation value */
 export interface AddressingModeRegister extends ByteRegister {
-	/** The value of the memory operation */
+	/** The value of the addressing mode stored in this register */
 	get value(): Addressing
-	/** The value of the memory operation.
+	/** The value of the addressing mode stored in this register.
 	 * @throws {InvalidAddressingModeError} */
 	set value(value: Addressing)
 }
