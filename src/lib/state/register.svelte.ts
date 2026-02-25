@@ -55,23 +55,19 @@ export interface WordRegister extends Register<16> {
 
 /** Base class for the implementation of a {@link Register} */
 export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Register<Bits> {
-	/** The size of this register in bits */
 	public readonly sizeBits: number
-	/** The value of this register as an unsigned integer */
 	private _unsigned: UInt<Bits>
 
 	constructor(sizeBits: Bits, initialValue?: UInt<Bits>) {
 		this.sizeBits = sizeBits
 		this._unsigned = $state(initialValue ?? (0 as UInt<Bits>))
+		this.assertValid(this._unsigned)
 	}
 
-	/** The value of this register as a signed integer */
 	get signed(): Int<Bits> {
 		return this.unsignedToSigned(this._unsigned)
 	}
 
-	/** The value of this register as a signed integer.
-	 * @throws {IntegerOutOfRangeError} */
 	set signed(value: number) {
 		this.assertSigned(value)
 		const unsigned = this.signedToUnsigned(value)
@@ -79,13 +75,10 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 		this._unsigned = unsigned
 	}
 
-	/** The value of this register as an unsigned integer */
 	get unsigned(): UInt<Bits> {
 		return this._unsigned
 	}
 
-	/** The value of this register as an unsigned integer.
-	 * @throws {IntegerOutOfRangeError} */
 	set unsigned(value: number) {
 		this.assertUnsigned(value)
 		this.assertValid(value)
@@ -126,7 +119,8 @@ export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
 		return i8(unsigned)
 	}
 
-	protected override assertValid(): void {}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- When a subclass overrides this, it will need a parameter. If i remove the parameter, typescript will complain that the overriding function parameters do not match the parameters of this function
+	protected override assertValid(_: UInt<8>): void {}
 }
 
 /** Implementation of a {@link WordRegister} */
@@ -169,5 +163,6 @@ export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
 		return i16(unsigned)
 	}
 
-	protected override assertValid(): void {}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- When a subclass overrides this, it will need a parameter. If i remove the parameter, typescript will complain that the overriding function parameters do not match the parameters of this function
+	protected override assertValid(_: UInt<16>): void {}
 }
