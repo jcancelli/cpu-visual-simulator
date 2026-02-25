@@ -19,16 +19,31 @@ export class SignalConflictError extends BusError {
 	}
 }
 
-/** Error regarding a read/end signal operation on a {@link Bus} that is not carrying a signal */
+/** Error regarding a read signal operation on a {@link Bus} that is not carrying a signal */
 export class NoSignalError extends BusError {
 	/** The bus with no signal */
 	public readonly busID?: BusID
 
 	constructor(busID?: BusID) {
 		if (busID !== undefined) {
-			super(`Tring to end/read signal from bus "${BusID[busID]}" that has no signal`)
+			super(`Tring to read a signal from bus "${BusID[busID]}", but no signal was found`)
 		} else {
-			super("Tring to end/read a signal from a bus with no signal")
+			super("Tring to read a signal from a bus, but no signal was found")
+		}
+		this.busID = busID
+	}
+}
+
+/** Error regarding an end signal operation on a {@link Bus} that is already not carrying a signal */
+export class AlreadyNoSignalError extends BusError {
+	/** The bus with no signal */
+	public readonly busID?: BusID
+
+	constructor(busID?: BusID) {
+		if (busID !== undefined) {
+			super(`Tring to end the signal on bus "${BusID[busID]}" that already has no signal`)
+		} else {
+			super("Tring to end the signal on a bus that already has no signal")
 		}
 		this.busID = busID
 	}
