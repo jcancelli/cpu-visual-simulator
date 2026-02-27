@@ -205,7 +205,7 @@ export function u8ToPaddedString(value: U8, base: Base = Base.DECIMAL): string {
 			return value.toString(10)
 
 		case Base.HEX:
-			return value.toString(16).padStart(2, "0")
+			return value.toString(16).toUpperCase().padStart(2, "0")
 	}
 }
 
@@ -224,7 +224,7 @@ export function u16ToPaddedString(value: U16, base: Base = Base.DECIMAL): string
 			return value.toString(10)
 
 		case Base.HEX:
-			return value.toString(16).padStart(4, "0")
+			return value.toString(16).toUpperCase().padStart(4, "0")
 	}
 }
 
