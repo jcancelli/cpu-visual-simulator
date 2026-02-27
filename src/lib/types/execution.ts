@@ -29,7 +29,9 @@ export enum ExecutionStep {
 	LOAD_OPERAND_1_FROM_ACCUMULATOR,
 	/** The second operand of the ALU is loaded from the immediate operand stored in the instruction register */
 	LOAD_OPERAND_2_FROM_INSTRUCTION_REGISTER,
-	/** The second operand of the ALU is loaded from memory through the data bus */
+	/** The value of the operand stored in the instruction register is sent to the memory through the address bus */
+	INSTRUCTION_REGISTER_OPERAND_TO_MEMORY,
+	/** The second operand of the ALU is loaded from memory */
 	LOAD_OPERAND_2_FROM_MEMORY,
 	/** The address stored as operand in the instruction register is loaded into the program counter through the address bus */
 	OPERAND_TO_PROGRAM_COUNTER,
