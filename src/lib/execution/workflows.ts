@@ -12,10 +12,13 @@ import {
 import { endInstruction, endProgram, endStep, startStep } from "./action/execution"
 import { ttsReadStep, waitTextToSpeechToFinish } from "./action/text_to_speech"
 import { flashUI, waitUIAnimation } from "./action/animation"
-import { atomic } from "./task"
+import { atomic, Task } from "./task"
 
-/** Actions that implement the start of a fetch-decode-execute cycle */
-export const FETCH_AND_DECODE_ACTIONS = [
+/** A reusable list of tasks */
+export type Workflow = ReadonlyArray<Task>
+
+/** Workflow that implements the fetch and decode steps of the fetch-decode-execute cycle */
+export const FETCH_AND_DECODE_WORKFLOW: Workflow = [
 	// ---- Send program counter to memory ----
 	atomic(
 		startStep(Step.PROGRAM_COUNTER_TO_ADDRESS_BUS),
@@ -104,10 +107,10 @@ export const FETCH_AND_DECODE_ACTIONS = [
 		// At this point it is responsability of the decode opcode action handler to procede with the execution
 	),
 	endStep,
-] as const
+]
 
-/** Actions that implement what happens when an invalid opcode is decoded by the decoder */
-export const INVALID_OPCODE_ACTIONS = [
+/** Workflow performed when an invalid opcode is decoded by the decoder */
+export const INVALID_OPCODE_WORKFLOW: Workflow = [
 	atomic(
 		startStep(Step.INVALID_OPCODE),
 		ttsReadStep(Step.INVALID_OPCODE),
@@ -115,10 +118,10 @@ export const INVALID_OPCODE_ACTIONS = [
 		waitTextToSpeechToFinish,
 		endProgram,
 	),
-] as const
+]
 
-/** Actions that implement the NOP instruction */
-export const NOP_ACTIONS = [
+/** NOP instruction workflow */
+export const NOP_WORKFLOW: Workflow = [
 	atomic(
 		startStep(Step.NO_OP),
 		ttsReadStep(Step.NO_OP),
@@ -126,75 +129,75 @@ export const NOP_ACTIONS = [
 		endStep,
 		incrementProgramCounterOrHaltProgram,
 	),
-] as const
+]
 
-/** Actions that implement the HLT instruction */
-export const HLT_ACTIONS = [
+/** HLT instruction workflow */
+export const HLT_WORKFLOW: Workflow = [
 	atomic(
 		startStep(Step.HALT), //
 		ttsReadStep(Step.HALT),
 		waitTextToSpeechToFinish,
 		endProgram,
 	),
-] as const
+]
 
-/** Actions that implement the JMP instruction */
-export const JMP_ACTIONS = [
+/** JMP instruction workflow */
+export const JMP_WORKFLOW: Workflow = [
 	atomic(
 		startStep(Step.DIRECT_OPERAND_TO_ADDRESS_BUS),
 		ttsReadStep(Step.DIRECT_OPERAND_TO_ADDRESS_BUS),
 	),
-] as const
+]
 
-/** Actions that implement the JZ instruction */
-export const JZ_ACTIONS = [] as const
+/** JZ instruction workflow */
+export const JZ_WORKFLOW: Workflow = []
 
-/** Actions that implement the JNZ instruction */
-export const JNZ_ACTIONS = [] as const
+/** JNZ instruction workflow */
+export const JNZ_WORKFLOW: Workflow = []
 
-/** Actions that implement the JN instruction */
-export const JN_ACTIONS = [] as const
+/** JN instruction workflow */
+export const JN_WORKFLOW: Workflow = []
 
-/** Actions that implement the JNN instruction */
-export const JNN_ACTIONS = [] as const
+/** JNN instruction workflow */
+export const JNN_WORKFLOW: Workflow = []
 
-/** Actions that implement the LOD instruction */
-export const LOD_ACTIONS = [] as const
+/** LOD instruction workflow */
+export const LOD_WORKFLOW: Workflow = []
 
-/** Actions that implement the STO instruction */
-export const STO_ACTIONS = [] as const
+/** STO instruction workflow */
+export const STO_WORKFLOW: Workflow = []
 
-/** Actions that implement the ADD instruction */
-export const ADD_ACTIONS = [] as const
+/** ADD instruction workflow */
+export const ADD_WORKFLOW: Workflow = []
 
-/** Actions that implement the SUB instruction */
-export const SUB_ACTIONS = [] as const
+/** SUB instruction workflow */
+export const SUB_WORKFLOW: Workflow = []
 
-/** Actions that implement the MUL instruction */
-export const MUL_ACTIONS = [] as const
+/** MUL instruction workflow */
+export const MUL_WORKFLOW: Workflow = []
 
-/** Actions that implement the DIV instruction */
-export const DIV_ACTIONS = [] as const
+/** DIV instruction workflow */
+export const DIV_WORKFLOW: Workflow = []
 
-/** Tasks to perform when a division by zero occurs */
-export const DIVISION_BY_ZERO_TASKS = [
+/** Workflow for when a division by zero is performed */
+export const DIVISION_BY_ZERO_WORKFLOW: Workflow = [
 	atomic(startStep(Step.DIVISION_BY_ZERO), ttsReadStep(Step.DIVISION_BY_ZERO)),
 	//sendNotification,
 	waitTextToSpeechToFinish,
 	endProgram,
-] as const
+]
 
-/** Actions that implement the AND instruction */
-export const AND_ACTIONS = [] as const
+/** AND instruction workflow */
+export const AND_WORKFLOW: Workflow = []
 
-/** Actions that implement the CMP instruction */
-export const CMP_ACTIONS = [] as const
+/** CMP instruction workflow */
+export const CMP_WORKFLOW: Workflow = []
 
-/** Actions that implement the NOT instruction */
-export const NOT_ACTIONS = [] as const
+/** NOT instruction workflow */
+export const NOT_WORKFLOW: Workflow = []
 
-/** Actions that implement the incrementing of the program counter */
-export const INCREMENT_PROGRAM_COUNTER_ACTIONS = [
+/** Workflow to increment the program couter */
+export const INCREMENT_PROGRAM_COUNTER_WORKFLOW: Workflow = [
 	atomic(
 		startStep(Step.INCREMENT_PROGRAM_COUNTER), //
 		ttsReadStep(Step.INCREMENT_PROGRAM_COUNTER),
@@ -228,13 +231,13 @@ export const INCREMENT_PROGRAM_COUNTER_ACTIONS = [
 		waitTextToSpeechToFinish,
 	),
 	endInstruction,
-] as const
+]
 
-/** Actions that implement the behaviour of when the program counter reached the last address */
-export const MAX_ADDRESS_REACHED_ACTIONS = [
+/** Workflow performed when it's time to increment the program counter but the last valid address was reached */
+export const LAST_ADDRESS_REACHED_WORKFLOW: Workflow = [
 	atomic(
-		startStep(Step.MAX_ADDRESS_REACHED), //
-		ttsReadStep(Step.MAX_ADDRESS_REACHED),
+		startStep(Step.LAST_ADDRESS_REACHED), //
+		ttsReadStep(Step.LAST_ADDRESS_REACHED),
 	),
 	atomic(
 		resetProgramCounter, //
@@ -245,4 +248,4 @@ export const MAX_ADDRESS_REACHED_ACTIONS = [
 		waitUIAnimation(UI.PROGRAM_COUNTER),
 	),
 	endProgram,
-] as const
+]
