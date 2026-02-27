@@ -126,8 +126,8 @@ export const NOP_WORKFLOW: Workflow = [
 		startStep(Step.NO_OP),
 		ttsReadStep(Step.NO_OP),
 		waitTextToSpeechToFinish,
-		endStep,
 		incrementProgramCounterOrHaltProgram,
+		endInstruction,
 	),
 ]
 
@@ -192,13 +192,30 @@ export const LOAD_ALU_OPERAND_1_WORKFLOW: Workflow = [
 	endStep,
 ]
 
-/** JMP instruction workflow */
-export const JMP_WORKFLOW: Workflow = [
+/** Workflow that writes the operand stored in the instruction register into the program counter.
+ * IMPORTANT: This workflow starts a step but does not end it. The end step/instruction action to end the step
+ * must be appended wherever this workflow is used. */
+export const OPERAND_TO_PROGRAM_COUNTER_WORKFLOW: Workflow = [
 	atomic(
-		startStep(Step.DIRECT_OPERAND_TO_ADDRESS_BUS),
-		ttsReadStep(Step.DIRECT_OPERAND_TO_ADDRESS_BUS),
+		startStep(Step.OPERAND_TO_PROGRAM_COUNTER),
+		ttsReadStep(Step.OPERAND_TO_PROGRAM_COUNTER),
 	),
+	flashUI(UI.INSTRUCTION_REGISTER_OPERAND),
+	waitUIAnimation(UI.INSTRUCTION_REGISTER_OPERAND),
+	atomic(
+		sendSignalOnBus(RegisterID.INSTRUCTION_REGISTER_OPERAND, BusID.ADDRESS),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(
+		readSignalFromBus(RegisterID.PROGRAM_COUNTER, BusID.ADDRESS),
+		flashUI(UI.PROGRAM_COUNTER),
+	),
+	atomic(waitUIAnimation(UI.PROGRAM_COUNTER), waitTextToSpeechToFinish),
 ]
+
+/** JMP instruction workflow */
+export const JMP_WORKFLOW: Workflow = [...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, endInstruction]
 
 /** JZ instruction workflow */
 export const JZ_WORKFLOW: Workflow = []
@@ -281,7 +298,6 @@ export const INCREMENT_PROGRAM_COUNTER_WORKFLOW: Workflow = [
 		waitUIAnimation(UI.PROGRAM_COUNTER), //
 		waitTextToSpeechToFinish,
 	),
-	endInstruction,
 ]
 
 /** Workflow performed when it's time to increment the program counter but the last valid address was reached */
