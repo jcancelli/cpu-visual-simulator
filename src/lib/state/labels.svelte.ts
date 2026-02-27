@@ -1,9 +1,9 @@
 import { SvelteMap } from "svelte/reactivity"
 import {
 	assertWordAlignedAddress,
-	MAX_WORD_ADDRESS,
+	LAST_WORD_ADDRESS,
 	MEMORY_SIZE_BYTES,
-	MIN_ADDRESS,
+	FIRST_ADDRESS,
 	WORD_ALIGNMENT,
 	type WordAlignedAddress,
 } from "$lib/types/address"
@@ -72,7 +72,7 @@ export default class Labels {
 
 	/** Unmap all labels */
 	clear(): void {
-		for (let address = MIN_ADDRESS; address <= MAX_WORD_ADDRESS; address += WORD_ALIGNMENT) {
+		for (let address = FIRST_ADDRESS; address <= LAST_WORD_ADDRESS; address += WORD_ALIGNMENT) {
 			const label = this._addressToLabel[address]
 			if (label === null) {
 				continue
@@ -160,21 +160,21 @@ export default class Labels {
 		return this._addressToLabel[address] ?? null
 	}
 
-	/** Shift down by {@link WORD_ALIGNMENT} all labels from {@link MIN_ADDRESS} to {@link address}.
+	/** Shift down by {@link WORD_ALIGNMENT} all labels from {@link FIRST_ADDRESS} to {@link address}.
 	 * {@link address} + {@link WORD_ALIGNMENT} is overwritten.
-	 * If {@link address} === {@link MAX_WORD_ADDRESS}, the shift is not performed.
+	 * If {@link address} === {@link LAST_WORD_ADDRESS}, the shift is not performed.
 	 * A {@link LabelMovedEvent} is emitted for every label that was shifted.
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link address} + {@link WORD_ALIGNMENT}.
 	 * Note: "upperHalf" refers to all the addresses <= {@link address}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftUpperHalfDownFromAddress(address: number): void {
-		if (address === MAX_WORD_ADDRESS) {
+		if (address === LAST_WORD_ADDRESS) {
 			// Noop if it's trying to shift from the last address
 			return
 		}
 		assertWordAlignedAddress(address)
-		const upperAddress = MIN_ADDRESS
+		const upperAddress = FIRST_ADDRESS
 		const lowerAddress = address + WORD_ALIGNMENT
 		for (
 			let newAddress = lowerAddress;
@@ -186,17 +186,17 @@ export default class Labels {
 		}
 	}
 
-	/** Shift down by {@link WORD_ALIGNMENT} all labels from {@link address} to {@link MAX_WORD_ADDRESS} - {@link WORD_ALIGNMENT}.
-	 * {@link MAX_WORD_ADDRESS} is overwritten.
+	/** Shift down by {@link WORD_ALIGNMENT} all labels from {@link address} to {@link LAST_WORD_ADDRESS} - {@link WORD_ALIGNMENT}.
+	 * {@link LAST_WORD_ADDRESS} is overwritten.
 	 * A {@link LabelMovedEvent} is emitted for every label that was shifted.
-	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link MAX_WORD_ADDRESS}.
+	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link LAST_WORD_ADDRESS}.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link address}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftLowerHalfDownFromAddress(address: number): void {
 		assertWordAlignedAddress(address)
 		const upperAddress = address
-		const lowerAddress = MAX_WORD_ADDRESS
+		const lowerAddress = LAST_WORD_ADDRESS
 		for (
 			let newAddress = lowerAddress;
 			newAddress > upperAddress;
@@ -207,16 +207,16 @@ export default class Labels {
 		}
 	}
 
-	/** Shift up by {@link WORD_ALIGNMENT} all labels from {@link MIN_ADDRESS} + {@link WORD_ALIGNMENT} to {@link address}.
-	 * {@link MIN_ADDRESS} is overwritten.
+	/** Shift up by {@link WORD_ALIGNMENT} all labels from {@link FIRST_ADDRESS} + {@link WORD_ALIGNMENT} to {@link address}.
+	 * {@link FIRST_ADDRESS} is overwritten.
 	 * A {@link LabelMovedEvent} is emitted for every label that was shifted.
-	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link MIN_ADDRESS}.
+	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link FIRST_ADDRESS}.
 	 * Note: "upperHalf" refers to all the addresses <= {@link address}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftUpperHalfUpFromAddress(address: number): void {
 		assertWordAlignedAddress(address)
-		const upperAddress = MIN_ADDRESS
+		const upperAddress = FIRST_ADDRESS
 		const lowerAddress = address
 		for (
 			let newAddress = upperAddress;
@@ -228,22 +228,22 @@ export default class Labels {
 		}
 	}
 
-	/** Shift up by {@link WORD_ALIGNMENT} all labels from {@link address} to {@link MAX_WORD_ADDRESS}.
+	/** Shift up by {@link WORD_ALIGNMENT} all labels from {@link address} to {@link LAST_WORD_ADDRESS}.
 	 * {@link address}-{@link WORD_ALIGNMENT} is overwritten.
-	 * If {@link address} === {@link MIN_ADDRESS}, the shift is not performed.
+	 * If {@link address} === {@link FIRST_ADDRESS}, the shift is not performed.
 	 * A {@link LabelMovedEvent} is emitted for every label that was shifted.
 	 * A {@link LabelRemovedEvent} is emitted if a label was mapped to {@link address} - {@link WORD_ALIGNMENT}.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link address}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftLowerHalfUpFromAddress(address: number): void {
-		if (address === MIN_ADDRESS) {
+		if (address === FIRST_ADDRESS) {
 			// Noop if it's trying to shift from the first address
 			return
 		}
 		assertWordAlignedAddress(address)
 		const upperAddress = address - WORD_ALIGNMENT
-		const lowerAddress = MAX_WORD_ADDRESS
+		const lowerAddress = LAST_WORD_ADDRESS
 		for (
 			let newAddress = upperAddress;
 			newAddress < lowerAddress;

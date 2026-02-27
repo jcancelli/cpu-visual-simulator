@@ -20,10 +20,10 @@ import type { ActionType } from "$lib/types/action"
 import {
 	assertByteAlignedAddress,
 	assertWordAlignedAddress,
-	MAX_ADDRESS,
-	MAX_WORD_ADDRESS,
+	LAST_BYTE_ADDRESS,
+	LAST_WORD_ADDRESS,
 	MEMORY_SIZE_BYTES,
-	MIN_ADDRESS,
+	FIRST_ADDRESS,
 	WORD_ALIGNMENT,
 	type WordAlignedAddress,
 } from "$lib/types/address"
@@ -79,7 +79,7 @@ export default class Memory {
 
 	/** Set all bytes to 0 */
 	clear(): void {
-		for (let address = MIN_ADDRESS; address <= MAX_ADDRESS; address += 1) {
+		for (let address = FIRST_ADDRESS; address <= LAST_BYTE_ADDRESS; address += 1) {
 			this._bytes[address] = 0 as U8
 		}
 	}
@@ -142,22 +142,22 @@ export default class Memory {
 		return joinU8ToI16(this._bytes[address], this._bytes[address + 1])
 	}
 
-	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link MIN_ADDRESS} to {@link msbAddress} + 1.
+	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link FIRST_ADDRESS} to {@link msbAddress} + 1.
 	 * {@link msbAddress} + {@link WORD_ALIGNMENT} and {@link msbAddress} + {@link WORD_ALIGNMENT} + 1 are overwritten.
-	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are set to 0.
-	 * If {@link msbAddress} === {@link MAX_WORD_ADDRESS}, the shift is not performed.
+	 * {@link FIRST_ADDRESS} and {@link FIRST_ADDRESS} + 1 are set to 0.
+	 * If {@link msbAddress} === {@link LAST_WORD_ADDRESS}, the shift is not performed.
 	 * Note: "upperHalf" refers to all the addresses <= {@link msbAddress}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftUpperHalfDownFromAddress(msbAddress: number): void {
-		if (msbAddress === MAX_WORD_ADDRESS) {
+		if (msbAddress === LAST_WORD_ADDRESS) {
 			// Noop if it's trying to shift from the last address
 			return
 		}
 		assertWordAlignedAddress(msbAddress)
 		const lowerMsbAddress = msbAddress + WORD_ALIGNMENT
 		const lowerLsbAddress = lowerMsbAddress + 1
-		const upperMsbAddress = MIN_ADDRESS
+		const upperMsbAddress = FIRST_ADDRESS
 		const upperLsbAddress = upperMsbAddress + 1
 		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
 			const oldAddress = newAddress - WORD_ALIGNMENT
@@ -167,15 +167,15 @@ export default class Memory {
 		this._bytes[upperLsbAddress] = 0 as U8
 	}
 
-	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link MAX_WORD_ADDRESS} - 1.
-	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are overwritten.
+	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link LAST_WORD_ADDRESS} - 1.
+	 * {@link LAST_WORD_ADDRESS} and {@link LAST_WORD_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link msbAddress}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftLowerHalfDownFromAddress(msbAddress: number): void {
 		assertWordAlignedAddress(msbAddress)
-		const lowerMsbAddress = MAX_WORD_ADDRESS
+		const lowerMsbAddress = LAST_WORD_ADDRESS
 		const lowerLsbAddress = lowerMsbAddress + 1
 		const upperMsbAddress = msbAddress
 		const upperLsbAddress = upperMsbAddress + 1
@@ -187,15 +187,15 @@ export default class Memory {
 		this._bytes[upperLsbAddress] = 0 as U8
 	}
 
-	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link MIN_ADDRESS} + {@link WORD_ALIGNMENT} to {@link msbAddress} + 1.
-	 * {@link MIN_ADDRESS} and {@link MIN_ADDRESS} + 1 are overwritten.
+	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link FIRST_ADDRESS} + {@link WORD_ALIGNMENT} to {@link msbAddress} + 1.
+	 * {@link FIRST_ADDRESS} and {@link FIRST_ADDRESS} + 1 are overwritten.
 	 * {@link msbAddress} and {@link msbAddress} + 1 are set to 0.
 	 * Note: "upperHalf" refers to all the addresses <= {@link msbAddress}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftUpperHalfUpFromAddress(msbAddress: number): void {
 		assertWordAlignedAddress(msbAddress)
-		const upperMsbAddress = MIN_ADDRESS
+		const upperMsbAddress = FIRST_ADDRESS
 		const lowerMsbAddress = msbAddress
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
@@ -206,21 +206,21 @@ export default class Memory {
 		this._bytes[lowerLsbAddress] = 0 as U8
 	}
 
-	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link MAX_ADDRESS}.
+	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link LAST_BYTE_ADDRESS}.
 	 * {@link msbAddress} - {@link WORD_ALIGNMENT} and {@link msbAddress} - 1 are overwritten.
-	 * {@link MAX_WORD_ADDRESS} and {@link MAX_WORD_ADDRESS} + 1 are set to 0.
-	 * If {@link msbAddress} === {@link MIN_ADDRESS}, the shift is not performed.
+	 * {@link LAST_WORD_ADDRESS} and {@link LAST_WORD_ADDRESS} + 1 are set to 0.
+	 * If {@link msbAddress} === {@link FIRST_ADDRESS}, the shift is not performed.
 	 * Note: "lowerHalf" refers to all the addresses >= {@link msbAddress}.
 	 * @throws {AddressOutOfRangeError}
 	 * @throws {InvalidWordAlignedAddressError} */
 	shiftLowerHalfUpFromAddress(msbAddress: number): void {
-		if (msbAddress === MIN_ADDRESS) {
+		if (msbAddress === FIRST_ADDRESS) {
 			// Noop if it's trying to shift from the first address
 			return
 		}
 		assertWordAlignedAddress(msbAddress)
 		const upperMsbAddress = msbAddress - WORD_ALIGNMENT
-		const lowerMsbAddress = MAX_WORD_ADDRESS
+		const lowerMsbAddress = LAST_WORD_ADDRESS
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
 			const oldAddress = newAddress + WORD_ALIGNMENT

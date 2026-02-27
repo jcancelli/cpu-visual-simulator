@@ -1,4 +1,8 @@
-import { assertWordAlignedAddress, MIN_ADDRESS, type WordAlignedAddress } from "$lib/types/address"
+import {
+	assertWordAlignedAddress,
+	FIRST_ADDRESS,
+	type WordAlignedAddress,
+} from "$lib/types/address"
 import type { U8 } from "$lib/types/integer"
 import { ByteRegisterImpl, type ByteRegister } from "./register.svelte"
 
@@ -13,7 +17,7 @@ export interface WordAddressRegister extends ByteRegister {
 
 /** Implementation of {@link WordAddressRegisterImpl} */
 export class WordAddressRegisterImpl extends ByteRegisterImpl implements WordAddressRegister {
-	constructor(initialValue: WordAlignedAddress = MIN_ADDRESS as WordAlignedAddress) {
+	constructor(initialValue: WordAlignedAddress = FIRST_ADDRESS as WordAlignedAddress) {
 		super(initialValue)
 	}
 
