@@ -1,11 +1,5 @@
 import type { WordAddressRegister } from "$lib/register/word_address"
 import { ActionType } from "$lib/types/action"
-import {
-	MAX_WORD_ADDRESS,
-	MIN_ADDRESS,
-	WORD_ALIGNMENT,
-	type WordAlignedAddress,
-} from "$lib/types/address"
 import { assert, unreachable } from "$lib/util/development"
 import type { ActionHandler, SubmitTasksFunction } from "../action_handler"
 import {
@@ -18,32 +12,38 @@ import {
 	ExecuteALUOperationAction,
 	SetMemoryOperationAction,
 } from "../action/cpu"
-import {
-	ADD_ACTIONS,
-	AND_ACTIONS,
-	CMP_ACTIONS,
-	DIV_ACTIONS,
-	DIVISION_BY_ZERO_TASKS,
-	HLT_ACTIONS,
-	INCREMENT_PROGRAM_COUNTER_ACTIONS,
-	INVALID_OPCODE_ACTIONS,
-	JMP_ACTIONS,
-	JN_ACTIONS,
-	JNN_ACTIONS,
-	JNZ_ACTIONS,
-	JZ_ACTIONS,
-	LOD_ACTIONS,
-	MAX_ADDRESS_REACHED_ACTIONS,
-	MUL_ACTIONS,
-	NOP_ACTIONS,
-	NOT_ACTIONS,
-	STO_ACTIONS,
-	SUB_ACTIONS,
-} from "../steps_actions"
 import type { ArithmeticLogicUnit, ControlUnit, Decoder } from "$lib/state/cpu"
 import { getOpcodeByNumeric, OpcodeNumeric } from "$lib/types/opcode"
 import { i16, u16, type I16 } from "$lib/types/integer"
 import { NEGATIVE_FLAG_BIT, STATUS_WORD_NO_FLAGS, ZERO_FLAG_BIT } from "$lib/types/status_word"
+import {
+	FIRST_ADDRESS,
+	LAST_WORD_ADDRESS,
+	WORD_ALIGNMENT,
+	type WordAlignedAddress,
+} from "$lib/types/address"
+import {
+	INVALID_OPCODE_WORKFLOW,
+	NOP_WORKFLOW,
+	HLT_WORKFLOW,
+	JMP_WORKFLOW,
+	JZ_WORKFLOW,
+	JNZ_WORKFLOW,
+	JN_WORKFLOW,
+	JNN_WORKFLOW,
+	LOD_WORKFLOW,
+	STO_WORKFLOW,
+	ADD_WORKFLOW,
+	SUB_WORKFLOW,
+	MUL_WORKFLOW,
+	DIV_WORKFLOW,
+	AND_WORKFLOW,
+	CMP_WORKFLOW,
+	NOT_WORKFLOW,
+	DIVISION_BY_ZERO_WORKFLOW,
+	INCREMENT_PROGRAM_COUNTER_WORKFLOW,
+	LAST_ADDRESS_REACHED_WORKFLOW,
+} from "../workflows"
 
 /** {@link ActionHandler} for {@link DecodeOpcodeAction} */
 export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeAction> {
@@ -60,7 +60,7 @@ export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeActi
 	handle(_: DecodeOpcodeAction, submitTasks: SubmitTasksFunction): void {
 		const opcode = getOpcodeByNumeric(this.decoder.input.unsigned)
 		if (opcode === undefined) {
-			submitTasks(...INVALID_OPCODE_ACTIONS)
+			submitTasks(...INVALID_OPCODE_WORKFLOW)
 		} else {
 			this.decoder.decodedOpcode.unsigned = this.decoder.input.unsigned
 			submitTasks(executeOpcode)
@@ -83,67 +83,67 @@ export class ExecuteOpcodeActionHandler implements ActionHandler<ExecuteOpcodeAc
 	handle(_: ExecuteOpcodeAction, submitTasks: SubmitTasksFunction): void {
 		switch (this.decoder.decodedOpcode.opcode.numeric) {
 			case OpcodeNumeric.NOP:
-				submitTasks(...NOP_ACTIONS)
+				submitTasks(...NOP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.HLT:
-				submitTasks(...HLT_ACTIONS)
+				submitTasks(...HLT_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JMP:
-				submitTasks(...JMP_ACTIONS)
+				submitTasks(...JMP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JZ:
-				submitTasks(...JZ_ACTIONS)
+				submitTasks(...JZ_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JNZ:
-				submitTasks(...JNZ_ACTIONS)
+				submitTasks(...JNZ_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JN:
-				submitTasks(...JN_ACTIONS)
+				submitTasks(...JN_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JNN:
-				submitTasks(...JNN_ACTIONS)
+				submitTasks(...JNN_WORKFLOW)
 				break
 
 			case OpcodeNumeric.LOD:
-				submitTasks(...LOD_ACTIONS)
+				submitTasks(...LOD_WORKFLOW)
 				break
 
 			case OpcodeNumeric.STO:
-				submitTasks(...STO_ACTIONS)
+				submitTasks(...STO_WORKFLOW)
 				break
 
 			case OpcodeNumeric.ADD:
-				submitTasks(...ADD_ACTIONS)
+				submitTasks(...ADD_WORKFLOW)
 				break
 
 			case OpcodeNumeric.SUB:
-				submitTasks(...SUB_ACTIONS)
+				submitTasks(...SUB_WORKFLOW)
 				break
 
 			case OpcodeNumeric.MUL:
-				submitTasks(...MUL_ACTIONS)
+				submitTasks(...MUL_WORKFLOW)
 				break
 
 			case OpcodeNumeric.DIV:
-				submitTasks(...DIV_ACTIONS)
+				submitTasks(...DIV_WORKFLOW)
 				break
 
 			case OpcodeNumeric.AND:
-				submitTasks(...AND_ACTIONS)
+				submitTasks(...AND_WORKFLOW)
 				break
 
 			case OpcodeNumeric.CMP:
-				submitTasks(...CMP_ACTIONS)
+				submitTasks(...CMP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.NOT:
-				submitTasks(...NOT_ACTIONS)
+				submitTasks(...NOT_WORKFLOW)
 				break
 
 			default:
@@ -188,7 +188,7 @@ export class ExecuteALUOperationActionHandler implements ActionHandler<ExecuteAL
 
 			case OpcodeNumeric.DIV:
 				if (op2 === 0) {
-					submitTasks(...DIVISION_BY_ZERO_TASKS)
+					submitTasks(...DIVISION_BY_ZERO_WORKFLOW)
 					return
 				}
 				result = i16(op1 / op2)
@@ -250,10 +250,10 @@ export class IncrementPCOrHaltProgramActionHandler implements ActionHandler<Incr
 	}
 
 	handle(_: IncrementPCOrHaltProgramAction, submitTasks: SubmitTasksFunction): void {
-		if (this.programCounter.address === MAX_WORD_ADDRESS) {
-			submitTasks(...MAX_ADDRESS_REACHED_ACTIONS)
+		if (this.programCounter.address === LAST_WORD_ADDRESS) {
+			submitTasks(...LAST_ADDRESS_REACHED_WORKFLOW)
 		} else {
-			submitTasks(...INCREMENT_PROGRAM_COUNTER_ACTIONS)
+			submitTasks(...INCREMENT_PROGRAM_COUNTER_WORKFLOW)
 		}
 	}
 }
@@ -271,7 +271,7 @@ export class IncrementAddressActionHandler implements ActionHandler<IncrementAdd
 	}
 
 	handle(): void {
-		assert(this.programCounterIncrementer.address < MAX_WORD_ADDRESS)
+		assert(this.programCounterIncrementer.address < LAST_WORD_ADDRESS)
 		this.programCounterIncrementer.unsigned += WORD_ALIGNMENT
 	}
 }
@@ -289,6 +289,6 @@ export class ResetProgramCounterActionHandler implements ActionHandler<ResetProg
 	}
 
 	handle(): void {
-		this.programCounter.address = MIN_ADDRESS as WordAlignedAddress
+		this.programCounter.address = FIRST_ADDRESS as WordAlignedAddress
 	}
 }
