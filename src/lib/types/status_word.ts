@@ -30,13 +30,13 @@ export function assertStatusWord(value: number): asserts value is StatusWord {
 
 /** @returns The provided status word with the zero flag bit set to 1.
  * No validation is performed on the input. */
-export function withZeroFlag(value: StatusWord): StatusWord {
+export function withZeroFlag(value: StatusWord = 0 as StatusWord): StatusWord {
 	return (value | ZERO_FLAG_BIT) as StatusWord
 }
 
 /** @returns The provided status word with the zero flag bit set to 0.
  * No validation is performed on the input. */
-export function withoutZeroFlag(value: StatusWord): StatusWord {
+export function withoutZeroFlag(value: StatusWord = 0 as StatusWord): StatusWord {
 	return (value & ZERO_FLAG_MASK) as StatusWord
 }
 
@@ -54,13 +54,13 @@ export function setZeroFlag(value: StatusWord, flag: boolean): StatusWord {
 
 /** @returns The provided status word with the negative flag bit set to 1.
  * No validation is performed on the input. */
-export function withNegativeFlag(value: StatusWord): StatusWord {
+export function withNegativeFlag(value: StatusWord = 0 as StatusWord): StatusWord {
 	return (value | NEGATIVE_FLAG_BIT) as StatusWord
 }
 
 /** @returns The provided status word with the negative flag bit set to 0.
  * No validation is performed on the input. */
-export function withoutNegativeFlag(value: StatusWord): StatusWord {
+export function withoutNegativeFlag(value: StatusWord = 0 as StatusWord): StatusWord {
 	return (value & NEGATIVE_FLAG_MASK) as StatusWord
 }
 
