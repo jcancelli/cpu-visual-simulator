@@ -143,7 +143,10 @@ export const HLT_WORKFLOW: Workflow = [
 
 /** Workflow that sends the decoded opcode to the ALU */
 export const SET_ALU_OPERATION_WORKFLOW: Workflow = [
-	atomic(startStep(Step.SET_ALU_OPERATION), ttsReadStep(Step.SET_ALU_OPERATION)),
+	atomic(
+		startStep(Step.SET_ALU_OPERATION), //
+		ttsReadStep(Step.SET_ALU_OPERATION),
+	),
 	flashUI(UI.CONTROL_UNIT),
 	waitUIAnimation(UI.CONTROL_UNIT),
 	atomic(
@@ -155,13 +158,19 @@ export const SET_ALU_OPERATION_WORKFLOW: Workflow = [
 		readSignalFromBus(RegisterID.ALU_OPERATION, BusID.ALU_CONTROL),
 		flashUI(UI.ALU_OPERATION),
 	),
-	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.ALU_OPERATION)),
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.ALU_OPERATION),
+	),
 	endStep,
 ]
 
 /** Workflow that sends the decoded addressing mode to the multiplexer */
 export const SET_ADDRESSING_MODE_WORKFLOW: Workflow = [
-	atomic(startStep(Step.SET_ADDRESSING_MODE), ttsReadStep(Step.SET_ADDRESSING_MODE)),
+	atomic(
+		startStep(Step.SET_ADDRESSING_MODE), //
+		ttsReadStep(Step.SET_ADDRESSING_MODE),
+	),
 	flashUI(UI.CONTROL_UNIT),
 	waitUIAnimation(UI.CONTROL_UNIT),
 	atomic(
@@ -169,8 +178,14 @@ export const SET_ADDRESSING_MODE_WORKFLOW: Workflow = [
 		//flashWire,
 	),
 	//waitWireAnimation,
-	atomic(readSignalFromBus(RegisterID.MUX_ADDRESSING_MODE, BusID.MUX_CONTROL), flashUI(UI.MUX)),
-	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.MUX)),
+	atomic(
+		readSignalFromBus(RegisterID.MUX_ADDRESSING_MODE, BusID.MUX_CONTROL), //
+		flashUI(UI.MUX),
+	),
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.MUX),
+	),
 	endStep,
 ]
 
@@ -187,8 +202,14 @@ export const LOAD_ALU_OPERAND_1_WORKFLOW: Workflow = [
 		//flashWire,
 	),
 	//waitWireAnimation,
-	atomic(readSignalFromBus(RegisterID.ALU_OPERAND_1, BusID.DATA), flashUI(UI.ALU_OPERAND_1)),
-	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.ALU_OPERAND_1)),
+	atomic(
+		readSignalFromBus(RegisterID.ALU_OPERAND_1, BusID.DATA), //
+		flashUI(UI.ALU_OPERAND_1),
+	),
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.ALU_OPERAND_1),
+	),
 	endStep,
 ]
 
@@ -211,11 +232,17 @@ export const OPERAND_TO_PROGRAM_COUNTER_WORKFLOW: Workflow = [
 		readSignalFromBus(RegisterID.PROGRAM_COUNTER, BusID.ADDRESS),
 		flashUI(UI.PROGRAM_COUNTER),
 	),
-	atomic(waitUIAnimation(UI.PROGRAM_COUNTER), waitTextToSpeechToFinish),
+	atomic(
+		waitUIAnimation(UI.PROGRAM_COUNTER), //
+		waitTextToSpeechToFinish,
+	),
 ]
 
 /** JMP instruction workflow */
-export const JMP_WORKFLOW: Workflow = [...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, endInstruction]
+export const JMP_WORKFLOW: Workflow = [
+	...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, //
+	endInstruction,
+]
 
 /** JZ instruction workflow */
 export const JZ_WORKFLOW: Workflow = []
@@ -249,7 +276,10 @@ export const DIV_WORKFLOW: Workflow = []
 
 /** Workflow for when a division by zero is performed */
 export const DIVISION_BY_ZERO_WORKFLOW: Workflow = [
-	atomic(startStep(Step.DIVISION_BY_ZERO), ttsReadStep(Step.DIVISION_BY_ZERO)),
+	atomic(
+		startStep(Step.DIVISION_BY_ZERO), //
+		ttsReadStep(Step.DIVISION_BY_ZERO),
+	),
 	//sendNotification,
 	waitTextToSpeechToFinish,
 	endProgram,
