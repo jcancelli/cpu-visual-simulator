@@ -14,6 +14,16 @@ export const I16_MAX = 32_767
 export const U16_MIN = 0
 export const U16_MAX = 65_535
 
+/** Base of an integer string representation */
+export enum Base {
+	/** Base 2 */
+	BINARY = 2,
+	/** Base 10 */
+	DECIMAL = 10,
+	/** Base 16 */
+	HEX = 16,
+}
+
 /** Type brand representing signedness of an integer type */
 export type Signed = { __signed: true }
 /** Type brand representing unsignedness of an integer type */
