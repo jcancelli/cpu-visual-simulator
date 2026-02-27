@@ -21,9 +21,14 @@ export interface CPU {
 export interface Decoder {
 	/** The last value read from the instruction register */
 	readonly input: ByteRegister
-	/** The last opcode that was successfully decoded. Emphasis on "last" and "successfully", meaning that it
-	 * does not necessarily reflect the value that was read from the instruction register. */
+	/** The last opcode that was successfully decoded without any eventual immediate flag.
+	 * Emphasis on "last" and "successfully", meaning that it does not necessarily reflect the value
+	 * that was read from the instruction register. */
 	readonly decodedOpcode: OpcodeRegister
+	/** The state of the immediate flag of the last opcode that was successfully decoded.
+	 * Emphasis on "last" and "successfully", meaning that it does not necessarily reflect the value
+	 * that was read from the instruction register. */
+	decodedImmediateFlag: boolean
 }
 
 /** State of the control unit */

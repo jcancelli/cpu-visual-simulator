@@ -13,7 +13,7 @@ import {
 	SetMemoryOperationAction,
 } from "../action/cpu"
 import type { ArithmeticLogicUnit, ControlUnit, Decoder } from "$lib/state/cpu"
-import { getOpcodeByNumeric, OpcodeNumeric } from "$lib/types/opcode"
+import { getImmediateFlag, getOpcodeByNumeric, OpcodeNumeric } from "$lib/types/opcode"
 import { i16, u16, type I16 } from "$lib/types/integer"
 import { NEGATIVE_FLAG_BIT, STATUS_WORD_NO_FLAGS, ZERO_FLAG_BIT } from "$lib/types/status_word"
 import {
@@ -44,12 +44,15 @@ import {
 	INCREMENT_PROGRAM_COUNTER_WORKFLOW,
 	LAST_ADDRESS_REACHED_WORKFLOW,
 } from "../workflows"
+import { Addressing } from "$lib/types/cpu"
 
 /** {@link ActionHandler} for {@link DecodeOpcodeAction} */
 export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeAction> {
+	private controlUnit: ControlUnit
 	private decoder: Decoder
 
-	constructor(decoder: Decoder) {
+	constructor(controlUnit: ControlUnit, decoder: Decoder) {
+		this.controlUnit = controlUnit
 		this.decoder = decoder
 	}
 
@@ -58,11 +61,16 @@ export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeActi
 	}
 
 	handle(_: DecodeOpcodeAction, submitTasks: SubmitTasksFunction): void {
-		const opcode = getOpcodeByNumeric(this.decoder.input.unsigned)
+		const input = this.decoder.input.unsigned
+		const opcode = getOpcodeByNumeric(input)
+		const immediateFlag = getImmediateFlag(input)
 		if (opcode === undefined) {
 			submitTasks(...INVALID_OPCODE_WORKFLOW)
 		} else {
-			this.decoder.decodedOpcode.unsigned = this.decoder.input.unsigned
+			this.decoder.decodedOpcode.unsigned = opcode.numeric
+			this.decoder.decodedImmediateFlag = immediateFlag
+			this.controlUnit.addressingMode.value =
+				immediateFlag ? Addressing.IMMEDIATE : Addressing.DIRECT
 			submitTasks(executeOpcode)
 		}
 	}
