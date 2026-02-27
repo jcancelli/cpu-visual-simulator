@@ -19,6 +19,13 @@ export class ExecuteOpcodeAction extends CPUAction {
 	}
 }
 
+/** Load the second operand of the ALU from the source selected by the addressing mode */
+export class LoadALUOPerand2Action extends CPUAction {
+	override get actionType(): ActionType {
+		return ActionType.LOAD_ALU_OPERAND_2
+	}
+}
+
 /** Execute whatever instruction the ALU was set to perform */
 export class ExecuteALUOperationAction extends CPUAction {
 	override get actionType(): ActionType {
@@ -76,6 +83,10 @@ export const decodeOpcode = new DecodeOpcodeAction()
 /** Instance of {@link ExecuteOpcodeAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
 export const executeOpcode = new ExecuteOpcodeAction()
+
+/** Instance of {@link LoadALUOPerand2Action}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const loadSecondOperand = new LoadALUOPerand2Action()
 
 /** Instance of {@link ExecuteALUOperationAction}.
  * Stored in a constant so that it can be reused without instancing new objects */

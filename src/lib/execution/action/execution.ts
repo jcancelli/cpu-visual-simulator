@@ -44,30 +44,34 @@ export class EndProgramAction extends ExecutionAction {
 /** Instances of {@link StartStepAction} indexed by their step.
  * Stored in a constant so that they can be reused without instancing new objects */
 const START_STEP_ACTIONS = {
-	[Step.PROGRAM_COUNTER_TO_ADDRESS_BUS]: new StartStepAction(Step.PROGRAM_COUNTER_TO_ADDRESS_BUS),
+	[Step.PROGRAM_COUNTER_TO_MEMORY]: new StartStepAction(Step.PROGRAM_COUNTER_TO_MEMORY),
 	[Step.MEMORY_TO_INSTRUCTION_REGISTER]: new StartStepAction(Step.MEMORY_TO_INSTRUCTION_REGISTER),
 	[Step.DECODE_OPCODE]: new StartStepAction(Step.DECODE_OPCODE),
 	[Step.INVALID_OPCODE]: new StartStepAction(Step.INVALID_OPCODE),
 	[Step.NO_OP]: new StartStepAction(Step.NO_OP),
 	[Step.HALT]: new StartStepAction(Step.HALT),
-	[Step.SET_ADDRESSING_MODE]: new StartStepAction(Step.SET_ADDRESSING_MODE),
 	[Step.SET_ALU_OPERATION]: new StartStepAction(Step.SET_ALU_OPERATION),
+	[Step.SET_ADDRESSING_MODE]: new StartStepAction(Step.SET_ADDRESSING_MODE),
+	[Step.DIVISION_BY_ZERO]: new StartStepAction(Step.DIVISION_BY_ZERO),
+	[Step.INCREMENT_PROGRAM_COUNTER]: new StartStepAction(Step.INCREMENT_PROGRAM_COUNTER),
+	[Step.LAST_ADDRESS_REACHED]: new StartStepAction(Step.LAST_ADDRESS_REACHED),
 	[Step.LOAD_OPERAND_1_FROM_ACCUMULATOR]: new StartStepAction(
 		Step.LOAD_OPERAND_1_FROM_ACCUMULATOR,
 	),
-	[Step.INCREMENT_PROGRAM_COUNTER]: new StartStepAction(Step.INCREMENT_PROGRAM_COUNTER),
-	[Step.LOAD_IMMEDIATE_OPERAND]: new StartStepAction(Step.LOAD_IMMEDIATE_OPERAND),
-	[Step.DIRECT_OPERAND_TO_ADDRESS_BUS]: new StartStepAction(Step.DIRECT_OPERAND_TO_ADDRESS_BUS),
+	[Step.LOAD_OPERAND_2_FROM_INSTRUCTION_REGISTER]: new StartStepAction(
+		Step.LOAD_OPERAND_2_FROM_INSTRUCTION_REGISTER,
+	),
+	[Step.INSTRUCTION_REGISTER_OPERAND_TO_MEMORY]: new StartStepAction(
+		Step.INSTRUCTION_REGISTER_OPERAND_TO_MEMORY,
+	),
+	[Step.LOAD_OPERAND_2_FROM_MEMORY]: new StartStepAction(Step.LOAD_OPERAND_2_FROM_MEMORY),
+	[Step.OPERAND_TO_PROGRAM_COUNTER]: new StartStepAction(Step.OPERAND_TO_PROGRAM_COUNTER),
+	[Step.CHECK_STATUS_WORD_FLAG]: new StartStepAction(Step.CHECK_STATUS_WORD_FLAG),
 	[Step.SIGNAL_MEMORY_FETCH]: new StartStepAction(Step.SIGNAL_MEMORY_FETCH),
 	[Step.SIGNAL_MEMORY_READ]: new StartStepAction(Step.SIGNAL_MEMORY_READ),
 	[Step.SIGNAL_MEMORY_WRITE]: new StartStepAction(Step.SIGNAL_MEMORY_WRITE),
-	[Step.LOAD_OPERAND_2_FROM_MEMORY]: new StartStepAction(Step.LOAD_OPERAND_2_FROM_MEMORY),
-	[Step.SET_PROGRAM_COUNTER_TO_DIRECT_OPERAND]: new StartStepAction(
-		Step.SET_PROGRAM_COUNTER_TO_DIRECT_OPERAND,
-	),
-	[Step.EXECUTE_OPERATION]: new StartStepAction(Step.EXECUTE_OPERATION),
+	[Step.EXECUTE_ALU_OPERATION]: new StartStepAction(Step.EXECUTE_ALU_OPERATION),
 	[Step.UPDATE_STATUS_WORD]: new StartStepAction(Step.UPDATE_STATUS_WORD),
-	[Step.ACCUMULATOR_TO_DATA_BUS]: new StartStepAction(Step.ACCUMULATOR_TO_DATA_BUS),
 	[Step.ACCUMULATOR_STORED_TO_MEMORY]: new StartStepAction(Step.ACCUMULATOR_STORED_TO_MEMORY),
 } as const satisfies {
 	[S in Step]: StartStepAction

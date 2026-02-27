@@ -13,8 +13,9 @@ import {
 	SetMemoryOperationAction,
 	ConditionalJumpAction,
 	incrementProgramCounterOrHaltProgram,
+	LoadALUOPerand2Action,
 } from "../action/cpu"
-import type { ArithmeticLogicUnit, ControlUnit, Decoder } from "$lib/state/cpu"
+import type { ArithmeticLogicUnit, ControlUnit, Decoder, Multiplexer } from "$lib/state/cpu"
 import { getImmediateFlag, getOpcodeByNumeric, OpcodeNumeric } from "$lib/types/opcode"
 import { i16, u16, type I16 } from "$lib/types/integer"
 import { NEGATIVE_FLAG_BIT, STATUS_WORD_NO_FLAGS, ZERO_FLAG_BIT } from "$lib/types/status_word"
@@ -46,6 +47,8 @@ import {
 	INCREMENT_PROGRAM_COUNTER_WORKFLOW,
 	LAST_ADDRESS_REACHED_WORKFLOW,
 	OPERAND_TO_PROGRAM_COUNTER_WORKFLOW,
+	LOAD_ALU_OPERAND_2_DIRECT_WORKFLOW,
+	LOAD_ALU_OPERAND_2_IMMEDIATE_WORKFLOW,
 } from "../workflows"
 import { Addressing } from "$lib/types/cpu"
 import type { StatusWordRegister } from "$lib/register/status_word"
@@ -124,7 +127,7 @@ export class ExecuteOpcodeActionHandler implements ActionHandler<ExecuteOpcodeAc
 				break
 
 			case OpcodeNumeric.LOD:
-				taskSystem.submit.submit(...LOD_WORKFLOW)
+				taskSystem.submit(...LOD_WORKFLOW)
 				break
 
 			case OpcodeNumeric.STO:
@@ -157,6 +160,34 @@ export class ExecuteOpcodeActionHandler implements ActionHandler<ExecuteOpcodeAc
 
 			case OpcodeNumeric.NOT:
 				taskSystem.submit(...NOT_WORKFLOW)
+				break
+
+			default:
+				unreachable()
+		}
+	}
+}
+
+/** {@link ActionHandler} for {@link LoadALUOPerand2Action} */
+export class LoadALUOPerand2ActionHandler implements ActionHandler<LoadALUOPerand2Action> {
+	private mux: Multiplexer
+
+	constructor(mux: Multiplexer) {
+		this.mux = mux
+	}
+
+	get actionType(): ActionType {
+		return ActionType.LOAD_ALU_OPERAND_2
+	}
+
+	handle(_: LoadALUOPerand2Action, taskSystem: TaskSystemProxy): void {
+		switch (this.mux.addressingMode.value) {
+			case Addressing.DIRECT:
+				taskSystem.submitWithPriority(...LOAD_ALU_OPERAND_2_DIRECT_WORKFLOW)
+				break
+
+			case Addressing.IMMEDIATE:
+				taskSystem.submitWithPriority(...LOAD_ALU_OPERAND_2_IMMEDIATE_WORKFLOW)
 				break
 
 			default:

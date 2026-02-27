@@ -22,8 +22,8 @@ export type Workflow = ReadonlyArray<Task>
 export const FETCH_AND_DECODE_WORKFLOW: Workflow = [
 	// ---- Send program counter to memory ----
 	atomic(
-		startStep(Step.PROGRAM_COUNTER_TO_ADDRESS_BUS),
-		ttsReadStep(Step.PROGRAM_COUNTER_TO_ADDRESS_BUS),
+		startStep(Step.PROGRAM_COUNTER_TO_MEMORY), //
+		ttsReadStep(Step.PROGRAM_COUNTER_TO_MEMORY),
 	),
 	flashUI(UI.PROGRAM_COUNTER),
 	waitUIAnimation(UI.PROGRAM_COUNTER),
@@ -210,6 +210,93 @@ export const LOAD_ALU_OPERAND_1_WORKFLOW: Workflow = [
 	atomic(
 		waitTextToSpeechToFinish, //
 		waitUIAnimation(UI.ALU_OPERAND_1),
+	),
+	endStep,
+]
+
+/** Workflow that loads the second operand of the ALU from the instruction register */
+export const LOAD_ALU_OPERAND_2_IMMEDIATE_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.LOAD_OPERAND_2_FROM_INSTRUCTION_REGISTER),
+		ttsReadStep(Step.LOAD_OPERAND_2_FROM_INSTRUCTION_REGISTER),
+	),
+	flashUI(UI.INSTRUCTION_REGISTER_OPERAND),
+	waitUIAnimation(UI.INSTRUCTION_REGISTER_OPERAND),
+	atomic(
+		sendSignalOnBus(RegisterID.INSTRUCTION_REGISTER_OPERAND, BusID.ADDRESS),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	readSignalFromBus(RegisterID.MUX_SIGNAL, BusID.ADDRESS),
+	atomic(
+		sendSignalOnBus(RegisterID.MUX_SIGNAL, BusID.MUX_ALU),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(
+		readSignalFromBus(RegisterID.ALU_OPERAND_2, BusID.MUX_ALU), //
+		flashUI(UI.ALU_OPERAND_2),
+	),
+	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.ALU_OPERAND_2)),
+	endStep,
+]
+
+/** Workflow that loads the second operand of the ALU from the memory */
+export const LOAD_ALU_OPERAND_2_DIRECT_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.INSTRUCTION_REGISTER_OPERAND_TO_MEMORY),
+		ttsReadStep(Step.INSTRUCTION_REGISTER_OPERAND_TO_MEMORY),
+	),
+	flashUI(UI.INSTRUCTION_REGISTER_OPERAND),
+	waitUIAnimation(UI.INSTRUCTION_REGISTER_OPERAND),
+	atomic(
+		sendSignalOnBus(RegisterID.INSTRUCTION_REGISTER_OPERAND, BusID.ADDRESS),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(
+		readSignalFromBus(RegisterID.MEMORY_ADDRESS, BusID.ADDRESS),
+		flashUI(UI.MEMORY_SELECTED_ADDRESS),
+	),
+	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.MEMORY_SELECTED_ADDRESS)),
+	endStep,
+
+	atomic(startStep(Step.SIGNAL_MEMORY_READ), ttsReadStep(Step.SIGNAL_MEMORY_READ)),
+	flashUI(UI.CONTROL_UNIT),
+	waitUIAnimation(UI.CONTROL_UNIT),
+	atomic(
+		sendSignalOnBus(RegisterID.CONTROL_UNIT_MEMORY_OPERATION, BusID.MEMORY_CONTROL),
+		//flashWire,
+	),
+	//waitUIAnimation,
+	readSignalFromBus(RegisterID.MEMORY_OPERATION, BusID.MEMORY_CONTROL),
+	waitTextToSpeechToFinish,
+	endStep,
+
+	atomic(
+		startStep(Step.LOAD_OPERAND_2_FROM_MEMORY), //
+		ttsReadStep(Step.LOAD_OPERAND_2_FROM_MEMORY),
+	),
+	flashUI(UI.MEMORY_SELECTED_DATA),
+	waitUIAnimation(UI.MEMORY_SELECTED_DATA),
+	atomic(
+		sendSignalOnBus(RegisterID.MEMORY_DATA, BusID.DATA),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	readSignalFromBus(RegisterID.MUX_SIGNAL, BusID.DATA),
+	atomic(
+		sendSignalOnBus(RegisterID.MUX_SIGNAL, BusID.MUX_ALU),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(
+		readSignalFromBus(RegisterID.ALU_OPERAND_2, BusID.MUX_ALU), //
+		flashUI(UI.ALU_OPERAND_2),
+	),
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.ALU_OPERAND_2),
 	),
 	endStep,
 ]
