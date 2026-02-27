@@ -101,7 +101,7 @@ export const FETCH_AND_DECODE_ACTIONS = [
 		waitTextToSpeechToFinish,
 		waitUIAnimation(UI.DECODER),
 		decodeOpcode,
-		// At this point it is responsability of the decoder to procede with the execution
+		// At this point it is responsability of the decode opcode action handler to procede with the execution
 	),
 	endStep,
 ] as const
@@ -175,6 +175,14 @@ export const MUL_ACTIONS = [] as const
 
 /** Actions that implement the DIV instruction */
 export const DIV_ACTIONS = [] as const
+
+/** Tasks to perform when a division by zero occurs */
+export const DIVISION_BY_ZERO_TASKS = [
+	atomic(startStep(Step.DIVISION_BY_ZERO), ttsReadStep(Step.DIVISION_BY_ZERO)),
+	//sendNotification,
+	waitTextToSpeechToFinish,
+	endProgram,
+] as const
 
 /** Actions that implement the AND instruction */
 export const AND_ACTIONS = [] as const
