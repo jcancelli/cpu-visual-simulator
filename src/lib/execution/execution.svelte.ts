@@ -1,15 +1,15 @@
 import { ActionType } from "$lib/types/action"
 import { ExecutionStep, ExecutionSteppingMode as SteppingMode } from "$lib/types/execution"
 import { unreachable } from "$lib/util/development"
+import type { StartStepAction } from "./action/execution"
 import type { ActionHandler, SubmitTasksFunction } from "./action_handler"
 import type { ActionHandlerFor } from "./actions"
-import type { StartStepAction } from "./actions/execution"
 import { FETCH_AND_DECODE_ACTIONS } from "./steps_actions"
 import { Action, AtomicActionGroup, type Task } from "./task"
 
-/** Lists of action handlers indexed by the action type that they handle */
+/** {@link ActionHandler} indexed by the {@link ActionType} they handle */
 export type ActionHandlersMapping = {
-	[T in MappableActions]: ActionHandlerFor<T>[]
+	[T in MappableActions]: ActionHandlerFor<T>
 }
 
 /** All of the actions that can be mapped to an handler */
@@ -21,9 +21,9 @@ export type MappableActions = Exclude<
 	| typeof ActionType.END_PROGRAM
 >
 
-/** Lists of action handlers indexed by the action type that they handle */
+/** {@link ActionHandler} indexed by the {@link ActionType} they handle */
 type _ActionHandlersMapping = {
-	[T in ActionType]: ActionHandlerFor<T>[]
+	[T in ActionType]: ActionHandlerFor<T>
 }
 
 /** Execution controller for the simulator.
@@ -56,10 +56,30 @@ export class Execution {
 		this.macrotaskID = -1
 		this.actionHandlers = {
 			...actionHandlers,
-			[ActionType.START_STEP]: [this.handleStartStepAction.bind(this)],
-			[ActionType.END_STEP]: [this.handleEndStepAction.bind(this)],
-			[ActionType.END_INSTRUCTION]: [this.handleEndInstructionAction.bind(this)],
-			[ActionType.END_PROGRAM]: [this.handleEndProgramAction.bind(this)],
+			[ActionType.START_STEP]: {
+				handle: this.handleStartStepAction.bind(this),
+				get actionType(): ActionType {
+					return ActionType.START_STEP
+				},
+			},
+			[ActionType.END_STEP]: {
+				handle: this.handleEndStepAction.bind(this),
+				get actionType(): ActionType {
+					return ActionType.END_STEP
+				},
+			},
+			[ActionType.END_INSTRUCTION]: {
+				handle: this.handleEndInstructionAction.bind(this),
+				get actionType(): ActionType {
+					return ActionType.END_INSTRUCTION
+				},
+			},
+			[ActionType.END_PROGRAM]: {
+				handle: this.handleEndProgramAction.bind(this),
+				get actionType(): ActionType {
+					return ActionType.END_PROGRAM
+				},
+			},
 		}
 		this.submitTasksFunc = (...newTasks) => this.taskQueue.push(...newTasks)
 	}
@@ -198,47 +218,37 @@ export class Execution {
 
 	/** Execute the provided action */
 	private async executeAction(action: Action): Promise<void> {
-		const handlers = this.actionHandlers[action.type] as ActionHandler<Action>[]
 		try {
-			for (const handler of handlers) {
-				const actionWasHandled = await handler(action, this.submitTasksFunc)
-				if (actionWasHandled) {
-					return
-				}
-			}
+			const handler = this.actionHandlers[action.actionType] as ActionHandler<Action>
+			await handler.handle(action, this.submitTasksFunc)
 		} catch (error: unknown) {
 			unreachable(
 				`An error was thrown by an action handler.\n\tAction: ${action.toString()}\n\tError: ${error}`,
 			)
 		}
-		console.warn(`Unhandled action: ${action.toString()}`)
 	}
 
 	/** {@link ActionHandler} for {@link StartStepAction} */
-	private handleStartStepAction(action: StartStepAction): boolean {
+	private handleStartStepAction(action: StartStepAction): void {
 		this._step = action.step
-		return true
 	}
 
 	/** {@link ActionHandler} for {@link EndStepAction} */
-	private handleEndStepAction(): boolean {
+	private handleEndStepAction(): void {
 		if (this._steppingMode === SteppingMode.STEP) {
 			this.stop()
 		}
-		return true
 	}
 
 	/** {@link ActionHandler} for {@link EndInstructionAction} */
-	private handleEndInstructionAction(): boolean {
+	private handleEndInstructionAction(): void {
 		if (this._steppingMode !== SteppingMode.PROGRAM) {
 			this.stop()
 		}
-		return true
 	}
 
 	/** {@link ActionHandler} for {@link EndProgramAction} */
-	private handleEndProgramAction(): boolean {
+	private handleEndProgramAction(): void {
 		this.stop()
-		return true
 	}
 }

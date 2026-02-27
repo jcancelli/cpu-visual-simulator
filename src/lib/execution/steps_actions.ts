@@ -1,16 +1,17 @@
-import { BusID, Register } from "$lib/types/bus"
+import { BusID, RegisterID } from "$lib/types/bus"
 import { ExecutionStep as Step } from "$lib/types/execution"
 import { UI } from "$lib/types/ui"
-import { readSignalFromBus, sendSignalOnBus } from "./actions/bus"
+import { readSignalFromBus, sendSignalOnBus } from "./action/bus"
 import {
 	decodeOpcode,
-	incrementProgramCounter,
+	incrementProgramCounterOrHaltProgram,
+	incrementAddress,
 	resetProgramCounter,
 	setMemoryFetchOperation,
-} from "./actions/cpu"
-import { endInstruction, endProgram, endStep, startStep } from "./actions/execution"
-import { ttsReadStep, waitTextToSpeechToFinish } from "./actions/text_to_speech"
-import { flashUI, waitUIAnimation } from "./actions/animation"
+} from "./action/cpu"
+import { endInstruction, endProgram, endStep, startStep } from "./action/execution"
+import { ttsReadStep, waitTextToSpeechToFinish } from "./action/text_to_speech"
+import { flashUI, waitUIAnimation } from "./action/animation"
 import { atomic } from "./task"
 
 /** Actions that implement the start of a fetch-decode-execute cycle */
@@ -23,12 +24,12 @@ export const FETCH_AND_DECODE_ACTIONS = [
 	flashUI(UI.PROGRAM_COUNTER),
 	waitUIAnimation(UI.PROGRAM_COUNTER),
 	atomic(
-		sendSignalOnBus(Register.PROGRAM_COUNTER, BusID.ADDRESS),
+		sendSignalOnBus(RegisterID.PROGRAM_COUNTER, BusID.ADDRESS),
 		//flashWire,
 	),
 	//waitWireAnimation,
 	atomic(
-		readSignalFromBus(Register.MEMORY_ADDRESS, BusID.ADDRESS),
+		readSignalFromBus(RegisterID.MEMORY_ADDRESS, BusID.ADDRESS),
 		flashUI(UI.MEMORY_SELECTED_ADDRESS),
 	),
 	atomic(
@@ -48,11 +49,11 @@ export const FETCH_AND_DECODE_ACTIONS = [
 	),
 	waitUIAnimation(UI.CONTROL_UNIT),
 	atomic(
-		sendSignalOnBus(Register.CONTROL_UNIT, BusID.MEMORY_CONTROL),
+		sendSignalOnBus(RegisterID.CONTROL_UNIT_MEMORY_OPERATION, BusID.MEMORY_CONTROL),
 		//flashWire,
 	),
 	//waitWireAnimation,
-	readSignalFromBus(Register.MEMORY_OPERATION, BusID.MEMORY_CONTROL),
+	readSignalFromBus(RegisterID.MEMORY_OPERATION, BusID.MEMORY_CONTROL),
 	atomic(
 		waitTextToSpeechToFinish, //
 		endStep,
@@ -66,12 +67,12 @@ export const FETCH_AND_DECODE_ACTIONS = [
 	flashUI(UI.MEMORY_SELECTED_DATA),
 	waitUIAnimation(UI.MEMORY_SELECTED_DATA),
 	atomic(
-		sendSignalOnBus(Register.MEMORY_DATA, BusID.DATA),
+		sendSignalOnBus(RegisterID.MEMORY_DATA, BusID.DATA),
 		//flasWire,
 	),
 	//waitWireAnimation,
 	atomic(
-		readSignalFromBus(Register.INSTRUCTION_REGISTER, BusID.DATA),
+		readSignalFromBus(RegisterID.INSTRUCTION_REGISTER, BusID.DATA),
 		flashUI(UI.INSTRUCTION_REGISTER),
 	),
 	atomic(
@@ -88,12 +89,12 @@ export const FETCH_AND_DECODE_ACTIONS = [
 	flashUI(UI.INSTRUCTION_REGISTER_OPCODE),
 	waitUIAnimation(UI.INSTRUCTION_REGISTER_OPCODE),
 	atomic(
-		sendSignalOnBus(Register.INSTRUCTION_REGISTER_OPCODE, BusID.OPCODE_DECODER),
+		sendSignalOnBus(RegisterID.INSTRUCTION_REGISTER_OPCODE, BusID.OPCODE_DECODER),
 		//flasWire,
 	),
 	//waitWireAnimation,
 	atomic(
-		readSignalFromBus(Register.DECODER, BusID.OPCODE_DECODER), //
+		readSignalFromBus(RegisterID.DECODER_INPUT, BusID.OPCODE_DECODER), //
 		flashUI(UI.DECODER),
 	),
 	atomic(
@@ -123,7 +124,7 @@ export const NOP_ACTIONS = [
 		ttsReadStep(Step.NO_OP),
 		waitTextToSpeechToFinish,
 		endStep,
-		incrementProgramCounter,
+		incrementProgramCounterOrHaltProgram,
 	),
 ] as const
 
@@ -193,18 +194,25 @@ export const INCREMENT_PROGRAM_COUNTER_ACTIONS = [
 	flashUI(UI.PROGRAM_COUNTER),
 	waitUIAnimation(UI.PROGRAM_COUNTER),
 	atomic(
-		sendSignalOnBus(Register.PROGRAM_COUNTER, BusID.ADDRESS),
+		sendSignalOnBus(RegisterID.PROGRAM_COUNTER, BusID.ADDRESS),
 		//flashWire,
 	),
 	//waitWireAnimation,
-	readSignalFromBus(Register.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
+	readSignalFromBus(RegisterID.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
 	atomic(
-		sendSignalOnBus(Register.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
+		incrementAddress, //
+		flashUI(UI.PROGRAM_COUNTER_INCREMENT),
+	),
+	atomic(
+		sendSignalOnBus(RegisterID.PROGRAM_COUNTER_INCREMENTER, BusID.ADDRESS),
 		//flashWire,
 	),
-	//waitWireAnimation,
 	atomic(
-		readSignalFromBus(Register.PROGRAM_COUNTER, BusID.ADDRESS), //
+		waitUIAnimation(UI.PROGRAM_COUNTER_INCREMENT), //
+		//waitWireAnimation,
+	),
+	atomic(
+		readSignalFromBus(RegisterID.PROGRAM_COUNTER, BusID.ADDRESS), //
 		flashUI(UI.PROGRAM_COUNTER),
 	),
 	atomic(

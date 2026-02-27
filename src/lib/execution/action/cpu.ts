@@ -42,16 +42,16 @@ export class SetMemoryOperationAction extends CPUAction {
 }
 
 /** Increment the program counter or halt execution if the end of the program was reached */
-export class IncrementAddressAction extends CPUAction {
+export class IncrementPCOrHaltProgramAction extends CPUAction {
 	override get actionType(): ActionType {
-		return ActionType.INCREMENT_ADDRESS
+		return ActionType.INCREMENT_PC_OR_HALT_PROGRAM
 	}
 }
 
 /** Increment the value stored in the program counter incrementer */
-export class IncrementIncrementerAction extends CPUAction {
+export class IncrementAddressAction extends CPUAction {
 	override get actionType(): ActionType {
-		return ActionType.INCREMENT_INCREMENTER
+		return ActionType.INCREMENT_ADDRESS
 	}
 }
 
@@ -86,13 +86,13 @@ export const setMemoryReadOperation = new SetMemoryOperationAction(MemoryOperati
  * Stored in a constant so that it can be reused without instancing new objects */
 export const setMemoryWriteOperation = new SetMemoryOperationAction(MemoryOperation.WRITE)
 
+/** Instance of {@link IncrementPCOrHaltProgramAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const incrementProgramCounterOrHaltProgram = new IncrementPCOrHaltProgramAction()
+
 /** Instance of {@link IncrementAddressAction}.
  * Stored in a constant so that it can be reused without instancing new objects */
 export const incrementAddress = new IncrementAddressAction()
-
-/** Instance of {@link IncrementIncrementerAction}.
- * Stored in a constant so that it can be reused without instancing new objects */
-export const incrementIncrementer = new IncrementIncrementerAction()
 
 /** Instance of {@link ResetProgramCounterAction}.
  * Stored in a constant so that it can be reused without instancing new objects */

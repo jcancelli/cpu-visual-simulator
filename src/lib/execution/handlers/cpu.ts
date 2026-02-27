@@ -9,14 +9,14 @@ import {
 import { assert } from "$lib/util/development"
 import type { ActionHandler, SubmitTasksFunction } from "../action_handler"
 import type {
+	IncrementPCOrHaltProgramAction,
 	IncrementAddressAction,
-	IncrementIncrementerAction,
 	ResetProgramCounterAction,
 } from "../action/cpu"
 import { INCREMENT_PROGRAM_COUNTER_ACTIONS, MAX_ADDRESS_REACHED_ACTIONS } from "../steps_actions"
 
-/** {@link ActionHandler} for {@link IncrementAddressAction} */
-export class IncrementAddressActionHandler implements ActionHandler<IncrementAddressAction> {
+/** {@link ActionHandler} for {@link IncrementPCOrHaltProgramAction} */
+export class IncrementPCOrHaltProgramActionHandler implements ActionHandler<IncrementPCOrHaltProgramAction> {
 	private programCounter: WordAddressRegister
 
 	constructor(programCounter: WordAddressRegister) {
@@ -24,10 +24,10 @@ export class IncrementAddressActionHandler implements ActionHandler<IncrementAdd
 	}
 
 	get actionType(): ActionType {
-		return ActionType.INCREMENT_ADDRESS
+		return ActionType.INCREMENT_PC_OR_HALT_PROGRAM
 	}
 
-	handle(_: IncrementAddressAction, submitTasks: SubmitTasksFunction): void {
+	handle(_: IncrementPCOrHaltProgramAction, submitTasks: SubmitTasksFunction): void {
 		if (this.programCounter.address === MAX_WORD_ADDRESS) {
 			submitTasks(...MAX_ADDRESS_REACHED_ACTIONS)
 		} else {
@@ -36,8 +36,8 @@ export class IncrementAddressActionHandler implements ActionHandler<IncrementAdd
 	}
 }
 
-/** {@link ActionHandler} for {@link IncrementIncrementerAction} */
-export class IncrementIncrementerActionHandler implements ActionHandler<IncrementIncrementerAction> {
+/** {@link ActionHandler} for {@link IncrementAddressAction} */
+export class IncrementAddressActionHandler implements ActionHandler<IncrementAddressAction> {
 	private programCounterIncrementer: WordAddressRegister
 
 	constructor(programCounterIncrementer: WordAddressRegister) {
@@ -45,7 +45,7 @@ export class IncrementIncrementerActionHandler implements ActionHandler<Incremen
 	}
 
 	get actionType(): ActionType {
-		return ActionType.INCREMENT_INCREMENTER
+		return ActionType.INCREMENT_ADDRESS
 	}
 
 	handle(): void {
