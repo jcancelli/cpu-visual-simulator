@@ -15,11 +15,11 @@ export type ByteAlignedAddress = AlignedAddress<1>
 export type WordAlignedAddress = AlignedAddress<2>
 
 /** The lowest valid address */
-export const MIN_ADDRESS = 0
+export const FIRST_ADDRESS = 0
 /** The highest valid address for a byte */
-export const MAX_ADDRESS = 255
+export const LAST_BYTE_ADDRESS = 255
 /** The highest valid address for a word */
-export const MAX_WORD_ADDRESS = 254
+export const LAST_WORD_ADDRESS = 254
 /** Size of a word in bytes */
 export const WORD_ALIGNMENT = 2
 /** Size in bytes of the memory */
