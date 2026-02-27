@@ -1,7 +1,7 @@
 import type { WordAddressRegister } from "$lib/register/word_address"
 import { ActionType } from "$lib/types/action"
 import { assert, unreachable } from "$lib/util/development"
-import type { ActionHandler, SubmitTasksFunction } from "../action_handler"
+import type { ActionHandler, TaskSystemProxy } from "../action_handler"
 import {
 	type IncrementPCOrHaltProgramAction,
 	type IncrementAddressAction,
@@ -60,18 +60,18 @@ export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeActi
 		return ActionType.DECODE_OPCODE
 	}
 
-	handle(_: DecodeOpcodeAction, submitTasks: SubmitTasksFunction): void {
+	handle(_: DecodeOpcodeAction, taskSystem: TaskSystemProxy): void {
 		const input = this.decoder.input.unsigned
 		const opcode = getOpcodeByNumeric(input)
 		const immediateFlag = getImmediateFlag(input)
 		if (opcode === undefined) {
-			submitTasks(...INVALID_OPCODE_WORKFLOW)
+			taskSystem.submit(...INVALID_OPCODE_WORKFLOW)
 		} else {
 			this.decoder.decodedOpcode.unsigned = opcode.numeric
 			this.decoder.decodedImmediateFlag = immediateFlag
 			this.controlUnit.addressingMode.value =
 				immediateFlag ? Addressing.IMMEDIATE : Addressing.DIRECT
-			submitTasks(executeOpcode)
+			taskSystem.submit(executeOpcode)
 		}
 	}
 }
@@ -88,70 +88,70 @@ export class ExecuteOpcodeActionHandler implements ActionHandler<ExecuteOpcodeAc
 		return ActionType.EXECUTE_OPCODE
 	}
 
-	handle(_: ExecuteOpcodeAction, submitTasks: SubmitTasksFunction): void {
+	handle(_: ExecuteOpcodeAction, taskSystem: TaskSystemProxy): void {
 		switch (this.decoder.decodedOpcode.opcode.numeric) {
 			case OpcodeNumeric.NOP:
-				submitTasks(...NOP_WORKFLOW)
+				taskSystem.submit(...NOP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.HLT:
-				submitTasks(...HLT_WORKFLOW)
+				taskSystem.submit(...HLT_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JMP:
-				submitTasks(...JMP_WORKFLOW)
+				taskSystem.submit(...JMP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JZ:
-				submitTasks(...JZ_WORKFLOW)
+				taskSystem.submit(...JZ_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JNZ:
-				submitTasks(...JNZ_WORKFLOW)
+				taskSystem.submit(...JNZ_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JN:
-				submitTasks(...JN_WORKFLOW)
+				taskSystem.submit(...JN_WORKFLOW)
 				break
 
 			case OpcodeNumeric.JNN:
-				submitTasks(...JNN_WORKFLOW)
+				taskSystem.submit(...JNN_WORKFLOW)
 				break
 
 			case OpcodeNumeric.LOD:
-				submitTasks(...LOD_WORKFLOW)
+				taskSystem.submit.submit(...LOD_WORKFLOW)
 				break
 
 			case OpcodeNumeric.STO:
-				submitTasks(...STO_WORKFLOW)
+				taskSystem.submit(...STO_WORKFLOW)
 				break
 
 			case OpcodeNumeric.ADD:
-				submitTasks(...ADD_WORKFLOW)
+				taskSystem.submit(...ADD_WORKFLOW)
 				break
 
 			case OpcodeNumeric.SUB:
-				submitTasks(...SUB_WORKFLOW)
+				taskSystem.submit(...SUB_WORKFLOW)
 				break
 
 			case OpcodeNumeric.MUL:
-				submitTasks(...MUL_WORKFLOW)
+				taskSystem.submit(...MUL_WORKFLOW)
 				break
 
 			case OpcodeNumeric.DIV:
-				submitTasks(...DIV_WORKFLOW)
+				taskSystem.submit(...DIV_WORKFLOW)
 				break
 
 			case OpcodeNumeric.AND:
-				submitTasks(...AND_WORKFLOW)
+				taskSystem.submit(...AND_WORKFLOW)
 				break
 
 			case OpcodeNumeric.CMP:
-				submitTasks(...CMP_WORKFLOW)
+				taskSystem.submit(...CMP_WORKFLOW)
 				break
 
 			case OpcodeNumeric.NOT:
-				submitTasks(...NOT_WORKFLOW)
+				taskSystem.submit(...NOT_WORKFLOW)
 				break
 
 			default:
@@ -172,7 +172,7 @@ export class ExecuteALUOperationActionHandler implements ActionHandler<ExecuteAL
 		return ActionType.EXECUTE_ALU_OPERATION
 	}
 
-	handle(_: ExecuteALUOperationAction, submitTasks: SubmitTasksFunction): void {
+	handle(_: ExecuteALUOperationAction, taskSystem: TaskSystemProxy): void {
 		const op1 = this.alu.operand1.signed
 		const op2 = this.alu.operand2.signed
 		let result: I16
@@ -196,7 +196,7 @@ export class ExecuteALUOperationActionHandler implements ActionHandler<ExecuteAL
 
 			case OpcodeNumeric.DIV:
 				if (op2 === 0) {
-					submitTasks(...DIVISION_BY_ZERO_WORKFLOW)
+					taskSystem.submit(...DIVISION_BY_ZERO_WORKFLOW)
 					return
 				}
 				result = i16(op1 / op2)
@@ -257,11 +257,11 @@ export class IncrementPCOrHaltProgramActionHandler implements ActionHandler<Incr
 		return ActionType.INCREMENT_PC_OR_HALT_PROGRAM
 	}
 
-	handle(_: IncrementPCOrHaltProgramAction, submitTasks: SubmitTasksFunction): void {
+	handle(_: IncrementPCOrHaltProgramAction, taskSystem: TaskSystemProxy): void {
 		if (this.programCounter.address === LAST_WORD_ADDRESS) {
-			submitTasks(...LAST_ADDRESS_REACHED_WORKFLOW)
+			taskSystem.submit(...LAST_ADDRESS_REACHED_WORKFLOW)
 		} else {
-			submitTasks(...INCREMENT_PROGRAM_COUNTER_WORKFLOW)
+			taskSystem.submit(...INCREMENT_PROGRAM_COUNTER_WORKFLOW)
 		}
 	}
 }

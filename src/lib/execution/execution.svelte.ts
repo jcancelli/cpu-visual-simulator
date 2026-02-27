@@ -2,10 +2,10 @@ import { ActionType } from "$lib/types/action"
 import { ExecutionStep, ExecutionSteppingMode as SteppingMode } from "$lib/types/execution"
 import { unreachable } from "$lib/util/development"
 import type { StartStepAction } from "./action/execution"
-import type { ActionHandler, SubmitTasksFunction } from "./action_handler"
+import type { ActionHandler, TaskSystemProxy } from "./action_handler"
 import type { ActionHandlerFor } from "./actions"
-import { FETCH_AND_DECODE_ACTIONS } from "./steps_actions"
 import { Action, AtomicActionGroup, type Task } from "./task"
+import { FETCH_AND_DECODE_WORKFLOW } from "./workflows"
 
 /** {@link ActionHandler} indexed by the {@link ActionType} they handle */
 export type ActionHandlersMapping = {
@@ -44,9 +44,8 @@ export class Execution {
 	private macrotaskID: number
 	/** All the action handlers available, indexed by their action types */
 	private readonly actionHandlers: _ActionHandlersMapping
-	/** Instance of a {@link SubmitTasksFunction} that will be passed to the action handlers when invoked.
-	 * Stored in a variable so that it will be created just once */
-	private readonly submitTasksFunc: SubmitTasksFunction
+	/** Instance of a {@link TaskSystemProxy} that will be passed to the action handlers */
+	private readonly proxy: TaskSystemProxy
 
 	constructor(actionHandlers: ActionHandlersMapping) {
 		this._isExecuting = $state(false)
@@ -81,7 +80,10 @@ export class Execution {
 				},
 			},
 		}
-		this.submitTasksFunc = (...newTasks) => this.taskQueue.push(...newTasks)
+		this.proxy = {
+			submit: (...newTasks) => this.taskQueue.push(...newTasks),
+			submitWithPriority: (...newTasks) => this.taskQueue.unshift(...newTasks),
+		}
 	}
 
 	/** Wether the program is executing or not */
@@ -108,7 +110,7 @@ export class Execution {
 		// at the start of a new instruction?
 		// Maybe just to be sure i should store this information in a variable
 		if (this.taskQueue.length === 0) {
-			this.taskQueue.push(...FETCH_AND_DECODE_ACTIONS)
+			this.taskQueue.push(...FETCH_AND_DECODE_WORKFLOW)
 		}
 	}
 
@@ -220,7 +222,7 @@ export class Execution {
 	private async executeAction(action: Action): Promise<void> {
 		try {
 			const handler = this.actionHandlers[action.actionType] as ActionHandler<Action>
-			await handler.handle(action, this.submitTasksFunc)
+			await handler.handle(action, this.proxy)
 		} catch (error: unknown) {
 			unreachable(
 				`An error was thrown by an action handler.\n\tAction: ${action.toString()}\n\tError: ${error}`,
