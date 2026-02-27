@@ -287,9 +287,15 @@ export class ConditionalJumpActionHandler implements ActionHandler<ConditionalJu
 				unreachable()
 		}
 		if (isJumping) {
-			taskSystem.submit(...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, endInstruction)
+			taskSystem.submit(
+				...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, //
+				endInstruction,
+			)
 		} else {
-			taskSystem.submit(incrementProgramCounterOrHaltProgram, endInstruction)
+			taskSystem.submit(
+				incrementProgramCounterOrHaltProgram, //
+				endInstruction,
+			)
 		}
 	}
 }
