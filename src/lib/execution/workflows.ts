@@ -141,6 +141,57 @@ export const HLT_WORKFLOW: Workflow = [
 	),
 ]
 
+/** Workflow that sends the decoded opcode to the ALU */
+export const SET_ALU_OPERATION_WORKFLOW: Workflow = [
+	atomic(startStep(Step.SET_ALU_OPERATION), ttsReadStep(Step.SET_ALU_OPERATION)),
+	flashUI(UI.CONTROL_UNIT),
+	waitUIAnimation(UI.CONTROL_UNIT),
+	atomic(
+		sendSignalOnBus(RegisterID.DECODER_DECODED_OPCODE, BusID.ALU_CONTROL),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(
+		readSignalFromBus(RegisterID.ALU_OPERATION, BusID.ALU_CONTROL),
+		flashUI(UI.ALU_OPERATION),
+	),
+	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.ALU_OPERATION)),
+	endStep,
+]
+
+/** Workflow that sends the decoded addressing mode to the multiplexer */
+export const SET_ADDRESSING_MODE_WORKFLOW: Workflow = [
+	atomic(startStep(Step.SET_ADDRESSING_MODE), ttsReadStep(Step.SET_ADDRESSING_MODE)),
+	flashUI(UI.CONTROL_UNIT),
+	waitUIAnimation(UI.CONTROL_UNIT),
+	atomic(
+		sendSignalOnBus(RegisterID.CONTROL_UNIT_ADDRESSING_MODE, BusID.MUX_CONTROL),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(readSignalFromBus(RegisterID.MUX_ADDRESSING_MODE, BusID.MUX_CONTROL), flashUI(UI.MUX)),
+	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.MUX)),
+	endStep,
+]
+
+/** Workflow that loads the accumulator as the alu first operand */
+export const LOAD_ALU_OPERAND_1_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.LOAD_OPERAND_1_FROM_ACCUMULATOR),
+		ttsReadStep(Step.LOAD_OPERAND_1_FROM_ACCUMULATOR),
+	),
+	flashUI(UI.ACCUMULATOR),
+	waitUIAnimation(UI.ACCUMULATOR),
+	atomic(
+		sendSignalOnBus(RegisterID.ACCUMULATOR, BusID.DATA),
+		//flashWire,
+	),
+	//waitWireAnimation,
+	atomic(readSignalFromBus(RegisterID.ALU_OPERAND_1, BusID.DATA), flashUI(UI.ALU_OPERAND_1)),
+	atomic(waitTextToSpeechToFinish, waitUIAnimation(UI.ALU_OPERAND_1)),
+	endStep,
+]
+
 /** JMP instruction workflow */
 export const JMP_WORKFLOW: Workflow = [
 	atomic(
