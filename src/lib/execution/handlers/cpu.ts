@@ -11,6 +11,8 @@ import {
 	ExecuteOpcodeAction,
 	ExecuteALUOperationAction,
 	SetMemoryOperationAction,
+	ConditionalJumpAction,
+	incrementProgramCounterOrHaltProgram,
 } from "../action/cpu"
 import type { ArithmeticLogicUnit, ControlUnit, Decoder } from "$lib/state/cpu"
 import { getImmediateFlag, getOpcodeByNumeric, OpcodeNumeric } from "$lib/types/opcode"
@@ -43,8 +45,11 @@ import {
 	DIVISION_BY_ZERO_WORKFLOW,
 	INCREMENT_PROGRAM_COUNTER_WORKFLOW,
 	LAST_ADDRESS_REACHED_WORKFLOW,
+	OPERAND_TO_PROGRAM_COUNTER_WORKFLOW,
 } from "../workflows"
 import { Addressing } from "$lib/types/cpu"
+import type { StatusWordRegister } from "$lib/register/status_word"
+import { endInstruction } from "../action/execution"
 
 /** {@link ActionHandler} for {@link DecodeOpcodeAction} */
 export class DecodeOpcodeActionHandler implements ActionHandler<DecodeOpcodeAction> {
@@ -242,6 +247,50 @@ export class SetMemoryOperationActionHandler implements ActionHandler<SetMemoryO
 
 	handle(action: SetMemoryOperationAction): void {
 		this.controlUnit.memoryOperation.value = action.operation
+	}
+}
+
+/** {@link ActionHandler} for {@link ConditionalJumpAction} */
+export class ConditionalJumpActionHandler implements ActionHandler<ConditionalJumpAction> {
+	private decoder: Decoder
+	private statusWord: StatusWordRegister
+
+	constructor(decoder: Decoder, statusWord: StatusWordRegister) {
+		this.decoder = decoder
+		this.statusWord = statusWord
+	}
+
+	get actionType(): ActionType {
+		return ActionType.CONDITIONAL_JUMP
+	}
+
+	handle(_: ConditionalJumpAction, taskSystem: TaskSystemProxy): Promise<void> | void {
+		let isJumping: boolean
+		switch (this.decoder.decodedOpcode.opcode.numeric) {
+			case OpcodeNumeric.JZ:
+				isJumping = this.statusWord.zeroFlag
+				break
+
+			case OpcodeNumeric.JNZ:
+				isJumping = !this.statusWord.zeroFlag
+				break
+
+			case OpcodeNumeric.JN:
+				isJumping = this.statusWord.negativeFlag
+				break
+
+			case OpcodeNumeric.JNN:
+				isJumping = !this.statusWord.negativeFlag
+				break
+
+			default:
+				unreachable()
+		}
+		if (isJumping) {
+			taskSystem.submit(...OPERAND_TO_PROGRAM_COUNTER_WORKFLOW, endInstruction)
+		} else {
+			taskSystem.submit(incrementProgramCounterOrHaltProgram, endInstruction)
+		}
 	}
 }
 

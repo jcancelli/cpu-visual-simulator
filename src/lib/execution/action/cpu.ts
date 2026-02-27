@@ -41,6 +41,13 @@ export class SetMemoryOperationAction extends CPUAction {
 	}
 }
 
+/** Jump if the status word matches the condition required by the decoded opcode */
+export class ConditionalJumpAction extends CPUAction {
+	override get actionType(): ActionType {
+		return ActionType.CONDITIONAL_JUMP
+	}
+}
+
 /** Increment the program counter or halt execution if the end of the program was reached */
 export class IncrementPCOrHaltProgramAction extends CPUAction {
 	override get actionType(): ActionType {
@@ -85,6 +92,10 @@ export const setMemoryReadOperation = new SetMemoryOperationAction(MemoryOperati
 /** Instance of {@link SetMemoryOperationAction} for a {@link MemoryOperation.WRITE} operation.
  * Stored in a constant so that it can be reused without instancing new objects */
 export const setMemoryWriteOperation = new SetMemoryOperationAction(MemoryOperation.WRITE)
+
+/** Instance of {@link ConditionalJumpAction}.
+ * Stored in a constant so that it can be reused without instancing new objects */
+export const conditionalJump = new ConditionalJumpAction()
 
 /** Instance of {@link IncrementPCOrHaltProgramAction}.
  * Stored in a constant so that it can be reused without instancing new objects */

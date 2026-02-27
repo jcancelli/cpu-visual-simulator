@@ -8,6 +8,7 @@ import {
 	incrementAddress,
 	resetProgramCounter,
 	setMemoryFetchOperation,
+	conditionalJump,
 } from "./action/cpu"
 import { endInstruction, endProgram, endStep, startStep } from "./action/execution"
 import { ttsReadStep, waitTextToSpeechToFinish } from "./action/text_to_speech"
@@ -245,16 +246,68 @@ export const JMP_WORKFLOW: Workflow = [
 ]
 
 /** JZ instruction workflow */
-export const JZ_WORKFLOW: Workflow = []
+export const JZ_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.CHECK_STATUS_WORD_FLAG), //
+		ttsReadStep(Step.CHECK_STATUS_WORD_FLAG),
+	),
+	flashUI(UI.STATUS_WORD_ZERO_FLAG),
+	// The conditional jump action handler will execute the jump and end the instruction
+	conditionalJump,
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.STATUS_WORD_ZERO_FLAG),
+	),
+	endStep,
+]
 
 /** JNZ instruction workflow */
-export const JNZ_WORKFLOW: Workflow = []
+export const JNZ_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.CHECK_STATUS_WORD_FLAG), //
+		ttsReadStep(Step.CHECK_STATUS_WORD_FLAG),
+	),
+	flashUI(UI.STATUS_WORD_ZERO_FLAG),
+	// The conditional jump action handler will execute the jump and end the instruction
+	conditionalJump,
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.STATUS_WORD_ZERO_FLAG),
+	),
+	endStep,
+]
 
 /** JN instruction workflow */
-export const JN_WORKFLOW: Workflow = []
+export const JN_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.CHECK_STATUS_WORD_FLAG), //
+		ttsReadStep(Step.CHECK_STATUS_WORD_FLAG),
+	),
+	flashUI(UI.STATUS_WORD_NEGATIVE_FLAG),
+	// The conditional jump action handler will execute the jump and end the instruction
+	conditionalJump,
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.STATUS_WORD_ZERO_FLAG),
+	),
+	endStep,
+]
 
 /** JNN instruction workflow */
-export const JNN_WORKFLOW: Workflow = []
+export const JNN_WORKFLOW: Workflow = [
+	atomic(
+		startStep(Step.CHECK_STATUS_WORD_FLAG), //
+		ttsReadStep(Step.CHECK_STATUS_WORD_FLAG),
+	),
+	flashUI(UI.STATUS_WORD_NEGATIVE_FLAG),
+	// The conditional jump action handler will execute the jump and end the instruction
+	conditionalJump,
+	atomic(
+		waitTextToSpeechToFinish, //
+		waitUIAnimation(UI.STATUS_WORD_ZERO_FLAG),
+	),
+	endStep,
+]
 
 /** LOD instruction workflow */
 export const LOD_WORKFLOW: Workflow = []
