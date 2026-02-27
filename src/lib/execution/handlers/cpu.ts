@@ -264,7 +264,7 @@ export class ConditionalJumpActionHandler implements ActionHandler<ConditionalJu
 		return ActionType.CONDITIONAL_JUMP
 	}
 
-	handle(_: ConditionalJumpAction, taskSystem: TaskSystemProxy): Promise<void> | void {
+	handle(_: ConditionalJumpAction, taskSystem: TaskSystemProxy): void {
 		let isJumping: boolean
 		switch (this.decoder.decodedOpcode.opcode.numeric) {
 			case OpcodeNumeric.JZ:
