@@ -2,22 +2,24 @@ import { InvalidStatusWordError } from "$lib/errors/cpu"
 import type { U8 } from "./integer"
 
 /** The bit of the status word zero flag */
-export const ZERO_FLAG_BIT = 1 << 7
+export const ZERO_FLAG_BIT = (1 << 7) as StatusWord
 /** All the bits of the status word except the zero flag set to 1 */
 export const ZERO_FLAG_MASK = ~ZERO_FLAG_BIT >>> 0
 /** The bit of the status word negative flag */
-export const NEGATIVE_FLAG_BIT = 1 << 6
+export const NEGATIVE_FLAG_BIT = (1 << 6) as StatusWord
 /** All the bits of the status word except the negative flag set to 1 */
 export const NEGATIVE_FLAG_MASK = ~NEGATIVE_FLAG_BIT >>> 0
 /** All the bits of the status word set to 0 except the ones used for flags */
-export const ALL_FLAGS = ZERO_FLAG_BIT | NEGATIVE_FLAG_BIT
+export const STATUS_WORD_ALL_FLAGS = ZERO_FLAG_BIT | (NEGATIVE_FLAG_BIT as StatusWord)
+/** Status word with all flags set to 0 */
+export const STATUS_WORD_NO_FLAGS = 0 as StatusWord
 
 /** A byte that stores the zero flag and negative flag */
 export type StatusWord = U8 & { __statusWord: true }
 
 /** Check if the provided value is a valid status word value */
 export function isStatusWord(value: number): value is StatusWord {
-	return (value & ALL_FLAGS) === value
+	return (value & STATUS_WORD_ALL_FLAGS) === value
 }
 
 /** Asserts that the provided value is a valid status word value.
