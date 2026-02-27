@@ -194,3 +194,41 @@ export function setU16MSB(value: U16, msb: U8): U16 {
 export function setU16LSB(value: U16, lsb: U8): U16 {
 	return (lsb | (value & 0xff00)) as U16
 }
+
+/** Format the provided value into a string padded with leading 0 */
+export function u8ToPaddedString(value: U8, base: Base = Base.DECIMAL): string {
+	switch (base) {
+		case Base.BINARY:
+			return value.toString(2).padStart(8, "0")
+
+		case Base.DECIMAL:
+			return value.toString(10)
+
+		case Base.HEX:
+			return value.toString(16).padStart(2, "0")
+	}
+}
+
+/** Format the provided value into a string padded with leading 0 */
+export function i8ToPaddedString(value: I8, base: Base = Base.DECIMAL): string {
+	return u8ToPaddedString(u8(value), base)
+}
+
+/** Format the provided value into a string padded with leading 0 */
+export function u16ToPaddedString(value: U16, base: Base = Base.DECIMAL): string {
+	switch (base) {
+		case Base.BINARY:
+			return value.toString(2).padStart(16, "0")
+
+		case Base.DECIMAL:
+			return value.toString(10)
+
+		case Base.HEX:
+			return value.toString(16).padStart(4, "0")
+	}
+}
+
+/** Format the provided value into a string padded with leading 0 */
+export function i16ToPaddedString(value: I16, base: Base = Base.DECIMAL): string {
+	return u16ToPaddedString(u16(value), base)
+}
