@@ -10,8 +10,8 @@
 		base?: Base
 		/** Wether the decimal value should be signed or unsigned */
 		signed?: boolean
-		/** ID of this element */
 		id?: string
+		class?: string
 		disabled?: boolean
 		readonly?: boolean
 		tabindex?: number
@@ -28,6 +28,7 @@
 		readonly,
 		tabindex,
 		oneditfail: onerror,
+		...props
 	}: WordRegisterProps = $props()
 
 	/** Wether the input is currently focused and editing its value or not */
@@ -71,8 +72,46 @@
 		}
 	}
 
-	/** Callback for when the input element acquires focus */
+	/** Init editValue and enable editing */
 	function onfocus(): void {
+		editValue = makeEditValue()
+		isEditing = true
+	}
+
+	/** Disable editing */
+	function onblur(): void {
+		isEditing = false
+	}
+
+	/** Parse user input and update register value */
+	function onchange(): void {
+		try {
+			const value = editValue !== "" ? parseInt(editValue, base) : 0
+			if (base === Base.DECIMAL && signed) {
+				register.signed = value
+			} else {
+				register.unsigned = value
+			}
+		} catch (err: unknown) {
+			onerror?.(err as Error)
+		}
+	}
+
+	/** Commit edit on enter, cancel edit on escape */
+	function onkeydown(event: KeyboardEvent): void {
+		if (event.key === "Enter") {
+			;(event.target as HTMLInputElement).blur()
+			return
+		}
+		if (event.key === "Escape") {
+			editValue = makeEditValue()
+			;(event.target as HTMLInputElement).blur()
+			return
+		}
+	}
+
+	/** @returns A string that represents the content of the register */
+	function makeEditValue(): string {
 		let newEditValue: string
 		switch (base) {
 			case Base.DECIMAL:
@@ -91,27 +130,7 @@
 			default:
 				unreachable()
 		}
-		editValue = newEditValue !== "0" ? newEditValue : ""
-		isEditing = true
-	}
-
-	/** Callback for when the input element looses focus */
-	function onblur(): void {
-		isEditing = false
-	}
-
-	/** Callaback for the input element "change" event. Parse user input and update register value */
-	function onchange(): void {
-		try {
-			const value = editValue !== "" ? parseInt(editValue, base) : 0
-			if (base === Base.DECIMAL && signed) {
-				register.signed = value
-			} else {
-				register.unsigned = value
-			}
-		} catch (err: unknown) {
-			onerror?.(err as Error)
-		}
+		return newEditValue !== "0" ? newEditValue : ""
 	}
 </script>
 
@@ -126,22 +145,19 @@
 	enterkeyhint="done"
 	spellcheck="false"
 	class="
-		relative
-		h-7.5
-		w-44
+		register
+		register-foreground
+		register-background
+		register-border
+		register-focusable
+		w-(--word-register-width)
 		rounded-md
-		border
-		border-black
-		bg-gray-100
 		text-center
-		font-mono
-		text-base
-		leading-7.5
-		focus:bg-black
-		focus:text-gray-100
+		{props.class ?? ''}
 	"
 	{onfocus}
 	{onblur}
 	{onchange}
+	{onkeydown}
 	bind:value={get, set}
 />
