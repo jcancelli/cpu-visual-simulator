@@ -99,7 +99,7 @@ export abstract class RegisterImpl<Bits extends RegisterSizeBits> implements Reg
 
 /** Implementation of a {@link ByteRegister} */
 export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
-	constructor(initialValue: U8) {
+	constructor(initialValue?: U8) {
 		super(initialValue)
 	}
 
@@ -129,7 +129,7 @@ export class ByteRegisterImpl extends RegisterImpl<8> implements ByteRegister {
 
 /** Implementation of a {@link WordRegister} */
 export class WordRegisterImpl extends RegisterImpl<16> implements WordRegister {
-	constructor(initialValue: U16) {
+	constructor(initialValue?: U16) {
 		super(initialValue)
 	}
 
