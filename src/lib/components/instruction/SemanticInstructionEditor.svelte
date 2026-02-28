@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { i8, I8_MAX, I8_MIN, u8, U8_MAX, U8_MIN } from "$lib/integer"
-	import { getImmediateFlag, setImmediateFlag, OPCODES, OPCODES_BY_NUMBER } from "$lib/opcode"
+	import { i8, I8_MAX, I8_MIN, u8, U8_MAX, U8_MIN, type U8 } from "$lib/types/integer"
+	import {
+		getImmediateFlag,
+		setImmediateFlag,
+		OPCODES,
+		getOpcodeByNumeric,
+	} from "$lib/types/opcode"
 
 	interface SemanticInstructionEditorProps {
-		msb?: number
-		lsb?: number
+		msb?: U8
+		lsb?: U8
 		opcodeClass?: string
 		immediateFlagClass?: string
 		immediateFlagTrueClass?: string
@@ -13,8 +18,8 @@
 	}
 
 	let {
-		msb = $bindable(0),
-		lsb = $bindable(0),
+		msb = $bindable(0 as U8),
+		lsb = $bindable(0 as U8),
 		opcodeClass = "",
 		immediateFlagClass = "",
 		immediateFlagTrueClass = "",
@@ -23,7 +28,7 @@
 	}: SemanticInstructionEditorProps = $props()
 
 	const msbNoImmediateFlag = $derived(setImmediateFlag(msb, false))
-	const opcode = $derived(OPCODES_BY_NUMBER[msbNoImmediateFlag] ?? null)
+	const opcode = $derived(getOpcodeByNumeric(msb))
 	const immediateFlag = $derived(getImmediateFlag(msb))
 	const operand = $derived(immediateFlag ? i8(lsb) : u8(lsb))
 
