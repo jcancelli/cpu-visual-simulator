@@ -1,107 +1,53 @@
 import {
 	assertI16,
-	assertI8,
 	assertU16,
-	assertU8,
 	i16LSB,
 	i16MSB,
 	joinU8ToI16,
 	joinU8ToU16,
 	u16LSB,
 	u16MSB,
-	u8,
 	type I16,
 	type U16,
 	type U8,
 } from "$lib/types/integer"
-import { todo, unreachable } from "$lib/util/development"
-import type { Bus } from "./bus.svelte"
-import type { ActionType } from "$lib/types/action"
 import {
-	assertByteAlignedAddress,
 	assertWordAlignedAddress,
 	LAST_BYTE_ADDRESS,
 	LAST_WORD_ADDRESS,
 	MEMORY_SIZE_BYTES,
 	FIRST_ADDRESS,
 	WORD_ALIGNMENT,
-	type WordAlignedAddress,
 } from "$lib/types/address"
-import { MemoryOperation as Operation } from "$lib/types/memory"
-
-/** Action types handled by the {@link Memory} */
-export type MemoryHandledActions = ActionType.SEND_SIGNAL | ActionType.READ_SIGNAL
+import type { WordAddressRegister } from "$lib/register/word_address"
+import type { MemoryOperationRegister } from "$lib/register/memory_operation"
+import { ByteRegisterImpl, type ByteRegister } from "$lib/register/register.svelte"
 
 /** State of the memory */
 export default class Memory {
-	/** Writable state containing the memory's contents. */
-	private _bytes: U8[]
+	/** List of bytes representing this memory data */
+	public readonly data: ReadonlyArray<ByteRegister>
 	/** The currently selected address */
-	private _selectedAddress: WordAlignedAddress
-	/** The current memory operation */
-	private _selectedOperation: Operation
-	/** Reference to the data bus */
-	private dataBus: Bus<16>
-	/** Reference to the address bus */
-	private addressBus: Bus<8>
-	/** Reference to the control bus */
-	private controlBus: Bus<8>
+	public readonly selectedAddress: WordAddressRegister
+	/** The currently selected memory operation */
+	public readonly selectedOperation: MemoryOperationRegister
 
-	constructor(dataBus: Bus<16>, addressBus: Bus<8>, controlBus: Bus<8>) {
-		this._bytes = $state(new Array(MEMORY_SIZE_BYTES).fill(0))
-		this._selectedAddress = $state(0 as WordAlignedAddress)
-		this._selectedOperation = $state(Operation.READ)
-		this.dataBus = dataBus
-		this.addressBus = addressBus
-		this.controlBus = controlBus
-		this.actionHandlers = new ActionHandlerMap({
-			[ActionType.SEND_SIGNAL]: this.handleSendSignalBusAction.bind(this),
-			[ActionType.READ_SIGNAL]: this.handleReadSignalBusAction.bind(this),
-			[ActionType.PERFORM_MEMORY_OPERATION]:
-				this.handlePerformMemoryOperationAction.bind(this),
-		})
-	}
-
-	/** Readonly state containing the memory's contents */
-	get bytes(): ReadonlyArray<U8> {
-		return this._bytes
-	}
-
-	/** The currently selected address */
-	get selectedAddress(): WordAlignedAddress {
-		return this._selectedAddress
-	}
-
-	/** The current memory operation */
-	get selectedOperation(): Operation {
-		return this._selectedOperation
+	constructor(
+		selectedAddressRegister: WordAddressRegister,
+		selectedOperationRegister: MemoryOperationRegister,
+	) {
+		this.data = Array(MEMORY_SIZE_BYTES)
+			.fill(0)
+			.map(() => new ByteRegisterImpl())
+		this.selectedAddress = selectedAddressRegister
+		this.selectedOperation = selectedOperationRegister
 	}
 
 	/** Set all bytes to 0 */
 	clear(): void {
 		for (let address = FIRST_ADDRESS; address <= LAST_BYTE_ADDRESS; address += 1) {
-			this._bytes[address] = 0 as U8
+			this.data[address].unsigned = 0 as U8
 		}
-	}
-
-	/** Write the specified 8-bit unsigned integer at the specified address.
-	 * @throws {AddressOutOfRangeError}
-	 * @throws {InvalidByteAlignedAddressError}
-	 * @throws {InvalidU8Error} */
-	writeU8(address: number, value: number): void {
-		assertByteAlignedAddress(address)
-		assertU8(value)
-		this._bytes[address] = value
-	}
-
-	/** Write the specified 8-bit signed integer at the specified address.
-	 * @throws {AddressOutOfRangeError}
-	 * @throws {InvalidByteAlignedAddressError}
-	 * @throws {InvalidI8Error} */
-	writeI8(address: number, value: number): void {
-		assertByteAlignedAddress(address)
-		assertI8(value)
-		this._bytes[address] = u8(value)
 	}
 
 	/** Write the specified 16-bit unsigned integer at the specified address.
@@ -111,8 +57,8 @@ export default class Memory {
 	writeU16(address: number, value: number): void {
 		assertWordAlignedAddress(address)
 		assertU16(value)
-		this._bytes[address] = u16MSB(value)
-		this._bytes[address + 1] = u16LSB(value)
+		this.data[address].unsigned = u16MSB(value)
+		this.data[address + 1].unsigned = u16LSB(value)
 	}
 
 	/** Write the specified 16-bit signed integer at the specified address.
@@ -122,8 +68,8 @@ export default class Memory {
 	writeI16(address: number, value: number): void {
 		assertWordAlignedAddress(address)
 		assertI16(value)
-		this._bytes[address] = i16MSB(value)
-		this._bytes[address + 1] = i16LSB(value)
+		this.data[address].unsigned = i16MSB(value)
+		this.data[address + 1].unsigned = i16LSB(value)
 	}
 
 	/** Read a 16-bit unsigned integer from the specified address.
@@ -131,7 +77,7 @@ export default class Memory {
 	 * @throws {InvalidWordAlignedAddressError} */
 	readU16(address: number): U16 {
 		assertWordAlignedAddress(address)
-		return joinU8ToU16(this._bytes[address], this._bytes[address + 1])
+		return joinU8ToU16(this.data[address].unsigned, this.data[address + 1].unsigned)
 	}
 
 	/** Read a 16-bit signed integer from the specified address.
@@ -139,7 +85,7 @@ export default class Memory {
 	 * @throws {InvalidWordAlignedAddressError} */
 	readI16(address: number): I16 {
 		assertWordAlignedAddress(address)
-		return joinU8ToI16(this._bytes[address], this._bytes[address + 1])
+		return joinU8ToI16(this.data[address].unsigned, this.data[address + 1].unsigned)
 	}
 
 	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link FIRST_ADDRESS} to {@link msbAddress} + 1.
@@ -161,10 +107,10 @@ export default class Memory {
 		const upperLsbAddress = upperMsbAddress + 1
 		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
 			const oldAddress = newAddress - WORD_ALIGNMENT
-			this._bytes[newAddress] = this._bytes[oldAddress]
+			this.data[newAddress].unsigned = this.data[oldAddress].unsigned
 		}
-		this._bytes[upperMsbAddress] = 0 as U8
-		this._bytes[upperLsbAddress] = 0 as U8
+		this.data[upperMsbAddress].unsigned = 0 as U8
+		this.data[upperLsbAddress].unsigned = 0 as U8
 	}
 
 	/** Shift down by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link LAST_WORD_ADDRESS} - 1.
@@ -181,10 +127,10 @@ export default class Memory {
 		const upperLsbAddress = upperMsbAddress + 1
 		for (let newAddress = lowerLsbAddress; newAddress > upperLsbAddress; newAddress -= 1) {
 			const oldAddress = newAddress - WORD_ALIGNMENT
-			this._bytes[newAddress] = this._bytes[oldAddress]
+			this.data[newAddress].unsigned = this.data[oldAddress].unsigned
 		}
-		this._bytes[upperMsbAddress] = 0 as U8
-		this._bytes[upperLsbAddress] = 0 as U8
+		this.data[upperMsbAddress].unsigned = 0 as U8
+		this.data[upperLsbAddress].unsigned = 0 as U8
 	}
 
 	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link FIRST_ADDRESS} + {@link WORD_ALIGNMENT} to {@link msbAddress} + 1.
@@ -200,10 +146,10 @@ export default class Memory {
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
 			const oldAddress = newAddress + WORD_ALIGNMENT
-			this._bytes[newAddress] = this._bytes[oldAddress]
+			this.data[newAddress].unsigned = this.data[oldAddress].unsigned
 		}
-		this._bytes[lowerMsbAddress] = 0 as U8
-		this._bytes[lowerLsbAddress] = 0 as U8
+		this.data[lowerMsbAddress].unsigned = 0 as U8
+		this.data[lowerLsbAddress].unsigned = 0 as U8
 	}
 
 	/** Shift up by {@link WORD_ALIGNMENT} all bytes from {@link msbAddress} to {@link LAST_BYTE_ADDRESS}.
@@ -224,50 +170,9 @@ export default class Memory {
 		const lowerLsbAddress = lowerMsbAddress + 1
 		for (let newAddress = upperMsbAddress; newAddress < lowerMsbAddress; newAddress += 1) {
 			const oldAddress = newAddress + WORD_ALIGNMENT
-			this._bytes[newAddress] = this._bytes[oldAddress]
+			this.data[newAddress].unsigned = this.data[oldAddress].unsigned
 		}
-		this._bytes[lowerMsbAddress] = 0 as U8
-		this._bytes[lowerLsbAddress] = 0 as U8
-	}
-
-	/** {@link ActionHandler} for {@link SendSignalBusAction} */
-	private async handleSendSignalBusAction(
-		action: SendSignalBusAction,
-	): Promise<ActionHandlerResult> {
-		if (action.from !== Register.MEMORY || action.bus !== BusID.DATA) {
-			unreachable()
-		}
-		const data = this.readU16(this.selectedAddress)
-		this.dataBus.sendSignalUnsigned(data)
-		return { actionWasHandled: true }
-	}
-
-	/** {@link ActionHandler} for {@link ReadSignalBusAction} */
-	private async handleReadSignalBusAction(
-		action: ReadSignalBusAction,
-	): Promise<ActionHandlerResult> {
-		todo(action.toString())
-	}
-
-	/** {@link ActionHandler} for {@link PerformMemoryOperationAction} */
-	private async handlePerformMemoryOperationAction(): Promise<ActionHandlerResult> {
-		const newTasks: Task[] = []
-		switch (this._selectedOperation) {
-			case Operation.READ:
-				newTasks.push(...MEMORY_READ_ACTIONS)
-				break
-
-			case Operation.WRITE:
-				newTasks.push(...MEMORY_WRITE_ACTIONS)
-				break
-
-			case Operation.FETCH:
-				newTasks.push(...MEMORY_FETCH_ACTIONS)
-				break
-
-			default:
-				unreachable()
-		}
-		todo()
+		this.data[lowerMsbAddress].unsigned = 0 as U8
+		this.data[lowerLsbAddress].unsigned = 0 as U8
 	}
 }
