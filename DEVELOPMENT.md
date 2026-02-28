@@ -18,6 +18,7 @@
 - [ ] Hexadecimal display mode
 - [ ] Possibility to "revert" instructions and steps. Basicaly an undo button for execution.
 - [ ] Local storage versioning
+- [ ] Add metadata to the page head (description, keywords, author, ...)
 
 ## "We'll see" improvements
 
