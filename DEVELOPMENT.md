@@ -1,111 +1,56 @@
-# Milestones
-
-- [ ] Add an actual licens (maybe MIT?)
-- [ ] UI
-    - [ ] RAM
-        - [ ] Address
-        - [ ] Instruction
-        - [ ] Ram wrapper
-    - [ ] Labels
-    - [ ] CPU
-        - [ ] ALU
-        - [ ] MUX
-        - [ ] Status word
-        - [ ] Instruction register
-        - [ ] Program counter
-        - [ ] PC Increment
-        - [ ] Control unit/decoder
-        - [ ] Accumulator
-    - [ ] Control bar
-    - [ ] Notifications
-    - [ ] Navbar
-    - [ ] Components animations
-    - [ ] Styling
-        - [ ] Define color pallete
-        - [ ] Define commpon components and styles
-        - [ ] Pick UI library (maybe Flowbite?)
-- [ ] Wires
-    - [ ] WebGPU implementation
-    - [ ] WebGL fallback implementation
-    - [ ] Canvas fallback implementation
-    - [ ] Ability to pause/cancel animations while they are still running
-- [ ] Notifications
-    - [ ] Fixed notifications for each environment (ex. the warning for jcancelli.github.io/cpu-visual-simulator)
-- [ ] Define text
-    - [ ] English localization
-    - [ ] Italian localization
-    - [ ] Spanish localization
-- [ ] Manual
-    - [ ] Introduction
-    - [ ] Instructionset
-    - [ ] Keyboard shortcuts
-    - [ ] Code files
-    - [ ] Examples
-- [ ] Copyright page
-- [ ] Settings
-    - [ ] Accessibility
-        - [ ] Busses colors
-        - [ ] TTS settings
-    - [ ] Toggles
-        - [ ] Toggle busses labels
-        - [ ] Toggle components labels
-        - [ ] Toggle step text
-- [ ] Keyboard shortcuts
-- [ ] Instructions
-    - [ ] Parsing
-    - [ ] Decoding
-    - [ ] Validating
-- [ ] Loading/saving programs
-    - [ ] To URL
-    - [ ] To file
-    - [ ] To local storage
-    - [ ] Loading examples
-- [ ] Touch support
-- [ ] Execution
-    - [x] Define steps
-    - [x] Implement task system
-    - [ ] Implement actions
-- [ ] State
-    - [ ] Memory
-    - [ ] Labels
-    - [ ] Cpu
-    - [ ] Local storage persistence
-        - [ ] Local storage versioning
-
-# TODO
-
-- Add jsdoc comments to the top of all the files
-- Make it so that eslint doesn't bitch about unused types when the types are only used in the JsDoc comments
-
-# Bugs
+## Bugs
 
 - [ ] ALU component misalligned on safari
+- [ ] Broken animations on firefox + linux
+- [ ] Programs stored in local storage not being loaded
 
-# "We'll see" changes
-
-- [ ] Consider changing behavior of immediate label operands.
-      Current: `LOD #LABEL` with LABEL assigned to 254 (or any other address outside 8-bit signed range [0,127]) errors out
-      Idea: cast it to signed integer
-- [x] Define granularity of the steps
-- [ ] Disconnect address bus from operand bus and connect it to the bottom of the MUX.
-      This way if the opcode needs to be put on the address bus it needs to be sent through the MUX first.
-      The control unit should also select input/output of the mux.
-      Rename it from MUX to crossbar or just switch
-
-# Improvements
+## Improvements
 
 - [x] Better actions granularity
-- [x] Possibility of displaying the value of a bus signal
+- [x] Ability of displaying the value of a bus signal
 - [x] Actual routing
 - [ ] Touch support
+- [ ] Better accessibility
+    - [ ] Better screen reader friendlyness (aria properties like describedby and so on...)
+    - [ ] Better keyboard-only navigation
+    - [ ] Support for reduced motion
+- [x] Dark mode support
+- [ ] Hexadecimal display mode
+- [ ] Possibility to "revert" instructions and steps. Basicaly an undo button for execution.
+- [ ] Local storage versioning
 
-# "We'll see" improvements
+## "We'll see" improvements
 
-- [ ] Manual page where you can display an instruction with different formats
-- [ ] Utility page where tools for creating localizations are available (like tools for text to speech testing and displaying text)
-- [ ] Telemetry, maybe just a ping sent to something like a vercel free tier just to know how many users there are
-- [ ] Custom keyboard shortcuts
-- [ ] Pause at any time
-    - [ ] Pause/cancel animation in the middle of them
-- [ ] Manual page with a guide for the UI
-- [ ] Integrated code editor (maybe codemirror? Should check it's license)
+- Individual speeds for flash animations and wire animations
+- Better introduction/about page for the manual
+- Manual page where you can display an instruction with different formats
+- Utility page where tools for creating localizations are available (like tools for text to speech testing and displaying text)
+    - Also a few words about the philosophy of free educational software
+- Telemetry
+    - Umanmi maybe?
+    - Privacy notice page
+- Custom keyboard shortcuts
+- Manual page with a guide for the UI
+- Integrated code editor (maybe codemirror? Should check it's license)
+- Advanced mode
+    - Multiple registers
+    - Extended instruction set (call, ret, push, pop)
+    - Indirect operands
+    - More status flags
+    - Memory mapped IO (extremelly ambitious, but maybe users could write plugins for cpuvs and "mount" them as io devices)
+
+## "We'll see" changes
+
+- Consider changing behavior of immediate label operands.
+  Current: `LOD #LABEL` with LABEL assigned to 254 (or any other address outside 8-bit signed range [0,127]) errors out
+  Idea: cast it to signed integer
+- Disconnect address bus from operand bus and connect it to the bottom of the MUX.
+  This way if the opcode needs to be put on the address bus it needs to be sent through the MUX first.
+  The control unit should also select input/output of the mux.
+  Rename it from MUX to crossbar or just switch
+
+## TODO (Technical stuff)
+
+- Document all modules with jsdoc
+- Make it so that eslint doesn't bitch about unused types when the types are only used in the JsDoc comments
+- Add circular dependency linting
