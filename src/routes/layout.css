@@ -1,3 +1,96 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	/* Dark mode independent colors */
+	--color-address-text: oklch(0 0 0);
+	--color-memory-address: oklch(0.7505 0.1791 58.28);
+
+	/* Light mode colors */
+	--color-register-light: oklch(0.9677 0.0027 286.35);
+	--color-memory-data-light: oklch(0.8576 0 0);
+	--color-label-light: oklch(0.7058 0 0);
+	--color-register-text-light: oklch(0 0 0);
+	--color-animation-light: oklch(0.8664 0.294827 142.4953);
+
+	/* Dark mode colors */
+	--color-register-dark: oklch(0.2255 0.0149 261.63);
+	--color-memory-data-dark: oklch(0.2931 0 0);
+	--color-label-dark: oklch(0.453 0.0145 17.7);
+	--color-register-text-dark: oklch(0.9249 0 0);
+	--color-animation-dark: oklch(0.8664 0.294827 142.4953);
+
+	/* Height values */
+	--register-height: --spacing(7.5);
+	--label-height: --spacing(7);
+
+	/* Width values */
+	--byte-register-width: --spacing(25);
+	--word-register-width: --spacing(44);
+	--instruction-register-width: --spacing(50);
+	--label-width: --spacing(37.5);
+	--memory-address-width: --spacing(25);
+	--memory-data-width: --spacing(47.5);
+
+	/* Shadows */
+	--shadow-label: inset 0 0 --spacing(2.5) rgba(0, 0, 0, 0.2);
+}
+
+.register {
+	@apply relative font-mono text-base;
+
+	height: var(--register-height);
+	line-height: var(--register-height);
+}
+
+.register-border {
+	@apply border;
+
+	border-color: var(--color-register-text-light);
+
+	@veriant dark {
+		border-color: var(--color-register-text-dark);
+	}
+}
+
+.register-foreground {
+	color: var(--color-register-text-light);
+
+	@variant dark {
+		color: var(--color-register-text-dark);
+	}
+}
+
+.register-background {
+	background-color: var(--color-register-light);
+
+	@variant dark {
+		background-color: var(--color-register-dark);
+	}
+}
+
+.register-focusable.register-foreground.register-background {
+	@variant focus {
+		color: var(--color-register-light);
+		background-color: var(--color-register-text-light);
+
+		@variant dark {
+			color: var(--color-register-dark);
+			background-color: var(--color-register-text-dark);
+		}
+	}
+}
+
+.register-focusable.register-foreground.register-background.register-border {
+	@variant focus {
+		border-color: var(--color-register-text-light);
+
+		@variant dark {
+			border-color: var(--color-register-text-dark);
+		}
+	}
+}
+
 @source "test/+page.svelte";

@@ -9,6 +9,15 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<!-- https://tailwindcss.com/docs/dark-mode#with-system-theme-support -->
+	<script>
+		document.documentElement.classList.toggle(
+			"dark",
+			localStorage.theme === "dark"
+				|| (!("theme" in localStorage)
+					&& window.matchMedia("(prefers-color-scheme: dark)").matches),
+		)
+	</script>
 </svelte:head>
 
 {@render children()}
