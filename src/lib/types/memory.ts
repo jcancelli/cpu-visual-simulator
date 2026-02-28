@@ -9,7 +9,7 @@ export enum MemoryOperation {
 
 /** Check if the specified value is a valid {@link MemoryOperation} */
 export function isMemoryOperation(value: number): value is MemoryOperation {
-	return value === MemoryOperation.READ || value === MemoryOperation.WRITE
+	return MemoryOperation[value] !== undefined
 }
 
 /** Assert that the specified value is a valid {@link MemoryOperation}
