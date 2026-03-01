@@ -69,7 +69,8 @@
 	--memory-data-width: 20ch;
 
 	/* Shadows */
-	--shadow-label: inset 0 0 --spacing(2.5) rgba(0, 0, 0, 0.2);
+	--shadow-label: inset 0 0 --spacing(2.5) oklch(0% 0 0 / 20%);
+	--drop-shadow-memory: 0 0 --spacing(5) oklch(0% 0 0 / 30%);
 }
 
 .register {
