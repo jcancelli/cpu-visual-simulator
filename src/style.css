@@ -18,9 +18,9 @@
 	--color-memory-data-text-light: oklch(0 0 0);
 	--color-memory-data-focus-background-light: oklch(0 0 0);
 	--color-memory-data-focus-text-light: oklch(0.9677 0.0027 286.35);
-	--color-label-background-light: oklch(0.7058 0 0);
+	--color-label-background-light: oklch(70.6% 0 0 / 60%);
 	--color-label-text-light: oklch(0 0 0);
-	--color-label-border-light: oklch(0 0 0);
+	--color-label-border-light: oklch(0% 0 0 / 60%);
 	--color-animation-light: oklch(0.8664 0.294827 142.4953);
 
 	/* Dark mode colors */
@@ -33,9 +33,9 @@
 	--color-memory-data-text-dark: oklch(92.5% 0 76);
 	--color-memory-data-focus-background-dark: oklch(92.5% 0 76);
 	--color-memory-data-focus-text-dark: oklch(24.8% 0 63.4);
-	--color-label-background-dark: oklch(0.7058 0 0);
-	--color-label-text-dark: oklch(0 0 0);
-	--color-label-border-dark: oklch(0 0 0);
+	--color-label-background-dark: oklch(40.1% 0 180 / 60%);
+	--color-label-text-dark: oklch(80.1% 0 45);
+	--color-label-border-dark: oklch(71.5% 0 0 / 60%);
 	--color-animation-dark: oklch(0.8664 0.294827 142.4953);
 
 	/* Height values */
@@ -99,4 +99,4 @@
 	}
 }
 
-@source "test/+page.svelte";
+@source "./routes/test/+page.svelte";
