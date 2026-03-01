@@ -117,4 +117,6 @@
 	}
 }
 
+/* You can add @source "anything" to test-routes.css, this way tailwind picks up the classes used
+ * by routes that are ignored by .gitignore */
 @source "./routes/test/test-routes.css";
