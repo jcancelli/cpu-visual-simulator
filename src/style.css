@@ -3,6 +3,17 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Flowbite */
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite-svelte/dist";
+@source "../node_modules/flowbite-svelte-icons/dist";
+@layer base {
+	/* disable chrome cancel button */
+	input[type="search"]::-webkit-search-cancel-button {
+		display: none;
+	}
+}
+
 @theme {
 	/* Dark mode independent colors */
 	--color-address-background: oklch(0.7505 0.1791 58.28);
@@ -106,4 +117,4 @@
 	}
 }
 
-@source "./routes/test/+page.svelte";
+@source "./routes/test/test-routes.css";
