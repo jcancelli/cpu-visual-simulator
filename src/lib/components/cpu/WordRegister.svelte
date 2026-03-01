@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { WordRegister } from "$lib/register/register.svelte"
-	import { Base, u16ToPaddedString, u8ToPaddedString } from "$lib/types/integer"
+	import { Base, u8ToPaddedString } from "$lib/types/integer"
 	import { unreachable } from "$lib/util/development"
 
 	export interface WordRegisterProps {
@@ -56,7 +56,7 @@
 	function set(value: string): void {
 		switch (base) {
 			case Base.BINARY:
-				editValue = value.replaceAll(/[^01]/g, "")
+				editValue = value.replaceAll(/[^01 ]/g, "")
 				break
 
 			case Base.DECIMAL:
@@ -64,7 +64,7 @@
 				break
 
 			case Base.HEX:
-				editValue = value.toUpperCase().replaceAll(/[^0-9ABCDEF]/g, "")
+				editValue = value.toUpperCase().replaceAll(/[^0-9ABCDEF ]/g, "")
 				break
 
 			default:
@@ -86,7 +86,8 @@
 	/** Parse user input and update register value */
 	function onchange(): void {
 		try {
-			const value = editValue !== "" ? parseInt(editValue, base) : 0
+			const inputStr = editValue.replaceAll(/\s/g, "")
+			const value = editValue !== "" ? parseInt(inputStr, base) : 0
 			if (base === Base.DECIMAL && signed) {
 				register.signed = value
 			} else {
@@ -112,29 +113,7 @@
 
 	/** @returns A string that represents the content of the register */
 	function makeEditValue(): string {
-		let newEditValue: string
-		switch (base) {
-			case Base.DECIMAL:
-				if (signed) {
-					newEditValue = register.signed.toString(10)
-				} else {
-					newEditValue = register.unsigned.toString(10)
-				}
-				if (newEditValue === "0") {
-					newEditValue = ""
-				}
-				break
-
-			case Base.BINARY:
-			// Fallthrough
-			case Base.HEX:
-				newEditValue = u16ToPaddedString(register.unsigned, base)
-				break
-
-			default:
-				unreachable()
-		}
-		return newEditValue
+		return displayValue !== "0" ? displayValue : ""
 	}
 </script>
 
