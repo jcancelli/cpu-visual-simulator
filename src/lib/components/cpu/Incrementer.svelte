@@ -22,6 +22,7 @@
 		w-(--byte-register-width)
 		rounded-md
 		text-center
+		shadow-register
 		{props.class ?? ''}
 	"
 >

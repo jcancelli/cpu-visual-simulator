@@ -70,6 +70,7 @@
 
 	/* Shadows */
 	--shadow-label: inset 0 0 --spacing(2.5) oklch(0% 0 0 / 20%);
+	--shadow-register: 0 0 --spacing(2.5) oklch(0% 0 0 / 20%);
 	--drop-shadow-memory: 0 0 --spacing(5) oklch(0% 0 0 / 30%);
 }
 

@@ -29,6 +29,7 @@
 		grid-cols-2
 		rounded-md
 		text-center
+		shadow-register
 		{props.class ?? ''}
 	"
 >
