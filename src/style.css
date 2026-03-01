@@ -61,12 +61,12 @@
 	--label-height: --spacing(7);
 
 	/* Width values */
-	--byte-register-width: --spacing(25);
-	--word-register-width: --spacing(44);
-	--instruction-register-width: --spacing(50);
-	--label-width: --spacing(37.5);
-	--memory-address-width: --spacing(25);
-	--memory-data-width: --spacing(47.5);
+	--byte-register-width: 11ch;
+	--word-register-width: 20ch;
+	--instruction-register-width: 20ch;
+	--label-width: 14ch;
+	--memory-address-width: 11ch;
+	--memory-data-width: 20ch;
 
 	/* Shadows */
 	--shadow-label: inset 0 0 --spacing(2.5) rgba(0, 0, 0, 0.2);
