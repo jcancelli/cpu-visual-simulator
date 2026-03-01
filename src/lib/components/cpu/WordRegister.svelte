@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { WordRegister } from "$lib/register/register.svelte"
-	import { Base, u8ToPaddedString } from "$lib/types/integer"
+	import { Base, u16ToPaddedString, u8ToPaddedString } from "$lib/types/integer"
 	import { unreachable } from "$lib/util/development"
 
 	export interface WordRegisterProps {
@@ -115,22 +115,26 @@
 		let newEditValue: string
 		switch (base) {
 			case Base.DECIMAL:
-				newEditValue =
-					signed ? register.signed.toString(10) : register.unsigned.toString(10)
+				if (signed) {
+					newEditValue = register.signed.toString(10)
+				} else {
+					newEditValue = register.unsigned.toString(10)
+				}
+				if (newEditValue === "0") {
+					newEditValue = ""
+				}
 				break
 
 			case Base.BINARY:
-				newEditValue = register.unsigned.toString(2)
-				break
-
+			// Fallthrough
 			case Base.HEX:
-				newEditValue = register.unsigned.toString(16).toUpperCase()
+				newEditValue = u16ToPaddedString(register.unsigned, base)
 				break
 
 			default:
 				unreachable()
 		}
-		return newEditValue !== "0" ? newEditValue : ""
+		return newEditValue
 	}
 </script>
 
