@@ -17,7 +17,7 @@
 		memory-address
 		register
 		w-(--memory-address-width)
-		bg-memory-address
+		bg-address-background
 		text-center
 		text-address-text
 		{props.class ?? ''}
