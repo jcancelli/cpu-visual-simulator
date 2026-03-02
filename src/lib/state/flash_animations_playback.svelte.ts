@@ -1,4 +1,3 @@
-import { UI as UIElementID } from "$lib/types/ui"
 import { clamp } from "$lib/util/math"
 
 /** Minimum value for a flash animation playback rate */
@@ -9,19 +8,31 @@ export const MAX_ANIMATION_RATE = 3.0
 export const DEFAULT_ANIMATION_RATE = 1.0
 
 /** An element that has a flash animation */
-export interface Flashable {
+export interface FlashableElement {
+	getFlashableID(): FlashableID
 	createFlashAnimation(): Animation
+	getFlashableSubelements(): FlashableElement[]
 }
 
-/** Allows to play/pause/cancel flash animations of {@link Flashable} elements identified by their {@link UIElementID} */
-export class FlashAnimations {
-	/** The animations handled by this instance indexed by their respective UI element ID */
-	private animations: Map<UIElementID, Animation>
+/** ID of a {@link FlashableElement} element */
+export type FlashableID = string
+
+/** Centralized handler for the playback of flash animation associated to {@link FlashableElement}*/
+export class FlashAnimationsPlayback {
+	/** The elements handled by this instance indexed by their ID */
+	private elements: Map<FlashableID, FlashableElement>
+	/** The animations handled by this instance indexed by their element ID */
+	private animations: Map<FlashableID, Animation>
 	/** The playback rate of the flash animations handled by this instance.
 	 * The value is clamped between {@link MIN_ANIMATION_RATE} and {@link MAX_ANIMATION_RATE}. */
 	private _playbackRate: number
 
 	constructor() {
+		/* eslint-disable-next-line svelte/prefer-svelte-reactivity -- Reactivity for this map is
+		 * not only not needed but also damaging. Usually addElement is invoked inside a $effect when
+		 * an html element with bind:this is mounted. If the map is reactive, this trigger an
+		 * infinite recursive loop, throwing a Svelte error: effect_update_depth_exceeded. */
+		this.elements = new Map()
 		/* eslint-disable-next-line svelte/prefer-svelte-reactivity -- Reactivity for this map is
 		 * not only not needed but also damaging. Usually addElement is invoked inside a $effect when
 		 * an html element with bind:this is mounted. If the map is reactive, this trigger an
@@ -49,44 +60,55 @@ export class FlashAnimations {
 		}
 	}
 
-	/** Add the specified {@link Flashable} element to the elements handled by this instance */
-	addElement(id: UIElementID, element: Flashable): void {
-		if (this.animations.has(id)) {
-			this.removeElement(id)
+	/** Add the specified {@link FlashableElement} element and all of its subelements to the
+	 * elements handled by this instance */
+	addElement(element: FlashableElement): void {
+		const id = element.getFlashableID()
+		if (this.elements.has(id)) {
+			return
 		}
 		const animation = element.createFlashAnimation()
 		animation.playbackRate = this._playbackRate
-		animation.id = `${UIElementID[id]}-flash-animation`
+		animation.id = `${id}-flash-animation`
 		this.animations.set(id, animation)
+		for (const subelement of element.getFlashableSubelements()) {
+			this.addElement(subelement)
+		}
 	}
 
-	/** Remove the specified {@link Flashable} element from the elements handled by this instance.
-	 * All flash animations associated to the element are canceled. */
-	removeElement(id: UIElementID): void {
-		if (!this.animations.has(id)) {
+	/** Remove the flashable element associated to the specified ID and all of its subelements from
+	 * the elements handled by this instance. All of the animations associated to the removed
+	 * elements are canceled. */
+	removeElement(id: FlashableID): void {
+		const element = this.elements.get(id)
+		if (element === undefined) {
 			return
 		}
 		this.cancel(id)
+		this.elements.delete(id)
 		this.animations.delete(id)
+		for (const subelement of element.getFlashableSubelements()) {
+			this.removeElement(subelement.getFlashableID())
+		}
 	}
 
-	/** Plays the flash animation associated to the specified UI element */
-	play(id: UIElementID): void {
+	/** Plays the flash animation associated to the specified id */
+	play(id: FlashableID): void {
 		this.animations.get(id)?.play()
 	}
 
-	/** Pause the flash animation associated to the specified UI element */
-	pause(id: UIElementID): void {
+	/** Pause the flash animation associated to the specified id */
+	pause(id: FlashableID): void {
 		this.animations.get(id)?.pause()
 	}
 
-	/** Cancel the flash animation associated to the specified UI element */
-	cancel(id: UIElementID): void {
+	/** Cancel the flash animation associated to the specified id */
+	cancel(id: FlashableID): void {
 		this.animations.get(id)?.cancel()
 	}
 
-	/** Wait for the flash animation associated to the specified UI element to finish playing */
-	async wait(id: UIElementID): Promise<void> {
+	/** Wait for the flash animation associated to the specified id to finish playing */
+	async wait(id: FlashableID): Promise<void> {
 		const animation = this.animations.get(id)
 		if (animation === undefined) {
 			return
@@ -123,7 +145,7 @@ export class FlashAnimations {
 	}
 
 	/** @returns Wether the flash animation associated to the element with the specified ID is playing or not */
-	isPlaying(id: UIElementID): boolean {
+	isPlaying(id: FlashableID): boolean {
 		const animation = this.animations.get(id)
 		return animation !== undefined && animation.playState === "running"
 	}
