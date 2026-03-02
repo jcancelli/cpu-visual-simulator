@@ -1,3 +1,5 @@
+import type { FlashAnimation } from "$lib/flash/animation"
+import type { Flashable, FlashableID } from "$lib/flash/flashable"
 import { clamp } from "$lib/util/math"
 
 /** Minimum value for a flash animation playback rate */
@@ -7,25 +9,12 @@ export const MAX_ANIMATION_RATE = 3.0
 /** Default value for a flash animation playback rate */
 export const DEFAULT_ANIMATION_RATE = 1.0
 
-/** An element that has a flash animation */
-export interface FlashableElement {
-	/** @returns The ID of this element */
-	getFlashableID(): FlashableID
-	/** @returns A new instance of a flash animation */
-	createFlashAnimation(): Animation
-	/** @returns All of the subelements associated with this element */
-	getFlashableSubelements(): FlashableElement[]
-}
-
-/** ID of a {@link FlashableElement} element */
-export type FlashableID = string
-
-/** Centralized handler for the playback of flash animation associated to {@link FlashableElement}*/
+/** Centralized handler for the playback of flash animation associated to {@link Flashable}*/
 export class FlashAnimationsPlayback {
 	/** The elements handled by this instance indexed by their ID */
-	private elements: Map<FlashableID, FlashableElement>
+	private elements: Map<FlashableID, Flashable>
 	/** The animations handled by this instance indexed by their element ID */
-	private animations: Map<FlashableID, Animation>
+	private animations: Map<FlashableID, FlashAnimation>
 	/** The playback rate of the flash animations handled by this instance.
 	 * The value is clamped between {@link MIN_ANIMATION_RATE} and {@link MAX_ANIMATION_RATE}. */
 	private _playbackRate: number
@@ -63,16 +52,15 @@ export class FlashAnimationsPlayback {
 		}
 	}
 
-	/** Add the specified {@link FlashableElement} element and all of its subelements to the
+	/** Add the specified {@link Flashable} element and all of its subelements to the
 	 * elements handled by this instance */
-	addElement(element: FlashableElement): void {
+	addElement(element: Flashable): void {
 		const id = element.getFlashableID()
 		if (this.elements.has(id)) {
 			return
 		}
 		const animation = element.createFlashAnimation()
 		animation.playbackRate = this._playbackRate
-		animation.id = `${id}-flash-animation`
 		this.animations.set(id, animation)
 		for (const subelement of element.getFlashableSubelements()) {
 			this.addElement(subelement)
@@ -112,11 +100,7 @@ export class FlashAnimationsPlayback {
 
 	/** Wait for the flash animation associated to the specified id to finish playing */
 	async wait(id: FlashableID): Promise<void> {
-		const animation = this.animations.get(id)
-		if (animation === undefined) {
-			return
-		}
-		await safeWaitFinished(animation)
+		await this.animations.get(id)?.finished
 	}
 
 	/** Pause all flash animations handled by this instance */
@@ -144,7 +128,7 @@ export class FlashAnimationsPlayback {
 
 	/** Wait all flash animations handled by this instance to finish playing */
 	async waitAll(): Promise<void> {
-		await Promise.allSettled(this.animations.values().map(safeWaitFinished))
+		await Promise.allSettled(this.animations.values().map(animation => animation.finished))
 	}
 
 	/** @returns Wether the flash animation associated to the element with the specified ID is playing or not */
@@ -152,9 +136,4 @@ export class FlashAnimationsPlayback {
 		const animation = this.animations.get(id)
 		return animation !== undefined && animation.playState === "running"
 	}
-}
-
-/** Wrapper around {@link Animation.finished} that catches the error thrown when an animation is canceled */
-async function safeWaitFinished(animation: Animation): Promise<Animation> {
-	return animation.finished.catch(() => animation)
 }
