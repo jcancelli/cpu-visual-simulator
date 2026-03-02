@@ -93,8 +93,6 @@ export interface MultipleElementsFlashAnimationParams {
 	flashableElementId: FlashableID
 	/** Animations that compose this animation */
 	subanimations: {
-		/** ID of the {@link Flashable} element associated with the sub-animation */
-		flashableElementId: FlashableID
 		/** The animated element */
 		element: HTMLElement
 		/** Keyframes for the sub-animation */
@@ -119,15 +117,17 @@ export class MultipleElementsFlashAnimation implements FlashAnimation {
 		}
 		this.id = `${params.flashableElementId}-flash-animation`
 		this.subAnimations = []
+		let i = 0
 		for (const subanimation of params.subanimations) {
 			this.subAnimations.push(
 				new SingleElementFlashAnimation({
-					flashableElementId: subanimation.flashableElementId,
+					flashableElementId: `${params.flashableElementId}-subelement-${i}`,
 					element: subanimation.element,
 					keyframes: subanimation.keyframes,
 					options: params.options,
 				}),
 			)
+			i += 1
 		}
 	}
 
