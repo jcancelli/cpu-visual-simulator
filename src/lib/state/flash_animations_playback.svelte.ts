@@ -9,8 +9,11 @@ export const DEFAULT_ANIMATION_RATE = 1.0
 
 /** An element that has a flash animation */
 export interface FlashableElement {
+	/** @returns The ID of this element */
 	getFlashableID(): FlashableID
+	/** @returns A new instance of a flash animation */
 	createFlashAnimation(): Animation
+	/** @returns All of the subelements associated with this element */
 	getFlashableSubelements(): FlashableElement[]
 }
 
