@@ -63,17 +63,74 @@ export class InstructionRegisterFlashAnimation extends MultipleElementsFlashAnim
 			flashableElementId: params.flashableElementId,
 			subanimations: [
 				{
-					element: params.opcodeElement,
+					element: params.instructionRegisterElement,
 					keyframes: {
 						backgroundColor: "var(--color-flash-animation-background)",
-						color: "var(--color-flash-animation-text)",
 						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+				{
+					element: params.opcodeElement,
+					keyframes: {
+						color: "var(--color-flash-animation-text)",
 					},
 				},
 				{
 					element: params.operandElement,
 					keyframes: {
+						color: "var(--color-flash-animation-text)",
+					},
+				},
+			],
+			options: registerFlashAnimationOpts,
+		})
+	}
+}
+
+/** Parameters for the creation of a {@link StatusWordFlashAnimation} */
+export interface StatusWordFlashAnimationParams {
+	/** ID of the status word element associated with the animation */
+	flashableElementId: FlashableID
+	/** The animated html element of the status word */
+	statusWordElement: HTMLElement
+	/** The animated html element of the zero flag */
+	zeroFlagElement: HTMLElement
+	/** The animated html element of the negative flag */
+	negativeFlagElement: HTMLElement
+	/** The animated html element of the unused bits */
+	unusedBitsElement: HTMLElement
+}
+
+/** Flash animation for a status word element */
+export class StatusWordFlashAnimation extends MultipleElementsFlashAnimation {
+	constructor(params: StatusWordFlashAnimationParams) {
+		super({
+			flashableElementId: params.flashableElementId,
+			subanimations: [
+				{
+					element: params.statusWordElement,
+					keyframes: {
 						backgroundColor: "var(--color-flash-animation-background)",
+						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+				{
+					element: params.zeroFlagElement,
+					keyframes: {
+						color: "var(--color-flash-animation-text)",
+						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+				{
+					element: params.negativeFlagElement,
+					keyframes: {
+						color: "var(--color-flash-animation-text)",
+						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+				{
+					element: params.unusedBitsElement,
+					keyframes: {
 						color: "var(--color-flash-animation-text)",
 						borderColor: "var(--color-flash-animation-border)",
 					},
