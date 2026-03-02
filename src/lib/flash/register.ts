@@ -1,4 +1,8 @@
-import { SingleElementFlashAnimation, type FlashableID } from "./animation"
+import {
+	MultipleElementsFlashAnimation,
+	SingleElementFlashAnimation,
+	type FlashableID,
+} from "./animation"
 
 /** Parameters for the creation of a {@link RegisterFlashAnimation} */
 export interface RegisterFlashAnimationParams {
@@ -35,6 +39,46 @@ export class RegisterFlashAnimation extends SingleElementFlashAnimation {
 			flashableElementId: params.flashableElementId,
 			element: params.element,
 			keyframes,
+			options: registerFlashAnimationOpts,
+		})
+	}
+}
+
+/** Parameters for the creation of an {@link InstructionRegisterFlashAnimation} */
+export interface InstructionRegisterFlashAnimationParams {
+	/** ID of the instruction register element associated with the animation */
+	flashableElementId: FlashableID
+	/** The animated html element of the instruction register */
+	instructionRegisterElement: HTMLElement
+	/** The animated html element of the opcode */
+	opcodeElement: HTMLElement
+	/** The animated html element of the operand */
+	operandElement: HTMLElement
+}
+
+/** Flash animation for an instruction register element */
+export class InstructionRegisterFlashAnimation extends MultipleElementsFlashAnimation {
+	constructor(params: InstructionRegisterFlashAnimationParams) {
+		super({
+			flashableElementId: params.flashableElementId,
+			subanimations: [
+				{
+					element: params.opcodeElement,
+					keyframes: {
+						backgroundColor: "var(--color-flash-animation-background)",
+						color: "var(--color-flash-animation-text)",
+						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+				{
+					element: params.operandElement,
+					keyframes: {
+						backgroundColor: "var(--color-flash-animation-background)",
+						color: "var(--color-flash-animation-text)",
+						borderColor: "var(--color-flash-animation-border)",
+					},
+				},
+			],
 			options: registerFlashAnimationOpts,
 		})
 	}
