@@ -1,7 +1,13 @@
 <script lang="ts">
+	import type { InvalidI16Error, InvalidU16Error } from "$lib/errors/integer"
 	import type { WordRegister } from "$lib/register/register.svelte"
+	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
 	import { Base, u8ToPaddedString } from "$lib/types/integer"
+	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
+
+	/** Error that could be thrown when editing a word register */
+	export type WordRegisterEditError = InvalidI16Error | InvalidU16Error
 
 	export interface WordRegisterProps {
 		/** The register attached to this component */
@@ -11,12 +17,13 @@
 		/** Wether the decimal value should be signed or unsigned */
 		signed?: boolean
 		id?: string
+		flashableId?: FlashableID
 		class?: string
 		disabled?: boolean
 		readonly?: boolean
 		tabindex?: number
 		/** Callback for when editing the value of the register fails */
-		oneditfail?: (error: Error) => void
+		oneditfail?: (error: WordRegisterEditError) => void
 	}
 
 	let {
@@ -24,12 +31,15 @@
 		base = Base.DECIMAL,
 		signed = true,
 		id,
+		flashableId,
 		disabled,
 		readonly,
 		tabindex,
-		oneditfail: onerror,
 		...props
 	}: WordRegisterProps = $props()
+
+	/** Handle to the input element */
+	let inputElement: HTMLInputElement
 
 	/** Wether the input is currently focused and editing its value or not */
 	let isEditing = $state(false)
@@ -94,19 +104,19 @@
 				register.unsigned = value
 			}
 		} catch (err: unknown) {
-			onerror?.(err as Error)
+			props.oneditfail?.(err as Error)
 		}
 	}
 
 	/** Commit edit on enter, cancel edit on escape */
 	function onkeydown(event: KeyboardEvent): void {
 		if (event.key === "Enter") {
-			;(event.target as HTMLInputElement).blur()
+			inputElement.blur()
 			return
 		}
 		if (event.key === "Escape") {
 			editValue = makeEditValue()
-			;(event.target as HTMLInputElement).blur()
+			inputElement.blur()
 			return
 		}
 	}
@@ -115,9 +125,32 @@
 	function makeEditValue(): string {
 		return displayValue !== "0" ? displayValue : ""
 	}
+
+	// Implements FlashableElement
+	export function getFlashableID(): FlashableID {
+		if (flashableId !== undefined) {
+			return flashableId
+		}
+		unreachable("Flashable ID not defined on WordRegister")
+	}
+
+	// Implements FlashableElement
+	export function createFlashAnimation(): Animation {
+		return makeFlashAnimation(inputElement, {
+			background: true,
+			text: true,
+			border: true,
+		})
+	}
+
+	// Implements FlashableElement
+	export function getFlashableSubelements(): FlashableElement[] {
+		return []
+	}
 </script>
 
 <input
+	bind:this={inputElement}
 	type="text"
 	{id}
 	{tabindex}

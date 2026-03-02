@@ -1,7 +1,13 @@
 <script lang="ts">
+	import type { InvalidI8Error, InvalidU8Error } from "$lib/errors/integer"
 	import type { ByteRegister } from "$lib/register/register.svelte"
+	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
 	import { Base, u8ToPaddedString } from "$lib/types/integer"
+	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
+
+	/** Error that could be thrown when editing a word register */
+	export type ByteRegisterEditError = InvalidI8Error | InvalidU8Error
 
 	export interface ByteRegisterProps {
 		/** The register attached to this component */
@@ -11,12 +17,13 @@
 		/** Wether the decimal value should be signed or unsigned */
 		signed?: boolean
 		id?: string
+		flashableId?: FlashableID
 		class?: string
 		disabled?: boolean
 		readonly?: boolean
 		tabindex?: number
 		/** Callback for when editing the value of the register fails */
-		oneditfail?: (error: Error) => void
+		oneditfail?: (error: ByteRegisterEditError) => void
 	}
 
 	let {
@@ -24,12 +31,15 @@
 		base = Base.DECIMAL,
 		signed = true,
 		id,
+		flashableId,
 		disabled,
 		readonly,
 		tabindex,
-		oneditfail: onerror,
 		...props
 	}: ByteRegisterProps = $props()
+
+	/** Handle to the input element */
+	let inputElement: HTMLInputElement
 
 	/** Wether the input is currently focused and editing its value or not */
 	let isEditing = $state(false)
@@ -90,20 +100,20 @@
 			} else {
 				register.unsigned = value
 			}
-		} catch (err: unknown) {
-			onerror?.(err as Error)
+		} catch (error: unknown) {
+			props.oneditfail?.(error as ByteRegisterEditError)
 		}
 	}
 
 	/** Commit edit on enter, cancel edit on escape */
 	function onkeydown(event: KeyboardEvent): void {
 		if (event.key === "Enter") {
-			;(event.target as HTMLInputElement).blur()
+			inputElement.blur()
 			return
 		}
 		if (event.key === "Escape") {
 			editValue = makeEditValue()
-			;(event.target as HTMLInputElement).blur()
+			inputElement.blur()
 			return
 		}
 	}
@@ -134,9 +144,32 @@
 		}
 		return newEditValue
 	}
+
+	// Implements FlashableElement
+	export function getFlashableID(): FlashableID {
+		if (flashableId !== undefined) {
+			return flashableId
+		}
+		unreachable("Flashable ID not defined on ByteRegister")
+	}
+
+	// Implements FlashableElement
+	export function createFlashAnimation(): Animation {
+		return makeFlashAnimation(inputElement, {
+			background: true,
+			text: true,
+			border: true,
+		})
+	}
+
+	// Implements FlashableElement
+	export function getFlashableSubelements(): FlashableElement[] {
+		return []
+	}
 </script>
 
 <input
+	bind:this={inputElement}
 	type="text"
 	{id}
 	{tabindex}
