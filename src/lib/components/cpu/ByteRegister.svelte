@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { InvalidI8Error, InvalidU8Error } from "$lib/errors/integer"
+	import type { Flashable, FlashableID, FlashAnimation } from "$lib/flash/animation"
+	import { RegisterFlashAnimation } from "$lib/flash/register"
 	import type { ByteRegister } from "$lib/register/register.svelte"
-	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
 	import { Base, u8ToPaddedString } from "$lib/types/integer"
-	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
 
 	/** Error that could be thrown when editing a word register */
@@ -145,25 +145,32 @@
 		return newEditValue
 	}
 
-	// Implements FlashableElement
+	// Implements Flashable
 	export function getFlashableID(): FlashableID {
-		if (flashableId !== undefined) {
-			return flashableId
+		if (flashableId === undefined) {
+			unreachable("Flashable ID not defined on ByteRegister")
 		}
-		unreachable("Flashable ID not defined on ByteRegister")
+		return flashableId
 	}
 
-	// Implements FlashableElement
-	export function createFlashAnimation(): Animation {
-		return makeFlashAnimation(inputElement, {
-			background: true,
-			text: true,
-			border: true,
+	// Implements Flashable
+	export function createFlashAnimation(): FlashAnimation {
+		if (flashableId === undefined) {
+			unreachable("Flashable ID not defined on ByteRegister. Cannot create flash animation.")
+		}
+		return new RegisterFlashAnimation({
+			flashableElementId: flashableId,
+			element: inputElement,
+			properties: {
+				background: true,
+				text: true,
+				border: true,
+			},
 		})
 	}
 
-	// Implements FlashableElement
-	export function getFlashableSubelements(): FlashableElement[] {
+	// Implements Flashable
+	export function getFlashableSubelements(): Flashable[] {
 		return []
 	}
 </script>

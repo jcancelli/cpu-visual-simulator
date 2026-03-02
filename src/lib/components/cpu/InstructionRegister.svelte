@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { type Flashable, type FlashableID, type FlashAnimation } from "$lib/flash/animation"
+	import { InstructionRegisterFlashAnimation, RegisterFlashAnimation } from "$lib/flash/register"
 	import type { WordRegister } from "$lib/register/register.svelte"
-	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
 	import { Base, i8, u8ToPaddedString } from "$lib/types/integer"
 	import { getImmediateFlag, getOpcodeByNumeric } from "$lib/types/opcode"
-	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
 
 	export interface InstructionRegisterProps {
@@ -36,25 +36,31 @@
 	/** Handle to the html element that represents the operand */
 	let operandElement: HTMLElement
 
-	// Implements FlashableElement
+	// Implements Flashable
 	export function getFlashableID(): FlashableID {
-		if (flashableIds !== undefined) {
-			return flashableIds.instructionRegister
+		if (flashableIds === undefined) {
+			unreachable("Flashable ID not defined on InstructionRegister")
 		}
-		unreachable("Flashable ID not defined on InstructionRegister")
+		return flashableIds.instructionRegister
 	}
 
-	// Implements FlashableElement
-	export function createFlashAnimation(): Animation {
-		return makeFlashAnimation(htmlElement, {
-			background: true,
-			text: true,
-			border: true,
+	// Implements Flashable
+	export function createFlashAnimation(): FlashAnimation {
+		if (flashableIds === undefined) {
+			unreachable(
+				"Flashable ID not defined on InstructionRegister. Cannot create flash animation.",
+			)
+		}
+		return new InstructionRegisterFlashAnimation({
+			flashableElementId: flashableIds.instructionRegister,
+			instructionRegisterElement: htmlElement,
+			opcodeElement,
+			operandElement,
 		})
 	}
 
-	// Implements FlashableElement
-	export function getFlashableSubelements(): FlashableElement[] {
+	// Implements Flashable
+	export function getFlashableSubelements(): Flashable[] {
 		if (flashableIds === undefined) {
 			unreachable(
 				"Flashable ID not defined on InstructionRegister. Unable to get flashable subcomponents.",
@@ -64,9 +70,13 @@
 			{
 				getFlashableID: () => flashableIds.opcode,
 				createFlashAnimation: () => {
-					return makeFlashAnimation(opcodeElement, {
-						background: true,
-						text: true,
+					return new RegisterFlashAnimation({
+						flashableElementId: flashableIds.opcode,
+						element: opcodeElement,
+						properties: {
+							background: true,
+							text: true,
+						},
 					})
 				},
 				getFlashableSubelements: () => [],
@@ -74,9 +84,13 @@
 			{
 				getFlashableID: () => flashableIds.operand,
 				createFlashAnimation: () => {
-					return makeFlashAnimation(operandElement, {
-						background: true,
-						text: true,
+					return new RegisterFlashAnimation({
+						flashableElementId: flashableIds.operand,
+						element: operandElement,
+						properties: {
+							background: true,
+							text: true,
+						},
 					})
 				},
 				getFlashableSubelements: () => [],
@@ -110,7 +124,6 @@
 			instruction-register-opcode
 			register
 			register-foreground
-			register-background
 			text-center
 		"
 	>
@@ -131,7 +144,6 @@
 			instruction-register-operand
 			register
 			register-foreground
-			register-background
 			block
 			text-center
 		"

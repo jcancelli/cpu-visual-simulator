@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
+	import type { Flashable, FlashableID, FlashAnimation } from "$lib/flash/animation"
+	import { RegisterFlashAnimation } from "$lib/flash/register"
 	import { Base, u8ToPaddedString, type U8 } from "$lib/types/integer"
-	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
 
 	export interface IncrementerProps {
@@ -17,25 +17,32 @@
 	/** Handle to the html element that represents this component */
 	let htmlElement: HTMLElement
 
-	// Implements FlashableElement
+	// Implements Flashable
 	export function getFlashableID(): FlashableID {
-		if (flashableId !== undefined) {
-			return flashableId
+		if (flashableId === undefined) {
+			unreachable("Flashable ID not defined on Incrementer")
 		}
-		unreachable("Flashable ID not defined on Incrementer")
+		return flashableId
 	}
 
-	// Implements FlashableElement
-	export function createFlashAnimation(): Animation {
-		return makeFlashAnimation(htmlElement, {
-			background: true,
-			text: true,
-			border: true,
+	// Implements Flashable
+	export function createFlashAnimation(): FlashAnimation {
+		if (flashableId === undefined) {
+			unreachable("Flashable ID not defined on Incrementer. Cannot create flash animation.")
+		}
+		return new RegisterFlashAnimation({
+			flashableElementId: flashableId,
+			element: htmlElement,
+			properties: {
+				background: true,
+				text: true,
+				border: true,
+			},
 		})
 	}
 
-	// Implements FlashableElement
-	export function getFlashableSubelements(): FlashableElement[] {
+	// Implements Flashable
+	export function getFlashableSubelements(): Flashable[] {
 		return []
 	}
 </script>
