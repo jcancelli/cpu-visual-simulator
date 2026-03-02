@@ -1,7 +1,7 @@
 <script lang="ts">
+	import type { Flashable, FlashableID, FlashAnimation } from "$lib/flash/animation"
+	import { RegisterFlashAnimation, StatusWordFlashAnimation } from "$lib/flash/register"
 	import type { StatusWordRegister } from "$lib/register/status_word"
-	import type { FlashableElement, FlashableID } from "$lib/state/flash_animations_playback.svelte"
-	import { makeFlashAnimation } from "$lib/util/animation"
 	import { unreachable } from "$lib/util/development"
 
 	export interface StatusWordProps {
@@ -21,26 +21,32 @@
 	let htmlElement: HTMLElement
 	let zeroFlagElement: HTMLElement
 	let negativeFlagElement: HTMLElement
+	let unusedBitsElement: HTMLElement
 
 	// Implements FlashableElement
 	export function getFlashableID(): FlashableID {
-		if (flashableIds !== undefined) {
-			return flashableIds.statusWord
+		if (flashableIds === undefined) {
+			unreachable("Flashable ID not defined on StatusWord")
 		}
-		unreachable("Flashable ID not defined on StatusWord")
+		return flashableIds.statusWord
 	}
 
 	// Implements FlashableElement
-	export function createFlashAnimation(): Animation {
-		return makeFlashAnimation(htmlElement, {
-			background: true,
-			text: true,
-			border: true,
+	export function createFlashAnimation(): FlashAnimation {
+		if (flashableIds === undefined) {
+			unreachable("Flashable ID not defined on StatusWord. Cannot create flash animation.")
+		}
+		return new StatusWordFlashAnimation({
+			flashableElementId: flashableIds.statusWord,
+			statusWordElement: htmlElement,
+			zeroFlagElement,
+			negativeFlagElement,
+			unusedBitsElement,
 		})
 	}
 
 	// Implements FlashableElement
-	export function getFlashableSubelements(): FlashableElement[] {
+	export function getFlashableSubelements(): Flashable[] {
 		if (flashableIds === undefined) {
 			unreachable(
 				"Flashable ID not defined on StatusWord. Unable to get flashable subcomponents.",
@@ -50,9 +56,14 @@
 			{
 				getFlashableID: () => flashableIds.zeroFlag,
 				createFlashAnimation: () => {
-					return makeFlashAnimation(zeroFlagElement, {
-						background: true,
-						text: true,
+					return new RegisterFlashAnimation({
+						flashableElementId: flashableIds.zeroFlag,
+						element: zeroFlagElement,
+						properties: {
+							background: true,
+							text: true,
+							border: true,
+						},
 					})
 				},
 				getFlashableSubelements: () => [],
@@ -60,9 +71,14 @@
 			{
 				getFlashableID: () => flashableIds.negativeFlag,
 				createFlashAnimation: () => {
-					return makeFlashAnimation(negativeFlagElement, {
-						background: true,
-						text: true,
+					return new RegisterFlashAnimation({
+						flashableElementId: flashableIds.negativeFlag,
+						element: negativeFlagElement,
+						properties: {
+							background: true,
+							text: true,
+							border: true,
+						},
 					})
 				},
 				getFlashableSubelements: () => [],
@@ -97,7 +113,6 @@
 			status-word-zero-flag
 			register
 			register-foreground
-			register-background
 			block
 			border-r
 			border-s-register-border-light
@@ -117,7 +132,6 @@
 			status-word-negative-flag
 			register
 			register-foreground
-			register-background
 			block
 			border-r
 			border-s-register-border-light
@@ -131,5 +145,7 @@
 	>
 		{statusWord.negativeFlag ? "1" : "0"}
 	</button>
-	<p class="register register-foreground block w-full text-center">----</p>
+	<p bind:this={unusedBitsElement} class="register register-foreground block w-full text-center">
+		----
+	</p>
 </div>
