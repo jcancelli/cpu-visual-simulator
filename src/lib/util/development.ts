@@ -5,6 +5,9 @@ import {
 	AssertionError,
 } from "$lib/errors/development"
 
+/** Empty function, stored in a constant because i don't trust browsers optimizations */
+export const EMPTY_FUNC = () => {}
+
 /** Utility function to mark a branch of code as unreachable.
  * @throws {UnreachableError} */
 export function unreachable(message?: string): never {
